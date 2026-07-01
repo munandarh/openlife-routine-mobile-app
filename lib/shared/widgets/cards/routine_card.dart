@@ -12,7 +12,10 @@ class RoutineCard extends StatelessWidget {
     required this.iconBackground,
     required this.iconColor,
     this.statusLabel,
+    this.secondaryActionLabel,
     this.onTap,
+    this.onCheckTap,
+    this.onSecondaryAction,
     this.isDone = false,
     this.isDueNow = false,
     super.key,
@@ -24,7 +27,10 @@ class RoutineCard extends StatelessWidget {
   final Color iconBackground;
   final Color iconColor;
   final String? statusLabel;
+  final String? secondaryActionLabel;
   final VoidCallback? onTap;
+  final VoidCallback? onCheckTap;
+  final VoidCallback? onSecondaryAction;
   final bool isDone;
   final bool isDueNow;
 
@@ -109,26 +115,54 @@ class RoutineCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                      if (secondaryActionLabel != null) ...<Widget>[
+                        InkWell(
+                          borderRadius: BorderRadius.circular(AppRadius.small),
+                          onTap: onSecondaryAction,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primarySoft,
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.small,
+                              ),
+                            ),
+                            child: Text(
+                              secondaryActionLabel!,
+                              style: AppTextStyles.label.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
-                borderRadius: BorderRadius.circular(AppRadius.pill),
-                border: Border.all(
-                  color: isDone ? Colors.transparent : AppColors.border,
-                  width: 2,
+            InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              onTap: onCheckTap,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                  border: Border.all(
+                    color: isDone ? Colors.transparent : AppColors.border,
+                    width: 2,
+                  ),
                 ),
-              ),
-              child: Icon(
-                isDone ? Icons.check_rounded : Icons.circle_outlined,
-                color: isDone ? AppColors.success : AppColors.border,
+                child: Icon(
+                  isDone ? Icons.check_rounded : Icons.circle_outlined,
+                  color: isDone ? AppColors.success : AppColors.border,
+                ),
               ),
             ),
           ],

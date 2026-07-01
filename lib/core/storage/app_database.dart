@@ -152,3 +152,53 @@ typedef RoutineLogsTable = RoutineLogs;
 typedef RoutineRowData = Routine;
 typedef RoutineScheduleRowData = RoutineSchedule;
 typedef RoutineLogRowData = RoutineLog;
+
+extension RoutineLogQueries on AppDatabase {
+  Future<List<RoutineLogRowData>> getRoutineLogsByDate(String dateKey) {
+    return (select(
+      routineLogs,
+    )..where((RoutineLogsTable table) => table.date.equals(dateKey))).get();
+  }
+
+  Future<RoutineLogRowData?> getRoutineLogByRoutineAndDate(
+    String routineId,
+    String dateKey,
+  ) {
+    return (select(routineLogs)..where(
+          (RoutineLogsTable table) =>
+              table.routineId.equals(routineId) & table.date.equals(dateKey),
+        ))
+        .getSingleOrNull();
+  }
+
+  Future<void> upsertRoutineLog({
+    required String routineId,
+    required String dateKey,
+    required String status,
+  }) async {
+    final DateTime now = DateTime.now();
+    final RoutineLogRowData? existingLog = await getRoutineLogByRoutineAndDate(
+      routineId,
+      dateKey,
+    );
+
+    await into(routineLogs).insertOnConflictUpdate(
+      RoutineLogsCompanion(
+        id: Value(existingLog?.id ?? '${routineId}_$dateKey'),
+        routineId: Value(routineId),
+        date: Value(dateKey),
+        status: Value(status),
+        createdAt: Value(existingLog?.createdAt ?? now),
+        updatedAt: Value(now),
+      ),
+    );
+  }
+
+  Future<void> deleteRoutineLog(String routineId, String dateKey) {
+    return (delete(routineLogs)..where(
+          (RoutineLogsTable table) =>
+              table.routineId.equals(routineId) & table.date.equals(dateKey),
+        ))
+        .go();
+  }
+}

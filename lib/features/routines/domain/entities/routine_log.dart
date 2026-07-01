@@ -39,11 +39,11 @@ class RoutineLog extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        routineId,
-        date,
-        status,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    routineId,
+    date,
+    status,
+    createdAt,
+    updatedAt,
+  ];
 }

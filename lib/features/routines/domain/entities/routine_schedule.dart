@@ -37,11 +37,11 @@ class RoutineSchedule extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        routineId,
-        reminderTime,
-        repeatDays,
-        snoozeMinutes,
-        updatedAt,
-      ];
+    id,
+    routineId,
+    reminderTime,
+    repeatDays,
+    snoozeMinutes,
+    updatedAt,
+  ];
 }

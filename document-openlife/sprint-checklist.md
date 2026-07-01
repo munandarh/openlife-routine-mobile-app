@@ -145,22 +145,22 @@
 
 ## 5. Sprint 4 — Today Checklist
 
-- [ ] Selected date state implemented
-- [ ] Query routines by selected date implemented
-- [ ] Daily log creation implemented
-- [ ] Mark done implemented
-- [ ] Skip routine implemented
-- [ ] Undo action implemented
-- [ ] Progress calculation implemented
-- [ ] TodayBloc built
-- [ ] Today screen bound to real data
-- [ ] Empty state bound correctly
+- [x] Selected date state implemented
+- [x] Query routines by selected date implemented
+- [x] Daily log creation implemented
+- [x] Mark done implemented
+- [x] Skip routine implemented
+- [x] Undo action implemented
+- [x] Progress calculation implemented
+- [x] TodayBloc built
+- [x] Today screen bound to real data
+- [x] Empty state bound correctly
 
 ### Review gate
 
-- [ ] Only scheduled routines appear
-- [ ] Progress updates instantly
-- [ ] Due state and done state match UI direction
+- [x] Only scheduled routines appear
+- [x] Progress updates instantly
+- [x] Due state and done state match UI direction
 
 ---
 

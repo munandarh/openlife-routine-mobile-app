@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/app/app.dart';
 import 'package:openlife_routine/core/di/app_dependencies.dart';
@@ -45,6 +46,9 @@ void main() {
     expect(find.text('OpenLife Routine'), findsOneWidget);
     expect(find.text('Build better days'), findsOneWidget);
     expect(find.text('Continue'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   });
 
   testWidgets('returning user opens Today shell', (WidgetTester tester) async {
@@ -62,10 +66,14 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text('Daily Progress'), findsOneWidget);
     expect(find.text('Daily routine'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   });
 }
 
@@ -80,8 +88,8 @@ class _FakeOnboardingRepository implements OnboardingRepository {
   Future<bool> hasCompletedOnboarding() async => false;
 
   @override
-  Future<void> skipOnboarding() async {}
+  Future<void> setPreferredLanguageCode(String languageCode) async {}
 
   @override
-  Future<void> setPreferredLanguageCode(String languageCode) async {}
+  Future<void> skipOnboarding() async {}
 }

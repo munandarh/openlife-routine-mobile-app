@@ -12,6 +12,7 @@ import 'package:openlife_routine/features/routines/domain/usecases/get_routine_u
 import 'package:openlife_routine/features/routines/domain/usecases/update_routine_use_case.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/watch_routines_use_case.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDependencies {
@@ -65,5 +66,9 @@ class AppDependencies {
       deleteRoutineUseCase: DeleteRoutineUseCase(routineRepository),
       getRoutineUseCase: GetRoutineUseCase(routineRepository),
     );
+  }
+
+  TodayBloc createTodayBloc() {
+    return TodayBloc(appDatabase: appDatabase);
   }
 }

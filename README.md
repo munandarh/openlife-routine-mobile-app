@@ -61,17 +61,3 @@ flutter run
 flutter analyze
 flutter test
 ```
-
-## Key Documents
-
-- `document-openlife/PRD.md`
-- `document-openlife/design.md`
-- `document-openlife/design-system.md`
-- `document-openlife/architecture.md`
-- `document-openlife/roadmap.md`
-- `document-openlife/sprint-planning.md`
-- `document-openlife/sprint-checklist.md`
-
-## Contribution
-
-This project is being built incrementally. Before changing architecture or UX direction, align with the product and design documents first.

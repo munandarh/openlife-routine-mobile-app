@@ -1,3 +1,4 @@
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
@@ -24,6 +25,8 @@ class AppDependencies {
     required this.preferredLanguageCode,
     required this.appDatabase,
     required this.routineRepository,
+    required this.notificationService,
+    required this.initialNotificationRoutineId,
   });
 
   final LocalDatabaseConfig databaseConfig;
@@ -33,6 +36,8 @@ class AppDependencies {
   final String preferredLanguageCode;
   final AppDatabase appDatabase;
   final RoutineRepository routineRepository;
+  final AppNotificationService notificationService;
+  final String? initialNotificationRoutineId;
 
   static Future<AppDependencies> bootstrap() async {
     final SharedPreferencesAsync preferences = SharedPreferencesAsync();
@@ -46,6 +51,10 @@ class AppDependencies {
     final RoutineRepository routineRepository = DriftRoutineRepository(
       RoutineLocalDataSource(appDatabase),
     );
+    final AppNotificationService notificationService = AppNotificationService();
+    final String? initialNotificationRoutineId = await notificationService
+        .initialize();
+    await notificationService.syncRoutineSchedules(appDatabase);
 
     return AppDependencies(
       databaseConfig: const LocalDatabaseConfig.recommended(),
@@ -55,6 +64,8 @@ class AppDependencies {
       preferredLanguageCode: preferredLanguageCode,
       appDatabase: appDatabase,
       routineRepository: routineRepository,
+      notificationService: notificationService,
+      initialNotificationRoutineId: initialNotificationRoutineId,
     );
   }
 
@@ -65,6 +76,7 @@ class AppDependencies {
       updateRoutineUseCase: UpdateRoutineUseCase(routineRepository),
       deleteRoutineUseCase: DeleteRoutineUseCase(routineRepository),
       getRoutineUseCase: GetRoutineUseCase(routineRepository),
+      notificationService: notificationService,
     );
   }
 

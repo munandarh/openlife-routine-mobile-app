@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/create_routine_use_case.dart';
@@ -96,6 +97,7 @@ RoutineBloc _buildBloc(RoutineRepository repository) {
     updateRoutineUseCase: UpdateRoutineUseCase(repository),
     deleteRoutineUseCase: DeleteRoutineUseCase(repository),
     getRoutineUseCase: GetRoutineUseCase(repository),
+    notificationService: AppNotificationService.noop(),
   );
 }
 

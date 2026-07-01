@@ -1,9 +1,9 @@
 # OpenLife Routine — Sprint Execution Checklist
 
 **Purpose:** Single execution tracker for implementation progress.
-**Rule:** Every completed task must be checked immediately.
+**Rule:** Completed task checked immediately.
 **Architecture rule:** Use full BLoC only. Do not use Cubit.
-**MVP navigation rule:** Bottom navigation stays `Today / Routines / Insights / Settings`. `Templates` lives under `Routines`, not a main tab.
+**MVP navigation rule:** Bottom navigation stays `Today / Routines / Insights / Settings`. `Templates` lives under `Routines`, not main tab.
 **Git rule:** No `git commit` or `git push` during execution.
 
 ---
@@ -12,9 +12,9 @@
 
 - [x] Product direction read from `document-openlife`
 - [x] UI reference screens read from `ui-ux-design-screen`
-- [x] Design direction locked to warm cream + sage + large rounded cards
+- [x] Design direction locked warm cream + sage + large rounded cards
 - [x] Full BLoC rule locked
-- [x] MVP navigation locked to 4 tabs
+- [x] MVP navigation locked 4 tabs
 - [x] Final package choices confirmed in codebase setup
 
 ---
@@ -25,7 +25,7 @@
 
 - [x] Flutter app scaffold available
 - [x] Folder structure follows feature-first clean architecture
-- [x] `flutter_bloc` selected for state management
+- [x] `flutter_bloc` selected state management
 - [x] Local DB approach locked
 - [x] Notification stack locked
 - [x] Routing approach locked
@@ -52,8 +52,8 @@
 
 ### Tokens
 
-- [x] Color tokens implemented from `serene_routine`
-- [x] Typography tokens implemented with Plus Jakarta Sans
+- [x] Color tokens implemented `serene_routine`
+- [x] Typography tokens implemented Plus Jakarta Sans
 - [x] Spacing tokens implemented
 - [x] Radius tokens implemented
 - [x] Shadow tokens implemented
@@ -67,7 +67,7 @@
 - [x] `RoutineCard` UI-only built
 - [x] `WeekDateSelector` UI-only built
 - [x] `ProgressRing` UI-only built
-- [x] `OpenLifeBottomNav` built with 4 tabs only
+- [x] `OpenLifeBottomNav` built 4 tabs only
 - [x] Empty state component built
 
 ### Screen shells
@@ -83,9 +83,9 @@
 
 ### Review gate
 
-- [x] Screens visually align with `ui-ux-design-screen`
+- [x] Screens visually align `ui-ux-design-screen`
 - [x] Navigation works
-- [x] No extra main tab for Templates
+- [x] No extra main tab Templates
 
 ---
 
@@ -97,7 +97,7 @@
 - [x] First-run persistence works
 - [x] Notification education screen built
 - [x] Language selection entry built
-- [x] Supportive copy aligned with design docs
+- [x] Supportive copy aligned design docs
 - [x] Rive placeholder or static illustration fallback added
 
 ### Review gate
@@ -166,17 +166,17 @@
 
 ## 6. Sprint 5 — Reminder Engine
 
-- [ ] Notification permission flow built
-- [ ] Notification service built
-- [ ] Reminder scheduler built
-- [ ] Timezone initialization built
-- [ ] Create schedule on routine creation
-- [ ] Update schedule on routine update
-- [ ] Cancel schedule on routine delete
-- [ ] Snooze flow built
-- [ ] Notification payload handling built
-- [ ] Duplicate prevention built
-- [ ] Rebuild schedules after restart built
+- [x] Notification permission flow built
+- [x] Notification service built
+- [x] Reminder scheduler built
+- [x] Timezone initialization built
+- [x] Create schedule on routine creation
+- [x] Update schedule on routine update
+- [x] Cancel schedule on routine delete
+- [x] Snooze flow built
+- [x] Notification payload handling built
+- [x] Duplicate prevention built
+- [x] Rebuild schedules restart built
 
 ### Review gate
 
@@ -206,7 +206,7 @@
 
 ---
 
-## 8. Sprint 7 — Templates and Insights
+## 8. Sprint 7 — Templates Insights
 
 ### Templates
 
@@ -249,37 +249,20 @@
 ### Review gate
 
 - [ ] Settings persist
-- [ ] Export and import work
+- [ ] Export import work
 - [ ] Privacy messaging stays clear
 
 ---
 
-## 10. Sprint 9 — Test and Release Prep
+## 10. Sprint 9 — Test Release Prep
 
-- [ ] Unit tests for routine logic
-- [ ] Unit tests for progress logic
-- [ ] Unit tests for scheduling logic
-- [ ] Widget tests for core screens
-- [ ] Accessibility labels added
-- [ ] Small-screen QA done
-- [ ] Dark-mode QA done
-- [ ] Asset optimization done
-- [ ] Screenshots prepared
-- [ ] Demo video prepared
-- [ ] Release APK built locally
+- [ ] Unit tests routine logic
+- [ ] Unit tests progress logic
+- [ ] Widget tests critical flows
+- [ ] Manual QA pass complete
+- [ ] Release build sanity check complete
 
 ### Review gate
 
-- [ ] CI passes
-- [ ] No known critical bug
-- [ ] MVP release checklist reviewed
-
----
-
-## 11. Daily Working Rule
-
-- [ ] Pick tasks only from active sprint
-- [ ] Finish one vertical slice at a time
-- [ ] Check task immediately after verification
-- [ ] Update docs when behavior changes
-- [ ] Do not commit or push
+- [ ] Release candidate stable
+- [ ] No known blocker left

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/app/app.dart';
 import 'package:openlife_routine/core/di/app_dependencies.dart';
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
@@ -37,6 +38,8 @@ void main() {
           preferredLanguageCode: 'en',
           appDatabase: appDatabase,
           routineRepository: routineRepository,
+          notificationService: AppNotificationService.noop(),
+          initialNotificationRoutineId: null,
         ),
       ),
     );
@@ -62,6 +65,8 @@ void main() {
           preferredLanguageCode: 'en',
           appDatabase: appDatabase,
           routineRepository: routineRepository,
+          notificationService: AppNotificationService.noop(),
+          initialNotificationRoutineId: null,
         ),
       ),
     );

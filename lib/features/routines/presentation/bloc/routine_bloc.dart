@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/create_routine_use_case.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/delete_routine_use_case.dart';
@@ -19,11 +20,13 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     required UpdateRoutineUseCase updateRoutineUseCase,
     required DeleteRoutineUseCase deleteRoutineUseCase,
     required GetRoutineUseCase getRoutineUseCase,
+    required AppNotificationService notificationService,
   }) : _watchRoutinesUseCase = watchRoutinesUseCase,
        _createRoutineUseCase = createRoutineUseCase,
        _updateRoutineUseCase = updateRoutineUseCase,
        _deleteRoutineUseCase = deleteRoutineUseCase,
        _getRoutineUseCase = getRoutineUseCase,
+       _notificationService = notificationService,
        super(const RoutineState.initial()) {
     on<RoutineWatchRequested>(_onWatchRequested);
     on<_RoutineWatchUpdated>(_onWatchUpdated);
@@ -38,7 +41,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
   final UpdateRoutineUseCase _updateRoutineUseCase;
   final DeleteRoutineUseCase _deleteRoutineUseCase;
   final GetRoutineUseCase _getRoutineUseCase;
-
+  final AppNotificationService _notificationService;
   StreamSubscription<List<Routine>>? _watchSubscription;
 
   @override
@@ -56,7 +59,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       emit(
         state.copyWith(
           status: RoutineStatus.failure,
-          errorMessage: 'Routine name is required.',
+          errorMessage: 'Routine name required.',
           saved: false,
           deleted: false,
         ),
@@ -77,6 +80,9 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     );
 
     await _createRoutineUseCase(routine);
+    await _notificationService.requestPermissions();
+    await _notificationService.scheduleRoutine(routine);
+
     emit(
       state.copyWith(
         status: RoutineStatus.success,
@@ -93,6 +99,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     Emitter<RoutineState> emit,
   ) async {
     await _deleteRoutineUseCase(event.id);
+    await _notificationService.cancelRoutine(event.id);
     emit(
       state.copyWith(
         status: RoutineStatus.success,
@@ -116,6 +123,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
         clearErrorMessage: true,
       ),
     );
+
     final Routine? routine = await _getRoutineUseCase(event.id);
     if (routine == null) {
       emit(
@@ -163,6 +171,9 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     );
 
     await _updateRoutineUseCase(updatedRoutine);
+    await _notificationService.requestPermissions();
+    await _notificationService.scheduleRoutine(updatedRoutine);
+
     emit(
       state.copyWith(
         status: RoutineStatus.success,

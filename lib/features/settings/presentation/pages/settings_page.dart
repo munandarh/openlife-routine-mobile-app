@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -37,7 +38,7 @@ class SettingsPage extends StatelessWidget {
           items: <_SettingsItemData>[
             _SettingsItemData(
               title: 'Account Details',
-              subtitle: 'Manage your personal info',
+              subtitle: 'Manage personal info',
               icon: Icons.person_outline,
               iconColor: AppColors.primary,
               iconBackground: AppColors.primarySoft,
@@ -61,16 +62,29 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
-        const _SettingsSection(
+        _SettingsSection(
           title: 'Notifications',
           items: <_SettingsItemData>[
             _SettingsItemData(
-              title: 'Push Notifications',
-              trailing: 'On',
+              title: 'Routine alerts',
+              subtitle: 'Allow reminders and exact alarm scheduling',
               icon: Icons.notifications_none_rounded,
+              onTap: () async {
+                await AppScope.read(
+                  context,
+                ).notificationService.requestPermissions();
+                if (!context.mounted) {
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Notification permissions request sent.'),
+                  ),
+                );
+              },
             ),
-            _SettingsItemData(
-              title: 'Email Digests',
+            const _SettingsItemData(
+              title: 'Email updates',
               trailing: 'Off',
               icon: Icons.mail_outline,
             ),
@@ -78,28 +92,29 @@ class SettingsPage extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xl),
         const _SettingsSection(
-          title: 'Data & Storage',
+          title: 'Data',
           items: <_SettingsItemData>[
             _SettingsItemData(
-              title: 'Export Data',
+              title: 'Export routines',
               icon: Icons.download_outlined,
             ),
             _SettingsItemData(
-              title: 'Import Data',
+              title: 'Backup status',
+              trailing: 'Local only',
               icon: Icons.upload_outlined,
             ),
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
         const _SettingsSection(
-          title: 'About',
+          title: 'Privacy',
           items: <_SettingsItemData>[
             _SettingsItemData(
-              title: 'Privacy Policy',
+              title: 'Privacy & data',
               icon: Icons.shield_outlined,
             ),
             _SettingsItemData(
-              title: 'Open Source Licenses',
+              title: 'About open source',
               icon: Icons.code_outlined,
             ),
           ],
@@ -135,10 +150,15 @@ class _SettingsSection extends StatelessWidget {
           ),
           child: Column(
             children: items.map((_SettingsItemData item) {
-              final bool isLast = identical(item, items.last);
+              final bool isLast = item == items.last;
               return Column(
                 children: <Widget>[
                   ListTile(
+                    onTap: item.onTap == null
+                        ? null
+                        : () {
+                            item.onTap!.call();
+                          },
                     leading: CircleAvatar(
                       backgroundColor:
                           item.iconBackground ?? AppColors.surfaceSoft,
@@ -185,6 +205,7 @@ class _SettingsItemData {
     this.trailing,
     this.iconBackground,
     this.iconColor,
+    this.onTap,
   });
 
   final String title;
@@ -193,4 +214,5 @@ class _SettingsItemData {
   final IconData icon;
   final Color? iconBackground;
   final Color? iconColor;
+  final Future<void> Function()? onTap;
 }

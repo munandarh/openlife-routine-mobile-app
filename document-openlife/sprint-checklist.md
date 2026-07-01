@@ -180,29 +180,29 @@
 
 ### Review gate
 
-- [ ] Notification fires on time
-- [ ] No duplicate spam
-- [ ] Tap opens relevant app flow
+- [x] Notification fires on time
+- [x] No duplicate spam
+- [x] Tap opens relevant app flow
 
 ---
 
 ## 7. Sprint 6 — Motion and Polish
 
-- [ ] Shared Rive wrapper built
-- [ ] Static fallback support built
-- [ ] Onboarding animation integrated
-- [ ] Empty state animation integrated
-- [ ] Done check animation integrated
-- [ ] Daily complete animation integrated
-- [ ] Progress ring animation integrated
-- [ ] Haptic feedback added
-- [ ] Motion respects calm design direction
+- [x] Shared Rive wrapper built
+- [x] Static fallback support built
+- [x] Onboarding animation integrated
+- [x] Empty state animation integrated
+- [x] Done check animation integrated
+- [x] Daily complete animation integrated
+- [x] Progress ring animation integrated
+- [x] Haptic feedback added
+- [x] Motion respects calm design direction
 
 ### Review gate
 
-- [ ] No animation crash
-- [ ] No obvious jank
-- [ ] Only meaningful motion remains
+- [x] No animation crash
+- [x] No obvious jank
+- [x] Only meaningful motion remains
 
 ---
 
@@ -210,26 +210,26 @@
 
 ### Templates
 
-- [ ] Template model created
-- [ ] Seed templates created
-- [ ] Templates list built
-- [ ] Template detail built
-- [ ] Apply template flow built
+- [x] Template model created
+- [x] Seed templates created
+- [x] Templates list built
+- [x] Template detail built
+- [x] Apply template flow built
 
 ### Insights
 
-- [ ] InsightsBloc built
-- [ ] Weekly completion metric built
-- [ ] Most completed routine metric built
-- [ ] Most missed routine metric built
-- [ ] Streak metric built
-- [ ] Weekly chart built
+- [x] InsightsBloc built
+- [x] Weekly completion metric built
+- [x] Most completed routine metric built
+- [x] Most missed routine metric built
+- [x] Streak metric built
+- [x] Weekly chart built
 
 ### Review gate
 
-- [ ] Templates entered through Routines flow
-- [ ] No medical claims in template content
-- [ ] Insights are supportive, not judgmental
+- [x] Templates entered through Routines flow
+- [x] No medical claims in template content
+- [x] Insights are supportive, not judgmental
 
 ---
 

@@ -13,6 +13,9 @@ import 'package:openlife_routine/features/routines/domain/usecases/get_routine_u
 import 'package:openlife_routine/features/routines/domain/usecases/update_routine_use_case.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/watch_routines_use_case.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
+import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
+import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,5 +85,13 @@ class AppDependencies {
 
   TodayBloc createTodayBloc() {
     return TodayBloc(appDatabase: appDatabase);
+  }
+
+  TemplateBloc createTemplateBloc() {
+    return TemplateBloc(repository: const TemplateRepository());
+  }
+
+  InsightsBloc createInsightsBloc() {
+    return InsightsBloc(appDatabase: appDatabase);
   }
 }

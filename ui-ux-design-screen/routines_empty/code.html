@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Routines Library | OpenLife Routine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "secondary": "#396281",
+                  "on-primary-fixed": "#131f00",
+                  "on-background": "#1f1b17",
+                  "inverse-primary": "#b3d180",
+                  "surface-soft": "#F0EAE2",
+                  "error": "#ba1a1a",
+                  "inverse-on-surface": "#f8efe8",
+                  "error-container": "#ffdad6",
+                  "surface-container-low": "#fbf2ea",
+                  "on-tertiary-container": "#493400",
+                  "danger": "#E57373",
+                  "surface-bright": "#fff8f3",
+                  "outline": "#75796a",
+                  "secondary-fixed-dim": "#a2cbef",
+                  "surface-container": "#f5ece5",
+                  "on-primary-container": "#283d00",
+                  "on-tertiary-fixed": "#261900",
+                  "on-secondary": "#ffffff",
+                  "accent-soft": "#FFF1C8",
+                  "surface-tint": "#4d6622",
+                  "tertiary-container": "#c39b42",
+                  "inverse-surface": "#34302b",
+                  "on-secondary-fixed-variant": "#1e4a68",
+                  "on-error-container": "#93000a",
+                  "on-error": "#ffffff",
+                  "on-secondary-container": "#355f7e",
+                  "outline-variant": "#c5c8b7",
+                  "on-primary-fixed-variant": "#374e0b",
+                  "surface-container-highest": "#eae1da",
+                  "primary-fixed": "#cfed9a",
+                  "primary-soft": "#DDE8C8",
+                  "on-secondary-fixed": "#001e30",
+                  "secondary-fixed": "#cbe6ff",
+                  "secondary-soft": "#DDEBF5",
+                  "primary-container": "#8eaa5e",
+                  "primary": "#4d6622",
+                  "on-surface-variant": "#44483c",
+                  "tertiary-fixed": "#ffdea1",
+                  "surface": "#FFFFFF",
+                  "border": "#E5DDD3",
+                  "success": "#34C759",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-dim": "#e1d9d1",
+                  "primary-fixed-dim": "#b3d180",
+                  "tertiary": "#795900",
+                  "surface-variant": "#eae1da",
+                  "secondary-container": "#b0d9fd",
+                  "on-primary": "#ffffff",
+                  "on-tertiary": "#ffffff",
+                  "tertiary-fixed-dim": "#edc063",
+                  "sleep-purple": "#9B86BD",
+                  "surface-container-high": "#efe7df",
+                  "background": "#F8F4EE",
+                  "on-tertiary-fixed-variant": "#5c4300",
+                  "on-surface": "#1f1b17"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "card-gap": "16px",
+                  "3xl": "40px",
+                  "2xl": "32px",
+                  "page-margin": "24px",
+                  "unit": "4px",
+                  "md": "12px",
+                  "lg": "16px",
+                  "xs": "4px",
+                  "xl": "24px",
+                  "sm": "8px"
+          },
+          "fontFamily": {
+                  "title-sm": ["Plus Jakarta Sans"],
+                  "headline-md": ["Plus Jakarta Sans"],
+                  "display-lg-mobile": ["Plus Jakarta Sans"],
+                  "body-lg": ["Plus Jakarta Sans"],
+                  "badge-sm": ["Plus Jakarta Sans"],
+                  "body-md": ["Plus Jakarta Sans"],
+                  "label-md": ["Plus Jakarta Sans"],
+                  "display-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+                  "title-sm": ["17px", {"lineHeight": "24px", "fontWeight": "700"}],
+                  "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                  "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-lg": ["15px", {"lineHeight": "22px", "fontWeight": "500"}],
+                  "badge-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                  "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                  "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                  "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #F8F4EE;
+      color: #1f1b17;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    .soft-shadow {
+      shadow: 0px 8px 24px rgba(142, 170, 94, 0.12);
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col items-center">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background dark:bg-background flex justify-between items-center px-page-margin py-md w-full">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center overflow-hidden border border-border">
+<img class="w-full h-full object-cover" data-alt="A soft, professional studio portrait of a friendly young person smiling warmly, lit by natural morning light in a clean, modern apartment setting. The visual style is organic and high-end, using the Serene Routine color palette of warm creams and sage greens to convey a sense of calm wellness and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgYESzmrtKd8FMXKs3-9d82YvlLTUUHXnPSltpwFNaZz4AlLxmfKLo0JVpeubRj2onPokhCh_hA9PQINzyBaYod3ObdpFmiqft8J1BXXdXSUaBxQYGi30QJoU8fdA1VY2rASV2jc7LEZwBBSYgFHE-VGce51iu3tN8UgSHU2XlDk1vWHQNeFulCHOlfZokd4CtRI4Bw7UzDUKatoFBFBlYP5BPTsED4z4xoEHXI8eF1FZliUIrTGpKQ1bkKEmirL_w_tGnjyXaIKY"/>
+</div>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary dark:text-primary-fixed">OpenLife Routine</h1>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-lg px-page-margin flex flex-col items-center justify-center pb-32 pt-12">
+<!-- Empty State Content -->
+<div class="w-full flex flex-col items-center text-center">
+<!-- Vector Illustration Wrapper -->
+<div class="relative w-64 h-64 mb-2xl animate-float">
+<img class="w-full h-full object-contain" data-alt="A beautiful, modern flat vector illustration of a serene character with closed eyes and a gentle smile standing before a minimalist, empty wooden bookshelf. The scene is bathed in warm, soft sunlight streaming from the side, casting gentle shadows. The color palette is composed of sage green, warm cream, and soft terracotta, embodying a tranquil and organic aesthetic that encourages a fresh start." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAakT3ia4_sd3OJG0ISWV9fA2ssns-MaQRuPBZZZL4Zx_leyQVgsuWXWrucEYJr7-QbkRnmNgPjbmFjrLX89or-zyainFMZir3bEidXSKeFI7RjtTETA8q3S6XNV-DzKVsTFxceUG3I0wRZG0so3dLi8qmUcbqVSLtkPjbaq5LRsc61KUZUybmaGO1EAGSLIjW5c4J5uAreCYYoqYhb3DIR3BI-B5pAqW10wCPfj1AOL6eCe1OteFhSvTIqN_HpHgO-8qvxs3AyB_Y"/>
+</div>
+<!-- Text Content -->
+<div class="space-y-sm mb-2xl">
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface">
+          Your Library is Quiet
+        </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[320px] mx-auto">
+          You haven't saved any routines yet. Start by creating your own or explore our templates to get inspired.
+        </p>
+</div>
+<!-- CTAs -->
+<div class="flex flex-col w-full gap-lg">
+<button class="bg-primary text-on-primary rounded-full px-xl py-lg font-title-sm text-title-sm shadow-[0px_8px_24px_rgba(142,170,94,0.12)] active:scale-95 transition-transform">
+          Add My First Routine
+        </button>
+<button class="bg-primary-soft text-primary rounded-full px-xl py-lg font-title-sm text-title-sm active:scale-95 transition-transform">
+          Browse Templates
+        </button>
+</div>
+<!-- Subtle Tip -->
+<div class="mt-2xl p-lg bg-surface border border-border rounded-[24px] flex items-start gap-md text-left">
+<span class="material-symbols-outlined text-primary-container" data-icon="lightbulb" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-xs">Pro Tip</p>
+<p class="font-body-md text-body-md text-on-surface">Saving templates helps you build consistent morning and evening habits faster.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-page-margin pb-8 pt-4 bg-surface dark:bg-surface-container rounded-t-[32px] shadow-[0px_-8px_24px_rgba(142,170,94,0.12)] z-50">
+<!-- Today Tab -->
+<a class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<!-- Routines Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-soft text-primary rounded-full px-5 py-2 scale-95 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="event_note" style="font-variation-settings: 'FILL' 1;">event_note</span>
+<span class="font-label-md text-label-md">Routines</span>
+</a>
+<!-- Insights Tab -->
+<a class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<!-- Settings Tab -->
+<a class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+    // Micro-interaction for the character illustration
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctas = document.querySelectorAll('button');
+      ctas.forEach(cta => {
+        cta.addEventListener('click', () => {
+          // Trigger a subtle haptic-like bounce on click
+          cta.classList.add('scale-90');
+          setTimeout(() => cta.classList.remove('scale-90'), 150);
+        });
+      });
+    });
+  </script>
+</body></html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenLife Routine - Today</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#edc063",
+            "surface-container-low": "#fbf2ea",
+            "surface-soft": "#F0EAE2",
+            "inverse-surface": "#34302b",
+            "secondary-soft": "#DDEBF5",
+            "on-primary-container": "#283d00",
+            "tertiary-container": "#c39b42",
+            "outline-variant": "#c5c8b7",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#ffdea1",
+            "on-primary-fixed-variant": "#374e0b",
+            "on-secondary-fixed-variant": "#1e4a68",
+            "background": "#F8F4EE",
+            "on-surface-variant": "#44483c",
+            "primary-container": "#8eaa5e",
+            "surface-container-highest": "#eae1da",
+            "on-secondary-fixed": "#001e30",
+            "secondary-container": "#b0d9fd",
+            "danger": "#E57373",
+            "primary-fixed": "#cfed9a",
+            "surface-variant": "#eae1da",
+            "on-tertiary-fixed": "#261900",
+            "on-secondary-container": "#355f7e",
+            "secondary-fixed-dim": "#a2cbef",
+            "primary-soft": "#DDE8C8",
+            "on-surface": "#1f1b17",
+            "surface-container": "#f5ece5",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#f8efe8",
+            "sleep-purple": "#9B86BD",
+            "on-tertiary-fixed-variant": "#5c4300",
+            "accent-soft": "#FFF1C8",
+            "primary": "#4d6622",
+            "surface-bright": "#fff8f3",
+            "on-secondary": "#ffffff",
+            "surface": "#FFFFFF",
+            "success": "#34C759",
+            "on-tertiary": "#ffffff",
+            "border": "#E5DDD3",
+            "on-background": "#1f1b17",
+            "surface-dim": "#e1d9d1",
+            "on-primary": "#ffffff",
+            "surface-tint": "#4d6622",
+            "tertiary": "#795900",
+            "secondary": "#396281",
+            "on-primary-fixed": "#131f00",
+            "inverse-primary": "#b3d180",
+            "surface-container-high": "#efe7df",
+            "outline": "#75796a",
+            "on-tertiary-container": "#493400",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#cbe6ff",
+            "primary-fixed-dim": "#b3d180"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px",
+            "card": "24px",
+            "container": "32px"
+          },
+          "spacing": {
+            "2xl": "32px",
+            "xs": "4px",
+            "page-margin": "24px",
+            "3xl": "40px",
+            "xl": "24px",
+            "md": "12px",
+            "unit": "4px",
+            "card-gap": "16px",
+            "lg": "16px",
+            "sm": "8px"
+          },
+          "fontFamily": {
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "badge-sm": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "title-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .soft-shadow {
+      box-shadow: 0px 8px 24px rgba(142, 170, 94, 0.12);
+    }
+    /* Animated atmospheric effect for empty state */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-background dark:bg-inverse-surface flex items-center justify-between px-page-margin py-md z-40">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" style="font-size: 24px;">spa</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">OpenLife Routine</h1>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-soft flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</header>
+<main class="max-w-md mx-auto px-page-margin space-y-2xl pt-lg">
+<!-- Greeting & Date Picker -->
+<section class="space-y-lg">
+<div class="space-y-xs">
+<p class="font-label-md text-label-md text-on-surface-variant">MONDAY, MAY 22</p>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">Good morning, Alex</h2>
+</div>
+<!-- Horizontal Date Picker -->
+<div class="flex gap-md overflow-x-auto hide-scrollbar -mx-page-margin px-page-margin py-xs">
+<!-- Past days -->
+<div class="flex flex-col items-center justify-center min-w-[56px] h-20 rounded-card bg-surface border border-border">
+<span class="font-label-md text-label-md text-on-surface-variant">FRI</span>
+<span class="font-title-sm text-title-sm">19</span>
+</div>
+<div class="flex flex-col items-center justify-center min-w-[56px] h-20 rounded-card bg-surface border border-border">
+<span class="font-label-md text-label-md text-on-surface-variant">SAT</span>
+<span class="font-title-sm text-title-sm">20</span>
+</div>
+<div class="flex flex-col items-center justify-center min-w-[56px] h-20 rounded-card bg-surface border border-border">
+<span class="font-label-md text-label-md text-on-surface-variant">SUN</span>
+<span class="font-title-sm text-title-sm">21</span>
+</div>
+<!-- Active Day -->
+<div class="flex flex-col items-center justify-center min-w-[56px] h-24 rounded-card bg-primary-container text-on-primary-container soft-shadow scale-110">
+<span class="font-label-md text-label-md opacity-80">MON</span>
+<span class="font-display-lg-mobile text-display-lg-mobile">22</span>
+<div class="w-1.5 h-1.5 rounded-full bg-on-primary-container mt-1"></div>
+</div>
+<!-- Future days -->
+<div class="flex flex-col items-center justify-center min-w-[56px] h-20 rounded-card bg-surface border border-border">
+<span class="font-label-md text-label-md text-on-surface-variant">TUE</span>
+<span class="font-title-sm text-title-sm">23</span>
+</div>
+<div class="flex flex-col items-center justify-center min-w-[56px] h-20 rounded-card bg-surface border border-border">
+<span class="font-label-md text-label-md text-on-surface-variant">WED</span>
+<span class="font-title-sm text-title-sm">24</span>
+</div>
+</div>
+</section>
+<!-- Main Content: Empty State -->
+<section class="flex flex-col items-center justify-center text-center py-2xl space-y-xl">
+<!-- Illustration Area -->
+<div class="relative w-full max-w-[280px] aspect-square flex items-center justify-center">
+<!-- Decorative blobs -->
+<div class="absolute inset-0 bg-primary-soft rounded-full opacity-20 blur-3xl animate-pulse"></div>
+<!-- Character Illustration -->
+<div class="relative z-10 w-full h-full flex items-center justify-center animate-float">
+<div class="w-64 h-64 rounded-container overflow-hidden bg-surface-container soft-shadow flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A serene and minimalist digital illustration of a character sitting cross-legged in a cozy, bright room beside a large, leafy green monstera plant. The character is sketching in a blank notebook with a peaceful expression. The aesthetic is clean and modern organic, using a soft color palette of cream, sage green, and warm wood tones. Natural sunlight streams from a window, creating a warm, non-judgmental atmosphere for personal growth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8eL8tqKR8imZSFJl8vCO190uklWTogvgq3TENGTJMJTekC2KFOKQZLtXT9ryEGQjDxuTxDZGpQkWgBXL48j4K_lYFk0t9cjcMROchH25p15KGZRFyoH3KC9ntH2dlgRdUC-jJ7zl1LwmStYuKll-ptRyHxOG4M5T_LZhg6YTY-d5SrmuTLepkBNcX6qD3VVE7I19ekWueJadfPG0NQHwxfjjKiT7QwqmwoyoHkeYj9H4UdF6wi-DRh_C12R8EwdKYWrYul8Wbnls"/>
+</div>
+<!-- Floating elements -->
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-accent-soft rounded-full flex items-center justify-center soft-shadow">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 28px;">edit</span>
+</div>
+<div class="absolute bottom-4 -left-6 w-12 h-12 bg-secondary-soft rounded-full flex items-center justify-center soft-shadow">
+<span class="material-symbols-outlined text-secondary" style="font-size: 24px;">sticky_note_2</span>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="space-y-md max-w-[320px]">
+<h3 class="font-headline-md text-headline-md text-on-surface">Your day is a blank canvas</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          You haven't added any routines for today yet. Start simple with a template or create your own.
+        </p>
+</div>
+<!-- CTAs -->
+<div class="flex flex-col w-full gap-lg pt-md">
+<button class="w-full h-14 bg-primary text-on-primary rounded-full font-title-sm text-title-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined">explore</span>
+          Browse Templates
+        </button>
+<button class="w-full h-14 bg-primary-soft text-primary rounded-full font-title-sm text-title-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined">add</span>
+          Add Custom Routine
+        </button>
+</div>
+</section>
+<!-- Tip Card -->
+<section class="bg-surface border border-border rounded-card p-xl flex gap-lg items-start">
+<div class="w-10 h-10 shrink-0 bg-tertiary-fixed-dim/30 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">lightbulb</span>
+</div>
+<div class="space-y-xs">
+<h4 class="font-title-sm text-title-sm text-on-surface">Pro Tip</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Adding just one morning routine can boost your productivity by 20%.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-surface dark:bg-surface-container-highest flex justify-around items-center px-lg pb-safe shadow-[0px_-8px_24px_rgba(142,170,94,0.12)] rounded-t-3xl z-50">
+<!-- Today (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<!-- Routines -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-md text-label-md">Routines</span>
+</a>
+<!-- Insights -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- FAB (Contextual for Dashboard) -->
+<button class="fixed bottom-24 right-page-margin w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center soft-shadow transition-transform active:scale-90 z-40">
+<span class="material-symbols-outlined" style="font-size: 28px;">add</span>
+</button>
+<script>
+    // Simple logic to handle date picker clicks (visual only)
+    const dateItems = document.querySelectorAll('.overflow-x-auto > div');
+    dateItems.forEach(item => {
+      item.addEventListener('click', () => {
+        dateItems.forEach(i => {
+          i.classList.remove('bg-primary-container', 'text-on-primary-container', 'scale-110', 'soft-shadow');
+          i.classList.add('bg-surface', 'border', 'border-border');
+          const dot = i.querySelector('.rounded-full');
+          if (dot) dot.remove();
+        });
+        
+        item.classList.remove('bg-surface', 'border', 'border-border');
+        item.classList.add('bg-primary-container', 'text-on-primary-container', 'scale-110', 'soft-shadow');
+        
+        // Add indicator dot
+        const dot = document.createElement('div');
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-on-primary-container mt-1';
+        item.appendChild(dot);
+      });
+    });
+  </script>
+</body></html>

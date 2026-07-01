@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenLife Routine - Stay in your flow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-container-lowest": "#ffffff",
+                  "tertiary-fixed-dim": "#edc063",
+                  "surface-container-low": "#fbf2ea",
+                  "surface-soft": "#F0EAE2",
+                  "inverse-surface": "#34302b",
+                  "secondary-soft": "#DDEBF5",
+                  "on-primary-container": "#283d00",
+                  "tertiary-container": "#c39b42",
+                  "outline-variant": "#c5c8b7",
+                  "on-error": "#ffffff",
+                  "error-container": "#ffdad6",
+                  "tertiary-fixed": "#ffdea1",
+                  "on-primary-fixed-variant": "#374e0b",
+                  "on-secondary-fixed-variant": "#1e4a68",
+                  "background": "#F8F4EE",
+                  "on-surface-variant": "#44483c",
+                  "primary-container": "#8eaa5e",
+                  "surface-container-highest": "#eae1da",
+                  "on-secondary-fixed": "#001e30",
+                  "secondary-container": "#b0d9fd",
+                  "danger": "#E57373",
+                  "primary-fixed": "#cfed9a",
+                  "surface-variant": "#eae1da",
+                  "on-tertiary-fixed": "#261900",
+                  "on-secondary-container": "#355f7e",
+                  "secondary-fixed-dim": "#a2cbef",
+                  "primary-soft": "#DDE8C8",
+                  "on-surface": "#1f1b17",
+                  "surface-container": "#f5ece5",
+                  "on-error-container": "#93000a",
+                  "inverse-on-surface": "#f8efe8",
+                  "sleep-purple": "#9B86BD",
+                  "on-tertiary-fixed-variant": "#5c4300",
+                  "accent-soft": "#FFF1C8",
+                  "primary": "#4d6622",
+                  "surface-bright": "#fff8f3",
+                  "on-secondary": "#ffffff",
+                  "surface": "#FFFFFF",
+                  "success": "#34C759",
+                  "on-tertiary": "#ffffff",
+                  "border": "#E5DDD3",
+                  "on-background": "#1f1b17",
+                  "surface-dim": "#e1d9d1",
+                  "on-primary": "#ffffff",
+                  "surface-tint": "#4d6622",
+                  "tertiary": "#795900",
+                  "secondary": "#396281",
+                  "on-primary-fixed": "#131f00",
+                  "inverse-primary": "#b3d180",
+                  "surface-container-high": "#efe7df",
+                  "outline": "#75796a",
+                  "on-tertiary-container": "#493400",
+                  "error": "#ba1a1a",
+                  "secondary-fixed": "#cbe6ff",
+                  "primary-fixed-dim": "#b3d180"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "2xl": "32px",
+                  "xs": "4px",
+                  "page-margin": "24px",
+                  "3xl": "40px",
+                  "xl": "24px",
+                  "md": "12px",
+                  "unit": "4px",
+                  "card-gap": "16px",
+                  "lg": "16px",
+                  "sm": "8px"
+          },
+          "fontFamily": {
+                  "headline-md": ["Plus Jakarta Sans"],
+                  "display-lg-mobile": ["Plus Jakarta Sans"],
+                  "label-md": ["Plus Jakarta Sans"],
+                  "body-md": ["Plus Jakarta Sans"],
+                  "badge-sm": ["Plus Jakarta Sans"],
+                  "display-lg": ["Plus Jakarta Sans"],
+                  "title-sm": ["Plus Jakarta Sans"],
+                  "body-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+                  "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                  "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                  "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                  "badge-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                  "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "title-sm": ["17px", {"lineHeight": "24px", "fontWeight": "700"}],
+                  "body-lg": ["15px", {"lineHeight": "22px", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .pulse-glow {
+      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .float-slow {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .ripple-surface {
+      background: radial-gradient(circle, rgba(142, 170, 94, 0.1) 0%, transparent 70%);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center overflow-hidden">
+<!-- Suppression of Shell: No TopAppBar or BottomNavBar as requested for transactional/focused journey -->
+<main class="relative w-full max-w-[440px] mx-auto px-page-margin flex flex-col items-center justify-center">
+<!-- Background Atmospheric Effect -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="ripple-surface absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-40"></div>
+</div>
+<!-- Illustration Section -->
+<div class="relative w-64 h-64 flex items-center justify-center mb-2xl">
+<!-- Animated Background Circles -->
+<div class="absolute w-48 h-48 bg-primary-soft rounded-full pulse-glow opacity-30"></div>
+<div class="absolute w-64 h-64 bg-primary-soft rounded-full pulse-glow opacity-10" style="animation-delay: 1.5s;"></div>
+<!-- Central Bell Illustration Wrapper -->
+<div class="relative float-slow flex items-center justify-center">
+<div class="bg-surface p-xl rounded-[40px] shadow-[0px_8px_24px_rgba(142,170,94,0.12)] border border-border">
+<span class="material-symbols-outlined text-primary text-[80px]" style="font-variation-settings: 'FILL' 1;">
+            notifications_active
+          </span>
+</div>
+<!-- Small Accessory Orbs -->
+<div class="absolute -top-4 -right-2 w-8 h-8 bg-accent-soft rounded-full border-2 border-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div class="absolute -bottom-2 -left-6 w-12 h-12 bg-secondary-soft rounded-full border-2 border-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="text-center z-10 mb-2xl">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-background mb-md">
+        Stay in your flow
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[320px] mx-auto">
+        Allow notifications to receive gentle reminders for your routines. You can customize or snooze them anytime.
+      </p>
+</div>
+<!-- Feature Bento Minimalist Cards -->
+<div class="w-full grid grid-cols-1 gap-lg mb-3xl">
+<div class="bg-surface rounded-2xl p-lg border border-border flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm">Smart Reminders</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Gentle nudges when it matters.</span>
+</div>
+</div>
+<div class="bg-surface rounded-2xl p-lg border border-border flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-soft flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">bedtime</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm">Quiet Hours</span>
+<span class="font-label-md text-label-md text-on-surface-variant">We never disturb your focus or sleep.</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="w-full flex flex-col gap-md z-10">
+<button class="w-full py-4 bg-primary text-on-primary rounded-full font-title-sm text-title-sm shadow-[0px_8px_24px_rgba(142,170,94,0.12)] active:scale-[0.98] transition-all duration-200" onclick="requestPermission()">
+        Enable Notifications
+      </button>
+<button class="w-full py-4 bg-surface-soft text-primary rounded-full font-title-sm text-title-sm active:scale-[0.98] transition-all duration-200">
+        Maybe Later
+      </button>
+</div>
+<!-- Decorative Bottom Gradient -->
+<div class="fixed bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+</main>
+<script>
+    function requestPermission() {
+      const btn = event.currentTarget;
+      const originalText = btn.innerHTML;
+      
+      // Micro-interaction simulation
+      btn.classList.add('scale-95');
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span>';
+      
+      setTimeout(() => {
+        btn.classList.remove('scale-95');
+        btn.innerHTML = '<span class="material-symbols-outlined mr-2">check</span> Enabled';
+        btn.classList.remove('bg-primary');
+        btn.classList.add('bg-success');
+        
+        // Trigger subtle haptic-like effect or move to next screen logic
+        console.log("Notification permission flow triggered");
+      }, 1200);
+    }
+
+    // Interactive Floating Element script
+    document.addEventListener('mousemove', (e) => {
+      const moveX = (e.clientX - window.innerWidth / 2) / 50;
+      const moveY = (e.clientY - window.innerHeight / 2) / 50;
+      document.querySelector('.float-slow').style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+  </script>
+</body></html>

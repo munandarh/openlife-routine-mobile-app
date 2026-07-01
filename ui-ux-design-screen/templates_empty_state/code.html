@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenLife Routine - Templates Coming Soon</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#396281",
+                    "on-primary-fixed": "#131f00",
+                    "on-background": "#1f1b17",
+                    "inverse-primary": "#b3d180",
+                    "surface-soft": "#F0EAE2",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f8efe8",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#fbf2ea",
+                    "on-tertiary-container": "#493400",
+                    "danger": "#E57373",
+                    "surface-bright": "#fff8f3",
+                    "outline": "#75796a",
+                    "secondary-fixed-dim": "#a2cbef",
+                    "surface-container": "#f5ece5",
+                    "on-primary-container": "#283d00",
+                    "on-tertiary-fixed": "#261900",
+                    "on-secondary": "#ffffff",
+                    "accent-soft": "#FFF1C8",
+                    "surface-tint": "#4d6622",
+                    "tertiary-container": "#c39b42",
+                    "inverse-surface": "#34302b",
+                    "on-secondary-fixed-variant": "#1e4a68",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "on-secondary-container": "#355f7e",
+                    "outline-variant": "#c5c8b7",
+                    "on-primary-fixed-variant": "#374e0b",
+                    "surface-container-highest": "#eae1da",
+                    "primary-fixed": "#cfed9a",
+                    "primary-soft": "#DDE8C8",
+                    "on-secondary-fixed": "#001e30",
+                    "secondary-fixed": "#cbe6ff",
+                    "secondary-soft": "#DDEBF5",
+                    "primary-container": "#8eaa5e",
+                    "primary": "#4d6622",
+                    "on-surface-variant": "#44483c",
+                    "tertiary-fixed": "#ffdea1",
+                    "surface": "#FFFFFF",
+                    "border": "#E5DDD3",
+                    "success": "#34C759",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-dim": "#e1d9d1",
+                    "primary-fixed-dim": "#b3d180",
+                    "tertiary": "#795900",
+                    "surface-variant": "#eae1da",
+                    "secondary-container": "#b0d9fd",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#edc063",
+                    "sleep-purple": "#9B86BD",
+                    "surface-container-high": "#efe7df",
+                    "background": "#F8F4EE",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-surface": "#1f1b17"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-gap": "16px",
+                    "3xl": "40px",
+                    "2xl": "32px",
+                    "page-margin": "24px",
+                    "unit": "4px",
+                    "md": "12px",
+                    "lg": "16px",
+                    "xs": "4px",
+                    "xl": "24px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "badge-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "title-sm": ["17px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["15px", {"lineHeight": "22px", "fontWeight": "500"}],
+                    "badge-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F8F4EE;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .seedling-float {
+            animation: floating 3s ease-in-out infinite;
+        }
+        .star-sparkle {
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background w-full top-0 sticky z-50 transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center px-page-margin py-md w-full">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center overflow-hidden border border-border">
+<img class="w-full h-full object-cover" data-alt="A soft, professional studio portrait of a friendly young adult smiling warmly, set against a blurred warm cream background with natural soft lighting. The aesthetic is clean, organic, and calm, reflecting the Serene Routine brand identity with muted sage green and earth tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBDOf18JuZFr6gh75Xk5UDHEgfscszAM8V2Xi5F9hKmzFJdFCF0ogjeOWOuaDG6lylPxFr_dfZI1kpDPezActTRlT400NPI7ca3PWVlhDpE_vDQFqrY_4mXmBIYX-6QDGxGBh1qvrB1c6Qi6H4W1Hn-pLreYMeTzXRFAzautKHomEGcj90LpHNcd8hSnz5CCQub8uPRtGHPcffVjjSl2DqJvrysiUCclI8DuXaxhHLh7w_t3PvwYGkDZm_LmAifGaq2hy2K89_Lxc"/>
+</div>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-primary dark:text-primary-fixed">OpenLife Routine</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-page-margin pb-32 pt-8 text-center">
+<!-- Illustration Section -->
+<div class="relative mb-xl w-full max-w-[320px] aspect-square flex items-center justify-center">
+<!-- Decorative Background Element -->
+<div class="absolute inset-0 bg-primary-soft/30 rounded-full blur-3xl -z-10"></div>
+<!-- Animated Seedling Illustration -->
+<div class="seedling-float relative">
+<img class="w-56 h-56 object-contain drop-shadow-sm" data-alt="A charming, minimalist vector illustration of a tiny green seedling sprouting from a small mound of rich dark soil. The plant has two soft heart-shaped leaves in a gentle sage green color. Surrounding the seedling are several stylized golden twinkling stars and soft floating particles on a warm cream background, evoking a sense of growth, potential, and calm productivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcDMhMFtOEN_2bAtc3uJuJGDFNUynTyiUbjF8i_ZpMhfefCXg46hetDNn71nnjfup_xjYRpw4St8lay1yGwU_KdsafNmUPvkWYy_V66ERzygmNU3XO6OxU9rXbYRB0_gQ3rj351pUrrRZsLBv42xxM9exBpQ3IGPhn491WgsVeh-fcXloIuvhMKnKiOv4Ht2plw_g1-AKpX-hfEpF3HItcUW1VidyzFuiiK-h5xro2MdPLcvvvZroOsWVNoVy0f0J66kyCOThbLQg"/>
+<!-- Floating Icons/Stars for added life -->
+<div class="absolute -top-4 -right-4 star-sparkle delay-75">
+<span class="material-symbols-outlined text-tertiary text-2xl" style="font-variation-settings: 'FILL' 1;">spark</span>
+</div>
+<div class="absolute top-12 -left-8 star-sparkle delay-300">
+<span class="material-symbols-outlined text-primary-container text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="absolute bottom-8 -right-6 star-sparkle delay-500">
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="max-w-md">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-md">Ready to Bloom?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-2xl px-sm">
+                Our routine templates are being prepared just for you. Soon you will find expertly crafted routines for hydration, sleep, and more.
+            </p>
+</div>
+<!-- CTA Action -->
+<button class="bg-primary text-on-primary font-title-sm text-title-sm px-2xl py-lg rounded-full active:scale-95 transition-transform shadow-sm hover:opacity-90" onclick="console.log('Navigating to Today')">
+            Go back to Today
+        </button>
+<!-- Feature Teasers (Subtle) -->
+<div class="mt-3xl grid grid-cols-3 gap-md w-full max-w-sm">
+<div class="flex flex-col items-center opacity-60">
+<div class="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center mb-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="water_drop">water_drop</span>
+</div>
+<span class="font-label-md text-label-md">Hydration</span>
+</div>
+<div class="flex flex-col items-center opacity-60">
+<div class="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center mb-xs">
+<span class="material-symbols-outlined text-sleep-purple" data-icon="bedtime">bedtime</span>
+</div>
+<span class="font-label-md text-label-md">Sleep</span>
+</div>
+<div class="flex flex-col items-center opacity-60">
+<div class="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center mb-xs">
+<span class="material-symbols-outlined text-tertiary" data-icon="self_improvement">self_improvement</span>
+</div>
+<span class="font-label-md text-label-md">Mindful</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface-container rounded-t-[32px] shadow-[0px_-8px_24px_rgba(142,170,94,0.12)] flex justify-around items-center px-page-margin pb-8 pt-4">
+<!-- Today Tab -->
+<button class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</button>
+<!-- Routines (Templates) Tab - Active State -->
+<button class="flex flex-col items-center justify-center bg-primary-soft text-primary rounded-full px-5 py-2 scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="event_note" style="font-variation-settings: 'FILL' 1;">event_note</span>
+<span class="font-label-md text-label-md">Routines</span>
+</button>
+<!-- Insights Tab -->
+<button class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Insights</span>
+</button>
+<!-- Settings Tab -->
+<button class="flex flex-col items-center justify-center text-outline px-5 py-2 hover:text-primary transition-colors scale-95 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for the CTA button
+        const ctaBtn = document.querySelector('button[onclick*="Today"]');
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', () => {
+                // Flash effect or small haptic simulation
+                ctaBtn.style.opacity = '0.5';
+                setTimeout(() => {
+                    ctaBtn.style.opacity = '1';
+                    alert('Returning you to your daily flow...');
+                }, 200);
+            });
+        }
+
+        // Handle navigation clicks for visual feedback in prototype
+        const navButtons = document.querySelectorAll('nav button');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                navButtons.forEach(b => {
+                    b.classList.remove('bg-primary-soft', 'text-primary', 'rounded-full');
+                    b.classList.add('text-outline');
+                });
+                this.classList.remove('text-outline');
+                this.classList.add('bg-primary-soft', 'text-primary', 'rounded-full');
+            });
+        });
+    </script>
+</body></html>

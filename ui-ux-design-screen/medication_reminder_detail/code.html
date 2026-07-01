@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenLife Routine - Medication Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#493400",
+                        "on-surface-variant": "#44483c",
+                        "outline-variant": "#c5c8b7",
+                        "outline": "#75796a",
+                        "on-secondary-fixed": "#001e30",
+                        "surface-dim": "#e1d9d1",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b3d180",
+                        "surface-tint": "#4d6622",
+                        "surface-bright": "#fff8f3",
+                        "tertiary-container": "#c39b42",
+                        "surface-container-highest": "#eae1da",
+                        "inverse-surface": "#34302b",
+                        "on-primary-container": "#283d00",
+                        "surface-container": "#f5ece5",
+                        "tertiary-fixed-dim": "#edc063",
+                        "surface-container-low": "#fbf2ea",
+                        "primary-soft": "#DDE8C8",
+                        "error": "#ba1a1a",
+                        "background": "#F8F4EE",
+                        "surface-soft": "#F0EAE2",
+                        "accent-soft": "#FFF1C8",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#eae1da",
+                        "on-background": "#1f1b17",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#FFFFFF",
+                        "on-primary-fixed-variant": "#374e0b",
+                        "tertiary-fixed": "#ffdea1",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#cbe6ff",
+                        "sleep-purple": "#9B86BD",
+                        "on-secondary-container": "#355f7e",
+                        "on-tertiary-fixed": "#261900",
+                        "on-secondary-fixed-variant": "#1e4a68",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1f1b17",
+                        "tertiary": "#795900",
+                        "primary-fixed": "#cfed9a",
+                        "border": "#E5DDD3",
+                        "secondary-fixed-dim": "#a2cbef",
+                        "primary": "#4d6622",
+                        "surface-container-high": "#efe7df",
+                        "primary-container": "#8eaa5e",
+                        "danger": "#E57373",
+                        "secondary-container": "#b0d9fd",
+                        "inverse-on-surface": "#f8efe8",
+                        "secondary": "#396281",
+                        "primary-fixed-dim": "#b3d180",
+                        "on-primary-fixed": "#131f00",
+                        "secondary-soft": "#DDEBF5",
+                        "success": "#34C759",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "24px",
+                        "sm": "8px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "page-margin": "24px",
+                        "xs": "4px",
+                        "card-gap": "16px",
+                        "2xl": "32px",
+                        "unit": "4px",
+                        "3xl": "40px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "title-sm": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "badge-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 221, 211, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar (Sticky) -->
+<header class="w-full top-0 sticky z-40 bg-background flex items-center justify-between px-page-margin py-md">
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-soft transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">OpenLife Routine</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-soft transition-colors">
+<span class="material-symbols-outlined text-on-surface">edit</span>
+</button>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-page-margin mt-xl space-y-2xl">
+<!-- Hero Section: Routine Identity -->
+<section class="relative overflow-hidden rounded-[32px] bg-primary-soft p-xl flex flex-col items-center text-center">
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-primary rounded-full opacity-10 blur-3xl"></div>
+<div class="absolute -bottom-12 -left-12 w-48 h-48 bg-accent-soft rounded-full opacity-30 blur-2xl"></div>
+<div class="w-20 h-20 bg-surface rounded-3xl flex items-center justify-center shadow-[0px_8px_24px_rgba(142,170,94,0.12)] mb-lg relative z-10">
+<span class="material-symbols-outlined text-[40px] text-primary filled-icon">medication</span>
+</div>
+<div class="space-y-xs relative z-10">
+<div class="inline-flex items-center gap-xs px-md py-xs bg-accent-soft rounded-full text-on-tertiary-fixed-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                    8:00 AM • Daily
+                </div>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-primary-container mt-sm">Morning Vitamins</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">Essential nutrients to kickstart your day with energy and focus.</p>
+</div>
+<!-- Due Status Chip -->
+<div class="mt-xl flex items-center gap-sm bg-white/50 backdrop-blur-md px-lg py-md rounded-2xl border border-white/40">
+<div class="w-3 h-3 bg-tertiary rounded-full animate-pulse"></div>
+<span class="font-title-sm text-title-sm text-on-surface">Due in 15 mins</span>
+</div>
+</section>
+<!-- Bento Grid: Details & Instructions -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Instruction Card -->
+<div class="md:col-span-2 bg-surface rounded-3xl border border-border p-xl space-y-lg">
+<h3 class="font-title-sm text-title-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">info</span>
+                    Instructions
+                </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="flex items-start gap-md p-md bg-surface-container-low rounded-2xl">
+<span class="material-symbols-outlined text-secondary">restaurant</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Condition</p>
+<p class="font-body-md text-body-md font-bold">With breakfast</p>
+</div>
+</div>
+<div class="flex items-start gap-md p-md bg-surface-container-low rounded-2xl">
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Intake</p>
+<p class="font-body-md text-body-md font-bold">Full glass of water</p>
+</div>
+</div>
+</div>
+<div class="p-md rounded-2xl bg-on-surface/5 border border-dashed border-outline-variant">
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                        "Do not skip if you feel healthy. Consistent levels are key for effectiveness."
+                    </p>
+</div>
+</div>
+<!-- Dosage Card -->
+<div class="bg-secondary-soft rounded-3xl p-xl flex flex-col justify-between items-center text-center">
+<span class="material-symbols-outlined text-[32px] text-secondary">pill</span>
+<div>
+<p class="font-label-md text-label-md text-on-secondary-container uppercase tracking-widest">Dosage</p>
+<h4 class="font-display-lg-mobile text-display-lg-mobile text-secondary">2 Capsules</h4>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant">Multivitamin + Omega 3</p>
+</div>
+<div class="w-full h-1 bg-secondary-container rounded-full mt-lg overflow-hidden">
+<div class="w-3/4 h-full bg-secondary"></div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-sm">24 capsules left</p>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="flex flex-col gap-lg">
+<button class="group w-full bg-primary text-on-primary font-title-sm text-title-sm py-xl rounded-3xl flex items-center justify-center gap-md hover:opacity-90 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined group-hover:scale-125 transition-transform">check_circle</span>
+                Log Routine Completed
+            </button>
+<div class="grid grid-cols-2 gap-lg">
+<button class="bg-surface border border-border text-on-surface font-title-sm text-title-sm py-lg rounded-3xl flex items-center justify-center gap-sm hover:bg-surface-soft transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-primary">snooze</span>
+                    Snooze 15m
+                </button>
+<button class="bg-surface border border-border text-on-surface font-title-sm text-title-sm py-lg rounded-3xl flex items-center justify-center gap-sm hover:bg-surface-soft transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-danger">cancel</span>
+                    Skip Today
+                </button>
+</div>
+</section>
+<!-- Insights & History -->
+<section class="space-y-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Last 7 Days</h3>
+<div class="flex items-center gap-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] filled-icon">trending_up</span>
+                    94% Streak
+                </div>
+</div>
+<!-- Asymmetric History Layout -->
+<div class="flex justify-between items-end gap-sm h-32 px-md py-lg bg-surface border border-border rounded-3xl overflow-hidden relative">
+<!-- Data bars with tooltips -->
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary-soft rounded-t-xl h-24 transition-all group-hover:bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">M</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary-soft rounded-t-xl h-20 transition-all group-hover:bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">T</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary-soft rounded-t-xl h-28 transition-all group-hover:bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">W</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-danger/20 rounded-t-xl h-10 transition-all group-hover:bg-danger/40 border-b-2 border-danger"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">T</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary-soft rounded-t-xl h-24 transition-all group-hover:bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">F</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary-soft rounded-t-xl h-22 transition-all group-hover:bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-xs">S</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary rounded-t-xl h-26"></div>
+<span class="font-label-md text-label-md text-primary font-bold mt-xs">S</span>
+</div>
+<!-- Ambient depth line -->
+<div class="absolute bottom-[28px] left-0 w-full h-[1px] bg-border/50"></div>
+</div>
+<!-- Completion Log -->
+<div class="space-y-md">
+<div class="bg-surface rounded-2xl border border-border p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-success/15 rounded-full flex items-center justify-center text-success">
+<span class="material-symbols-outlined filled-icon">done_all</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold">Logged Yesterday</p>
+<p class="font-label-md text-label-md text-on-surface-variant">8:04 AM • On-time</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="bg-surface rounded-2xl border border-border p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-soft rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold">Detailed Analytics</p>
+<p class="font-label-md text-label-md text-on-surface-variant">View your 30-day trends</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile Primary Shell) -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-surface dark:bg-surface-container-highest flex justify-around items-center px-lg pb-safe shadow-[0px_-8px_24px_rgba(142,170,94,0.12)] z-50 rounded-t-3xl">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined filled-icon" data-icon="today">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+<span class="font-label-md text-label-md">Routines</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Subtle feedback for touch/click
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Simulating the "Log Routine" rewarding experience
+        const logBtn = document.querySelector('button.bg-primary');
+        logBtn.addEventListener('click', () => {
+            const originalContent = logBtn.innerHTML;
+            logBtn.innerHTML = `
+                <span class="material-symbols-outlined animate-bounce">celebration</span>
+                Successfully Logged!
+            `;
+            logBtn.classList.remove('bg-primary');
+            logBtn.classList.add('bg-success');
+            
+            setTimeout(() => {
+                logBtn.innerHTML = originalContent;
+                logBtn.classList.remove('bg-success');
+                logBtn.classList.add('bg-primary');
+            }, 3000);
+        });
+    </script>
+<style>
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</body></html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenLife Routine - Insights</title>
+<!-- Google Fonts: Plus Jakarta Sans for the Modern Organic aesthetic -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#edc063",
+                    "surface-container-low": "#fbf2ea",
+                    "surface-soft": "#F0EAE2",
+                    "inverse-surface": "#34302b",
+                    "secondary-soft": "#DDEBF5",
+                    "on-primary-container": "#283d00",
+                    "tertiary-container": "#c39b42",
+                    "outline-variant": "#c5c8b7",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#ffdea1",
+                    "on-primary-fixed-variant": "#374e0b",
+                    "on-secondary-fixed-variant": "#1e4a68",
+                    "background": "#F8F4EE",
+                    "on-surface-variant": "#44483c",
+                    "primary-container": "#8eaa5e",
+                    "surface-container-highest": "#eae1da",
+                    "on-secondary-fixed": "#001e30",
+                    "secondary-container": "#b0d9fd",
+                    "danger": "#E57373",
+                    "primary-fixed": "#cfed9a",
+                    "surface-variant": "#eae1da",
+                    "on-tertiary-fixed": "#261900",
+                    "on-secondary-container": "#355f7e",
+                    "secondary-fixed-dim": "#a2cbef",
+                    "primary-soft": "#DDE8C8",
+                    "on-surface": "#1f1b17",
+                    "surface-container": "#f5ece5",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#f8efe8",
+                    "sleep-purple": "#9B86BD",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "accent-soft": "#FFF1C8",
+                    "primary": "#4d6622",
+                    "surface-bright": "#fff8f3",
+                    "on-secondary": "#ffffff",
+                    "surface": "#FFFFFF",
+                    "success": "#34C759",
+                    "on-tertiary": "#ffffff",
+                    "border": "#E5DDD3",
+                    "on-background": "#1f1b17",
+                    "surface-dim": "#e1d9d1",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4d6622",
+                    "tertiary": "#795900",
+                    "secondary": "#396281",
+                    "on-primary-fixed": "#131f00",
+                    "inverse-primary": "#b3d180",
+                    "surface-container-high": "#efe7df",
+                    "outline": "#75796a",
+                    "on-tertiary-container": "#493400",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#cbe6ff",
+                    "primary-fixed-dim": "#b3d180"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "2xl": "32px",
+                    "xs": "4px",
+                    "page-margin": "24px",
+                    "3xl": "40px",
+                    "xl": "24px",
+                    "md": "12px",
+                    "unit": "4px",
+                    "card-gap": "16px",
+                    "lg": "16px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "badge-sm": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "title-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "badge-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["17px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "body-lg": ["15px", {"lineHeight": "22px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .soft-shadow {
+            shadow-[0px_8px_24px_rgba(142,170,94,0.12)];
+        }
+        .nav-shadow {
+            box-shadow: 0px -8px 24px rgba(142, 170, 94, 0.12);
+        }
+        /* Micro-interaction for the illustration */
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-anim {
+            animation: gentle-float 4s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar Shell -->
+<header class="w-full top-0 sticky z-50 bg-background dark:bg-inverse-surface flex items-center justify-between px-page-margin py-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary text-[28px]" data-icon="spa">spa</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">OpenLife Routine</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-soft transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col items-center justify-center px-page-margin pb-32 text-center">
+<!-- Illustration Container -->
+<div class="relative w-full max-w-sm aspect-square flex items-center justify-center mb-xl">
+<!-- Decorative Background Elements -->
+<div class="absolute inset-0 bg-primary-soft/30 rounded-full blur-3xl scale-75"></div>
+<!-- Main Empty State Illustration -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-64 h-64 rounded-3xl overflow-hidden float-anim flex items-center justify-center">
+<img class="w-full h-full object-contain" data-alt="A serene and minimalist organic illustration of a single small green plant sprouting from a soft mound of earth. The background is a clean, creamy off-white color with soft, diffused golden morning light. The style is modern vector art with high-quality gradients and a calming, spa-like aesthetic. Minimalist shapes and a limited palette of olive greens and warm neutrals evoke a sense of quiet growth and potential." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA97hZFWyah_wIFsc4eVMJOgfpOlhIQ5qdYUol_pXkbRMPb3AplTmGlqXJSTDBasTHG1JaA0QHKDWZ0r-K87AhZXqXQtUPq_mq7FCoT5XEOrqM0oaXZyQovKtRA7JKXXiHQMZtigJxi2k2MfHzuq8JRhpD9Crwma8Etsl8qB7_sZUQfMZXXWPlbDNuO0MuAo4b50pKBNEqsPWWCzjyJW-6I4rnrlWFGfsdhGkzmU7e1Z9FV6qgoWLGuQGQvOlDQhxVrBDOTSgzBTXM"/>
+</div>
+<!-- Floating Decorative Chips -->
+<div class="absolute top-0 right-0 p-lg bg-surface rounded-2xl border border-border nav-shadow -rotate-6 hidden md:block">
+<span class="material-symbols-outlined text-success" data-icon="show_chart">show_chart</span>
+</div>
+<div class="absolute bottom-8 left-0 p-md bg-secondary-soft rounded-2xl border border-border nav-shadow rotate-3 hidden md:block">
+<span class="material-symbols-outlined text-secondary" data-icon="star">star</span>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="max-w-xs mx-auto">
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-surface mb-sm">Insights will grow with you</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-xl px-4">
+                Complete your first few routines to see your consistency and progress trends here.
+            </p>
+</div>
+<!-- Action Area -->
+<button class="bg-primary text-on-primary font-title-sm text-title-sm px-xl py-md rounded-full shadow-lg active:scale-95 transition-all duration-200">
+            Start a Routine
+        </button>
+<!-- Subtle Background Detail -->
+<div class="mt-2xl flex gap-xs items-center opacity-40">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-surface dark:bg-surface-container-highest flex justify-around items-center px-lg pb-safe z-50 rounded-t-3xl nav-shadow">
+<!-- Today Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</button>
+<!-- Routines Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out">
+<span class="material-symbols-outlined mb-1" data-icon="event_repeat">event_repeat</span>
+<span class="font-label-md text-label-md">Routines</span>
+</button>
+<!-- Insights Tab (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined mb-1" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-md text-label-md">Insights</span>
+</button>
+<!-- Settings Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</button>
+</nav>
+<script>
+        // Simple Micro-interaction for the 'Start Routine' button hover
+        const startBtn = document.querySelector('button.bg-primary');
+        if (startBtn) {
+            startBtn.addEventListener('mouseenter', () => {
+                startBtn.classList.add('px-2xl');
+            });
+            startBtn.addEventListener('mouseleave', () => {
+                startBtn.classList.remove('px-2xl');
+            });
+        }
+
+        // Handle navigation active states (Visual only for this mockup)
+        const navButtons = document.querySelectorAll('nav button');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                navButtons.forEach(b => {
+                    b.className = "flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 ease-out";
+                    const icon = b.querySelector('.material-symbols-outlined');
+                    if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                
+                btn.className = "flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-all duration-300 ease-out";
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

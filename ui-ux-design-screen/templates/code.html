@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templates - Calm Productivity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#c39b42",
+                        "outline-variant": "#c5c8b7",
+                        "background": "#F8F4EE",
+                        "secondary-container": "#b0d9fd",
+                        "inverse-on-surface": "#f8efe8",
+                        "accent-soft": "#FFF1C8",
+                        "on-primary-container": "#283d00",
+                        "on-surface-variant": "#44483c",
+                        "surface-tint": "#4d6622",
+                        "surface-container": "#f5ece5",
+                        "danger": "#E57373",
+                        "on-tertiary": "#ffffff",
+                        "sleep-purple": "#9B86BD",
+                        "on-secondary-fixed": "#001e30",
+                        "on-primary-fixed-variant": "#374e0b",
+                        "secondary-soft": "#DDEBF5",
+                        "primary-fixed-dim": "#b3d180",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b3d180",
+                        "secondary-fixed": "#cbe6ff",
+                        "surface-container-lowest": "#ffffff",
+                        "border": "#E5DDD3",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "surface-bright": "#fff8f3",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#fbf2ea",
+                        "surface-soft": "#F0EAE2",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-fixed-variant": "#1e4a68",
+                        "secondary": "#396281",
+                        "surface-container-high": "#efe7df",
+                        "tertiary-fixed-dim": "#edc063",
+                        "on-primary-fixed": "#131f00",
+                        "on-secondary-container": "#355f7e",
+                        "on-tertiary-container": "#493400",
+                        "surface": "#FFFFFF",
+                        "primary-soft": "#DDE8C8",
+                        "surface-container-highest": "#eae1da",
+                        "primary-container": "#8eaa5e",
+                        "on-tertiary-fixed": "#261900",
+                        "primary-fixed": "#cfed9a",
+                        "outline": "#75796a",
+                        "on-surface": "#1f1b17",
+                        "tertiary": "#795900",
+                        "surface-dim": "#e1d9d1",
+                        "tertiary-fixed": "#ffdea1",
+                        "success": "#34C759",
+                        "on-background": "#1f1b17",
+                        "secondary-fixed-dim": "#a2cbef",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "primary": "#4d6622",
+                        "inverse-surface": "#34302b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem",
+                        "3xl": "2rem"
+                    },
+                    "spacing": {
+                        "card-gap": "16px",
+                        "xl": "24px",
+                        "sm": "8px",
+                        "page-margin": "24px",
+                        "md": "12px",
+                        "lg": "16px",
+                        "unit": "4px",
+                        "2xl": "32px",
+                        "xs": "4px",
+                        "3xl": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "badge-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "title-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "badge-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "title-sm": ["17px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background dark:bg-background flex justify-between items-center px-page-margin py-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-soft border border-border overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<h1 class="font-headline-md-mobile text-headline-md-mobile text-on-background font-bold tracking-tight">Templates</h1>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-border text-on-surface-variant hover:bg-surface-soft transition-colors scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-page-margin py-xl">
+<!-- Welcome Section -->
+<section class="mb-2xl">
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-primary mb-sm">Discover Routines</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">Add structured, calm habits to your day with a single tap.</p>
+</section>
+<!-- Templates Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-card-gap">
+<!-- Template Card: Morning Routine -->
+<article class="bg-surface rounded-2xl border border-border p-lg flex flex-col justify-between min-h-[160px] relative overflow-hidden group hover:border-primary-container transition-colors duration-300">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-soft rounded-bl-full opacity-20 -z-10 transition-transform duration-500 group-hover:scale-110"></div>
+<div>
+<div class="flex items-start justify-between mb-md">
+<div class="w-12 h-12 rounded-full bg-accent-soft text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<span class="bg-surface-soft text-on-surface-variant font-badge-sm text-badge-sm px-3 py-1 rounded-full uppercase tracking-wider">Popular</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">Morning Routine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-md">Start your day with intention and a gentle pace.</p>
+<!-- Routine Icons -->
+<div class="flex gap-sm items-center mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Meditation">
+<span class="material-symbols-outlined text-sm text-primary">self_improvement</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Stretching">
+<span class="material-symbols-outlined text-sm text-primary">sports_gymnastics</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Journaling">
+<span class="material-symbols-outlined text-sm text-primary">edit_document</span>
+</div>
+<span class="font-badge-sm text-badge-sm text-on-surface-variant ml-xs">3 steps</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md rounded-full py-3 flex items-center justify-center gap-sm hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Template
+                </button>
+</article>
+<!-- Template Card: Hydration -->
+<article class="bg-surface rounded-2xl border border-border p-lg flex flex-col justify-between min-h-[160px] relative overflow-hidden group hover:border-secondary transition-colors duration-300">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-soft rounded-bl-full opacity-30 -z-10 transition-transform duration-500 group-hover:scale-110"></div>
+<div>
+<div class="flex items-start justify-between mb-md">
+<div class="w-12 h-12 rounded-full bg-secondary-soft text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">Hydration Tracker</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-md">Keep your water intake consistent throughout the day.</p>
+<!-- Routine Icons -->
+<div class="flex gap-sm items-center mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Morning Glass">
+<span class="material-symbols-outlined text-sm text-secondary">local_drink</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Afternoon Refill">
+<span class="material-symbols-outlined text-sm text-secondary">local_drink</span>
+</div>
+<span class="font-badge-sm text-badge-sm text-on-surface-variant ml-xs">8 glasses total</span>
+</div>
+</div>
+<button class="w-full bg-primary-soft text-primary font-label-md text-label-md rounded-full py-3 flex items-center justify-center gap-sm hover:bg-surface-soft transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Template
+                </button>
+</article>
+<!-- Template Card: Vitamin Routine -->
+<article class="bg-surface rounded-2xl border border-border p-lg flex flex-col justify-between min-h-[160px] relative overflow-hidden group hover:border-tertiary-container transition-colors duration-300">
+<div class="absolute top-0 right-0 w-32 h-32 bg-accent-soft rounded-bl-full opacity-30 -z-10 transition-transform duration-500 group-hover:scale-110"></div>
+<div>
+<div class="flex items-start justify-between mb-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medication</span>
+</div>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">Vitamin Routine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-md">Never miss a supplement with timed daily reminders.</p>
+<!-- Routine Icons -->
+<div class="flex gap-sm items-center mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Morning Meds">
+<span class="material-symbols-outlined text-sm text-tertiary">wb_sunny</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Evening Meds">
+<span class="material-symbols-outlined text-sm text-tertiary">bedtime</span>
+</div>
+<span class="font-badge-sm text-badge-sm text-on-surface-variant ml-xs">2 steps</span>
+</div>
+</div>
+<button class="w-full bg-primary-soft text-primary font-label-md text-label-md rounded-full py-3 flex items-center justify-center gap-sm hover:bg-surface-soft transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Template
+                </button>
+</article>
+<!-- Template Card: Programmer Break -->
+<article class="bg-surface rounded-2xl border border-border p-lg flex flex-col justify-between min-h-[160px] relative overflow-hidden group hover:border-primary-container transition-colors duration-300">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-soft rounded-bl-full opacity-30 -z-10 transition-transform duration-500 group-hover:scale-110"></div>
+<div>
+<div class="flex items-start justify-between mb-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">code</span>
+</div>
+<span class="bg-surface-soft text-on-surface-variant font-badge-sm text-badge-sm px-3 py-1 rounded-full uppercase tracking-wider">New</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">Programmer Break</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-md">Eye rest and posture resets to combat screen fatigue.</p>
+<!-- Routine Icons -->
+<div class="flex gap-sm items-center mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="20-20-20 Rule">
+<span class="material-symbols-outlined text-sm text-primary">visibility</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center" title="Desk Stretches">
+<span class="material-symbols-outlined text-sm text-primary">directions_walk</span>
+</div>
+<span class="font-badge-sm text-badge-sm text-on-surface-variant ml-xs">Every 45 mins</span>
+</div>
+</div>
+<button class="w-full bg-primary-soft text-primary font-label-md text-label-md rounded-full py-3 flex items-center justify-center gap-sm hover:bg-surface-soft transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Template
+                </button>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-lg pb-8 pt-4 bg-surface dark:bg-surface-container-low rounded-t-3xl shadow-[0px_-8px_24px_rgba(142,170,94,0.12)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-soft transition-all active:scale-90 duration-300 ease-in-out p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center flex flex-col items-center justify-center bg-primary-soft text-primary rounded-full px-4 py-1 hover:bg-surface-soft transition-all active:scale-90 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-md text-label-md">Routines</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-soft transition-all active:scale-90 duration-300 ease-in-out p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1">insights</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-soft transition-all active:scale-90 duration-300 ease-in-out p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</body></html>

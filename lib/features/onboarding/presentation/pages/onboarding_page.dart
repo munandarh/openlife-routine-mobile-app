@@ -10,6 +10,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
+import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -261,7 +262,13 @@ class _SlideHero extends StatelessWidget {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(AppRadius.extraLarge),
         ),
-        child: Center(child: Icon(icon, size: 120, color: AppColors.primary)),
+        child: Center(
+          child: OpenLifeRiveView(
+            assetName: 'assets/rive/onboarding_build_better_days.riv',
+            fallbackIcon: icon,
+            size: 120,
+          ),
+        ),
       ),
     );
   }

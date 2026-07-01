@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
@@ -27,8 +28,15 @@ class TodayPage extends StatelessWidget {
   }
 }
 
-class _TodayView extends StatelessWidget {
+class _TodayView extends StatefulWidget {
   const _TodayView();
+
+  @override
+  State<_TodayView> createState() => _TodayViewState();
+}
+
+class _TodayViewState extends State<_TodayView> {
+  bool _showCelebration = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,21 @@ class _TodayView extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-        BlocBuilder<TodayBloc, TodayState>(
+        BlocConsumer<TodayBloc, TodayState>(
+          listenWhen: (TodayState previous, TodayState current) {
+            // Trigger celebration when all routines are completed.
+            return current.totalCount > 0 &&
+                current.completedCount == current.totalCount &&
+                (previous.completedCount != current.completedCount ||
+                    previous.totalCount != current.totalCount);
+          },
+          listener: (BuildContext context, TodayState state) {
+            if (state.totalCount > 0 &&
+                state.completedCount == state.totalCount) {
+              HapticFeedback.mediumImpact();
+              setState(() => _showCelebration = true);
+            }
+          },
           builder: (BuildContext context, TodayState state) {
             final List<WeekDateItem> weekItems = _buildWeekItems(
               state.selectedDate,
@@ -189,6 +211,7 @@ class _TodayView extends StatelessWidget {
                           ).toString(),
                         ),
                         onCheckTap: () {
+                          HapticFeedback.lightImpact();
                           context.read<TodayBloc>().add(
                             TodayRoutineCompletionToggled(item.routineId),
                           );
@@ -218,6 +241,10 @@ class _TodayView extends StatelessWidget {
               ],
             );
           },
+        ),
+        // Celebration overlay.
+        if (_showCelebration) _CelebrationOverlay(
+          onDismiss: () => setState(() => _showCelebration = false),
         ),
         Positioned(
           right: AppSpacing.pageMargin,
@@ -301,5 +328,117 @@ class _TodayView extends StatelessWidget {
       RoutineCategory.breakTime => AppColors.primary,
       RoutineCategory.custom => AppColors.primary,
     };
+  }
+}
+
+class _CelebrationOverlay extends StatefulWidget {
+  const _CelebrationOverlay({required this.onDismiss});
+
+  final VoidCallback onDismiss;
+
+  @override
+  State<_CelebrationOverlay> createState() => _CelebrationOverlayState();
+}
+
+class _CelebrationOverlayState extends State<_CelebrationOverlay>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutBack,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onDismiss,
+      child: Container(
+        color: Colors.black38,
+        child: Center(
+          child: ScaleTransition(
+            scale: _scaleAnimation,
+            child: Container(
+              margin: const EdgeInsets.all(AppSpacing.xl),
+              padding: const EdgeInsets.all(AppSpacing.xxl),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(
+                    Icons.celebration_outlined,
+                    size: 64,
+                    color: AppColors.success,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  const Text(
+                    'All Done!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  const Text(
+                    'You completed all your routines for today. Great work!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  ..._buildSparkles(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSparkles() {
+    const List<Color> colors = <Color>[
+      AppColors.success,
+      AppColors.warning,
+      AppColors.secondary,
+      AppColors.primary,
+      AppColors.danger,
+    ];
+
+    return List<Widget>.generate(5, (int i) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: colors[i].withValues(alpha: 0.6),
+            shape: BoxShape.circle,
+          ),
+        ),
+      );
+    });
   }
 }

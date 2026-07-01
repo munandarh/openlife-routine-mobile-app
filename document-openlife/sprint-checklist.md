@@ -91,19 +91,19 @@
 
 ## 3. Sprint 2 — Onboarding First Run
 
-- [ ] 3 onboarding pages built
-- [ ] Skip onboarding works
-- [ ] Complete onboarding works
-- [ ] First-run persistence works
-- [ ] Notification education screen built
-- [ ] Language selection entry built
-- [ ] Supportive copy aligned with design docs
-- [ ] Rive placeholder or static illustration fallback added
+- [x] 3 onboarding pages built
+- [x] Skip onboarding works
+- [x] Complete onboarding works
+- [x] First-run persistence works
+- [x] Notification education screen built
+- [x] Language selection entry built
+- [x] Supportive copy aligned with design docs
+- [x] Rive placeholder or static illustration fallback added
 
 ### Review gate
 
-- [ ] First launch goes to onboarding
-- [ ] Returning launch goes to Today
+- [x] First launch goes to onboarding
+- [x] Returning launch goes Today
 
 ---
 

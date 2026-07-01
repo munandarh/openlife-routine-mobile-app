@@ -20,9 +20,11 @@ class OpenLifeApp extends StatelessWidget {
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: ThemeMode.system,
-        routerConfig: AppRouter.router,
+        routerConfig: AppRouter(
+          hasCompletedOnboarding: dependencies.hasCompletedOnboarding,
+        ).router,
         supportedLocales: AppLocales.supportedLocales,
-        locale: AppLocales.defaultLocale,
+        locale: AppLocales.localeFromCode(dependencies.preferredLanguageCode),
       ),
     );
   }

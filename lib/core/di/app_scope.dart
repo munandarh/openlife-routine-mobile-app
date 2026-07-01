@@ -13,6 +13,14 @@ class AppScope extends InheritedWidget {
     return scope!.dependencies;
   }
 
+  static AppDependencies read(BuildContext context) {
+    final AppScope? scope =
+        context.getElementForInheritedWidgetOfExactType<AppScope>()?.widget
+            as AppScope?;
+    assert(scope != null, 'AppScope is missing in the widget tree.');
+    return scope!.dependencies;
+  }
+
   @override
   bool updateShouldNotify(AppScope oldWidget) {
     return dependencies != oldWidget.dependencies;

@@ -11,82 +11,87 @@ import 'package:openlife_routine/features/today/presentation/pages/today_page.da
 import 'package:openlife_routine/shared/navigation/openlife_shell.dart';
 
 final class AppRouter {
-  static final GoRouter router = GoRouter(
-    initialLocation: OpenLifeRoute.today.path,
-    routes: <RouteBase>[
-      GoRoute(
-        path: OpenLifeRoute.onboarding.path,
-        name: OpenLifeRoute.onboarding.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return const OnboardingPage();
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.today.path,
-        name: OpenLifeRoute.today.name,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return _shellPage(
-            child: const TodayPage(),
-            currentRoute: OpenLifeRoute.today,
-          );
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.routines.path,
-        name: OpenLifeRoute.routines.name,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return _shellPage(
-            child: const RoutinesPage(),
-            currentRoute: OpenLifeRoute.routines,
-          );
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.templates.path,
-        name: OpenLifeRoute.templates.name,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return _shellPage(
-            child: const TemplatesPage(),
-            currentRoute: OpenLifeRoute.templates,
-          );
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.insights.path,
-        name: OpenLifeRoute.insights.name,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return _shellPage(
-            child: const InsightsPage(),
-            currentRoute: OpenLifeRoute.insights,
-          );
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.settings.path,
-        name: OpenLifeRoute.settings.name,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return _shellPage(
-            child: const SettingsPage(),
-            currentRoute: OpenLifeRoute.settings,
-          );
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.newRoutine.path,
-        name: OpenLifeRoute.newRoutine.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return const NewRoutinePage();
-        },
-      ),
-      GoRoute(
-        path: OpenLifeRoute.routineDetail.path,
-        name: OpenLifeRoute.routineDetail.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RoutineDetailPage();
-        },
-      ),
-    ],
-  );
+  AppRouter({required bool hasCompletedOnboarding})
+    : router = GoRouter(
+        initialLocation: hasCompletedOnboarding
+            ? OpenLifeRoute.today.path
+            : OpenLifeRoute.onboarding.path,
+        routes: <RouteBase>[
+          GoRoute(
+            path: OpenLifeRoute.onboarding.path,
+            name: OpenLifeRoute.onboarding.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const OnboardingPage();
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.today.path,
+            name: OpenLifeRoute.today.name,
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return _shellPage(
+                child: const TodayPage(),
+                currentRoute: OpenLifeRoute.today,
+              );
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.routines.path,
+            name: OpenLifeRoute.routines.name,
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return _shellPage(
+                child: const RoutinesPage(),
+                currentRoute: OpenLifeRoute.routines,
+              );
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.templates.path,
+            name: OpenLifeRoute.templates.name,
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return _shellPage(
+                child: const TemplatesPage(),
+                currentRoute: OpenLifeRoute.templates,
+              );
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.insights.path,
+            name: OpenLifeRoute.insights.name,
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return _shellPage(
+                child: const InsightsPage(),
+                currentRoute: OpenLifeRoute.insights,
+              );
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.settings.path,
+            name: OpenLifeRoute.settings.name,
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return _shellPage(
+                child: const SettingsPage(),
+                currentRoute: OpenLifeRoute.settings,
+              );
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.newRoutine.path,
+            name: OpenLifeRoute.newRoutine.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const NewRoutinePage();
+            },
+          ),
+          GoRoute(
+            path: OpenLifeRoute.routineDetail.path,
+            name: OpenLifeRoute.routineDetail.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const RoutineDetailPage();
+            },
+          ),
+        ],
+      );
+
+  final GoRouter router;
 
   static NoTransitionPage<void> _shellPage({
     required Widget child,

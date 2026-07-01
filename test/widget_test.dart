@@ -1,11 +1,30 @@
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/app/app.dart';
 import 'package:openlife_routine/core/di/app_dependencies.dart';
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
+import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
+import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
+import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
 
 void main() {
+  late AppDatabase appDatabase;
+  late RoutineRepository routineRepository;
+
+  setUp(() {
+    appDatabase = AppDatabase.forTesting(NativeDatabase.memory());
+    routineRepository = DriftRoutineRepository(
+      RoutineLocalDataSource(appDatabase),
+    );
+  });
+
+  tearDown(() async {
+    await appDatabase.close();
+  });
+
   testWidgets('first launch shows onboarding', (WidgetTester tester) async {
     await tester.pumpWidget(
       OpenLifeApp(
@@ -15,9 +34,12 @@ void main() {
           onboardingRepository: _FakeOnboardingRepository(),
           hasCompletedOnboarding: false,
           preferredLanguageCode: 'en',
+          appDatabase: appDatabase,
+          routineRepository: routineRepository,
         ),
       ),
     );
+
     await tester.pumpAndSettle();
 
     expect(find.text('OpenLife Routine'), findsOneWidget);
@@ -34,9 +56,12 @@ void main() {
           onboardingRepository: _FakeOnboardingRepository(),
           hasCompletedOnboarding: true,
           preferredLanguageCode: 'en',
+          appDatabase: appDatabase,
+          routineRepository: routineRepository,
         ),
       ),
     );
+
     await tester.pumpAndSettle();
 
     expect(find.text('Daily Progress'), findsOneWidget);
@@ -55,8 +80,8 @@ class _FakeOnboardingRepository implements OnboardingRepository {
   Future<bool> hasCompletedOnboarding() async => false;
 
   @override
-  Future<void> setPreferredLanguageCode(String languageCode) async {}
+  Future<void> skipOnboarding() async {}
 
   @override
-  Future<void> skipOnboarding() async {}
+  Future<void> setPreferredLanguageCode(String languageCode) async {}
 }

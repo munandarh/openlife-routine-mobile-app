@@ -78,14 +78,16 @@ final class AppRouter {
             path: OpenLifeRoute.newRoutine.path,
             name: OpenLifeRoute.newRoutine.name,
             builder: (BuildContext context, GoRouterState state) {
-              return const NewRoutinePage();
+              return NewRoutinePage(routineId: state.uri.queryParameters['id']);
             },
           ),
           GoRoute(
             path: OpenLifeRoute.routineDetail.path,
             name: OpenLifeRoute.routineDetail.name,
             builder: (BuildContext context, GoRouterState state) {
-              return const RoutineDetailPage();
+              return RoutineDetailPage(
+                routineId: state.uri.queryParameters['id'] ?? '',
+              );
             },
           ),
         ],

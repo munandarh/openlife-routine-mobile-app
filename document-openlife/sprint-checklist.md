@@ -111,35 +111,35 @@
 
 ### Domain and data
 
-- [ ] Routine entity created
-- [ ] Routine schedule entity created
-- [ ] Routine log entity created
-- [ ] Repository contracts created
-- [ ] Local data source created
-- [ ] Database tables created
+- [x] Routine entity created
+- [x] Routine schedule entity created
+- [x] Routine log entity created
+- [x] Repository contracts created
+- [x] Local data source created
+- [x] Database tables created
 
 ### Application
 
-- [ ] CreateRoutine use case built
-- [ ] UpdateRoutine use case built
-- [ ] DeleteRoutine use case built
-- [ ] GetRoutine use case built
-- [ ] WatchRoutines use case built
+- [x] CreateRoutine use case built
+- [x] UpdateRoutine use case built
+- [x] DeleteRoutine use case built
+- [x] GetRoutine use case built
+- [x] WatchRoutines use case built
 
 ### Presentation
 
-- [ ] RoutineBloc built
-- [ ] New Routine form connected
-- [ ] Routines list screen connected
-- [ ] Edit routine flow connected
-- [ ] Delete routine flow connected
+- [x] RoutineBloc built
+- [x] New Routine form connected
+- [x] Routines list screen connected
+- [x] Edit routine flow connected
+- [x] Delete routine flow connected
 
 ### Review gate
 
-- [ ] Create routine works
-- [ ] Edit routine works
-- [ ] Delete routine works
-- [ ] Data survives restart
+- [x] Create routine works
+- [x] Edit routine works
+- [x] Delete routine works
+- [x] Data survives restart
 
 ---
 

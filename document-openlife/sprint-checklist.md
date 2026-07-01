@@ -1,10 +1,10 @@
 # OpenLife Routine — Sprint Execution Checklist
 
-> **Purpose:** Single execution tracker for implementation progress.
-> **Rule:** Every completed task must be checked immediately.
-> **Architecture rule:** Use full BLoC only. Do not use Cubit.
-> **MVP navigation rule:** Bottom navigation stays `Today / Routines / Insights / Settings`. `Templates` lives under `Routines`, not as a main tab.
-> **Git rule:** No `git commit` or `git push` during execution.
+**Purpose:** Single execution tracker for implementation progress.
+**Rule:** Every completed task must be checked immediately.
+**Architecture rule:** Use full BLoC only. Do not use Cubit.
+**MVP navigation rule:** Bottom navigation stays `Today / Routines / Insights / Settings`. `Templates` lives under `Routines`, not a main tab.
+**Git rule:** No `git commit` or `git push` during execution.
 
 ---
 
@@ -22,63 +22,70 @@
 ## 1. Sprint 0 — Foundation
 
 ### Decision lock
+
 - [x] Flutter app scaffold available
 - [x] Folder structure follows feature-first clean architecture
 - [x] `flutter_bloc` selected for state management
-- [ ] Local DB approach locked
-- [ ] Notification stack locked
+- [x] Local DB approach locked
+- [x] Notification stack locked
 - [x] Routing approach locked
 - [x] Localization approach locked
 
 ### Repo setup
-- [ ] Base app runs on Android emulator
+
+- [x] Base app runs on Android emulator
 - [x] Theme token files created
 - [x] Base router created
-- [ ] Base dependency injection approach created
+- [x] Base dependency injection approach created
 - [x] Linting configured
 - [x] Test command works
 - [x] CI workflow prepared
 
 ### Review gate
-- [ ] Sprint 0 demo ready
-- [ ] Sprint 0 checklist fully reviewed
+
+- [x] Sprint 0 demo ready
+- [x] Sprint 0 checklist fully reviewed
 
 ---
 
 ## 2. Sprint 1 — Design System App Shell
 
 ### Tokens
-- [ ] Color tokens implemented from `serene_routine`
-- [ ] Typography tokens implemented with Plus Jakarta Sans
-- [ ] Spacing tokens implemented
-- [ ] Radius tokens implemented
-- [ ] Shadow tokens implemented
-- [ ] Light theme implemented
-- [ ] Dark theme baseline implemented
+
+- [x] Color tokens implemented from `serene_routine`
+- [x] Typography tokens implemented with Plus Jakarta Sans
+- [x] Spacing tokens implemented
+- [x] Radius tokens implemented
+- [x] Shadow tokens implemented
+- [x] Light theme implemented
+- [x] Dark theme baseline implemented
 
 ### Shared UI
-- [ ] `PrimaryButton` built
-- [ ] `IconCircleButton` built
-- [ ] `RoutineCard` UI-only built
-- [ ] `WeekDateSelector` UI-only built
-- [ ] `ProgressRing` UI-only built
-- [ ] `OpenLifeBottomNav` built with 4 tabs only
-- [ ] Empty state component built
+
+- [x] `PrimaryButton` built
+- [x] `IconCircleButton` built
+- [x] `RoutineCard` UI-only built
+- [x] `WeekDateSelector` UI-only built
+- [x] `ProgressRing` UI-only built
+- [x] `OpenLifeBottomNav` built with 4 tabs only
+- [x] Empty state component built
 
 ### Screen shells
-- [ ] Onboarding shell built
-- [ ] Today shell built
-- [ ] Routines shell built
-- [ ] New Routine shell built
-- [ ] Routine Detail shell built
-- [ ] Insights shell built
-- [ ] Templates shell built under Routines flow
-- [ ] Settings shell built
+
+- [x] Onboarding shell built
+- [x] Today shell built
+- [x] Routines shell built
+- [x] New Routine shell built
+- [x] Routine Detail shell built
+- [x] Insights shell built
+- [x] Templates shell built under Routines flow
+- [x] Settings shell built
 
 ### Review gate
-- [ ] Screens visually align with `ui-ux-design-screen`
-- [ ] Navigation works
-- [ ] No extra main tab for Templates
+
+- [x] Screens visually align with `ui-ux-design-screen`
+- [x] Navigation works
+- [x] No extra main tab for Templates
 
 ---
 
@@ -94,6 +101,7 @@
 - [ ] Rive placeholder or static illustration fallback added
 
 ### Review gate
+
 - [ ] First launch goes to onboarding
 - [ ] Returning launch goes to Today
 
@@ -102,6 +110,7 @@
 ## 4. Sprint 3 — Routine CRUD
 
 ### Domain and data
+
 - [ ] Routine entity created
 - [ ] Routine schedule entity created
 - [ ] Routine log entity created
@@ -110,6 +119,7 @@
 - [ ] Database tables created
 
 ### Application
+
 - [ ] CreateRoutine use case built
 - [ ] UpdateRoutine use case built
 - [ ] DeleteRoutine use case built
@@ -117,6 +127,7 @@
 - [ ] WatchRoutines use case built
 
 ### Presentation
+
 - [ ] RoutineBloc built
 - [ ] New Routine form connected
 - [ ] Routines list screen connected
@@ -124,6 +135,7 @@
 - [ ] Delete routine flow connected
 
 ### Review gate
+
 - [ ] Create routine works
 - [ ] Edit routine works
 - [ ] Delete routine works
@@ -145,6 +157,7 @@
 - [ ] Empty state bound correctly
 
 ### Review gate
+
 - [ ] Only scheduled routines appear
 - [ ] Progress updates instantly
 - [ ] Due state and done state match UI direction
@@ -166,6 +179,7 @@
 - [ ] Rebuild schedules after restart built
 
 ### Review gate
+
 - [ ] Notification fires on time
 - [ ] No duplicate spam
 - [ ] Tap opens relevant app flow
@@ -185,6 +199,7 @@
 - [ ] Motion respects calm design direction
 
 ### Review gate
+
 - [ ] No animation crash
 - [ ] No obvious jank
 - [ ] Only meaningful motion remains
@@ -194,6 +209,7 @@
 ## 8. Sprint 7 — Templates and Insights
 
 ### Templates
+
 - [ ] Template model created
 - [ ] Seed templates created
 - [ ] Templates list built
@@ -201,6 +217,7 @@
 - [ ] Apply template flow built
 
 ### Insights
+
 - [ ] InsightsBloc built
 - [ ] Weekly completion metric built
 - [ ] Most completed routine metric built
@@ -209,6 +226,7 @@
 - [ ] Weekly chart built
 
 ### Review gate
+
 - [ ] Templates entered through Routines flow
 - [ ] No medical claims in template content
 - [ ] Insights are supportive, not judgmental
@@ -229,6 +247,7 @@
 - [ ] About open source screen built
 
 ### Review gate
+
 - [ ] Settings persist
 - [ ] Export and import work
 - [ ] Privacy messaging stays clear
@@ -250,6 +269,7 @@
 - [ ] Release APK built locally
 
 ### Review gate
+
 - [ ] CI passes
 - [ ] No known critical bug
 - [ ] MVP release checklist reviewed

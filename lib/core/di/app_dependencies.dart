@@ -16,6 +16,10 @@ import 'package:openlife_routine/features/routines/presentation/bloc/routine_blo
 import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
+import 'package:openlife_routine/features/settings/data/repositories/shared_prefs_settings_repository.dart';
+import 'package:openlife_routine/features/settings/data/services/export_import_service.dart';
+import 'package:openlife_routine/features/settings/domain/repositories/settings_repository.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +34,7 @@ class AppDependencies {
     required this.routineRepository,
     required this.notificationService,
     required this.initialNotificationRoutineId,
+    required this.settingsRepository,
   });
 
   final LocalDatabaseConfig databaseConfig;
@@ -41,6 +46,7 @@ class AppDependencies {
   final RoutineRepository routineRepository;
   final AppNotificationService notificationService;
   final String? initialNotificationRoutineId;
+  final SettingsRepository settingsRepository;
 
   static Future<AppDependencies> bootstrap() async {
     final SharedPreferencesAsync preferences = SharedPreferencesAsync();
@@ -58,6 +64,8 @@ class AppDependencies {
     final String? initialNotificationRoutineId = await notificationService
         .initialize();
     await notificationService.syncRoutineSchedules(appDatabase);
+    final SettingsRepository settingsRepository =
+        SharedPrefsSettingsRepository(preferences);
 
     return AppDependencies(
       databaseConfig: const LocalDatabaseConfig.recommended(),
@@ -69,6 +77,7 @@ class AppDependencies {
       routineRepository: routineRepository,
       notificationService: notificationService,
       initialNotificationRoutineId: initialNotificationRoutineId,
+      settingsRepository: settingsRepository,
     );
   }
 
@@ -93,5 +102,13 @@ class AppDependencies {
 
   InsightsBloc createInsightsBloc() {
     return InsightsBloc(appDatabase: appDatabase);
+  }
+
+  SettingsBloc createSettingsBloc() {
+    return SettingsBloc(repository: settingsRepository);
+  }
+
+  ExportImportService createExportImportService() {
+    return ExportImportService(appDatabase: appDatabase);
   }
 }

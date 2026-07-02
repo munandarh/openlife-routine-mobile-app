@@ -1,0 +1,56 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+  echo "usage: rtk <command> [args...]" >&2
+  exit 1
+fi
+
+command_name="$1"
+shift
+
+case "$command_name" in
+  find)
+    if [[ $# -lt 1 ]]; then
+      echo "usage: rtk find <pattern> [path]" >&2
+      exit 1
+    fi
+
+    pattern="$1"
+    search_root="${2:-.}"
+    rg --files "$search_root" | rg "$pattern"
+    ;;
+  grep)
+    if [[ $# -lt 1 ]]; then
+      echo "usage: rtk grep <pattern> [path...]" >&2
+      exit 1
+    fi
+
+    pattern="$1"
+    shift
+    if [[ $# -eq 0 ]]; then
+      set -- .
+    fi
+    rg -n "$pattern" "$@"
+    ;;
+  read)
+    if [[ $# -ne 1 ]]; then
+      echo "usage: rtk read <file>" >&2
+      exit 1
+    fi
+
+    sed -n '1,250p' "$1"
+    ;;
+  diff)
+    if [[ $# -ne 1 ]]; then
+      echo "usage: rtk diff <file>" >&2
+      exit 1
+    fi
+
+    git diff -- "$1"
+    ;;
+  *)
+    exec "$command_name" "$@"
+    ;;
+esac

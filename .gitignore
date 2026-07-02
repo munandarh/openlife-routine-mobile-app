@@ -30,6 +30,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+.tokensave/
 /build/
 /coverage/
 
@@ -44,6 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local-only project references
+# Local-only reference material
 document-openlife/
 ui-ux-design-screen/

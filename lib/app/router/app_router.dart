@@ -7,6 +7,8 @@ import 'package:openlife_routine/features/routines/presentation/pages/new_routin
 import 'package:openlife_routine/features/routines/presentation/pages/routines_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_page.dart';
 import 'package:openlife_routine/features/settings/presentation/pages/settings_page.dart';
+import 'package:openlife_routine/features/settings/presentation/pages/privacy_page.dart';
+import 'package:openlife_routine/features/settings/presentation/pages/about_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_page.dart';
 import 'package:openlife_routine/shared/navigation/openlife_shell.dart';
 
@@ -101,6 +103,20 @@ final class AppRouter {
                );
              },
            ),
+           GoRoute(
+             path: OpenLifeRoute.privacy.path,
+             name: OpenLifeRoute.privacy.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const PrivacyPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.about.path,
+             name: OpenLifeRoute.about.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const AboutPage();
+             },
+           ),
          ],
        );
 
@@ -145,7 +161,9 @@ enum OpenLifeRoute {
   insights('/insights', 'Insights', Icons.insights_outlined),
   settings('/settings', 'Settings', Icons.settings_outlined),
   newRoutine('/routines/new', 'New Routine', Icons.add_circle_outline),
-  routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz);
+  routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz),
+  privacy('/settings/privacy', 'Privacy', Icons.shield_outlined),
+  about('/settings/about', 'About', Icons.code_outlined);
 
   const OpenLifeRoute(this.path, this.label, this.icon);
 
@@ -162,6 +180,8 @@ enum OpenLifeRoute {
     OpenLifeRoute.settings => 'settings',
     OpenLifeRoute.newRoutine => 'newRoutine',
     OpenLifeRoute.routineDetail => 'routineDetail',
+    OpenLifeRoute.privacy => 'privacy',
+    OpenLifeRoute.about => 'about',
   };
 
   bool get isNestedUnderRoutines {

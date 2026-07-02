@@ -1,15 +1,14 @@
-## Summary
+## Description
+<!-- Describe your changes -->
 
-- 
+## Type of change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor
+- [ ] Documentation
 
 ## Checklist
-
-- [ ] Scope matches current sprint
-- [ ] Docs updated if behavior changed
 - [ ] `flutter analyze` passes
 - [ ] `flutter test` passes
-- [ ] No unintended navigation or design regressions
-
-## Screenshots / Notes
-
-- 
+- [ ] Documentation updated if needed
+- [ ] ADR added if architecture decision

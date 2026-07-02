@@ -1,24 +1,19 @@
 ---
-name: Feature request
-about: Suggest a product or engineering improvement
-title: '[Feature] '
+name: Feature Request
+about: Suggest an idea for OpenLife Routine
+title: '[FEATURE] '
 labels: enhancement
 assignees: ''
 ---
 
-## Problem
+**Is your feature request related to a problem?**
+A clear description of the problem.
 
-What user or engineering problem does this solve?
+**Describe the solution you'd like**
+What you want to happen.
 
-## Proposed solution
+**Describe alternatives you've considered**
+Any alternative solutions.
 
-Describe the smallest useful version first.
-
-## Scope
-
-- In MVP:
-- Later:
-
-## Notes
-
-Add links to relevant product or design docs if available.
+**Additional context**
+Add any other context or screenshots.

@@ -1,35 +1,27 @@
 ---
-name: Bug report
-about: Report a defect in app behavior or project setup
-title: '[Bug] '
+name: Bug Report
+about: Report a bug to help improve OpenLife Routine
+title: '[BUG] '
 labels: bug
 assignees: ''
 ---
 
-## Summary
+**Describe the bug**
+A clear description of what the bug is.
 
-Describe the bug clearly.
+**To Reproduce**
+Steps to reproduce:
+1. Go to '...'
+2. Tap on '...'
+3. See error
 
-## Steps to reproduce
+**Expected behavior**
+What you expected to happen.
 
-1. 
-2. 
-3. 
+**Screenshots**
+If applicable, add screenshots.
 
-## Expected behavior
-
-Describe what should have happened.
-
-## Actual behavior
-
-Describe what happened instead.
-
-## Environment
-
-- Flutter version:
-- Device / emulator:
-- OS:
-
-## Notes
-
-Add screenshots, logs, or extra context if needed.
+**Device info:**
+- Device: [e.g. Pixel 7]
+- OS: [e.g. Android 14]
+- App Version: [e.g. 1.0.0]

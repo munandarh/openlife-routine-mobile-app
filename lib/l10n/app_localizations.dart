@@ -1,0 +1,932 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_id.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('id'),
+  ];
+
+  /// No description provided for @appTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine'**
+  String get appTitle;
+
+  /// No description provided for @appTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm daily routines, private by default.'**
+  String get appTagline;
+
+  /// No description provided for @todayTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayTab;
+
+  /// No description provided for @routinesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesTab;
+
+  /// No description provided for @insightsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insightsTab;
+
+  /// No description provided for @settingsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTab;
+
+  /// No description provided for @templatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get templatesTitle;
+
+  /// No description provided for @onboardingSlide1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Build better days'**
+  String get onboardingSlide1Title;
+
+  /// No description provided for @onboardingSlide1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Design a routine that fits your life. Gentle nudges, not rigid rules.'**
+  String get onboardingSlide1Desc;
+
+  /// No description provided for @onboardingSlide2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Never miss what matters'**
+  String get onboardingSlide2Title;
+
+  /// No description provided for @onboardingSlide2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive calm reminders for meals, water, vitamins, and small routines that support your day.'**
+  String get onboardingSlide2Desc;
+
+  /// No description provided for @onboardingSlide3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Private by default'**
+  String get onboardingSlide3Title;
+
+  /// No description provided for @onboardingSlide3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your routines stay on-device first. No account required to start, and no forced cloud setup.'**
+  String get onboardingSlide3Desc;
+
+  /// No description provided for @onboardingSlide4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with a template'**
+  String get onboardingSlide4Title;
+
+  /// No description provided for @onboardingSlide4Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a starter template to begin, or add routines yourself one at a time.'**
+  String get onboardingSlide4Desc;
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
+  /// No description provided for @greetingNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Good night'**
+  String get greetingNight;
+
+  /// No description provided for @todayEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing scheduled today'**
+  String get todayEmptyTitle;
+
+  /// No description provided for @todayEmptyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a routine to see your day fill up with calm reminders.'**
+  String get todayEmptyDesc;
+
+  /// No description provided for @dailyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Progress'**
+  String get dailyProgress;
+
+  /// No description provided for @dailyRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily routine'**
+  String get dailyRoutine;
+
+  /// No description provided for @allDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All Done!'**
+  String get allDone;
+
+  /// No description provided for @allDoneMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You completed all your routines for today. Great work!'**
+  String get allDoneMessage;
+
+  /// No description provided for @stayConsistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay consistent'**
+  String get stayConsistent;
+
+  /// No description provided for @newRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'New Routine'**
+  String get newRoutine;
+
+  /// No description provided for @editRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Routine'**
+  String get editRoutine;
+
+  /// No description provided for @saveRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Routine'**
+  String get saveRoutine;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @createRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Create routine'**
+  String get createRoutine;
+
+  /// No description provided for @routineName.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Name'**
+  String get routineName;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// No description provided for @timeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeLabel;
+
+  /// No description provided for @notesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesOptional;
+
+  /// No description provided for @snoozeDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze duration'**
+  String get snoozeDuration;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @skipButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipButton;
+
+  /// No description provided for @backButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backButton;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @allowNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get allowNotifications;
+
+  /// No description provided for @startEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Start empty'**
+  String get startEmpty;
+
+  /// No description provided for @startWithTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with a template'**
+  String get startWithTemplate;
+
+  /// No description provided for @pickStarter.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a starter'**
+  String get pickStarter;
+
+  /// No description provided for @orStartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Or, you can start empty and add routines later from the Routines tab.'**
+  String get orStartEmpty;
+
+  /// No description provided for @noRoutinesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines yet'**
+  String get noRoutinesYet;
+
+  /// No description provided for @noRoutinesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'There is nothing scheduled for this date. Add one or pick another day.'**
+  String get noRoutinesDesc;
+
+  /// No description provided for @themeSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeSetting;
+
+  /// No description provided for @languageSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageSetting;
+
+  /// No description provided for @notificationsSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSetting;
+
+  /// No description provided for @exportSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Export routines'**
+  String get exportSetting;
+
+  /// No description provided for @importSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Import routines'**
+  String get importSetting;
+
+  /// No description provided for @resetSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all data'**
+  String get resetSetting;
+
+  /// No description provided for @privacySetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & data'**
+  String get privacySetting;
+
+  /// No description provided for @aboutSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'About open source'**
+  String get aboutSetting;
+
+  /// No description provided for @calmDayAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm day ahead. Add a routine whenever you are ready.'**
+  String get calmDayAhead;
+
+  /// No description provided for @allFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished all your routines today. Great work.'**
+  String get allFinished;
+
+  /// No description provided for @smallProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Small progress still counts. Take it one step at a time.'**
+  String get smallProgress;
+
+  /// No description provided for @addTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Template'**
+  String get addTemplate;
+
+  /// No description provided for @discoverRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Routines'**
+  String get discoverRoutines;
+
+  /// No description provided for @addStructured.
+  ///
+  /// In en, this message translates to:
+  /// **'Add structured, calm habits to your day with a single tap.'**
+  String get addStructured;
+
+  /// No description provided for @browseTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Templates'**
+  String get browseTemplates;
+
+  /// No description provided for @yourRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'Your routines'**
+  String get yourRoutines;
+
+  /// No description provided for @insightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insightsTitle;
+
+  /// No description provided for @completedThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed this week'**
+  String get completedThisWeek;
+
+  /// No description provided for @bestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak'**
+  String get bestStreak;
+
+  /// No description provided for @thisWeeksFlow.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week\'s Flow'**
+  String get thisWeeksFlow;
+
+  /// No description provided for @focusAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Areas'**
+  String get focusAreas;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @preferencesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferencesSection;
+
+  /// No description provided for @notificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSection;
+
+  /// No description provided for @dataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get dataSection;
+
+  /// No description provided for @privacySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacySection;
+
+  /// No description provided for @routineAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine alerts'**
+  String get routineAlerts;
+
+  /// No description provided for @exportJson.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON'**
+  String get exportJson;
+
+  /// No description provided for @importJson.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON'**
+  String get importJson;
+
+  /// No description provided for @resetDestructive.
+  ///
+  /// In en, this message translates to:
+  /// **'Destructive'**
+  String get resetDestructive;
+
+  /// No description provided for @privacyData.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & data'**
+  String get privacyData;
+
+  /// No description provided for @aboutOpenSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Open source'**
+  String get aboutOpenSource;
+
+  /// No description provided for @chooseTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose theme'**
+  String get chooseTheme;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get chooseLanguage;
+
+  /// No description provided for @systemTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemTheme;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get darkTheme;
+
+  /// No description provided for @englishLang.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get englishLang;
+
+  /// No description provided for @bahasaLang.
+  ///
+  /// In en, this message translates to:
+  /// **'Bahasa Indonesia'**
+  String get bahasaLang;
+
+  /// No description provided for @chooseYourLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get chooseYourLanguage;
+
+  /// No description provided for @chooseLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the language you want to see first. You can change it later in settings.'**
+  String get chooseLanguageDesc;
+
+  /// No description provided for @notificationEducationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification education'**
+  String get notificationEducationTitle;
+
+  /// No description provided for @notificationEducationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We will ask for notification permission later, only when reminder scheduling is ready.'**
+  String get notificationEducationMessage;
+
+  /// No description provided for @getGentleReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Get gentle reminders'**
+  String get getGentleReminders;
+
+  /// No description provided for @getGentleRemindersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife can remind you about routines at the right time, without noisy pressure.'**
+  String get getGentleRemindersDesc;
+
+  /// No description provided for @scheduledReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled reminders'**
+  String get scheduledReminders;
+
+  /// No description provided for @quietAndRespectful.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet and respectful'**
+  String get quietAndRespectful;
+
+  /// No description provided for @privateOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Private on device'**
+  String get privateOnDevice;
+
+  /// No description provided for @markDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get markDone;
+
+  /// No description provided for @skipAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipAction;
+
+  /// No description provided for @dueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Now'**
+  String get dueNow;
+
+  /// No description provided for @undoAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoAction;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// No description provided for @importData.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importData;
+
+  /// No description provided for @pasteJsonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste JSON backup here...'**
+  String get pasteJsonHint;
+
+  /// No description provided for @cancelAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelAction;
+
+  /// No description provided for @importAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importAction;
+
+  /// No description provided for @closeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeAction;
+
+  /// No description provided for @resetAllData.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All Data'**
+  String get resetAllData;
+
+  /// No description provided for @resetWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all your routines, schedules, and logs. This action cannot be undone.'**
+  String get resetWarning;
+
+  /// No description provided for @resetButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetButton;
+
+  /// No description provided for @daysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysLabel;
+
+  /// No description provided for @stepsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'steps'**
+  String get stepsLabel;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get privacyTitle;
+
+  /// No description provided for @privacyLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays on your device'**
+  String get privacyLocal;
+
+  /// No description provided for @privacyLocalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine stores all your routines, schedules, and logs locally on your phone. No data is sent to any server.'**
+  String get privacyLocalBody;
+
+  /// No description provided for @privacyNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'No account required'**
+  String get privacyNoAccount;
+
+  /// No description provided for @privacyNoAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can use all features without creating an account. There is no login, no registration, and no personal information collected.'**
+  String get privacyNoAccountBody;
+
+  /// No description provided for @privacyOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Works offline'**
+  String get privacyOffline;
+
+  /// No description provided for @privacyOfflineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All core features work without an internet connection. Reminders are scheduled locally and trigger even when you are offline.'**
+  String get privacyOfflineBody;
+
+  /// No description provided for @privacyControl.
+  ///
+  /// In en, this message translates to:
+  /// **'You control your data'**
+  String get privacyControl;
+
+  /// No description provided for @privacyControlBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can export your data as JSON at any time from Settings. You can also import a backup or reset all data from your device.'**
+  String get privacyControlBody;
+
+  /// No description provided for @privacyNoTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracking or analytics'**
+  String get privacyNoTracking;
+
+  /// No description provided for @privacyNoTrackingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app does not use third-party analytics, advertising trackers, or any form of user monitoring. Your routine is yours alone.'**
+  String get privacyNoTrackingBody;
+
+  /// No description provided for @privacyDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine is not a medical app.'**
+  String get privacyDisclaimer;
+
+  /// No description provided for @privacyDisclaimerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It is a lifestyle and routine reminder app designed to help you build better days. It does not diagnose, treat, or cure any condition.'**
+  String get privacyDisclaimerBody;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Open Source'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get aboutVersion;
+
+  /// No description provided for @aboutOpenSourceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine is free and open-source software. The full source code is available on GitHub under the Apache 2.0 license.'**
+  String get aboutOpenSourceBody;
+
+  /// No description provided for @aboutBuiltWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Built with Flutter'**
+  String get aboutBuiltWith;
+
+  /// No description provided for @aboutBuiltWithBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, local notifications, and Rive animations.'**
+  String get aboutBuiltWithBody;
+
+  /// No description provided for @aboutPortfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio project'**
+  String get aboutPortfolio;
+
+  /// No description provided for @aboutPortfolioBody.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine was built as a production-quality open-source portfolio project to demonstrate Flutter engineering, architecture, and product design skills.'**
+  String get aboutPortfolioBody;
+
+  /// No description provided for @aboutLicense.
+  ///
+  /// In en, this message translates to:
+  /// **'License'**
+  String get aboutLicense;
+
+  /// No description provided for @aboutLicenseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Apache License 2.0 — Free for personal and commercial use. The OpenLife Routine name and logo are reserved for the official project.'**
+  String get aboutLicenseBody;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'id'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'id':
+      return AppLocalizationsId();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

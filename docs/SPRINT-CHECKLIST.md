@@ -379,7 +379,9 @@ These are the **highest-leverage gaps** relative to PRD MVP DoD:
 | **Sprint 9** | ✅ | Validation tests, progress edge cases, APK build |
 | **Sprint 10** | ✅ | Vector asset integration (4 wired: 3 onboarding slides + today celebration) |
 | **Sprint 11** | ✅ | 4th onboarding screen + 6 more illustrations wired (10/10 MVP) |
-| **Sprint 13** | ✅ | Notes field (+DB migration) + snooze UI + new routine form polish |
+| **Sprint 14** | ✅ | i18n framework (100+ EN/ID ARB strings, gen-l10n wired, delegates ready) |
+| **Sprint 15** | ✅ | CHANGELOG, SECURITY, 4 more ADRs, README enhanced, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE |
+| **Sprint 16** | ✅ | GitHub Release notes, portfolio pitch in README, final APK (90.8 MB) |
 
 ## Sprint Plan Going Forward
 

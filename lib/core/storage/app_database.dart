@@ -14,6 +14,8 @@ class Routines extends Table {
 
   TextColumn get category => text()();
 
+  TextColumn get notes => text().nullable()();
+
   BoolColumn get isEnabled => boolean().withDefault(const Constant(true))();
 
   DateTimeColumn get createdAt => dateTime()();
@@ -76,7 +78,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

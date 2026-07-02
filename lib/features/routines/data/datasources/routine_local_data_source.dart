@@ -19,6 +19,7 @@ class RoutineLocalDataSource {
               id: routine.id,
               title: routine.title,
               category: routine.category.name,
+              notes: Value(routine.notes),
               isEnabled: Value(routine.isEnabled),
               createdAt: routine.createdAt,
               updatedAt: routine.updatedAt,

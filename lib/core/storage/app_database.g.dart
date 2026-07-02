@@ -41,6 +41,15 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isEnabledMeta = const VerificationMeta(
     'isEnabled',
   );
@@ -83,6 +92,7 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
     id,
     title,
     category,
+    notes,
     isEnabled,
     createdAt,
     updatedAt,
@@ -119,6 +129,12 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
       );
     } else if (isInserting) {
       context.missing(_categoryMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
     }
     if (data.containsKey('is_enabled')) {
       context.handle(
@@ -163,6 +179,10 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
         DriftSqlType.string,
         data['${effectivePrefix}category'],
       )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
       isEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_enabled'],
@@ -188,6 +208,7 @@ class Routine extends DataClass implements Insertable<Routine> {
   final String id;
   final String title;
   final String category;
+  final String? notes;
   final bool isEnabled;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -195,6 +216,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     required this.id,
     required this.title,
     required this.category,
+    this.notes,
     required this.isEnabled,
     required this.createdAt,
     required this.updatedAt,
@@ -205,6 +227,9 @@ class Routine extends DataClass implements Insertable<Routine> {
     map['id'] = Variable<String>(id);
     map['title'] = Variable<String>(title);
     map['category'] = Variable<String>(category);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     map['is_enabled'] = Variable<bool>(isEnabled);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -216,6 +241,9 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: Value(id),
       title: Value(title),
       category: Value(category),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
       isEnabled: Value(isEnabled),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -231,6 +259,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       category: serializer.fromJson<String>(json['category']),
+      notes: serializer.fromJson<String?>(json['notes']),
       isEnabled: serializer.fromJson<bool>(json['isEnabled']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -243,6 +272,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
       'category': serializer.toJson<String>(category),
+      'notes': serializer.toJson<String?>(notes),
       'isEnabled': serializer.toJson<bool>(isEnabled),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -253,6 +283,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     String? id,
     String? title,
     String? category,
+    Value<String?> notes = const Value.absent(),
     bool? isEnabled,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -260,6 +291,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     id: id ?? this.id,
     title: title ?? this.title,
     category: category ?? this.category,
+    notes: notes.present ? notes.value : this.notes,
     isEnabled: isEnabled ?? this.isEnabled,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -269,6 +301,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       category: data.category.present ? data.category.value : this.category,
+      notes: data.notes.present ? data.notes.value : this.notes,
       isEnabled: data.isEnabled.present ? data.isEnabled.value : this.isEnabled,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -281,6 +314,7 @@ class Routine extends DataClass implements Insertable<Routine> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('category: $category, ')
+          ..write('notes: $notes, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -290,7 +324,7 @@ class Routine extends DataClass implements Insertable<Routine> {
 
   @override
   int get hashCode =>
-      Object.hash(id, title, category, isEnabled, createdAt, updatedAt);
+      Object.hash(id, title, category, notes, isEnabled, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -298,6 +332,7 @@ class Routine extends DataClass implements Insertable<Routine> {
           other.id == this.id &&
           other.title == this.title &&
           other.category == this.category &&
+          other.notes == this.notes &&
           other.isEnabled == this.isEnabled &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -307,6 +342,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
   final Value<String> id;
   final Value<String> title;
   final Value<String> category;
+  final Value<String?> notes;
   final Value<bool> isEnabled;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
@@ -315,6 +351,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.category = const Value.absent(),
+    this.notes = const Value.absent(),
     this.isEnabled = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -324,6 +361,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     required String id,
     required String title,
     required String category,
+    this.notes = const Value.absent(),
     this.isEnabled = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -337,6 +375,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     Expression<String>? id,
     Expression<String>? title,
     Expression<String>? category,
+    Expression<String>? notes,
     Expression<bool>? isEnabled,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -346,6 +385,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (category != null) 'category': category,
+      if (notes != null) 'notes': notes,
       if (isEnabled != null) 'is_enabled': isEnabled,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -357,6 +397,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     Value<String>? id,
     Value<String>? title,
     Value<String>? category,
+    Value<String?>? notes,
     Value<bool>? isEnabled,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
@@ -366,6 +407,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
       id: id ?? this.id,
       title: title ?? this.title,
       category: category ?? this.category,
+      notes: notes ?? this.notes,
       isEnabled: isEnabled ?? this.isEnabled,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -384,6 +426,9 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     }
     if (category.present) {
       map['category'] = Variable<String>(category.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
     }
     if (isEnabled.present) {
       map['is_enabled'] = Variable<bool>(isEnabled.value);
@@ -406,6 +451,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('category: $category, ')
+          ..write('notes: $notes, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -1277,6 +1323,7 @@ typedef $$RoutinesTableCreateCompanionBuilder =
       required String id,
       required String title,
       required String category,
+      Value<String?> notes,
       Value<bool> isEnabled,
       required DateTime createdAt,
       required DateTime updatedAt,
@@ -1287,6 +1334,7 @@ typedef $$RoutinesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> title,
       Value<String> category,
+      Value<String?> notes,
       Value<bool> isEnabled,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -1357,6 +1405,11 @@ class $$RoutinesTableFilterComposer
 
   ColumnFilters<String> get category => $composableBuilder(
     column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1450,6 +1503,11 @@ class $$RoutinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isEnabled => $composableBuilder(
     column: $table.isEnabled,
     builder: (column) => ColumnOrderings(column),
@@ -1483,6 +1541,9 @@ class $$RoutinesTableAnnotationComposer
 
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 
   GeneratedColumn<bool> get isEnabled =>
       $composableBuilder(column: $table.isEnabled, builder: (column) => column);
@@ -1578,6 +1639,7 @@ class $$RoutinesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> category = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -1586,6 +1648,7 @@ class $$RoutinesTableTableManager
                 id: id,
                 title: title,
                 category: category,
+                notes: notes,
                 isEnabled: isEnabled,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -1596,6 +1659,7 @@ class $$RoutinesTableTableManager
                 required String id,
                 required String title,
                 required String category,
+                Value<String?> notes = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
@@ -1604,6 +1668,7 @@ class $$RoutinesTableTableManager
                 id: id,
                 title: title,
                 category: category,
+                notes: notes,
                 isEnabled: isEnabled,
                 createdAt: createdAt,
                 updatedAt: updatedAt,

@@ -47,6 +47,7 @@ class ExportImportService {
                 id: drift.Value(map['id'] as String),
                 title: drift.Value(map['title'] as String),
                 category: drift.Value(map['category'] as String),
+                notes: drift.Value(map['notes'] as String?),
                 isEnabled: drift.Value((map['isEnabled'] as bool?) ?? true),
                 createdAt: drift.Value(
                   DateTime.parse(map['createdAt'] as String),
@@ -120,6 +121,7 @@ class ExportImportService {
       'id': r.id,
       'title': r.title,
       'category': r.category,
+      'notes': r.notes,
       'isEnabled': r.isEnabled,
       'createdAt': r.createdAt.toIso8601String(),
       'updatedAt': r.updatedAt.toIso8601String(),

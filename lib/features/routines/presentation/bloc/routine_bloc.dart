@@ -75,6 +75,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       reminderTime: event.reminderTime,
       repeatDays: event.repeatDays,
       isEnabled: true,
+      notes: event.notes,
       createdAt: now,
       updatedAt: now,
     );

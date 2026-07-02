@@ -40,20 +40,24 @@ class _NewRoutineView extends StatefulWidget {
 
 class _NewRoutineViewState extends State<_NewRoutineView> {
   late final TextEditingController _nameController;
+  late final TextEditingController _notesController;
   RoutineCategory _selectedCategory = RoutineCategory.water;
   TimeOfDay _selectedTime = const TimeOfDay(hour: 8, minute: 0);
   Set<int> _repeatDays = <int>{1, 2, 3};
   bool _seededFromExisting = false;
+  int _snoozeMinutes = 10;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController();
+    _notesController = TextEditingController();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -198,6 +202,44 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     }),
                   ),
                 ),
+                const SizedBox(height: AppSpacing.xxl),
+                Text('Notes (optional)', style: textTheme.titleLarge),
+                const SizedBox(height: AppSpacing.md),
+                TextField(
+                  controller: _notesController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    hintText: 'e.g., Take with food',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xxl),
+                Text('Snooze duration', style: textTheme.titleLarge),
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Slider(
+                        value: _snoozeMinutes.toDouble(),
+                        min: 5,
+                        max: 60,
+                        divisions: 11,
+                        label: '$_snoozeMinutes min',
+                        onChanged: (double value) {
+                          setState(() {
+                            _snoozeMinutes = value.round();
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 60,
+                      child: Text(
+                        '${_snoozeMinutes}m',
+                        style: textTheme.titleMedium,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: AppSpacing.xxxl),
                 PrimaryButton(
                   label: isEditing ? 'Save Changes' : 'Save Routine',
@@ -239,6 +281,9 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
   void _submit(BuildContext context, bool isEditing) {
     final RoutineBloc bloc = context.read<RoutineBloc>();
     final List<int> repeatDays = _repeatDays.toList()..sort();
+    final String? notes = _notesController.text.trim().isEmpty
+        ? null
+        : _notesController.text.trim();
 
     if (isEditing) {
       bloc.add(
@@ -249,6 +294,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
           reminderTime: _serializeTime(_selectedTime),
           repeatDays: repeatDays,
           isEnabled: true,
+          notes: notes,
         ),
       );
       return;
@@ -260,6 +306,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
         category: _selectedCategory,
         reminderTime: _serializeTime(_selectedTime),
         repeatDays: repeatDays,
+        notes: notes,
       ),
     );
   }

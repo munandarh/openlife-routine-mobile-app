@@ -26,12 +26,14 @@ final class RoutineCreateRequested extends RoutineEvent {
     required this.category,
     required this.reminderTime,
     required this.repeatDays,
+    this.notes,
   });
 
   final String title;
   final RoutineCategory category;
   final String reminderTime;
   final List<int> repeatDays;
+  final String? notes;
 
   @override
   List<Object?> get props => <Object?>[
@@ -39,6 +41,7 @@ final class RoutineCreateRequested extends RoutineEvent {
     category,
     reminderTime,
     repeatDays,
+    notes,
   ];
 }
 
@@ -50,6 +53,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
     required this.reminderTime,
     required this.repeatDays,
     required this.isEnabled,
+    this.notes,
   });
 
   final String id;
@@ -58,6 +62,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
   final String reminderTime;
   final List<int> repeatDays;
   final bool isEnabled;
+  final String? notes;
 
   @override
   List<Object?> get props => <Object?>[
@@ -67,6 +72,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
     reminderTime,
     repeatDays,
     isEnabled,
+    notes,
   ];
 }
 

@@ -78,6 +78,13 @@ void main() {
   testWidgets('today page shows daily progress with routines', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
     await tester.pumpAndSettle();
 
@@ -89,6 +96,13 @@ void main() {
   testWidgets('marking routine done updates progress', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
     await tester.pumpAndSettle();
 
@@ -103,6 +117,13 @@ void main() {
   testWidgets('daily complete celebration appears when all done', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
     await tester.pumpAndSettle();
 
@@ -143,6 +164,13 @@ void main() {
   });
 
   testWidgets('celebration can be dismissed', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
     await tester.pumpAndSettle();
 

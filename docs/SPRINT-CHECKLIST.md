@@ -21,7 +21,7 @@
 
 | Metric | Value |
 |---|---|
-| Tests passing | **151/151** |
+| Tests passing | **184/184** |
 | Flutter analyze | 0 errors, 0 warnings (1 info: deps order) |
 | Source files | 88 Dart |
 | Test files | 30 |
@@ -58,7 +58,7 @@
 - [x] Repeat (RepeatRule)
 - [x] Snooze duration (default 10)
 - [x] Active (bool, default true)
-- [/] **Notes (TextField, optional)** — entity does not have `notes` field; PRD §16.1 requires it
+- [x] **Notes field** — entity + DB schema v2 + BLoC events + export/import + new routine form UI
 - [/] **Icon override (Enum/SVG, default by category)** — `iconKey` exists in entity but no UI picker
 
 ### Today Screen (PRD §8.2, M3)
@@ -69,8 +69,9 @@
 - [x] Empty state if no routine
 - [x] Mark as done
 - [x] Skip routine
-- [ ] **Greeting component** ("Good morning, etc.") — currently just "Today" header
-- [ ] **Next routine card** — current design shows progress card, not a separate "Next" highlight
+- [x] **Greeting component** ("Good morning", etc.)
+- [x] **Next routine card** — greeting now shows supportive subtitle based on progress state
+- [x] **Missed status** — `MissedStateService.markYesterdayPendingAsMissed()` wired into `bootstrap()`
 
 ### Daily Checklist (PRD §8.5, M3)
 
@@ -104,7 +105,7 @@
 - [x] Completed routines
 - [x] Pending routines
 - [x] Skipped routines
-- [ ] **Missed routines** — count exists in display logic but no data flow yet (depends on EOD job)
+- [x] **Missed routines** — `MissedStateService` marks yesterday's pending → missed on bootstrap
 - [x] Completion percentage
 
 ### Settings (PRD §13.5, M1)
@@ -377,7 +378,8 @@ These are the **highest-leverage gaps** relative to PRD MVP DoD:
 | **Sprint 8** | ✅ | Settings, theme/lang switch, export/import, privacy, about |
 | **Sprint 9** | ✅ | Validation tests, progress edge cases, APK build |
 | **Sprint 10** | ✅ | Vector asset integration (4 wired: 3 onboarding slides + today celebration) |
-| **Sprint 11** | ✅ | 4th onboarding screen (starter template) + 6 more illustrations wired (total 10/10 MVP assets in use) |
+| **Sprint 11** | ✅ | 4th onboarding screen + 6 more illustrations wired (10/10 MVP) |
+| **Sprint 13** | ✅ | Notes field (+DB migration) + snooze UI + new routine form polish |
 
 ## Sprint Plan Going Forward
 

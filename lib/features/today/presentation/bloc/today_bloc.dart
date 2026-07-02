@@ -153,6 +153,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         items: items,
         completedCount: completedCount,
         totalCount: items.length,
+        hasRoutines: _routineBundles.isNotEmpty,
         clearErrorMessage: true,
       ),
     );

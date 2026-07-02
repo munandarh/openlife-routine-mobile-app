@@ -8,6 +8,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/routines/presentation/pages/routines_empty_page.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
@@ -36,25 +37,48 @@ class _RoutinesView extends StatelessWidget {
 
     return BlocBuilder<RoutineBloc, RoutineState>(
       builder: (BuildContext context, RoutineState state) {
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            120,
-          ),
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const IconCircleButton(icon: Icons.person_outline),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text('Routines', style: textTheme.headlineMedium),
+        if (state.status == RoutineStatus.loading && state.routines.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state.routines.isEmpty) {
+          return const RoutinesEmptyPage();
+        }
+
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              leadingWidth: 68,
+              leading: const Padding(
+                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+                child: Center(
+                  child: IconCircleButton(icon: Icons.person_outline),
                 ),
-                const IconCircleButton(icon: Icons.notifications_none_rounded),
+              ),
+              title: Text(
+                'Routines',
+                style: textTheme.headlineMedium?.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              actions: const <Widget>[
+                IconCircleButton(
+                  icon: Icons.notifications_none_rounded,
+                ),
+                SizedBox(width: AppSpacing.pageMargin),
               ],
+              pinned: true,
+              backgroundColor: AppColors.background,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageMargin,
+                AppSpacing.xl,
+                AppSpacing.pageMargin,
+                120,
+              ),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
             Container(
               padding: const EdgeInsets.all(AppSpacing.xl),
               decoration: BoxDecoration(
@@ -130,8 +154,11 @@ class _RoutinesView extends StatelessWidget {
               icon: Icons.add,
               onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
             ),
-          ],
-        );
+          ]),
+        ),
+      ),
+    ],
+  );
       },
     );
   }

@@ -39,7 +39,9 @@ class RoutineCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(AppRadius.large),
       onTap: onTap,
-      child: Ink(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
         padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -65,11 +67,9 @@ class RoutineCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style: AppTextStyles.cardTitle.copyWith(
-                      decoration: isDone ? TextDecoration.lineThrough : null,
-                    ),
+                  _AnimatedStrikethroughText(
+                    text: title,
+                    isStruckThrough: isDone,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Wrap(
@@ -145,29 +145,87 @@ class RoutineCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            InkWell(
-              borderRadius: BorderRadius.circular(AppRadius.pill),
-              onTap: onCheckTap,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppRadius.pill),
-                  border: Border.all(
-                    color: isDone ? Colors.transparent : AppColors.border,
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  isDone ? Icons.check_rounded : Icons.circle_outlined,
-                  color: isDone ? AppColors.success : AppColors.border,
-                ),
-              ),
-            ),
+            _CheckCircle(isDone: isDone, onTap: onCheckTap),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CheckCircle extends StatelessWidget {
+  const _CheckCircle({required this.isDone, this.onTap});
+
+  final bool isDone;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          border: Border.all(
+            color: isDone ? Colors.transparent : AppColors.border,
+            width: 2,
+          ),
+        ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          switchInCurve: Curves.easeOutBack,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(scale: animation, child: child);
+          },
+          child: Icon(
+            isDone ? Icons.check_rounded : Icons.circle_outlined,
+            key: ValueKey<bool>(isDone),
+            color: isDone ? AppColors.success : AppColors.border,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AnimatedStrikethroughText extends StatelessWidget {
+  const _AnimatedStrikethroughText({
+    required this.text,
+    required this.isStruckThrough,
+  });
+
+  final String text;
+  final bool isStruckThrough;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(
+        begin: isStruckThrough ? 1.0 : 0.0,
+        end: isStruckThrough ? 1.0 : 0.0,
+      ),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      builder: (BuildContext context, double value, Widget? child) {
+        return Text(
+          text,
+          style: AppTextStyles.cardTitle.copyWith(
+            decoration: value > 0.5 ? TextDecoration.lineThrough : null,
+            color: Color.lerp(
+              AppColors.textPrimary,
+              AppColors.textSecondary,
+              value,
+            ),
+          ),
+        );
+      },
     );
   }
 }

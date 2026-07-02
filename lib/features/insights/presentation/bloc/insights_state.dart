@@ -46,7 +46,9 @@ class InsightsState extends Equatable {
       mostCompletedRoutine: mostCompletedRoutine ?? this.mostCompletedRoutine,
       mostMissedRoutine: mostMissedRoutine ?? this.mostMissedRoutine,
       dailyCompletion: dailyCompletion ?? this.dailyCompletion,
-      errorMessage: clearErrorMessage ? null : errorMessage ?? this.errorMessage,
+      errorMessage: clearErrorMessage
+          ? null
+          : errorMessage ?? this.errorMessage,
     );
   }
 

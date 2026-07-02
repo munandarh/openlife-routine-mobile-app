@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_dependencies.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
@@ -71,6 +72,11 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
               darkTheme: AppTheme.dark(),
               themeMode: _themeModeFromString(state.themeMode),
               routerConfig: _appRouter.router,
+              localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
               supportedLocales: AppLocales.supportedLocales,
               locale: AppLocales.localeFromCode(state.languageCode),
             );

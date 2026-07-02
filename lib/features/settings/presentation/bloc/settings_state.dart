@@ -26,8 +26,9 @@ class SettingsState extends Equatable {
       status: status ?? this.status,
       themeMode: themeMode ?? this.themeMode,
       languageCode: languageCode ?? this.languageCode,
-      errorMessage:
-          clearErrorMessage ? null : errorMessage ?? this.errorMessage,
+      errorMessage: clearErrorMessage
+          ? null
+          : errorMessage ?? this.errorMessage,
     );
   }
 

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_event.dart';
@@ -70,64 +72,91 @@ class _TemplatesView extends StatelessWidget {
     return BlocBuilder<TemplateBloc, TemplateState>(
       builder: (BuildContext context, TemplateState state) {
         if (state.status == TemplateStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            120,
-          ),
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const IconCircleButton(icon: Icons.person_outline),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text('Templates', style: textTheme.headlineMedium),
+        if (state.templates.isEmpty) {
+          return const TemplatesEmptyPage();
+        }
+
+        return Scaffold(
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  leadingWidth: 68,
+                  leading: Padding(
+                    padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
+                    child: Center(
+                      child: IconCircleButton(
+                        icon: Icons.arrow_back_rounded,
+                        onPressed: () => context.pop(),
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    'Templates',
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  actions: const <Widget>[
+                    IconCircleButton(
+                      icon: Icons.notifications_none_rounded,
+                    ),
+                    SizedBox(width: AppSpacing.pageMargin),
+                  ],
+                  pinned: true,
+                  backgroundColor: AppColors.background,
                 ),
-                const IconCircleButton(
-                  icon: Icons.notifications_none_rounded,
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.pageMargin,
+                    AppSpacing.xl,
+                    AppSpacing.pageMargin,
+                    120,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(<Widget>[
+                      Text(
+                        'Discover Routines',
+                        style: textTheme.displayLarge?.copyWith(
+                          color: AppColors.primary,
+                          fontSize: 22,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Add structured, calm habits to your day with a single tap.',
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      ...state.templates.map(
+                        (RoutineTemplate template) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+                          child: _TemplateCard(
+                            title: template.title,
+                            description: template.description,
+                            badge: template.badge,
+                            icon: _iconForKey(template.iconKey),
+                            iconBackground: _iconBgForKey(template.iconKey),
+                            iconColor: _iconColorForKey(template.iconKey),
+                            meta: '${template.routineCount} steps',
+                            isPrimary: template.isPrimary,
+                            onApply: () => _applyTemplate(context, template),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(
-              'Discover Routines',
-              style: textTheme.displayLarge?.copyWith(
-                color: AppColors.primary,
-                fontSize: 22,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Add structured, calm habits to your day with a single tap.',
-              style: textTheme.bodyLarge?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            ...state.templates.map(
-              (RoutineTemplate template) => Padding(
-                padding: const EdgeInsets.only(
-                  bottom: AppSpacing.cardGap,
-                ),
-                child: _TemplateCard(
-                  title: template.title,
-                  description: template.description,
-                  badge: template.badge,
-                  icon: _iconForKey(template.iconKey),
-                  iconBackground: _iconBgForKey(template.iconKey),
-                  iconColor: _iconColorForKey(template.iconKey),
-                  meta: '${template.routineCount} steps',
-                  isPrimary: template.isPrimary,
-                  onApply: () => _applyTemplate(context, template),
-                ),
-              ),
-            ),
-          ],
+          ),
         );
       },
     );

@@ -11,7 +11,10 @@ void main() {
       });
     }
 
-    Widget buildSelector({int selectedIndex = 0, ValueChanged<int>? onSelected}) {
+    Widget buildSelector({
+      int selectedIndex = 0,
+      ValueChanged<int>? onSelected,
+    }) {
       return MaterialApp(
         home: Scaffold(
           body: WeekDateSelector(
@@ -49,9 +52,7 @@ void main() {
       WidgetTester tester,
     ) async {
       int? tapped;
-      await tester.pumpWidget(
-        buildSelector(onSelected: (int i) => tapped = i),
-      );
+      await tester.pumpWidget(buildSelector(onSelected: (int i) => tapped = i));
 
       // Tap the third day.
       await tester.tap(find.text('3').last);

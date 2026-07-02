@@ -51,8 +51,9 @@ void main() {
     testWidgets('renders with animation entry from registry', (
       WidgetTester tester,
     ) async {
-      final OpenLifeAnimationEntry entry =
-          OpenLifeAnimationAssets.byName('emptyNoRoutines');
+      final OpenLifeAnimationEntry entry = OpenLifeAnimationAssets.byName(
+        'emptyNoRoutines',
+      );
 
       await tester.pumpWidget(
         MaterialApp(

@@ -44,10 +44,7 @@ class _AppEmptyStateState extends State<AppEmptyState>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.05),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.forward();
   }
 
@@ -92,7 +89,10 @@ class _AppEmptyStateState extends State<AppEmptyState>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xl),
-              PrimaryButton(label: widget.buttonLabel, onPressed: widget.onPressed),
+              PrimaryButton(
+                label: widget.buttonLabel,
+                onPressed: widget.onPressed,
+              ),
             ],
           ),
         ),

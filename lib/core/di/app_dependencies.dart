@@ -2,6 +2,7 @@ import 'package:openlife_routine/core/notifications/app_notification_service.dar
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
+import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
 import 'package:openlife_routine/features/onboarding/data/repositories/shared_prefs_onboarding_repository.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
@@ -13,13 +14,12 @@ import 'package:openlife_routine/features/routines/domain/usecases/get_routine_u
 import 'package:openlife_routine/features/routines/domain/usecases/update_routine_use_case.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/watch_routines_use_case.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
-import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
-import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
-import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
 import 'package:openlife_routine/features/settings/data/repositories/shared_prefs_settings_repository.dart';
 import 'package:openlife_routine/features/settings/data/services/export_import_service.dart';
 import 'package:openlife_routine/features/settings/domain/repositories/settings_repository.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
+import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,8 +64,9 @@ class AppDependencies {
     final String? initialNotificationRoutineId = await notificationService
         .initialize();
     await notificationService.syncRoutineSchedules(appDatabase);
-    final SettingsRepository settingsRepository =
-        SharedPrefsSettingsRepository(preferences);
+    final SettingsRepository settingsRepository = SharedPrefsSettingsRepository(
+      preferences,
+    );
 
     return AppDependencies(
       databaseConfig: const LocalDatabaseConfig.recommended(),

@@ -28,30 +28,32 @@ void main() {
 
     // Seed a routine that is enabled and repeats today.
     final String routineId = 'r1';
-    await appDatabase.into(appDatabase.routines).insert(
-      RoutinesCompanion(
-        id: Value(routineId),
-        title: const Value('Breakfast'),
-        category: const Value('meal'),
-        isEnabled: const Value(true),
-        createdAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
-      ),
-    );
+    await appDatabase
+        .into(appDatabase.routines)
+        .insert(
+          RoutinesCompanion(
+            id: Value(routineId),
+            title: const Value('Breakfast'),
+            category: const Value('meal'),
+            isEnabled: const Value(true),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
 
     final DateTime now = DateTime.now();
-    await appDatabase.into(appDatabase.routineSchedules).insert(
-      RoutineSchedulesCompanion(
-        id: Value('s1'),
-        routineId: Value(routineId),
-        reminderTime: const Value('07:00'),
-        repeatDays: Value(jsonEncode(<int>[
-          now.weekday,
-        ])),
-        snoozeMinutes: const Value(10),
-        updatedAt: Value(now),
-      ),
-    );
+    await appDatabase
+        .into(appDatabase.routineSchedules)
+        .insert(
+          RoutineSchedulesCompanion(
+            id: Value('s1'),
+            routineId: Value(routineId),
+            reminderTime: const Value('07:00'),
+            repeatDays: Value(jsonEncode(<int>[now.weekday])),
+            snoozeMinutes: const Value(10),
+            updatedAt: Value(now),
+          ),
+        );
   });
 
   tearDown(() async {
@@ -69,7 +71,7 @@ void main() {
       routineRepository: routineRepository,
       notificationService: AppNotificationService.noop(),
       initialNotificationRoutineId: null,
-          settingsRepository: _FakeSettingsRepository(),
+      settingsRepository: _FakeSettingsRepository(),
     );
   }
 
@@ -77,8 +79,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pumpAndSettle();
 
     expect(find.text('Daily Progress'), findsOneWidget);
     expect(find.text('Daily routine'), findsOneWidget);
@@ -89,8 +90,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pumpAndSettle();
 
     // Tap the check circle.
     await tester.tap(find.byIcon(Icons.circle_outlined));
@@ -104,8 +104,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pumpAndSettle();
 
     // Complete the only routine.
     await tester.tap(find.byIcon(Icons.circle_outlined));
@@ -117,8 +116,7 @@ void main() {
 
   testWidgets('celebration can be dismissed', (WidgetTester tester) async {
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pumpAndSettle();
 
     // Complete the only routine.
     await tester.tap(find.byIcon(Icons.circle_outlined));
@@ -153,13 +151,13 @@ class _FakeOnboardingRepository implements OnboardingRepository {
 
 class _FakeSettingsRepository implements SettingsRepository {
   @override
-  Future<String> getThemeMode() async => "system";
+  Future<String> getThemeMode() async => 'system';
 
   @override
   Future<void> setThemeMode(String mode) async {}
 
   @override
-  Future<String> getLanguageCode() async => "en";
+  Future<String> getLanguageCode() async => 'en';
 
   @override
   Future<void> setLanguageCode(String code) async {}

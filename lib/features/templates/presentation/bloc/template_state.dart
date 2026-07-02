@@ -23,7 +23,9 @@ class TemplateState extends Equatable {
     return TemplateState(
       status: status ?? this.status,
       templates: templates ?? this.templates,
-      errorMessage: clearErrorMessage ? null : errorMessage ?? this.errorMessage,
+      errorMessage: clearErrorMessage
+          ? null
+          : errorMessage ?? this.errorMessage,
     );
   }
 

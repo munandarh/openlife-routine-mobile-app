@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_page.dart';
+import 'package:openlife_routine/features/onboarding/presentation/pages/language_selection_page.dart';
+import 'package:openlife_routine/features/onboarding/presentation/pages/notification_permission_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:openlife_routine/features/routine_detail/presentation/pages/routine_detail_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/new_routine_page.dart';
+import 'package:openlife_routine/features/routines/presentation/pages/routines_empty_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/routines_page.dart';
+import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_page.dart';
-import 'package:openlife_routine/features/settings/presentation/pages/settings_page.dart';
-import 'package:openlife_routine/features/settings/presentation/pages/privacy_page.dart';
 import 'package:openlife_routine/features/settings/presentation/pages/about_page.dart';
+import 'package:openlife_routine/features/settings/presentation/pages/privacy_page.dart';
+import 'package:openlife_routine/features/settings/presentation/pages/settings_page.dart';
+import 'package:openlife_routine/features/splash/presentation/pages/splash_page.dart';
+import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_page.dart';
 import 'package:openlife_routine/shared/navigation/openlife_shell.dart';
 
@@ -17,16 +24,37 @@ final class AppRouter {
     required bool hasCompletedOnboarding,
     required String? initialNotificationRoutineId,
   }) : router = GoRouter(
-         initialLocation: _initialLocation(
-           hasCompletedOnboarding: hasCompletedOnboarding,
-           initialNotificationRoutineId: initialNotificationRoutineId,
-         ),
+         initialLocation: OpenLifeRoute.splash.path,
          routes: <RouteBase>[
+           GoRoute(
+             path: OpenLifeRoute.splash.path,
+             name: OpenLifeRoute.splash.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return SplashPage(
+                 hasCompletedOnboarding: hasCompletedOnboarding,
+                 initialNotificationRoutineId: initialNotificationRoutineId,
+               );
+             },
+           ),
            GoRoute(
              path: OpenLifeRoute.onboarding.path,
              name: OpenLifeRoute.onboarding.name,
              builder: (BuildContext context, GoRouterState state) {
                return const OnboardingPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.notificationPermission.path,
+             name: OpenLifeRoute.notificationPermission.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const NotificationPermissionPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.languageSelection.path,
+             name: OpenLifeRoute.languageSelection.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const LanguageSelectionPage();
              },
            ),
            GoRoute(
@@ -52,11 +80,8 @@ final class AppRouter {
            GoRoute(
              path: OpenLifeRoute.templates.path,
              name: OpenLifeRoute.templates.name,
-             pageBuilder: (BuildContext context, GoRouterState state) {
-               return _shellPage(
-                 child: const TemplatesPage(),
-                 currentRoute: OpenLifeRoute.templates,
-               );
+             builder: (BuildContext context, GoRouterState state) {
+               return const TemplatesPage();
              },
            ),
            GoRoute(
@@ -82,24 +107,18 @@ final class AppRouter {
            GoRoute(
              path: OpenLifeRoute.newRoutine.path,
              name: OpenLifeRoute.newRoutine.name,
-             pageBuilder: (BuildContext context, GoRouterState state) {
-               return _shellPage(
-                 child: NewRoutinePage(
-                   routineId: state.uri.queryParameters['id'],
-                 ),
-                 currentRoute: OpenLifeRoute.newRoutine,
+             builder: (BuildContext context, GoRouterState state) {
+               return NewRoutinePage(
+                 routineId: state.uri.queryParameters['id'],
                );
              },
            ),
            GoRoute(
              path: OpenLifeRoute.routineDetail.path,
              name: OpenLifeRoute.routineDetail.name,
-             pageBuilder: (BuildContext context, GoRouterState state) {
-               return _shellPage(
-                 child: RoutineDetailPage(
-                   routineId: state.uri.queryParameters['id'] ?? '',
-                 ),
-                 currentRoute: OpenLifeRoute.routineDetail,
+             builder: (BuildContext context, GoRouterState state) {
+               return RoutineDetailPage(
+                 routineId: state.uri.queryParameters['id'] ?? '',
                );
              },
            ),
@@ -117,27 +136,38 @@ final class AppRouter {
                return const AboutPage();
              },
            ),
+           GoRoute(
+             path: OpenLifeRoute.todayEmpty.path,
+             name: OpenLifeRoute.todayEmpty.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const TodayEmptyPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.routinesEmpty.path,
+             name: OpenLifeRoute.routinesEmpty.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const RoutinesEmptyPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.insightsEmpty.path,
+             name: OpenLifeRoute.insightsEmpty.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const InsightsEmptyPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.templatesEmpty.path,
+             name: OpenLifeRoute.templatesEmpty.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const TemplatesEmptyPage();
+             },
+           ),
          ],
        );
 
   final GoRouter router;
-
-  static String _initialLocation({
-    required bool hasCompletedOnboarding,
-    required String? initialNotificationRoutineId,
-  }) {
-    if (!hasCompletedOnboarding) {
-      return OpenLifeRoute.onboarding.path;
-    }
-    if (initialNotificationRoutineId == null ||
-        initialNotificationRoutineId.isEmpty) {
-      return OpenLifeRoute.today.path;
-    }
-    return Uri(
-      path: OpenLifeRoute.routineDetail.path,
-      queryParameters: <String, String>{'id': initialNotificationRoutineId},
-    ).toString();
-  }
 }
 
 NoTransitionPage<void> _shellPage({
@@ -150,7 +180,18 @@ NoTransitionPage<void> _shellPage({
 }
 
 enum OpenLifeRoute {
+  splash('/splash', 'Splash', Icons.spa_outlined),
   onboarding('/onboarding', 'Onboarding', Icons.spa_outlined),
+  notificationPermission(
+    '/onboarding/notification-permission',
+    'Notification Permission',
+    Icons.notifications_active_outlined,
+  ),
+  languageSelection(
+    '/onboarding/language-selection',
+    'Language Selection',
+    Icons.language_outlined,
+  ),
   today('/today', 'Today', Icons.today_outlined),
   routines('/routines', 'Routines', Icons.calendar_today_outlined),
   templates(
@@ -163,7 +204,23 @@ enum OpenLifeRoute {
   newRoutine('/routines/new', 'New Routine', Icons.add_circle_outline),
   routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz),
   privacy('/settings/privacy', 'Privacy', Icons.shield_outlined),
-  about('/settings/about', 'About', Icons.code_outlined);
+  about('/settings/about', 'About', Icons.code_outlined),
+  todayEmpty('/screens/today-empty', 'Today Empty', Icons.event_note_outlined),
+  routinesEmpty(
+    '/screens/routines-empty',
+    'Routines Empty',
+    Icons.calendar_view_day_outlined,
+  ),
+  insightsEmpty(
+    '/screens/insights-empty',
+    'Insights Empty',
+    Icons.insights_outlined,
+  ),
+  templatesEmpty(
+    '/screens/templates-empty',
+    'Templates Empty',
+    Icons.dashboard_customize_outlined,
+  );
 
   const OpenLifeRoute(this.path, this.label, this.icon);
 
@@ -172,7 +229,10 @@ enum OpenLifeRoute {
   final IconData icon;
 
   String get name => switch (this) {
+    OpenLifeRoute.splash => 'splash',
     OpenLifeRoute.onboarding => 'onboarding',
+    OpenLifeRoute.notificationPermission => 'notificationPermission',
+    OpenLifeRoute.languageSelection => 'languageSelection',
     OpenLifeRoute.today => 'today',
     OpenLifeRoute.routines => 'routines',
     OpenLifeRoute.templates => 'templates',
@@ -182,6 +242,10 @@ enum OpenLifeRoute {
     OpenLifeRoute.routineDetail => 'routineDetail',
     OpenLifeRoute.privacy => 'privacy',
     OpenLifeRoute.about => 'about',
+    OpenLifeRoute.todayEmpty => 'todayEmpty',
+    OpenLifeRoute.routinesEmpty => 'routinesEmpty',
+    OpenLifeRoute.insightsEmpty => 'insightsEmpty',
+    OpenLifeRoute.templatesEmpty => 'templatesEmpty',
   };
 
   bool get isNestedUnderRoutines {

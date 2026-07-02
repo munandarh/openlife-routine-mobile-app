@@ -46,10 +46,9 @@ class WeekDateSelector extends StatelessWidget {
             height: isSelected ? 60 : 40,
             decoration: BoxDecoration(
               color: isSelected ? AppColors.primary : Colors.transparent,
-              borderRadius:
-                  isSelected
-                      ? BorderRadius.circular(AppRadius.extraLarge)
-                      : BorderRadius.circular(AppRadius.pill),
+              borderRadius: isSelected
+                  ? BorderRadius.circular(AppRadius.extraLarge)
+                  : BorderRadius.circular(AppRadius.pill),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -33,9 +33,7 @@ void main() {
       );
     }
 
-    testWidgets('renders title and time label', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('renders title and time label', (WidgetTester tester) async {
       await tester.pumpWidget(buildCard());
 
       expect(find.text('Breakfast'), findsOneWidget);
@@ -54,17 +52,17 @@ void main() {
       expect(find.byIcon(Icons.check_rounded), findsOneWidget);
     });
 
-    testWidgets('isDueNow shows warning border', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('isDueNow shows warning border', (WidgetTester tester) async {
       await tester.pumpWidget(buildCard(isDueNow: true));
 
       // Find the AnimatedContainer carrying the BoxDecoration.
       final AnimatedContainer container = tester.widget<AnimatedContainer>(
-        find.descendant(
-          of: find.byType(RoutineCard),
-          matching: find.byType(AnimatedContainer),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(RoutineCard),
+              matching: find.byType(AnimatedContainer),
+            )
+            .first,
       );
 
       final BoxDecoration decoration = container.decoration as BoxDecoration;
@@ -86,10 +84,12 @@ void main() {
       await tester.pumpAndSettle();
 
       final AnimatedContainer container = tester.widget<AnimatedContainer>(
-        find.descendant(
-          of: find.byType(RoutineCard),
-          matching: find.byType(AnimatedContainer),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(RoutineCard),
+              matching: find.byType(AnimatedContainer),
+            )
+            .first,
       );
       final BoxDecoration decoration = container.decoration as BoxDecoration;
       final Border border = decoration.border! as Border;
@@ -102,9 +102,7 @@ void main() {
       await tester.pumpWidget(buildCard(isDone: true));
       await tester.pumpAndSettle();
 
-      final Text titleText = tester.widget<Text>(
-        find.text('Breakfast'),
-      );
+      final Text titleText = tester.widget<Text>(find.text('Breakfast'));
       expect(titleText.style?.decoration, TextDecoration.lineThrough);
     });
 
@@ -112,9 +110,7 @@ void main() {
       WidgetTester tester,
     ) async {
       bool tapped = false;
-      await tester.pumpWidget(
-        buildCard(onCheckTap: () => tapped = true),
-      );
+      await tester.pumpWidget(buildCard(onCheckTap: () => tapped = true));
 
       await tester.tap(find.byIcon(Icons.circle_outlined));
       expect(tapped, isTrue);
@@ -135,13 +131,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('calls onTap when card tapped', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('calls onTap when card tapped', (WidgetTester tester) async {
       bool tapped = false;
-      await tester.pumpWidget(
-        buildCard(onTap: () => tapped = true),
-      );
+      await tester.pumpWidget(buildCard(onTap: () => tapped = true));
 
       await tester.tap(find.text('Breakfast'));
       expect(tapped, isTrue);

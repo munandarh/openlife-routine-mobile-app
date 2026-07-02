@@ -92,18 +92,21 @@ void main() {
       expect(date.day, 1); // Same day
     });
 
-    test('next weekly date for same day but earlier time returns future date', () {
-      // Wednesday 2026-07-01 09:00, requesting Wednesday 08:00 (today, passed)
-      final date = AppNotificationService.nextWeeklyDateFor(
-        now: DateTime(2026, 7, 1, 9), // Wednesday
-        weekday: DateTime.wednesday,
-        reminderTime: '08:00',
-      );
+    test(
+      'next weekly date for same day but earlier time returns future date',
+      () {
+        // Wednesday 2026-07-01 09:00, requesting Wednesday 08:00 (today, passed)
+        final date = AppNotificationService.nextWeeklyDateFor(
+          now: DateTime(2026, 7, 1, 9), // Wednesday
+          weekday: DateTime.wednesday,
+          reminderTime: '08:00',
+        );
 
-      expect(date.weekday, DateTime.wednesday);
-      // Core guarantee: the returned date must be in the future.
-      expect(date.isAfter(DateTime(2026, 7, 1, 9)), true);
-    });
+        expect(date.weekday, DateTime.wednesday);
+        // Core guarantee: the returned date must be in the future.
+        expect(date.isAfter(DateTime(2026, 7, 1, 9)), true);
+      },
+    );
 
     test('next weekly date for passed weekday rolls forward', () {
       // Wednesday 2026-07-01, requesting Tuesday (already passed this week)
@@ -167,8 +170,10 @@ void main() {
     });
 
     test('snooze uses distinct notification id (weekday 99)', () {
-      final int snoozeId =
-          AppNotificationService.notificationIdFor('routine-x', 99);
+      final int snoozeId = AppNotificationService.notificationIdFor(
+        'routine-x',
+        99,
+      );
 
       // Should not collide with any regular weekday (1-7).
       for (int w = 1; w <= 7; w += 1) {

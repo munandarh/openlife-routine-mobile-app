@@ -16,7 +16,9 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
     InsightsStarted event,
     Emitter<InsightsState> emit,
   ) async {
-    emit(state.copyWith(status: InsightsStatus.loading, clearErrorMessage: true));
+    emit(
+      state.copyWith(status: InsightsStatus.loading, clearErrorMessage: true),
+    );
 
     try {
       final DateTime now = DateTime.now();
@@ -27,15 +29,12 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
         now.day,
       ).add(Duration(days: mondayOffset));
 
-      final List<String> weekDates = List<String>.generate(
-        7,
-        (int i) {
-          final DateTime d = monday.add(Duration(days: i));
-          final String m = d.month.toString().padLeft(2, '0');
-          final String day = d.day.toString().padLeft(2, '0');
-          return '${d.year}-$m-$day';
-        },
-      );
+      final List<String> weekDates = List<String>.generate(7, (int i) {
+        final DateTime d = monday.add(Duration(days: i));
+        final String m = d.month.toString().padLeft(2, '0');
+        final String day = d.day.toString().padLeft(2, '0');
+        return '${d.year}-$m-$day';
+      });
 
       // Collect all logs for this week.
       final List<RoutineLogRowData> allLogs = <RoutineLogRowData>[];
@@ -44,19 +43,16 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       }
 
       // Total routines scheduled per day (from active routines).
-      final List<RoutineBundleRow> bundles =
-          await _appDatabase.getRoutineBundles();
+      final List<RoutineBundleRow> bundles = await _appDatabase
+          .getRoutineBundles();
       final int activeRoutineCount = bundles
           .where((b) => b.routine.isEnabled)
           .length;
 
       // Weekly completion: percentage of completed logs vs total possible.
       final int totalPossible = activeRoutineCount * 7;
-      final int completed = allLogs
-          .where((log) => log.status == 'done')
-          .length;
-      final double rate =
-          totalPossible > 0 ? completed / totalPossible : 0.0;
+      final int completed = allLogs.where((log) => log.status == 'done').length;
+      final double rate = totalPossible > 0 ? completed / totalPossible : 0.0;
 
       // Daily completion per day.
       final List<double> dailyCompletion = <double>[];
@@ -68,9 +64,7 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
             .where((log) => log.status == 'done')
             .length;
         dailyCompletion.add(
-          activeRoutineCount > 0
-              ? dayCompleted / activeRoutineCount
-              : 0.0,
+          activeRoutineCount > 0 ? dayCompleted / activeRoutineCount : 0.0,
         );
       }
 
@@ -111,9 +105,7 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
         final String dateKey = _dateKey(checkDate);
         final List<RoutineLogRowData> dayLogs = await _appDatabase
             .getRoutineLogsByDate(dateKey);
-        final int dayDone = dayLogs
-            .where((log) => log.status == 'done')
-            .length;
+        final int dayDone = dayLogs.where((log) => log.status == 'done').length;
 
         // Count enabled routines for this day.
         final int scheduledThatDay = bundles.where((b) {

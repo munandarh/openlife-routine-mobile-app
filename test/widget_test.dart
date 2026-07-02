@@ -29,6 +29,13 @@ void main() {
   });
 
   testWidgets('first launch shows onboarding', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       OpenLifeApp(
         dependencies: AppDependencies(
@@ -46,9 +53,20 @@ void main() {
       ),
     );
 
+    await tester.pump(const Duration(milliseconds: 1000));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // Now on LanguageSelectionPage.
+    expect(find.text('Choose your language'), findsOneWidget);
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    expect(find.text('OpenLife Routine'), findsOneWidget);
+    // Now on NotificationPermissionPage.
+    expect(find.text('Get gentle reminders'), findsOneWidget);
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+
+    // Now on OnboardingPage.
     expect(find.text('Build better days'), findsOneWidget);
     expect(find.text('Continue'), findsOneWidget);
 
@@ -74,11 +92,11 @@ void main() {
       ),
     );
 
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump(const Duration(milliseconds: 1000));
+    await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Daily Progress'), findsOneWidget);
-    expect(find.text('Daily routine'), findsOneWidget);
+    // Since DB is empty, should show TodayEmptyPage.
+    expect(find.text('Nothing scheduled today'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -104,14 +122,14 @@ class _FakeOnboardingRepository implements OnboardingRepository {
 
 class _FakeSettingsRepository implements SettingsRepository {
   @override
-  Future<String> getThemeMode() async => 'system';
-
-  @override
-  Future<void> setThemeMode(String mode) async {}
-
-  @override
   Future<String> getLanguageCode() async => 'en';
 
   @override
+  Future<String> getThemeMode() async => 'system';
+
+  @override
   Future<void> setLanguageCode(String code) async {}
+
+  @override
+  Future<void> setThemeMode(String mode) async {}
 }

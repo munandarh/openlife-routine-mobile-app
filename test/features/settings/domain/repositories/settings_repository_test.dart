@@ -32,10 +32,7 @@ void main() {
     });
 
     test('theme mode rejects invalid values', () {
-      expect(
-        () => repository.setThemeMode('invalid'),
-        throwsArgumentError,
-      );
+      expect(() => repository.setThemeMode('invalid'), throwsArgumentError);
     });
   });
 }

@@ -40,6 +40,7 @@ class TodayState extends Equatable {
     required this.completedCount,
     required this.totalCount,
     required this.errorMessage,
+    required this.hasRoutines,
   });
 
   factory TodayState.initial(DateTime selectedDate) {
@@ -50,6 +51,7 @@ class TodayState extends Equatable {
       completedCount: 0,
       totalCount: 0,
       errorMessage: null,
+      hasRoutines: true,
     );
   }
 
@@ -59,6 +61,7 @@ class TodayState extends Equatable {
   final int completedCount;
   final int totalCount;
   final String? errorMessage;
+  final bool hasRoutines;
 
   double get progress => totalCount == 0 ? 0 : completedCount / totalCount;
 
@@ -78,6 +81,7 @@ class TodayState extends Equatable {
     int? completedCount,
     int? totalCount,
     String? errorMessage,
+    bool? hasRoutines,
     bool clearErrorMessage = false,
   }) {
     return TodayState(
@@ -89,6 +93,7 @@ class TodayState extends Equatable {
       errorMessage: clearErrorMessage
           ? null
           : (errorMessage ?? this.errorMessage),
+      hasRoutines: hasRoutines ?? this.hasRoutines,
     );
   }
 
@@ -100,5 +105,6 @@ class TodayState extends Equatable {
     completedCount,
     totalCount,
     errorMessage,
+    hasRoutines,
   ];
 }

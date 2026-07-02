@@ -17,17 +17,17 @@ final class OpenLifeAnimationAssets {
 
   static const OpenLifeAnimationEntry onboardingBuildBetterDays =
       OpenLifeAnimationEntry(
-    name: 'onboardingBuildBetterDays',
-    rivePath: 'assets/rive/onboarding_build_better_days.riv',
-    fallbackIcon: Icons.checklist_rtl_outlined,
-  );
+        name: 'onboardingBuildBetterDays',
+        rivePath: 'assets/rive/onboarding_build_better_days.riv',
+        fallbackIcon: Icons.checklist_rtl_outlined,
+      );
 
   static const OpenLifeAnimationEntry onboardingPrivateByDefault =
       OpenLifeAnimationEntry(
-    name: 'onboardingPrivateByDefault',
-    rivePath: 'assets/rive/onboarding_private_by_default.riv',
-    fallbackIcon: Icons.lock_outline_rounded,
-  );
+        name: 'onboardingPrivateByDefault',
+        rivePath: 'assets/rive/onboarding_private_by_default.riv',
+        fallbackIcon: Icons.lock_outline_rounded,
+      );
 
   static const OpenLifeAnimationEntry emptyNoRoutines = OpenLifeAnimationEntry(
     name: 'emptyNoRoutines',
@@ -35,8 +35,7 @@ final class OpenLifeAnimationAssets {
     fallbackIcon: Icons.event_note_outlined,
   );
 
-  static const OpenLifeAnimationEntry routineDoneCheck =
-      OpenLifeAnimationEntry(
+  static const OpenLifeAnimationEntry routineDoneCheck = OpenLifeAnimationEntry(
     name: 'routineDoneCheck',
     rivePath: 'assets/rive/routine_done_check.riv',
     fallbackIcon: Icons.check_circle_outline_rounded,
@@ -44,17 +43,17 @@ final class OpenLifeAnimationAssets {
 
   static const OpenLifeAnimationEntry dailyCompleteCelebration =
       OpenLifeAnimationEntry(
-    name: 'dailyCompleteCelebration',
-    rivePath: 'assets/rive/daily_complete_celebration.riv',
-    fallbackIcon: Icons.celebration_outlined,
-  );
+        name: 'dailyCompleteCelebration',
+        rivePath: 'assets/rive/daily_complete_celebration.riv',
+        fallbackIcon: Icons.celebration_outlined,
+      );
 
   static const OpenLifeAnimationEntry reminderActiveBell =
       OpenLifeAnimationEntry(
-    name: 'reminderActiveBell',
-    rivePath: 'assets/rive/reminder_active_bell.riv',
-    fallbackIcon: Icons.notifications_active_outlined,
-  );
+        name: 'reminderActiveBell',
+        rivePath: 'assets/rive/reminder_active_bell.riv',
+        fallbackIcon: Icons.notifications_active_outlined,
+      );
 
   static const List<OpenLifeAnimationEntry> entries = <OpenLifeAnimationEntry>[
     onboardingBuildBetterDays,

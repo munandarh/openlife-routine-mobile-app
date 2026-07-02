@@ -31,6 +31,13 @@ void main() {
   testWidgets('onboarding slides show rive fallback icons', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       OpenLifeApp(
         dependencies: AppDependencies(
@@ -50,6 +57,14 @@ void main() {
 
     await tester.pumpAndSettle();
 
+    // Navigate past Language Selection.
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    // Navigate past Notification Permission.
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+
     // Slide 1 should show checklist icon via Rive fallback.
     expect(find.byIcon(Icons.fact_check_outlined), findsOneWidget);
     expect(find.text('Build better days'), findsOneWidget);
@@ -59,6 +74,13 @@ void main() {
   testWidgets('can navigate through onboarding slides', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       OpenLifeApp(
         dependencies: AppDependencies(
@@ -76,6 +98,14 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
+    // Navigate past Language Selection.
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    // Navigate past Notification Permission.
+    await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
 
     // Navigate to slide 2.
@@ -95,6 +125,13 @@ void main() {
   testWidgets('skip onboarding navigates to today', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       OpenLifeApp(
         dependencies: AppDependencies(
@@ -114,18 +151,33 @@ void main() {
 
     await tester.pumpAndSettle();
 
+    // Navigate past Language Selection.
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    // Navigate past Notification Permission.
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+
     // Tap the header Skip (not the bottom "Skip" button).
     await tester.tap(find.widgetWithText(TextButton, 'Skip'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
 
-    // Should navigate to Today.
-    expect(find.text('Daily Progress'), findsOneWidget);
+    // Should navigate to Today. Since DB is empty, shows TodayEmptyPage.
+    expect(find.text('Nothing scheduled today'), findsOneWidget);
   });
 
   testWidgets('complete onboarding navigates to today', (
     WidgetTester tester,
   ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       OpenLifeApp(
         dependencies: AppDependencies(
@@ -143,6 +195,14 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
+    // Navigate past Language Selection.
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    // Navigate past Notification Permission.
+    await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
 
     // Go to last page.
@@ -158,7 +218,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Daily Progress'), findsOneWidget);
+    expect(find.text('Nothing scheduled today'), findsOneWidget);
   });
 }
 
@@ -181,13 +241,13 @@ class _FakeOnboardingRepository implements OnboardingRepository {
 
 class _FakeSettingsRepository implements SettingsRepository {
   @override
-  Future<String> getThemeMode() async => "system";
+  Future<String> getThemeMode() async => 'system';
 
   @override
   Future<void> setThemeMode(String mode) async {}
 
   @override
-  Future<String> getLanguageCode() async => "en";
+  Future<String> getLanguageCode() async => 'en';
 
   @override
   Future<void> setLanguageCode(String code) async {}

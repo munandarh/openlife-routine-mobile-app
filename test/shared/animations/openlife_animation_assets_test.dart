@@ -7,22 +7,29 @@ void main() {
     test('all rive asset paths are non-empty strings', () {
       for (final OpenLifeAnimationEntry entry
           in OpenLifeAnimationAssets.entries) {
-        expect(entry.rivePath, isNotEmpty,
-            reason: '${entry.name} rivePath must not be empty');
+        expect(
+          entry.rivePath,
+          isNotEmpty,
+          reason: '${entry.name} rivePath must not be empty',
+        );
       }
     });
 
     test('all entries have valid fallback IconData', () {
       for (final OpenLifeAnimationEntry entry
           in OpenLifeAnimationAssets.entries) {
-        expect(entry.fallbackIcon, isA<IconData>(),
-            reason: '${entry.name} fallback must be IconData');
+        expect(
+          entry.fallbackIcon,
+          isA<IconData>(),
+          reason: '${entry.name} fallback must be IconData',
+        );
       }
     });
 
     test('contains all expected animation types', () {
-      final List<String> names =
-          OpenLifeAnimationAssets.entries.map((e) => e.name).toList();
+      final List<String> names = OpenLifeAnimationAssets.entries
+          .map((e) => e.name)
+          .toList();
 
       expect(names, contains('onboardingBuildBetterDays'));
       expect(names, contains('onboardingPrivateByDefault'));
@@ -33,16 +40,17 @@ void main() {
     });
 
     test('onboardingBuildBetterDays has correct fallback', () {
-      final OpenLifeAnimationEntry entry = OpenLifeAnimationAssets
-          .byName('onboardingBuildBetterDays');
-      expect(entry.rivePath,
-          'assets/rive/onboarding_build_better_days.riv');
+      final OpenLifeAnimationEntry entry = OpenLifeAnimationAssets.byName(
+        'onboardingBuildBetterDays',
+      );
+      expect(entry.rivePath, 'assets/rive/onboarding_build_better_days.riv');
       expect(entry.fallbackIcon, Icons.checklist_rtl_outlined);
     });
 
     test('emptyNoRoutines has correct fallback', () {
-      final OpenLifeAnimationEntry entry =
-          OpenLifeAnimationAssets.byName('emptyNoRoutines');
+      final OpenLifeAnimationEntry entry = OpenLifeAnimationAssets.byName(
+        'emptyNoRoutines',
+      );
       expect(entry.rivePath, 'assets/rive/empty_no_routines.riv');
       expect(entry.fallbackIcon, Icons.event_note_outlined);
     });

@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
+import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
@@ -60,37 +61,53 @@ class _TodayViewState extends State<_TodayView> {
             }
           },
           builder: (BuildContext context, TodayState state) {
+            if (state.status == TodayStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!state.hasRoutines) {
+              return const TodayEmptyPage();
+            }
+
             final List<WeekDateItem> weekItems = _buildWeekItems(
               state.selectedDate,
             );
 
-            return ListView(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.pageMargin,
-                AppSpacing.pageMargin,
-                AppSpacing.pageMargin,
-                120,
-              ),
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    const IconCircleButton(icon: Icons.person_outline),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Text(
-                        'Today',
-                        style: textTheme.headlineMedium?.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
+            return CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  leadingWidth: 68,
+                  leading: const Padding(
+                    padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+                    child: Center(
+                      child: IconCircleButton(icon: Icons.person_outline),
                     ),
-                    const IconCircleButton(
+                  ),
+                  title: Text(
+                    'Today',
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  actions: const <Widget>[
+                    IconCircleButton(
                       icon: Icons.notifications_none_rounded,
                     ),
+                    SizedBox(width: AppSpacing.pageMargin),
                   ],
+                  pinned: true,
+                  backgroundColor: AppColors.background,
                 ),
-                const SizedBox(height: AppSpacing.xl),
-                Container(
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.pageMargin,
+                    AppSpacing.xl,
+                    AppSpacing.pageMargin,
+                    120,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(<Widget>[
+                      Container(
                   padding: const EdgeInsets.all(AppSpacing.xl),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -238,14 +255,18 @@ class _TodayViewState extends State<_TodayView> {
                       ),
                     ),
                   ),
-              ],
-            );
+              ]),
+            ),
+          ),
+        ],
+      );
           },
         ),
         // Celebration overlay.
-        if (_showCelebration) _CelebrationOverlay(
-          onDismiss: () => setState(() => _showCelebration = false),
-        ),
+        if (_showCelebration)
+          _CelebrationOverlay(
+            onDismiss: () => setState(() => _showCelebration = false),
+          ),
         Positioned(
           right: AppSpacing.pageMargin,
           bottom: 104,

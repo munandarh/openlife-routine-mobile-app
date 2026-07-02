@@ -48,28 +48,25 @@ class ProgressRing extends StatelessWidget {
                 ),
                 duration: const Duration(milliseconds: 600),
                 curve: Curves.easeOutBack,
-                builder: (
-                  BuildContext context,
-                  double scale,
-                  Widget? scaleChild,
-                ) {
-                  return Transform.scale(
-                    scale: scale,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          label,
-                          style: AppTextStyles.cardTitle.copyWith(
-                            color: isComplete
-                                ? AppColors.success
-                                : AppColors.textPrimary,
-                          ),
+                builder:
+                    (BuildContext context, double scale, Widget? scaleChild) {
+                      return Transform.scale(
+                        scale: scale,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              label,
+                              style: AppTextStyles.cardTitle.copyWith(
+                                color: isComplete
+                                    ? AppColors.success
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
               ),
             ],
           ),

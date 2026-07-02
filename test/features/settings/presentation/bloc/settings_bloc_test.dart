@@ -32,9 +32,7 @@ void main() {
         themeMode: 'system',
         languageCode: 'en',
       ),
-      act: (SettingsBloc bloc) => bloc.add(
-        const SettingsThemeChanged('dark'),
-      ),
+      act: (SettingsBloc bloc) => bloc.add(const SettingsThemeChanged('dark')),
       verify: (SettingsBloc bloc) {
         expect(bloc.state.themeMode, 'dark');
       },
@@ -48,9 +46,7 @@ void main() {
         themeMode: 'system',
         languageCode: 'en',
       ),
-      act: (SettingsBloc bloc) => bloc.add(
-        const SettingsLanguageChanged('id'),
-      ),
+      act: (SettingsBloc bloc) => bloc.add(const SettingsLanguageChanged('id')),
       verify: (SettingsBloc bloc) {
         expect(bloc.state.languageCode, 'id');
       },

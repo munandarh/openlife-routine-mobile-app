@@ -40,27 +40,28 @@ class ExportImportService {
       final List<dynamic> routines = data['routines'] as List<dynamic>;
       for (final dynamic r in routines) {
         final Map<String, dynamic> map = r as Map<String, dynamic>;
-        await _appDatabase.into(_appDatabase.routines).insertOnConflictUpdate(
-          RoutinesCompanion(
-            id: drift.Value(map['id'] as String),
-            title: drift.Value(map['title'] as String),
-            category: drift.Value(map['category'] as String),
-            isEnabled: drift.Value((map['isEnabled'] as bool?) ?? true),
-            createdAt: drift.Value(DateTime.parse(
-              map['createdAt'] as String,
-            )),
-            updatedAt: drift.Value(DateTime.parse(
-              map['updatedAt'] as String,
-            )),
-          ),
-        );
+        await _appDatabase
+            .into(_appDatabase.routines)
+            .insertOnConflictUpdate(
+              RoutinesCompanion(
+                id: drift.Value(map['id'] as String),
+                title: drift.Value(map['title'] as String),
+                category: drift.Value(map['category'] as String),
+                isEnabled: drift.Value((map['isEnabled'] as bool?) ?? true),
+                createdAt: drift.Value(
+                  DateTime.parse(map['createdAt'] as String),
+                ),
+                updatedAt: drift.Value(
+                  DateTime.parse(map['updatedAt'] as String),
+                ),
+              ),
+            );
         count += 1;
       }
     }
 
     if (data.containsKey('routineSchedules')) {
-      final List<dynamic> schedules =
-          data['routineSchedules'] as List<dynamic>;
+      final List<dynamic> schedules = data['routineSchedules'] as List<dynamic>;
       for (final dynamic s in schedules) {
         final Map<String, dynamic> map = s as Map<String, dynamic>;
         await _appDatabase
@@ -74,9 +75,9 @@ class ExportImportService {
                 snoozeMinutes: drift.Value(
                   (map['snoozeMinutes'] as int?) ?? 10,
                 ),
-                updatedAt: drift.Value(DateTime.parse(
-                  map['updatedAt'] as String,
-                )),
+                updatedAt: drift.Value(
+                  DateTime.parse(map['updatedAt'] as String),
+                ),
               ),
             );
       }
@@ -86,20 +87,22 @@ class ExportImportService {
       final List<dynamic> logs = data['routineLogs'] as List<dynamic>;
       for (final dynamic l in logs) {
         final Map<String, dynamic> map = l as Map<String, dynamic>;
-        await _appDatabase.into(_appDatabase.routineLogs).insertOnConflictUpdate(
-          RoutineLogsCompanion(
-            id: drift.Value(map['id'] as String),
-            routineId: drift.Value(map['routineId'] as String),
-            date: drift.Value(map['date'] as String),
-            status: drift.Value(map['status'] as String),
-            createdAt: drift.Value(DateTime.parse(
-              map['createdAt'] as String,
-            )),
-            updatedAt: drift.Value(DateTime.parse(
-              map['updatedAt'] as String,
-            )),
-          ),
-        );
+        await _appDatabase
+            .into(_appDatabase.routineLogs)
+            .insertOnConflictUpdate(
+              RoutineLogsCompanion(
+                id: drift.Value(map['id'] as String),
+                routineId: drift.Value(map['routineId'] as String),
+                date: drift.Value(map['date'] as String),
+                status: drift.Value(map['status'] as String),
+                createdAt: drift.Value(
+                  DateTime.parse(map['createdAt'] as String),
+                ),
+                updatedAt: drift.Value(
+                  DateTime.parse(map['updatedAt'] as String),
+                ),
+              ),
+            );
       }
     }
 

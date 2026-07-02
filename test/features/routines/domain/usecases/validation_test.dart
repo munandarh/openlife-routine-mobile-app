@@ -47,13 +47,22 @@ void main() {
 
     test('category must be one of the valid enum values', () {
       const List<String> validCategories = <String>[
-        'meal', 'water', 'vitamin', 'medicine',
-        'sleep', 'exercise', 'breakTime', 'custom',
+        'meal',
+        'water',
+        'vitamin',
+        'medicine',
+        'sleep',
+        'exercise',
+        'breakTime',
+        'custom',
       ];
 
       for (final String category in validCategories) {
-        expect(_isValidCategory(category), true,
-            reason: '$category should be valid');
+        expect(
+          _isValidCategory(category),
+          true,
+          reason: '$category should be valid',
+        );
       }
 
       expect(_isValidCategory('invalid'), false);
@@ -115,8 +124,14 @@ bool _isValidReminderTime(String time) {
 
 bool _isValidCategory(String category) {
   const List<String> valid = <String>[
-    'meal', 'water', 'vitamin', 'medicine',
-    'sleep', 'exercise', 'breakTime', 'custom',
+    'meal',
+    'water',
+    'vitamin',
+    'medicine',
+    'sleep',
+    'exercise',
+    'breakTime',
+    'custom',
   ];
   return valid.contains(category);
 }

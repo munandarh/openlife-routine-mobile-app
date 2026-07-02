@@ -22,10 +22,12 @@ void main() {
       );
 
       final SizedBox sizedBox = tester.widget<SizedBox>(
-        find.descendant(
-          of: find.byType(ProgressRing),
-          matching: find.byType(SizedBox),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(ProgressRing),
+              matching: find.byType(SizedBox),
+            )
+            .first,
       );
       expect(sizedBox.width, 108);
       expect(sizedBox.height, 108);
@@ -44,9 +46,7 @@ void main() {
       expect(find.byType(TweenAnimationBuilder<double>), findsWidgets);
     });
 
-    testWidgets('clamps progress between 0 and 1', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('clamps progress between 0 and 1', (WidgetTester tester) async {
       // Progress > 1.0 should be clamped to 1.0.
       await tester.pumpWidget(
         const MaterialApp(

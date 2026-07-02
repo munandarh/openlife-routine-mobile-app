@@ -13,9 +13,7 @@ void main() {
 
     test('lightImpact calls HapticFeedback.lightImpact', () {
       final List<String> calls = <String>[];
-      service = HapticService(
-        lightImpactFn: () => calls.add('lightImpact'),
-      );
+      service = HapticService(lightImpactFn: () => calls.add('lightImpact'));
 
       service.lightImpact();
       expect(calls, contains('lightImpact'));
@@ -23,9 +21,7 @@ void main() {
 
     test('mediumImpact calls HapticFeedback.mediumImpact', () {
       final List<String> calls = <String>[];
-      service = HapticService(
-        mediumImpactFn: () => calls.add('mediumImpact'),
-      );
+      service = HapticService(mediumImpactFn: () => calls.add('mediumImpact'));
 
       service.mediumImpact();
       expect(calls, contains('mediumImpact'));

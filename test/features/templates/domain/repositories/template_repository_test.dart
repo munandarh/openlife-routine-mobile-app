@@ -65,26 +65,34 @@ void main() {
       final RoutineTemplate programmer = templates.firstWhere(
         (t) => t.id == 'programmer_break',
       );
-      expect(
-        programmer.routines.any((r) => r.category == 'breakTime'),
-        true,
-      );
+      expect(programmer.routines.any((r) => r.category == 'breakTime'), true);
     });
 
     test('no template makes medical claims', () async {
       final List<RoutineTemplate> templates = await repository.getTemplates();
 
       for (final RoutineTemplate template in templates) {
-        final String combined =
-            '${template.title} ${template.description}';
-        expect(combined.contains('cure'), false,
-            reason: '${template.id} must not claim to cure');
-        expect(combined.contains('treat'), false,
-            reason: '${template.id} must not claim to treat');
-        expect(combined.contains('diagnose'), false,
-            reason: '${template.id} must not claim to diagnose');
-        expect(combined.contains('medical'), false,
-            reason: '${template.id} must not claim medical');
+        final String combined = '${template.title} ${template.description}';
+        expect(
+          combined.contains('cure'),
+          false,
+          reason: '${template.id} must not claim to cure',
+        );
+        expect(
+          combined.contains('treat'),
+          false,
+          reason: '${template.id} must not claim to treat',
+        );
+        expect(
+          combined.contains('diagnose'),
+          false,
+          reason: '${template.id} must not claim to diagnose',
+        );
+        expect(
+          combined.contains('medical'),
+          false,
+          reason: '${template.id} must not claim medical',
+        );
       }
     });
   });

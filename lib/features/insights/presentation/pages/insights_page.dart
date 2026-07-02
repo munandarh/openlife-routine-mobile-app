@@ -7,6 +7,7 @@ import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
+import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 
 class InsightsPage extends StatelessWidget {
@@ -36,43 +37,55 @@ class _InsightsView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
+        if (state.totalRoutines == 0) {
+          return const InsightsEmptyPage();
+        }
+
         final String completionPercent =
             '${(state.weeklyCompletionRate * 100).round()}%';
         final String streakLabel = '${state.streak} days';
 
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            120,
-          ),
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const CircleAvatar(
-                  radius: 22,
-                  backgroundColor: AppColors.surfaceSoft,
-                  child: Icon(
-                    Icons.insights_outlined,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    'Insights',
-                    style: textTheme.headlineMedium?.copyWith(
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              leadingWidth: 68,
+              leading: const Padding(
+                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: AppColors.surfaceSoft,
+                    child: Icon(
+                      Icons.insights_outlined,
                       color: AppColors.primary,
                     ),
                   ),
                 ),
-                const IconCircleButton(
+              ),
+              title: Text(
+                'Insights',
+                style: textTheme.headlineMedium?.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              actions: const <Widget>[
+                IconCircleButton(
                   icon: Icons.notifications_none_rounded,
                 ),
+                SizedBox(width: AppSpacing.pageMargin),
               ],
+              pinned: true,
+              backgroundColor: AppColors.background,
             ),
-            const SizedBox(height: AppSpacing.xl),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageMargin,
+                AppSpacing.xl,
+                AppSpacing.pageMargin,
+                120,
+              ),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
             Row(
               children: <Widget>[
                 Expanded(
@@ -115,8 +128,7 @@ class _InsightsView extends StatelessWidget {
                       children: List<Widget>.generate(
                         state.dailyCompletion.length,
                         (int i) {
-                          final double value =
-                              state.dailyCompletion.length > i
+                          final double value = state.dailyCompletion.length > i
                               ? state.dailyCompletion[i]
                               : 0.0;
                           return Column(
@@ -129,8 +141,8 @@ class _InsightsView extends StatelessWidget {
                                   color: value >= 1.0
                                       ? AppColors.success
                                       : AppColors.primary.withValues(
-                                        alpha: 0.3 + (value * 0.7),
-                                      ),
+                                          alpha: 0.3 + (value * 0.7),
+                                        ),
                                   borderRadius: BorderRadius.circular(
                                     AppRadius.small,
                                   ),
@@ -190,11 +202,14 @@ class _InsightsView extends StatelessWidget {
                 message:
                     'Create your first routine and start building insights over time.',
               ),
-          ],
-        );
-      },
-    );
-  }
+          ]),
+        ),
+      ),
+    ],
+  );
+    },
+  );
+}
 }
 
 class _MetricCard extends StatelessWidget {

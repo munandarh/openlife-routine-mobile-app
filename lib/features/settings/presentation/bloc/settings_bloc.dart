@@ -18,10 +18,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsStarted event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      status: SettingsLoadStatus.loading,
-      clearErrorMessage: true,
-    ));
+    emit(
+      state.copyWith(
+        status: SettingsLoadStatus.loading,
+        clearErrorMessage: true,
+      ),
+    );
 
     try {
       final String themeMode = await _repository.getThemeMode();

@@ -22,7 +22,8 @@ void main() {
   group('ExportImportService', () {
     test('export empty database returns valid JSON', () async {
       final String json = await service.exportToJson();
-      final Map<String, dynamic> data = jsonDecode(json) as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          jsonDecode(json) as Map<String, dynamic>;
 
       expect(data.containsKey('routines'), true);
       expect(data.containsKey('routineSchedules'), true);
@@ -31,19 +32,22 @@ void main() {
     });
 
     test('export includes seeded routines', () async {
-      await appDatabase.into(appDatabase.routines).insert(
-        RoutinesCompanion(
-          id: const Value('r1'),
-          title: const Value('Breakfast'),
-          category: const Value('meal'),
-          isEnabled: const Value(true),
-          createdAt: Value(DateTime(2026, 1, 1)),
-          updatedAt: Value(DateTime(2026, 1, 1)),
-        ),
-      );
+      await appDatabase
+          .into(appDatabase.routines)
+          .insert(
+            RoutinesCompanion(
+              id: const Value('r1'),
+              title: const Value('Breakfast'),
+              category: const Value('meal'),
+              isEnabled: const Value(true),
+              createdAt: Value(DateTime(2026, 1, 1)),
+              updatedAt: Value(DateTime(2026, 1, 1)),
+            ),
+          );
 
       final String json = await service.exportToJson();
-      final Map<String, dynamic> data = jsonDecode(json) as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          jsonDecode(json) as Map<String, dynamic>;
       final List<dynamic> routines = data['routines'] as List<dynamic>;
 
       expect(routines.length, 1);
@@ -58,7 +62,8 @@ void main() {
       );
 
       final String json = await service.exportToJson();
-      final Map<String, dynamic> data = jsonDecode(json) as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          jsonDecode(json) as Map<String, dynamic>;
       final List<dynamic> logs = data['routineLogs'] as List<dynamic>;
 
       expect(logs.length, 1);
@@ -102,26 +107,30 @@ void main() {
 
     test('round-trip: export then import restores data', () async {
       // Seed data.
-      await appDatabase.into(appDatabase.routines).insert(
-        RoutinesCompanion(
-          id: const Value('rt1'),
-          title: const Value('Round Trip'),
-          category: const Value('exercise'),
-          isEnabled: const Value(true),
-          createdAt: Value(DateTime(2026, 6, 1)),
-          updatedAt: Value(DateTime(2026, 6, 1)),
-        ),
-      );
-      await appDatabase.into(appDatabase.routineSchedules).insert(
-        RoutineSchedulesCompanion(
-          id: const Value('s1'),
-          routineId: const Value('rt1'),
-          reminderTime: const Value('08:00'),
-          repeatDays: Value(jsonEncode(<int>[1, 3, 5])),
-          snoozeMinutes: const Value(10),
-          updatedAt: Value(DateTime(2026, 6, 1)),
-        ),
-      );
+      await appDatabase
+          .into(appDatabase.routines)
+          .insert(
+            RoutinesCompanion(
+              id: const Value('rt1'),
+              title: const Value('Round Trip'),
+              category: const Value('exercise'),
+              isEnabled: const Value(true),
+              createdAt: Value(DateTime(2026, 6, 1)),
+              updatedAt: Value(DateTime(2026, 6, 1)),
+            ),
+          );
+      await appDatabase
+          .into(appDatabase.routineSchedules)
+          .insert(
+            RoutineSchedulesCompanion(
+              id: const Value('s1'),
+              routineId: const Value('rt1'),
+              reminderTime: const Value('08:00'),
+              repeatDays: Value(jsonEncode(<int>[1, 3, 5])),
+              snoozeMinutes: const Value(10),
+              updatedAt: Value(DateTime(2026, 6, 1)),
+            ),
+          );
 
       // Export.
       final String exported = await service.exportToJson();

@@ -145,10 +145,7 @@ class RoutineCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            _CheckCircle(
-              isDone: isDone,
-              onTap: onCheckTap,
-            ),
+            _CheckCircle(isDone: isDone, onTap: onCheckTap),
           ],
         ),
       ),

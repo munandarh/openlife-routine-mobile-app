@@ -18,15 +18,14 @@ class TemplateBloc extends Bloc<TemplateEvent, TemplateState> {
     TemplatesLoaded event,
     Emitter<TemplateState> emit,
   ) async {
-    emit(state.copyWith(status: TemplateStatus.loading, clearErrorMessage: true));
+    emit(
+      state.copyWith(status: TemplateStatus.loading, clearErrorMessage: true),
+    );
 
     try {
       final List<RoutineTemplate> templates = await _repository.getTemplates();
       emit(
-        state.copyWith(
-          status: TemplateStatus.success,
-          templates: templates,
-        ),
+        state.copyWith(status: TemplateStatus.success, templates: templates),
       );
     } on Exception catch (e) {
       emit(

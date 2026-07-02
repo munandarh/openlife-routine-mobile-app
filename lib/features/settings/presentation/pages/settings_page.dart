@@ -21,115 +21,135 @@ class SettingsPage extends StatelessWidget {
       builder: (BuildContext context, SettingsState state) {
         final TextTheme textTheme = Theme.of(context).textTheme;
 
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            AppSpacing.pageMargin,
-            120,
-          ),
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const CircleAvatar(
-                  radius: 22,
-                  backgroundColor: AppColors.surfaceSoft,
-                  child: Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    'Settings',
-                    style: textTheme.headlineMedium?.copyWith(
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              leadingWidth: 68,
+              leading: const Padding(
+                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: AppColors.surfaceSoft,
+                    child: Icon(
+                      Icons.settings_outlined,
                       color: AppColors.primary,
                     ),
                   ),
                 ),
-                const IconCircleButton(
+              ),
+              title: Text(
+                'Settings',
+                style: textTheme.headlineMedium?.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              actions: const <Widget>[
+                IconCircleButton(
                   icon: Icons.notifications_none_rounded,
                 ),
+                SizedBox(width: AppSpacing.pageMargin),
               ],
+              pinned: true,
+              backgroundColor: AppColors.background,
             ),
-            const SizedBox(height: AppSpacing.xl),
-            _SettingsSection(title: 'Preferences', items: <_SettingsItemData>[
-              _SettingsItemData(
-                icon: Icons.palette_outlined,
-                title: 'Theme',
-                trailing: state.themeMode == 'system'
-                    ? 'System'
-                    : state.themeMode == 'dark'
-                    ? 'Dark'
-                    : 'Light',
-                onTap: () => _showThemePicker(context),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageMargin,
+                AppSpacing.xl,
+                AppSpacing.pageMargin,
+                120,
               ),
-              _SettingsItemData(
-                icon: Icons.language_outlined,
-                title: 'Language',
-                trailing: state.languageCode == 'id' ? 'Bahasa' : 'English',
-                onTap: () => _showLanguagePicker(context),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
+                  _SettingsSection(
+                    title: 'Preferences',
+                    items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.palette_outlined,
+                        title: 'Theme',
+                        trailing: state.themeMode == 'system'
+                            ? 'System'
+                            : state.themeMode == 'dark'
+                            ? 'Dark'
+                            : 'Light',
+                        onTap: () => _showThemePicker(context),
+                      ),
+                      _SettingsItemData(
+                        icon: Icons.language_outlined,
+                        title: 'Language',
+                        trailing: state.languageCode == 'id' ? 'Bahasa' : 'English',
+                        onTap: () => _showLanguagePicker(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  _SettingsSection(
+                    title: 'Notifications',
+                    items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.notifications_active_outlined,
+                        title: 'Routine alerts',
+                        onTap: () async {
+                          await AppScope.read(
+                            context,
+                          ).notificationService.requestPermissions();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Notification permission requested.'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  _SettingsSection(
+                    title: 'Data',
+                    items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.file_upload_outlined,
+                        title: 'Export routines',
+                        trailing: 'JSON',
+                        onTap: () => _exportData(context),
+                      ),
+                      _SettingsItemData(
+                        icon: Icons.file_download_outlined,
+                        title: 'Import routines',
+                        trailing: 'JSON',
+                        onTap: () => _showImportDialog(context),
+                      ),
+                      _SettingsItemData(
+                        icon: Icons.delete_outline_rounded,
+                        title: 'Reset all data',
+                        trailing: 'Destructive',
+                        trailingColor: AppColors.danger,
+                        onTap: () => _showResetDialog(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  _SettingsSection(
+                    title: 'Privacy',
+                    items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.shield_outlined,
+                        title: 'Privacy & data',
+                        onTap: () => context.push(OpenLifeRoute.privacy.path),
+                      ),
+                      _SettingsItemData(
+                        icon: Icons.code_outlined,
+                        title: 'About open source',
+                        onTap: () => context.push(OpenLifeRoute.about.path),
+                      ),
+                    ],
+                  ),
+                ]),
               ),
-            ]),
-            const SizedBox(height: AppSpacing.xl),
-            _SettingsSection(
-              title: 'Notifications',
-              items: <_SettingsItemData>[
-                _SettingsItemData(
-                  icon: Icons.notifications_active_outlined,
-                  title: 'Routine alerts',
-                  onTap: () async {
-                    await AppScope.read(
-                      context,
-                    ).notificationService.requestPermissions();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Notification permission requested.'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
             ),
-            const SizedBox(height: AppSpacing.xl),
-            _SettingsSection(title: 'Data', items: <_SettingsItemData>[
-              _SettingsItemData(
-                icon: Icons.file_upload_outlined,
-                title: 'Export routines',
-                trailing: 'JSON',
-                onTap: () => _exportData(context),
-              ),
-              _SettingsItemData(
-                icon: Icons.file_download_outlined,
-                title: 'Import routines',
-                trailing: 'JSON',
-                onTap: () => _showImportDialog(context),
-              ),
-              _SettingsItemData(
-                icon: Icons.delete_outline_rounded,
-                title: 'Reset all data',
-                trailing: 'Destructive',
-                trailingColor: AppColors.danger,
-                onTap: () => _showResetDialog(context),
-              ),
-            ]),
-            const SizedBox(height: AppSpacing.xl),
-            _SettingsSection(title: 'Privacy', items: <_SettingsItemData>[
-              _SettingsItemData(
-                icon: Icons.shield_outlined,
-                title: 'Privacy & data',
-                onTap: () => context.push(OpenLifeRoute.privacy.path),
-              ),
-              _SettingsItemData(
-                icon: Icons.code_outlined,
-                title: 'About open source',
-                onTap: () => context.push(OpenLifeRoute.about.path),
-              ),
-            ]),
           ],
         );
       },
@@ -159,9 +179,9 @@ class SettingsPage extends StatelessWidget {
                 leading: const Icon(Icons.brightness_auto_outlined),
                 title: const Text('System'),
                 onTap: () {
-                  context
-                      .read<SettingsBloc>()
-                      .add(const SettingsThemeChanged('system'));
+                  context.read<SettingsBloc>().add(
+                    const SettingsThemeChanged('system'),
+                  );
                   Navigator.pop(sheetContext);
                 },
               ),
@@ -169,9 +189,9 @@ class SettingsPage extends StatelessWidget {
                 leading: const Icon(Icons.light_mode_outlined),
                 title: const Text('Light'),
                 onTap: () {
-                  context
-                      .read<SettingsBloc>()
-                      .add(const SettingsThemeChanged('light'));
+                  context.read<SettingsBloc>().add(
+                    const SettingsThemeChanged('light'),
+                  );
                   Navigator.pop(sheetContext);
                 },
               ),
@@ -179,9 +199,9 @@ class SettingsPage extends StatelessWidget {
                 leading: const Icon(Icons.dark_mode_outlined),
                 title: const Text('Dark'),
                 onTap: () {
-                  context
-                      .read<SettingsBloc>()
-                      .add(const SettingsThemeChanged('dark'));
+                  context.read<SettingsBloc>().add(
+                    const SettingsThemeChanged('dark'),
+                  );
                   Navigator.pop(sheetContext);
                 },
               ),
@@ -215,9 +235,9 @@ class SettingsPage extends StatelessWidget {
                 leading: const Text('🇬🇧'),
                 title: const Text('English'),
                 onTap: () {
-                  context
-                      .read<SettingsBloc>()
-                      .add(const SettingsLanguageChanged('en'));
+                  context.read<SettingsBloc>().add(
+                    const SettingsLanguageChanged('en'),
+                  );
                   Navigator.pop(sheetContext);
                 },
               ),
@@ -225,9 +245,9 @@ class SettingsPage extends StatelessWidget {
                 leading: const Text('🇮🇩'),
                 title: const Text('Bahasa Indonesia'),
                 onTap: () {
-                  context
-                      .read<SettingsBloc>()
-                      .add(const SettingsLanguageChanged('id'));
+                  context.read<SettingsBloc>().add(
+                    const SettingsLanguageChanged('id'),
+                  );
                   Navigator.pop(sheetContext);
                 },
               ),
@@ -239,8 +259,9 @@ class SettingsPage extends StatelessWidget {
   }
 
   Future<void> _exportData(BuildContext context) async {
-    final ExportImportService service =
-        AppScope.read(context).createExportImportService();
+    final ExportImportService service = AppScope.read(
+      context,
+    ).createExportImportService();
     final String json = await service.exportToJson();
 
     if (context.mounted) {
@@ -309,8 +330,9 @@ class SettingsPage extends StatelessWidget {
                   return;
                 }
                 try {
-                  final ExportImportService service =
-                      AppScope.read(context).createExportImportService();
+                  final ExportImportService service = AppScope.read(
+                    context,
+                  ).createExportImportService();
                   final int count = await service.importFromJson(json);
                   if (dialogContext.mounted) {
                     Navigator.pop(dialogContext);
@@ -359,8 +381,9 @@ class SettingsPage extends StatelessWidget {
             FilledButton(
               style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
               onPressed: () async {
-                final ExportImportService service =
-                    AppScope.read(context).createExportImportService();
+                final ExportImportService service = AppScope.read(
+                  context,
+                ).createExportImportService();
                 await service.resetAllData();
                 if (dialogContext.mounted) {
                   Navigator.pop(dialogContext);
@@ -396,9 +419,9 @@ class _SettingsSection extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: AppColors.textSecondary,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.md),
         Container(

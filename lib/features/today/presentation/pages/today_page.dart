@@ -10,11 +10,14 @@ import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
+import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
 import 'package:openlife_routine/shared/widgets/forms/week_date_selector.dart';
 import 'package:openlife_routine/shared/widgets/progress/progress_ring.dart';
+import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class TodayPage extends StatelessWidget {
   const TodayPage({super.key});
@@ -95,10 +98,23 @@ class _TodayViewState extends State<_TodayView> {
                     ),
                     SizedBox(width: AppSpacing.pageMargin),
                   ],
-                  pinned: true,
-                  backgroundColor: AppColors.background,
+              pinned: true,
+              backgroundColor: AppColors.background,
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.pageMargin,
+                  AppSpacing.md,
+                  AppSpacing.pageMargin,
+                  0,
                 ),
-                SliverPadding(
+                child: TodayGreeting(
+                  subtitle: _supportiveSubtitle(state),
+                ),
+              ),
+            ),
+            SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.pageMargin,
                     AppSpacing.xl,
@@ -292,6 +308,16 @@ class _TodayViewState extends State<_TodayView> {
     return '$displayHour:$displayMinute $suffix';
   }
 
+  static String _supportiveSubtitle(TodayState state) {
+    if (state.totalCount == 0) {
+      return 'A calm day ahead. Add a routine whenever you are ready.';
+    }
+    if (state.completedCount == state.totalCount) {
+      return 'You finished all your routines today. Great work.';
+    }
+    return 'Small progress still counts. Take it one step at a time.';
+  }
+
   static DateTime _startOfWeek(DateTime selectedDate) {
     return selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
   }
@@ -405,10 +431,11 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const Icon(
-                    Icons.celebration_outlined,
-                    size: 64,
-                    color: AppColors.success,
+                  OpenLifeRiveView.illustration(
+                    illustrationPath:
+                        AssetVectors.todayDailyCelebration.path,
+                    fallbackIcon: Icons.celebration_outlined,
+                    size: 120,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   const Text(

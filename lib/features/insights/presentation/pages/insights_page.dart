@@ -8,7 +8,9 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_bl
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
+import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class InsightsPage extends StatelessWidget {
   const InsightsPage({super.key});
@@ -76,6 +78,19 @@ class _InsightsView extends StatelessWidget {
               ],
               pinned: true,
               backgroundColor: AppColors.background,
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.pageMargin,
+                ),
+                child: OpenLifeRiveView.illustration(
+                  illustrationPath:
+                      AssetVectors.todayInsightsWorkspace.path,
+                  fallbackIcon: Icons.insights_outlined,
+                  size: 180,
+                ),
+              ),
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(

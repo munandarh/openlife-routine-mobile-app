@@ -3,6 +3,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
+import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class AppEmptyState extends StatefulWidget {
   const AppEmptyState({
@@ -11,6 +12,7 @@ class AppEmptyState extends StatefulWidget {
     required this.buttonLabel,
     required this.icon,
     this.onPressed,
+    this.illustrationPath,
     super.key,
   });
 
@@ -19,6 +21,10 @@ class AppEmptyState extends StatefulWidget {
   final String buttonLabel;
   final IconData icon;
   final VoidCallback? onPressed;
+
+  /// Optional path to a PNG illustration (under `assets/vector/`) used
+  /// in place of the pulsing icon when the asset is available.
+  final String? illustrationPath;
 
   @override
   State<AppEmptyState> createState() => _AppEmptyStateState();
@@ -73,7 +79,13 @@ class _AppEmptyStateState extends State<AppEmptyState>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _PulsingIcon(icon: widget.icon),
+              widget.illustrationPath != null
+                  ? OpenLifeRiveView.illustration(
+                      illustrationPath: widget.illustrationPath!,
+                      fallbackIcon: widget.icon,
+                      size: 140,
+                    )
+                  : _PulsingIcon(icon: widget.icon),
               const SizedBox(height: AppSpacing.lg),
               Text(
                 widget.title,

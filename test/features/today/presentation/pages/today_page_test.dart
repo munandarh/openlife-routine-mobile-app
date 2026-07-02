@@ -112,6 +112,34 @@ void main() {
 
     // Celebration overlay should be visible.
     expect(find.text('All Done!'), findsOneWidget);
+
+    // The PNG illustration (from AssetVectors) should be rendered
+    // instead of the icon fallback.
+    expect(find.byIcon(Icons.celebration_outlined), findsNothing);
+  });
+
+  testWidgets('celebration shows the PNG illustration', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
+    await tester.pumpAndSettle();
+
+    // Complete the only routine.
+    await tester.tap(find.byIcon(Icons.circle_outlined));
+    await tester.pumpAndSettle();
+
+    // The celebration overlay is visible.
+    expect(find.text('All Done!'), findsOneWidget);
+    // Image widget is rendered with the daily celebration asset.
+    final Finder imageFinder = find.byType(Image);
+    expect(imageFinder, findsWidgets);
   });
 
   testWidgets('celebration can be dismissed', (WidgetTester tester) async {

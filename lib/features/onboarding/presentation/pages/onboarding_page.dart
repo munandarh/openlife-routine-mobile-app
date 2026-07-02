@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
@@ -128,6 +129,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                               alpha: 0.45,
                             ),
                             icon: Icons.fact_check_outlined,
+                            illustrationPath:
+                                AssetVectors.onboardingBuildBetterDays.path,
                           ),
                           footer: _LanguageSelector(
                             selectedLanguageCode: state.selectedLanguageCode,
@@ -138,13 +141,15 @@ class _OnboardingViewState extends State<_OnboardingView> {
                             },
                           ),
                         ),
-                        const _OnboardingSlide(
+                        _OnboardingSlide(
                           title: 'Never miss what matters',
                           description:
                               'Receive calm reminders for meals, water, vitamins, and small routines that support your day.',
                           hero: _SlideHero(
                             backgroundColor: Color(0xFFFFF1C8),
                             icon: Icons.notifications_active_outlined,
+                            illustrationPath:
+                                AssetVectors.onboardingSmartRoutines.path,
                           ),
                           footer: _InfoPanel(
                             title: 'Notification education',
@@ -152,19 +157,33 @@ class _OnboardingViewState extends State<_OnboardingView> {
                                 'We will ask for notification permission later, only when reminder scheduling is ready.',
                           ),
                         ),
-                        const _OnboardingSlide(
+                        _OnboardingSlide(
                           title: 'Private by default',
                           description:
                               'Your routines stay on-device first. No account required to start, and no forced cloud setup.',
                           hero: _SlideHero(
                             backgroundColor: Color(0xFFDDEBF5),
                             icon: Icons.lock_outline_rounded,
+                            illustrationPath:
+                                AssetVectors.onboardingPrivateByDefault.path,
                           ),
                           footer: _InfoPanel(
                             title: 'Static fallback ready',
                             message:
                                 'Sprint 2 uses lightweight static hero panels now. Rive can replace these later without changing the flow.',
                           ),
+                        ),
+                        _OnboardingSlide(
+                          title: 'Start with a template',
+                          description:
+                              'Pick a starter template to begin, or add routines yourself one at a time.',
+                          hero: _SlideHero(
+                            backgroundColor: AppColors.primarySoft,
+                            icon: Icons.dashboard_customize_outlined,
+                            illustrationPath:
+                                AssetVectors.onboardingStarterTemplate.path,
+                          ),
+                          footer: const _StarterTemplatePanel(),
                         ),
                       ],
                     ),
@@ -242,10 +261,18 @@ class _OnboardingSlide extends StatelessWidget {
 }
 
 class _SlideHero extends StatelessWidget {
-  const _SlideHero({required this.backgroundColor, required this.icon});
+  const _SlideHero({
+    required this.backgroundColor,
+    required this.icon,
+    this.illustrationPath,
+  });
 
   final Color backgroundColor;
   final IconData icon;
+
+  /// Optional PNG illustration path. When provided, this is rendered
+  /// instead of the icon. See `AssetVectors` for the registry.
+  final String? illustrationPath;
 
   @override
   Widget build(BuildContext context) {
@@ -263,11 +290,17 @@ class _SlideHero extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.extraLarge),
         ),
         child: Center(
-          child: OpenLifeRiveView(
-            assetName: 'assets/rive/onboarding_build_better_days.riv',
-            fallbackIcon: icon,
-            size: 120,
-          ),
+          child: illustrationPath != null
+              ? OpenLifeRiveView.illustration(
+                  illustrationPath: illustrationPath!,
+                  fallbackIcon: icon,
+                  size: 120,
+                )
+              : OpenLifeRiveView.asset(
+                  assetName: 'assets/rive/onboarding_build_better_days.riv',
+                  fallbackIcon: icon,
+                  size: 120,
+                ),
         ),
       ),
     );
@@ -422,6 +455,128 @@ class _PageIndicators extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+class _StarterTemplatePanel extends StatelessWidget {
+  const _StarterTemplatePanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSoft,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Pick a starter',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Choose a starter template or skip and add routines yourself.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: <Widget>[
+              _StarterTemplateChip(
+                label: 'Morning Routine',
+                icon: Icons.wb_sunny_outlined,
+                background: AppColors.accentSoft,
+                foreground: AppColors.warning,
+              ),
+              _StarterTemplateChip(
+                label: 'Hydration',
+                icon: Icons.water_drop_outlined,
+                background: AppColors.secondarySoft,
+                foreground: AppColors.secondary,
+              ),
+              _StarterTemplateChip(
+                label: 'Vitamin',
+                icon: Icons.medication_outlined,
+                background: AppColors.accentSoft,
+                foreground: AppColors.warning,
+              ),
+              _StarterTemplateChip(
+                label: 'Sleep',
+                icon: Icons.bedtime_outlined,
+                background: AppColors.secondarySoft,
+                foreground: AppColors.secondary,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            'Or, you can start empty and add routines later from the Routines tab.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            'Start empty',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StarterTemplateChip extends StatelessWidget {
+  const _StarterTemplateChip({
+    required this.label,
+    required this.icon,
+    required this.background,
+    required this.foreground,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color background;
+  final Color foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon, size: 16, color: foreground),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: foreground,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

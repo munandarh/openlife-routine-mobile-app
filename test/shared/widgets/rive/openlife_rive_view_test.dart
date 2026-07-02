@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/shared/animations/openlife_animation_assets.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 void main() {
@@ -11,7 +12,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView(
+            body: OpenLifeRiveView.asset(
               assetName: 'assets/rive/non_existent.riv',
               fallbackIcon: Icons.error_outline,
               size: 120,
@@ -29,7 +30,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView(
+            body: OpenLifeRiveView.asset(
               assetName: 'assets/rive/non_existent.riv',
               fallbackIcon: Icons.star,
               size: 80,
@@ -58,7 +59,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView(
+            body: OpenLifeRiveView.asset(
               assetName: entry.rivePath,
               fallbackIcon: entry.fallbackIcon,
               size: 160,
@@ -77,7 +78,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView(
+            body: OpenLifeRiveView.asset(
               assetName: 'assets/rive/non_existent.riv',
               artboard: 'SomeArtboard',
               fallbackIcon: Icons.animation,
@@ -97,7 +98,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView(
+            body: OpenLifeRiveView.asset(
               assetName: 'assets/rive/non_existent.riv',
               stateMachine: 'SomeStateMachine',
               fallbackIcon: Icons.settings,
@@ -110,5 +111,104 @@ void main() {
       // Should render fallback without crashing.
       expect(find.byIcon(Icons.settings), findsOneWidget);
     });
+
+    // -- PNG asset support (Sprint 10) ------------------------------------
+    testWidgets('illustrationPath: renders Image.asset when PNG exists', (
+      WidgetTester tester,
+    ) async {
+      final AssetVectorEntry entry =
+          AssetVectors.byName('todayNotificationBell');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.illustration(
+              illustrationPath: entry.path,
+              fallbackIcon: Icons.broken_image,
+              size: 200,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      // Image.asset for a real bundled PNG is present.
+      expect(find.byType(Image), findsOneWidget);
+      // Should NOT show the broken_image icon since asset loads.
+      expect(find.byIcon(Icons.broken_image), findsNothing);
+    });
+
+    testWidgets('illustrationPath: falls back to icon when PNG missing', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.illustration(
+              illustrationPath: 'assets/vector/non_existent.png',
+              fallbackIcon: Icons.broken_image,
+              size: 200,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      // Falls back to icon when PNG can't be decoded.
+      expect(find.byIcon(Icons.broken_image), findsOneWidget);
+    });
+
+    testWidgets('illustration: respects size constraint', (
+      WidgetTester tester,
+    ) async {
+      final AssetVectorEntry entry =
+          AssetVectors.byName('onboardingBuildBetterDays');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.illustration(
+              illustrationPath: entry.path,
+              fallbackIcon: Icons.broken_image,
+              size: 256,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      // Outer SizedBox width/height.
+      final Finder sizedBoxFinder = find.descendant(
+        of: find.byType(OpenLifeRiveView),
+        matching: find.byType(SizedBox),
+      );
+      final SizedBox sizedBox = tester.widget<SizedBox>(sizedBoxFinder.first);
+      expect(sizedBox.width, 256);
+      expect(sizedBox.height, 256);
+    });
+
+    testWidgets('illustration: Image fits within bounds via BoxFit.contain', (
+      WidgetTester tester,
+    ) async {
+      final AssetVectorEntry entry =
+          AssetVectors.byName('todayDailyCelebration');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.illustration(
+              illustrationPath: entry.path,
+              fallbackIcon: Icons.broken_image,
+              size: 150,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      final Image image = tester.widget<Image>(find.byType(Image));
+      expect(image.fit, BoxFit.contain);
+    });
   });
 }
+

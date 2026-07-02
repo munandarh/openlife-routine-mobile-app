@@ -12,8 +12,10 @@ import 'package:openlife_routine/features/templates/domain/entities/routine_temp
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_event.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_state.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
+import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class TemplatesPage extends StatelessWidget {
   const TemplatesPage({super.key});
@@ -40,6 +42,17 @@ class _TemplatesView extends StatelessWidget {
       'bedtime' => Icons.bedtime_outlined,
       'self_improvement' => Icons.self_improvement_outlined,
       _ => Icons.star_outline_rounded,
+    };
+  }
+
+  String? _illustrationForKey(String iconKey) {
+    return switch (iconKey) {
+      'wb_sunny' => null, // Morning has no dedicated template PNG
+      'water_drop' => AssetVectors.todayWaterHydration.path,
+      'medication' => AssetVectors.todayVitaminRoutine.path,
+      'bedtime' => AssetVectors.todaySleepRoutine.path,
+      'self_improvement' => null, // Programmer break PNG is not MVP
+      _ => null,
     };
   }
 
@@ -145,6 +158,8 @@ class _TemplatesView extends StatelessWidget {
                             icon: _iconForKey(template.iconKey),
                             iconBackground: _iconBgForKey(template.iconKey),
                             iconColor: _iconColorForKey(template.iconKey),
+                            illustrationPath:
+                                _illustrationForKey(template.iconKey),
                             meta: '${template.routineCount} steps',
                             isPrimary: template.isPrimary,
                             onApply: () => _applyTemplate(context, template),
@@ -199,6 +214,7 @@ class _TemplateCard extends StatelessWidget {
     required this.iconColor,
     required this.meta,
     this.badge,
+    this.illustrationPath,
     this.isPrimary = false,
     this.onApply,
   });
@@ -210,6 +226,7 @@ class _TemplateCard extends StatelessWidget {
   final Color iconColor;
   final String meta;
   final String? badge;
+  final String? illustrationPath;
   final bool isPrimary;
   final VoidCallback? onApply;
 
@@ -227,11 +244,21 @@ class _TemplateCard extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              CircleAvatar(
-                backgroundColor: iconBackground,
-                foregroundColor: iconColor,
-                child: Icon(icon),
-              ),
+              illustrationPath != null
+                  ? ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(AppRadius.extraLarge),
+                      child: OpenLifeRiveView.illustration(
+                        illustrationPath: illustrationPath!,
+                        fallbackIcon: icon,
+                        size: 56,
+                      ),
+                    )
+                  : CircleAvatar(
+                      backgroundColor: iconBackground,
+                      foregroundColor: iconColor,
+                      child: Icon(icon),
+                    ),
               const Spacer(),
               if (badge != null)
                 Container(

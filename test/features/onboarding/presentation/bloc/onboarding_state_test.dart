@@ -3,17 +3,17 @@ import 'package:openlife_routine/features/onboarding/presentation/bloc/onboardin
 
 void main() {
   group('OnboardingState.initial', () {
-    test('totalPages is 4 (3 slides + 1 starter template screen)', () {
+    test('totalPages is 3', () {
       const OnboardingState state = OnboardingState.initial();
-      expect(state.totalPages, 4);
+      expect(state.totalPages, 3);
     });
 
-    test('isLastPage is true on the new last page (index 3)', () {
+    test('isLastPage is true on the last page (index 2)', () {
       const OnboardingState state = OnboardingState(
         status: OnboardingStatus.ready,
-        pageIndex: 3,
+        pageIndex: 2,
         selectedLanguageCode: 'en',
-        totalPages: 4,
+        totalPages: 3,
       );
       expect(state.isLastPage, true);
     });
@@ -23,7 +23,7 @@ void main() {
         status: OnboardingStatus.ready,
         pageIndex: 1,
         selectedLanguageCode: 'en',
-        totalPages: 4,
+        totalPages: 3,
       );
       expect(state.isLastPage, false);
     });

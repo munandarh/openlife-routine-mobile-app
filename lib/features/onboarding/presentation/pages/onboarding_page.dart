@@ -392,7 +392,7 @@ class _HeroCard extends StatelessWidget {
                 // for a Positioned.fill with BoxFit.cover so the artwork
                 // bleeds to the card edges.
                 Center(
-                  child: OpenLifeRiveView(
+                  child: OpenLifeRiveView.asset(
                     assetName: 'assets/rive/onboarding_build_better_days.riv',
                     fallbackIcon: icon,
                     size: artSize,

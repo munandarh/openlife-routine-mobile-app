@@ -14,7 +14,7 @@ final class OnboardingState extends Equatable {
     : status = OnboardingStatus.initial,
       pageIndex = 0,
       selectedLanguageCode = 'en',
-      totalPages = 4;
+      totalPages = 3;
 
   final OnboardingStatus status;
   final int pageIndex;

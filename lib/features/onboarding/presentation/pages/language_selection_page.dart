@@ -4,6 +4,7 @@ import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
@@ -59,106 +60,114 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.all(AppSpacing.pageMargin),
-          children: <Widget>[
-            const _MiniHeader(),
-            const SizedBox(height: AppSpacing.xl),
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: AppColors.primarySoft,
-                        borderRadius: BorderRadius.circular(
-                          AppRadius.extraLarge,
-                        ),
-                        border: Border.all(color: AppColors.border),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 460),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const _BrandRow(),
+                  const SizedBox(height: AppSpacing.xxl),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: _GlobeBadge(),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          Text(
+                            'Choose your language',
+                            style: AppTextStyles.pageTitle.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            'Pick the language you want to see first. You can change it later in settings.',
+                            style: AppTextStyles.body.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          _LanguageCard(
+                            code: 'EN',
+                            title: 'English',
+                            subtitle: 'Default app language',
+                            isSelected: _selectedLanguageCode == 'en',
+                            onTap: () => _selectLanguage('en'),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          _LanguageCard(
+                            code: 'ID',
+                            title: 'Bahasa Indonesia',
+                            subtitle: 'Bahasa utama untuk pengguna lokal',
+                            isSelected: _selectedLanguageCode == 'id',
+                            onTap: () => _selectLanguage('id'),
+                          ),
+                        ],
                       ),
-                      child: const Icon(
-                        Icons.language_outlined,
-                        size: 64,
-                        color: AppColors.primary,
-                      ),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      'Choose your language',
-                      style: AppTextStyles.pageTitle.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      'Pick the language you want to see first. You can change it later in settings.',
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    _LanguageCard(
-                      title: 'English',
-                      subtitle: 'Default app language',
-                      isSelected: _selectedLanguageCode == 'en',
-                      onTap: () => _selectLanguage('en'),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _LanguageCard(
-                      title: 'Bahasa Indonesia',
-                      subtitle: 'Bahasa utama untuk pengguna lokal',
-                      isSelected: _selectedLanguageCode == 'id',
-                      onTap: () => _selectLanguage('id'),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  PrimaryButton(
+                    label: 'Continue',
+                    isLoading: _isSaving,
+                    onPressed: () => _continue(),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xl),
-            PrimaryButton(
-              label: 'Continue',
-              isLoading: _isSaving,
-              onPressed: () => _continue(),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _MiniHeader extends StatelessWidget {
-  const _MiniHeader();
+/// Same brand lockup the onboarding slides open with, so the first-run flow
+/// reads as one screen sequence.
+class _BrandRow extends StatelessWidget {
+  const _BrandRow();
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
+    return Row(
+      children: <Widget>[
+        const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          'OpenLife Routine',
+          style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
         ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Text(
-          'Language selection',
-          style: TextStyle(
-            fontFamily: AppTextStyles.fontFamily,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textSecondary,
-          ),
-        ),
+      ],
+    );
+  }
+}
+
+/// A compact emblem instead of the large empty panel the page used to open
+/// with: it marks the screen without leaving a big hollow block above the
+/// title.
+class _GlobeBadge extends StatelessWidget {
+  const _GlobeBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
+      ),
+      child: const Icon(
+        Icons.language_outlined,
+        size: 28,
+        color: AppColors.primary,
       ),
     );
   }
@@ -166,12 +175,15 @@ class _MiniHeader extends StatelessWidget {
 
 class _LanguageCard extends StatelessWidget {
   const _LanguageCard({
+    required this.code,
     required this.title,
     required this.subtitle,
     required this.isSelected,
     required this.onTap,
   });
 
+  /// Two-letter language code shown in the leading tile (e.g. `EN`).
+  final String code;
   final String title;
   final String subtitle;
   final bool isSelected;
@@ -179,63 +191,108 @@ class _LanguageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: isSelected ? AppColors.primarySoft : Colors.white,
-      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-            border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.border,
-              width: isSelected ? 1.5 : 1,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primarySoft : AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        border: Border.all(
+          color: isSelected ? AppColors.primary : AppColors.border,
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: isSelected ? AppShadows.soft : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Row(
+              // Keep the tile and the tick lined up with the title when the
+              // subtitle wraps to a second line.
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 44,
+                  height: 44,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.surface : AppColors.surfaceSoft,
+                    borderRadius: BorderRadius.circular(AppRadius.small),
+                  ),
+                  child: Text(
+                    code,
+                    style: AppTextStyles.label.copyWith(
+                      fontSize: 14,
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        title,
+                        style: AppTextStyles.cardTitle.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.body.copyWith(
+                          fontSize: 13,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _SelectionTick(isSelected: isSelected),
+              ],
             ),
           ),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.75),
-                  borderRadius: BorderRadius.circular(AppRadius.medium),
-                ),
-                child: Icon(
-                  Icons.translate_outlined,
-                  color: isSelected ? AppColors.primary : AppColors.secondary,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      title,
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      subtitle,
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                isSelected ? Icons.check_circle_rounded : Icons.circle_outlined,
-                color: isSelected ? AppColors.primary : AppColors.border,
-              ),
-            ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectionTick extends StatelessWidget {
+  const _SelectionTick({required this.isSelected});
+
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 44,
+      child: Center(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primary : Colors.transparent,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.border,
+              width: 1.5,
+            ),
           ),
+          child: isSelected
+              ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
+              : null,
         ),
       ),
     );

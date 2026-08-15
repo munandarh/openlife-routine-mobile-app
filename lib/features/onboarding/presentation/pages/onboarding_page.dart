@@ -10,6 +10,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 /// Key for the circular primary action (Continue / Get Started).
@@ -109,8 +110,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                         description:
                             'Design a routine that fits your life. Gentle nudges, not rigid rules.',
                         hero: const _HeroCard(
-                          tint: AppColors.primarySoft,
-                          icon: Icons.fact_check_outlined,
+                          illustration: AssetVectors.onboardingBuildBetterDays,
+                          fallbackIcon: Icons.fact_check_outlined,
                         ),
                         footer: _LanguageSelector(
                           selectedLanguageCode: state.selectedLanguageCode,
@@ -124,8 +125,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                         description:
                             'Receive calm reminders for meals, water, vitamins, and small routines that support your day.',
                         hero: _HeroCard(
-                          tint: AppColors.accentSoft,
-                          icon: Icons.notifications_active_outlined,
+                          illustration: AssetVectors.onboardingSmartRoutines,
+                          fallbackIcon: Icons.notifications_active_outlined,
                         ),
                         footer: _InfoPanel(
                           title: 'Notification education',
@@ -138,8 +139,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                         description:
                             'Your routines stay on-device first. No account required to start, and no forced cloud setup.',
                         hero: _HeroCard(
-                          tint: AppColors.secondarySoft,
-                          icon: Icons.lock_outline_rounded,
+                          illustration: AssetVectors.onboardingPrivateByDefault,
+                          fallbackIcon: Icons.lock_outline_rounded,
                         ),
                         footer: _InfoPanel(
                           title: 'Static fallback ready',
@@ -304,9 +305,9 @@ class _OnboardingSlide extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         // The hero owns the largest share of the slide so the artwork fills
         // the card instead of floating inside a nested frame.
-        final double heroHeight = (constraints.maxHeight * 0.46).clamp(
-          180.0,
-          360.0,
+        final double heroHeight = (constraints.maxHeight * 0.52).clamp(
+          200.0,
+          380.0,
         );
 
         return SingleChildScrollView(
@@ -336,91 +337,31 @@ class _OnboardingSlide extends StatelessWidget {
   }
 }
 
-/// A single rounded card whose artwork fills the whole surface.
+/// A single rounded card filled edge to edge by the slide illustration.
 ///
-/// The previous design nested a coloured box inside a bordered white frame,
-/// which shrank the illustration to a fraction of the available space.
+/// The artwork is drawn with [BoxFit.cover] so it bleeds to the card corners
+/// instead of sitting in a nested frame. The hairline border keeps the card
+/// readable: the illustration's own cream backdrop is nearly the same tone as
+/// the page background.
 class _HeroCard extends StatelessWidget {
-  const _HeroCard({required this.tint, required this.icon});
+  const _HeroCard({required this.illustration, required this.fallbackIcon});
 
-  final Color tint;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        boxShadow: AppShadows.soft,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            final double artSize =
-                (constraints.biggest.shortestSide * 0.62).clamp(96.0, 220.0);
-
-            return Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        Color.lerp(tint, AppColors.surface, 0.35) ?? tint,
-                        tint,
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: -constraints.maxHeight * 0.18,
-                  right: -constraints.maxWidth * 0.12,
-                  child: _Blob(size: constraints.maxWidth * 0.62),
-                ),
-                Positioned(
-                  bottom: -constraints.maxHeight * 0.24,
-                  left: -constraints.maxWidth * 0.18,
-                  child: _Blob(
-                    size: constraints.maxWidth * 0.7,
-                    opacity: 0.22,
-                  ),
-                ),
-                // TODO(openlife): once the illustration assets land, swap this
-                // for a Positioned.fill with BoxFit.cover so the artwork
-                // bleeds to the card edges.
-                Center(
-                  child: OpenLifeRiveView.asset(
-                    assetName: 'assets/rive/onboarding_build_better_days.riv',
-                    fallbackIcon: icon,
-                    size: artSize,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _Blob extends StatelessWidget {
-  const _Blob({required this.size, this.opacity = 0.35});
-
-  final double size;
-  final double opacity;
+  final AssetVectorEntry illustration;
+  final IconData fallbackIcon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: size,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: AppColors.surface.withValues(alpha: opacity),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        border: Border.all(color: AppColors.border),
+        boxShadow: AppShadows.soft,
+      ),
+      child: OpenLifeRiveView.illustrationFill(
+        illustrationPath: illustration.path,
+        fallbackIcon: fallbackIcon,
       ),
     );
   }

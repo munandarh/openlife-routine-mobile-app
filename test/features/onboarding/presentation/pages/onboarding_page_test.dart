@@ -13,6 +13,7 @@ import 'package:openlife_routine/features/routines/data/datasources/routine_loca
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
 import 'package:openlife_routine/features/settings/domain/repositories/settings_repository.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 
 void main() {
   late AppDatabase appDatabase;
@@ -29,7 +30,7 @@ void main() {
     await appDatabase.close();
   });
 
-  testWidgets('onboarding slides show rive fallback icons', (
+  testWidgets('onboarding slides show their illustration asset', (
     WidgetTester tester,
   ) async {
     tester.view.physicalSize = const Size(800, 1200);
@@ -66,8 +67,18 @@ void main() {
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
 
-    // Slide 1 should show checklist icon via Rive fallback.
-    expect(find.byIcon(Icons.fact_check_outlined), findsOneWidget);
+    // Slide 1 fills its hero card with the build-better-days illustration.
+    expect(
+      find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                AssetVectors.onboardingBuildBetterDays.path &&
+            widget.fit == BoxFit.cover,
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Build better days'), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
   });

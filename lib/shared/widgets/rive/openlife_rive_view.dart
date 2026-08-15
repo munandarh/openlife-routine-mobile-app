@@ -21,6 +21,7 @@ class OpenLifeRiveView extends StatefulWidget {
     this.stateMachine,
     this.fit = BoxFit.contain,
     this.size = 120,
+    this.expand = false,
     this.onInit,
     super.key,
   });
@@ -71,6 +72,24 @@ class OpenLifeRiveView extends StatefulWidget {
     );
   }
 
+  /// Wrap a static PNG illustration that expands to fill its parent instead
+  /// of sitting in a fixed square box. Use this for hero areas where the
+  /// artwork should bleed all the way to the container edges.
+  factory OpenLifeRiveView.illustrationFill({
+    Key? key,
+    required String illustrationPath,
+    required IconData fallbackIcon,
+    BoxFit fit = BoxFit.cover,
+  }) {
+    return OpenLifeRiveView._(
+      key: key,
+      illustrationPath: illustrationPath,
+      fallbackIcon: fallbackIcon,
+      fit: fit,
+      expand: true,
+    );
+  }
+
   /// Path to the `.riv` asset (e.g. `assets/rive/empty_no_routines.riv`).
   final String? assetName;
 
@@ -89,8 +108,12 @@ class OpenLifeRiveView extends StatefulWidget {
   /// How the asset fits within the bounds.
   final BoxFit fit;
 
-  /// Width and height of the viewport.
+  /// Width and height of the viewport. Ignored when [expand] is true.
   final double size;
+
+  /// When true the illustration fills the parent's constraints instead of
+  /// being laid out in a [size] × [size] box.
+  final bool expand;
 
   /// Called when the Rive [Artboard] is initialized.
   final void Function(Artboard)? onInit;
@@ -101,6 +124,10 @@ class OpenLifeRiveView extends StatefulWidget {
 
 class _OpenLifeRiveViewState extends State<OpenLifeRiveView> {
   static const bool _showFallback = true;
+
+  /// Icon size used when an expanding illustration cannot be loaded.
+  static const double _expandFallbackSize = 96;
+
   bool _imageFailed = false;
 
   @override
@@ -115,31 +142,36 @@ class _OpenLifeRiveViewState extends State<OpenLifeRiveView> {
   Widget build(BuildContext context) {
     // PNG illustration path — try to load, fall back to icon on error.
     if (widget.illustrationPath != null) {
-      return SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: _imageFailed
-            ? Icon(widget.fallbackIcon, size: widget.size * 0.6)
-            : Image.asset(
-                widget.illustrationPath!,
-                fit: widget.fit,
-                errorBuilder: (
-                  BuildContext context,
-                  Object error,
-                  StackTrace? stackTrace,
-                ) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) {
-                      setState(() => _imageFailed = true);
-                    }
-                  });
-                  return Icon(
-                    widget.fallbackIcon,
-                    size: widget.size * 0.6,
-                  );
-                },
-              ),
-      );
+      final Widget fallback = widget.expand
+          ? Center(child: Icon(widget.fallbackIcon, size: _expandFallbackSize))
+          : Icon(widget.fallbackIcon, size: widget.size * 0.6);
+
+      final Widget content = _imageFailed
+          ? fallback
+          : Image.asset(
+              widget.illustrationPath!,
+              fit: widget.fit,
+              width: widget.expand ? double.infinity : null,
+              height: widget.expand ? double.infinity : null,
+              errorBuilder: (
+                BuildContext context,
+                Object error,
+                StackTrace? stackTrace,
+              ) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() => _imageFailed = true);
+                  }
+                });
+                return fallback;
+              },
+            );
+
+      if (widget.expand) {
+        return content;
+      }
+
+      return SizedBox(width: widget.size, height: widget.size, child: content);
     }
 
     // TODO(openlife): Remove `_showFallback` early-return when .riv files

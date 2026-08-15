@@ -85,6 +85,11 @@ class AppDatabase extends _$AppDatabase {
     onCreate: (Migrator migrator) async {
       await migrator.createAll();
     },
+    onUpgrade: (Migrator migrator, int from, int to) async {
+      if (from < 2) {
+        await migrator.addColumn(routines, routines.notes);
+      }
+    },
   );
 
   Future<RoutineBundleRow?> getRoutineBundleById(String routineId) async {

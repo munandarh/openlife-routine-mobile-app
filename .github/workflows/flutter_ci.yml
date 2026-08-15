@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Install sqlite3 native library
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
       - name: Analyze
         run: flutter analyze
 

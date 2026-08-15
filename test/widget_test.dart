@@ -8,6 +8,7 @@ import 'package:openlife_routine/core/notifications/notification_stack_config.da
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:openlife_routine/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
@@ -68,7 +69,7 @@ void main() {
 
     // Now on OnboardingPage.
     expect(find.text('Build better days'), findsOneWidget);
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.byKey(onboardingPrimaryActionKey), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

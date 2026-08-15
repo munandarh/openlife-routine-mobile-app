@@ -8,6 +8,7 @@ import 'package:openlife_routine/core/notifications/notification_stack_config.da
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:openlife_routine/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
@@ -109,17 +110,19 @@ void main() {
     await tester.pumpAndSettle();
 
     // Navigate to slide 2.
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
     await tester.pumpAndSettle();
     expect(find.text('Never miss what matters'), findsOneWidget);
 
     // Navigate to slide 3.
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
     await tester.pumpAndSettle();
     expect(find.text('Private by default'), findsOneWidget);
 
-    // Last slide shows "Get Started" instead of "Continue".
-    expect(find.text('Get Started'), findsOneWidget);
+    // Last slide swaps the arrow for a check and offers "Back" instead of
+    // "Skip".
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Back'), findsOneWidget);
   });
 
   testWidgets('skip onboarding navigates to today', (
@@ -159,7 +162,7 @@ void main() {
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
 
-    // Tap the header Skip (not the bottom "Skip" button).
+    // Tap the Skip text action in the bottom bar.
     await tester.tap(find.widgetWithText(TextButton, 'Skip'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
@@ -206,13 +209,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Go to last page.
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
     await tester.pumpAndSettle();
 
-    // Tap Get Started.
-    await tester.tap(find.text('Get Started'));
+    // Tap the primary action, which now completes onboarding.
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
     // Use pump() instead of pumpAndSettle() since Today page has
     // looping animations that never settle.
     await tester.pump();

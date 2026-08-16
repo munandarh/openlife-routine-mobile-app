@@ -12,6 +12,7 @@ import 'package:openlife_routine/features/templates/domain/entities/routine_temp
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_event.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_state.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
@@ -22,6 +23,7 @@ class TemplatesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return BlocProvider<TemplateBloc>(
       create: (BuildContext context) =>
           AppScope.read(context).createTemplateBloc()
@@ -110,7 +112,7 @@ class _TemplatesView extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    'Templates',
+                    l10n.templatesTitle,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
@@ -134,7 +136,7 @@ class _TemplatesView extends StatelessWidget {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(<Widget>[
                       Text(
-                        'Discover Routines',
+                        l10n.discoverRoutines,
                         style: textTheme.displayLarge?.copyWith(
                           color: AppColors.primary,
                           fontSize: 22,
@@ -142,7 +144,7 @@ class _TemplatesView extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Add structured, calm habits to your day with a single tap.',
+                        l10n.addStructured,
                         style: textTheme.bodyLarge?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -290,7 +292,7 @@ class _TemplateCard extends StatelessWidget {
           Text(meta, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: AppSpacing.lg),
           PrimaryButton(
-            label: 'Add Template',
+            label: l10n.addTemplate,
             isSecondary: !isPrimary,
             icon: Icons.add,
             onPressed: onApply,

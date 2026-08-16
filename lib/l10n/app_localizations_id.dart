@@ -324,6 +324,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get undoAction => 'Batal';
 
   @override
+  String get skippedStatus => 'Dilewati';
+
+  @override
+  String get snoozedStatus => 'Ditunda';
+
+  @override
+  String get missedStatus => 'Terlewat';
+
+  @override
+  String get snoozeAction => 'Tunda';
+
+  @override
   String get exportData => 'Ekspor Data';
 
   @override

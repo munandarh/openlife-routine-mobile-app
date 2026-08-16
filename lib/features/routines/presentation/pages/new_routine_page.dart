@@ -7,6 +7,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
 class NewRoutinePage extends StatelessWidget {
@@ -16,6 +17,7 @@ class NewRoutinePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return BlocProvider<RoutineBloc>(
       create: (BuildContext context) {
         final RoutineBloc bloc = AppScope.read(context).createRoutineBloc();
@@ -110,7 +112,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     ),
                     Expanded(
                       child: Text(
-                        isEditing ? 'Edit Routine' : 'New Routine',
+                        isEditing ? l10n.editRoutine : l10n.newRoutine,
                         textAlign: TextAlign.center,
                         style: textTheme.headlineMedium?.copyWith(
                           color: AppColors.primary,
@@ -121,7 +123,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Routine Name', style: textTheme.titleLarge),
+                Text(l10n.routineName, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: _nameController,
@@ -130,7 +132,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Category', style: textTheme.titleLarge),
+                Text(l10n.categoryLabel, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 _CategoryGrid(
                   selectedCategory: _selectedCategory,
@@ -141,7 +143,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   },
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Time', style: textTheme.titleLarge),
+                Text(l10n.timeLabel, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 InkWell(
                   borderRadius: BorderRadius.circular(AppRadius.large),
@@ -203,7 +205,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Notes (optional)', style: textTheme.titleLarge),
+                Text(l10n.notesOptional, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: _notesController,
@@ -213,7 +215,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Snooze duration', style: textTheme.titleLarge),
+                Text(l10n.snoozeDuration, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: <Widget>[
@@ -242,7 +244,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                 ),
                 const SizedBox(height: AppSpacing.xxxl),
                 PrimaryButton(
-                  label: isEditing ? 'Save Changes' : 'Save Routine',
+                  label: isEditing ? l10n.saveChanges : l10n.saveRoutine,
                   onPressed: state.status == RoutineStatus.loading
                       ? null
                       : () => _submit(context, isEditing),

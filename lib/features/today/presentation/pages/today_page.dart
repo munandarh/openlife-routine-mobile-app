@@ -11,6 +11,7 @@ import 'package:openlife_routine/features/routines/domain/entities/routine.dart'
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
@@ -45,6 +46,7 @@ class _TodayViewState extends State<_TodayView> {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Stack(
       children: <Widget>[
@@ -87,7 +89,7 @@ class _TodayViewState extends State<_TodayView> {
                     ),
                   ),
                   title: Text(
-                    'Today',
+                    l10n.todayTab,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
@@ -110,7 +112,7 @@ class _TodayViewState extends State<_TodayView> {
                   0,
                 ),
                 child: TodayGreeting(
-                  subtitle: _supportiveSubtitle(state),
+                  subtitle: _supportiveSubtitle(state, l10n),
                 ),
               ),
             ),
@@ -137,7 +139,7 @@ class _TodayViewState extends State<_TodayView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('Daily Progress', style: textTheme.titleLarge),
+                            Text(l10n.dailyProgress, style: textTheme.titleLarge),
                             const SizedBox(height: AppSpacing.md),
                             Text(
                               state.totalCount == 0
@@ -162,8 +164,8 @@ class _TodayViewState extends State<_TodayView> {
                               child: Text(
                                 state.completedCount == state.totalCount &&
                                         state.totalCount > 0
-                                    ? 'ALL DONE'
-                                    : 'STAY CONSISTENT',
+                                    ? l10n.allDone.toUpperCase()
+                                    : l10n.stayConsistent.toUpperCase(),
                                 style: textTheme.labelMedium?.copyWith(
                                   color: AppColors.primary,
                                 ),
@@ -194,16 +196,16 @@ class _TodayViewState extends State<_TodayView> {
                   },
                 ),
                 const SizedBox(height: AppSpacing.xxxl),
-                Text('Daily routine', style: textTheme.titleLarge),
+                Text(l10n.dailyRoutine, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.lg),
                 if (state.status == TodayStatus.loading)
                   const Center(child: CircularProgressIndicator())
                 else if (state.items.isEmpty)
                   AppEmptyState(
-                    title: 'No routines yet',
+                    title: l10n.noRoutinesYet,
                     description:
                         'There is nothing scheduled for this date. Add one or pick another day.',
-                    buttonLabel: 'Create routine',
+                    buttonLabel: l10n.createRoutine,
                     icon: Icons.calendar_today_outlined,
                     onPressed: () =>
                         context.push(OpenLifeRoute.newRoutine.path),
@@ -218,12 +220,12 @@ class _TodayViewState extends State<_TodayView> {
                         title: item.title,
                         timeLabel: _formatTime(item.reminderTime),
                         statusLabel: switch (item.status) {
-                          TodayRoutineItemStatus.done => 'Done',
-                          TodayRoutineItemStatus.skipped => 'Skipped',
-                          TodayRoutineItemStatus.snoozed => 'Snoozed',
-                          TodayRoutineItemStatus.missed => 'Missed',
+                          TodayRoutineItemStatus.done => l10n.markDone,
+                          TodayRoutineItemStatus.skipped => l10n.skippedStatus,
+                          TodayRoutineItemStatus.snoozed => l10n.snoozedStatus,
+                          TodayRoutineItemStatus.missed => l10n.missedStatus,
                           TodayRoutineItemStatus.pending when item.isDueNow =>
-                            'Due Now',
+                            l10n.dueNow,
                           _ => null,
                         },
                         statusForeground: switch (item.status) {
@@ -240,8 +242,8 @@ class _TodayViewState extends State<_TodayView> {
                         secondaryActionLabel:
                             item.status == TodayRoutineItemStatus.done ||
                                 item.status == TodayRoutineItemStatus.skipped
-                            ? 'Undo'
-                            : 'Skip',
+                            ? l10n.undoAction
+                            : l10n.skipAction,
                         icon: _iconForCategory(item.category),
                         iconBackground: _iconBackgroundForCategory(
                           item.category,
@@ -285,7 +287,7 @@ class _TodayViewState extends State<_TodayView> {
                         extraActionLabel:
                             item.status == TodayRoutineItemStatus.pending ||
                                 item.status == TodayRoutineItemStatus.missed
-                            ? 'Snooze'
+                            ? l10n.snoozeAction
                             : null,
                         onExtraAction: () {
                           HapticFeedback.selectionClick();
@@ -333,14 +335,14 @@ class _TodayViewState extends State<_TodayView> {
     return '$displayHour:$displayMinute $suffix';
   }
 
-  static String _supportiveSubtitle(TodayState state) {
+  static String _supportiveSubtitle(TodayState state, AppLocalizations l10n) {
     if (state.totalCount == 0) {
-      return 'A calm day ahead. Add a routine whenever you are ready.';
+      return l10n.calmDayAhead;
     }
     if (state.completedCount == state.totalCount) {
-      return 'You finished all your routines today. Great work.';
+      return l10n.allFinished;
     }
-    return 'Small progress still counts. Take it one step at a time.';
+    return l10n.smallProgress;
   }
 
   static DateTime _startOfWeek(DateTime selectedDate) {
@@ -463,19 +465,19 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
                     size: 120,
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  const Text(
-                    'All Done!',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.allDone,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  const Text(
-                    'You completed all your routines for today. Great work!',
+                  Text(
+                    AppLocalizations.of(context)!.allDoneMessage,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       color: AppColors.textSecondary,
                     ),

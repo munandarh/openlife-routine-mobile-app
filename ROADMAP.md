@@ -22,13 +22,14 @@ feature count. Ten of its thirteen criteria are met.
 | English + Indonesian | 🚧 | Delegate registered; first-run and Settings localized, remaining screens still hardcoded English |
 | Manual backup/export | ✅ | JSON export, import, validation |
 | Open-source docs | 🚧 | README, CONTRIBUTING, SECURITY, CHANGELOG, 5 ADRs, architecture doc done; design-system and animation guidelines outstanding |
-| Rive animations | ⬜ | `OpenLifeRiveView` and the PNG fallback layer are in place; no `.riv` files have been produced |
+| Rive animations | 🚧 | The Rive → PNG → icon chain is live and tested; no `.riv` files have been produced yet, and that is now the only thing missing |
 | APK on GitHub Releases | ⬜ | Requires a signed build |
 
 ### Remaining for v1.0
 
 1. Produce the `.riv` files for the key moments (onboarding hero, empty state,
-   completion check) — PRD §7.1 lists this as P0.
+   completion check) — PRD §7.1 lists this as P0. The code path is ready:
+   drop a file into `assets/rive/` and `OpenLifeRiveView` picks it up.
 2. Finish the localization pass on Today, Routines, Templates, Insights, New
    Routine and Routine Detail.
 3. `docs/design-system.md` and `docs/animation-guidelines.md`.

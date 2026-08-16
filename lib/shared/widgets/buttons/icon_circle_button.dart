@@ -6,6 +6,7 @@ class IconCircleButton extends StatelessWidget {
   const IconCircleButton({
     required this.icon,
     this.onPressed,
+    this.semanticLabel,
     this.backgroundColor,
     this.foregroundColor,
     super.key,
@@ -13,12 +14,20 @@ class IconCircleButton extends StatelessWidget {
 
   final IconData icon;
   final VoidCallback? onPressed;
+
+  /// What a screen reader announces, and the tooltip text. Required in
+  /// practice for anything tappable: an icon on its own says nothing.
+  ///
+  /// Leave it null only for decorative chrome, which is then hidden from
+  /// the semantics tree rather than announced as an unusable control.
+  final String? semanticLabel;
+
   final Color? backgroundColor;
   final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    final Widget button = InkWell(
       borderRadius: BorderRadius.circular(AppRadius.pill),
       onTap: onPressed,
       child: Ink(
@@ -35,6 +44,17 @@ class IconCircleButton extends StatelessWidget {
           size: 22,
         ),
       ),
+    );
+
+    if (semanticLabel == null) {
+      // Decorative: an unlabelled icon announced as a control is noise.
+      return ExcludeSemantics(child: button);
+    }
+
+    return Semantics(
+      button: onPressed != null,
+      label: semanticLabel,
+      child: Tooltip(message: semanticLabel!, child: button),
     );
   }
 }

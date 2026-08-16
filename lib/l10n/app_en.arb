@@ -143,6 +143,8 @@
   "dataResetDone": "All data has been reset.",
   "notificationRequested": "Notification permission requested.",
   "preparingYourDay": "Preparing your day",
+  "moreOptions": "More options",
+  "addRoutine": "Add routine",
   "importFailed": "Import failed: {error}",
   "@importFailed": {"placeholders": {"error": {"type": "Object"}}},
   "exportData": "Export Data",

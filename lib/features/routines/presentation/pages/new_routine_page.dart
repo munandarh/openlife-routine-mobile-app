@@ -108,6 +108,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   children: <Widget>[
                     IconButton(
                       onPressed: () => context.pop(),
+                      tooltip: l10n.closeAction,
                       icon: const Icon(Icons.close_rounded),
                     ),
                     Expanded(

@@ -452,6 +452,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get preparingYourDay => 'Menyiapkan harimu';
 
   @override
+  String get moreOptions => 'Opsi lainnya';
+
+  @override
+  String get addRoutine => 'Tambah rutinitas';
+
+  @override
   String importFailed(Object error) {
     return 'Impor gagal: $error';
   }

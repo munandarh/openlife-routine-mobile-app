@@ -950,6 +950,18 @@ abstract class AppLocalizations {
   /// **'Preparing your day'**
   String get preparingYourDay;
 
+  /// No description provided for @moreOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get moreOptions;
+
+  /// No description provided for @addRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add routine'**
+  String get addRoutine;
+
   /// No description provided for @importFailed.
   ///
   /// In en, this message translates to:

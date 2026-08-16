@@ -30,6 +30,11 @@ class WeekDateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The cell holds two stacked labels, so its height has to follow the
+    // user's text scale or the Column overflows. Width stays fixed: seven
+    // cells have to fit across the screen.
+    final TextScaler textScaler = MediaQuery.textScalerOf(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List<Widget>.generate(items.length, (int index) {
@@ -43,7 +48,7 @@ class WeekDateSelector extends StatelessWidget {
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeOutCubic,
             width: isSelected ? 52 : 40,
-            height: isSelected ? 60 : 40,
+            height: textScaler.scale(isSelected ? 60 : 40),
             decoration: BoxDecoration(
               color: isSelected ? AppColors.primary : Colors.transparent,
               borderRadius: isSelected

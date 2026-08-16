@@ -229,10 +229,10 @@
 - [x] Tap targets ≥ 44×44
 - [x] Color contrast (tested in design system)
 - [x] Semantic labels (most widgets)
-- [ ] **Text scaling support** — no `MediaQuery.textScaleFactor` test
+- [x] **Text scaling support** — `test/shared/accessibility/text_scale_test.dart` pumps Today and the first-run flow at 1.5x; a RenderFlex overflow raises a Flutter error, so the pump is the assertion
 - [ ] **Reduced-motion setting** — deferred to v1.1
-- [ ] **Dynamic text scale test** — no widget test
-- [ ] **Icon-only buttons have semantic labels** — partial
+- [x] **Dynamic text scale test** — see above
+- [x] **Icon-only buttons have semantic labels** — `IconCircleButton` takes a `semanticLabel` and hides itself from the semantics tree when it has none, so decorative chrome is not announced as a control. The back, close, more-options and add-routine controls are labelled. Note the profile and bell icons on five screens have no `onPressed` at all — they are decorative placeholders, flagged rather than wired up
 
 ### Performance (PRD §14.1)
 
@@ -350,8 +350,7 @@ Then, below the DoD line:
 
 4. ~~Finish the i18n pass~~ ✅ done (Sprint 21).
 5. ~~Integration test~~ ✅ done (Sprint 22).
-6. **Accessibility** — no text-scale test; icon-only buttons need a semantic
-   label audit.
+6. ~~Accessibility~~ ✅ done (Sprint 23).
 
 Deliberately **not** Tier 1: the icon override picker. PRD §8.3 marks the Icon
 field `Required: No`, so it is a v1.1 nicety, not an MVP gap — an earlier
@@ -398,6 +397,7 @@ revision of this file wrongly implied otherwise.
 | **Sprint 20** | ✅ | Rive gate opened: bundle probe + real Rive → PNG → icon chain, `.asset()` takes a PNG fallback |
 | **Sprint 21** | ✅ | i18n complete: delegate registered, all screens localized, 176 keys across en/id |
 | **Sprint 22** | ✅ | End-to-end create-routine test; fixed Today not reloading after a routine is created |
+| **Sprint 23** | ✅ | Accessibility: text-scale tests, semantic labels on icon-only controls, decorative chrome excluded from semantics |
 
 ## Sprint Plan Going Forward
 

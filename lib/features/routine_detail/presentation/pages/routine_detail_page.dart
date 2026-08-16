@@ -60,6 +60,7 @@ class _RoutineDetailView extends StatelessWidget {
                   children: <Widget>[
                     IconButton(
                       onPressed: () => context.pop(),
+                      tooltip: l10n.backButton,
                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     ),
                     Expanded(
@@ -69,7 +70,10 @@ class _RoutineDetailView extends StatelessWidget {
                         style: textTheme.headlineMedium,
                       ),
                     ),
-                    const IconCircleButton(icon: Icons.more_horiz_rounded),
+                    IconCircleButton(
+                      icon: Icons.more_horiz_rounded,
+                      semanticLabel: l10n.moreOptions,
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xl),

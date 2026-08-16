@@ -142,6 +142,8 @@
   "dataResetDone": "Semua data telah direset.",
   "notificationRequested": "Izin notifikasi diminta.",
   "preparingYourDay": "Menyiapkan harimu",
+  "moreOptions": "Opsi lainnya",
+  "addRoutine": "Tambah rutinitas",
   "importFailed": "Impor gagal: {error}",
   "exportData": "Ekspor Data",
   "importData": "Impor Data",

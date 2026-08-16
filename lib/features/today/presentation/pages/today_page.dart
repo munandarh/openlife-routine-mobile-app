@@ -315,6 +315,7 @@ class _TodayViewState extends State<_TodayView> {
           child: FloatingActionButton(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
+            tooltip: l10n.addRoutine,
             onPressed: () => _openNewRoutine(context),
             child: const Icon(Icons.add),
           ),

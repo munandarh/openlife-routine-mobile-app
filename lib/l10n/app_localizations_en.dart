@@ -451,6 +451,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get preparingYourDay => 'Preparing your day';
 
   @override
+  String get moreOptions => 'More options';
+
+  @override
+  String get addRoutine => 'Add routine';
+
+  @override
   String importFailed(Object error) {
     return 'Import failed: $error';
   }

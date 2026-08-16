@@ -56,17 +56,19 @@ void main() {
   }) async {
     tester.view.physicalSize = const Size(1000, 2000);
     tester.view.devicePixelRatio = 1.0;
+
+    // Set the scale on the dispatcher rather than wrapping the app in a
+    // MediaQuery: MaterialApp builds its own MediaQuery.fromView at the root,
+    // which shadows any ancestor one.
+    tester.platformDispatcher.textScaleFactorTestValue = scale;
+
     addTearDown(() {
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
     });
 
-    await tester.pumpWidget(
-      MediaQuery(
-        data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-        child: app,
-      ),
-    );
+    await tester.pumpWidget(app);
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
   }

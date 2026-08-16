@@ -23,7 +23,6 @@ class TemplatesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return BlocProvider<TemplateBloc>(
       create: (BuildContext context) =>
           AppScope.read(context).createTemplateBloc()
@@ -82,6 +81,7 @@ class _TemplatesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return BlocBuilder<TemplateBloc, TemplateState>(
@@ -234,6 +234,7 @@ class _TemplateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(

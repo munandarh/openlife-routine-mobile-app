@@ -17,7 +17,6 @@ class NewRoutinePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return BlocProvider<RoutineBloc>(
       create: (BuildContext context) {
         final RoutineBloc bloc = AppScope.read(context).createRoutineBloc();
@@ -65,6 +64,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final bool isEditing =
         widget.routineId != null && widget.routineId!.isNotEmpty;
     final TextTheme textTheme = Theme.of(context).textTheme;

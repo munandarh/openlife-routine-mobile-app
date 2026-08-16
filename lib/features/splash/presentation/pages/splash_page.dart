@@ -143,11 +143,11 @@ class _SplashPageState extends State<SplashPage> {
                         borderRadius: BorderRadius.circular(AppRadius.pill),
                         border: Border.all(color: AppColors.border),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          SizedBox(
+                          const SizedBox(
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(
@@ -155,10 +155,10 @@ class _SplashPageState extends State<SplashPage> {
                               color: AppColors.primary,
                             ),
                           ),
-                          SizedBox(width: AppSpacing.sm),
+                          const SizedBox(width: AppSpacing.sm),
                           Text(
                             l10n.preparingYourDay,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: AppTextStyles.fontFamily,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,

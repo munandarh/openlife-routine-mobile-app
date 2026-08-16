@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 
@@ -11,8 +12,10 @@ part 'today_state.dart';
 class TodayBloc extends Bloc<TodayEvent, TodayState> {
   TodayBloc({
     required AppDatabase appDatabase,
+    AppNotificationService? notificationService,
     DateTime Function()? nowProvider,
   }) : _appDatabase = appDatabase,
+       _notificationService = notificationService,
        _nowProvider = nowProvider ?? DateTime.now,
        super(
          TodayState.initial(
@@ -23,9 +26,11 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     on<TodayDateSelected>(_onDateSelected);
     on<TodayRoutineCompletionToggled>(_onRoutineCompletionToggled);
     on<TodayRoutineSkipped>(_onRoutineSkipped);
+    on<TodayRoutineSnoozed>(_onRoutineSnoozed);
   }
 
   final AppDatabase _appDatabase;
+  final AppNotificationService? _notificationService;
   final DateTime Function() _nowProvider;
   List<RoutineBundleRow> _routineBundles = <RoutineBundleRow>[];
 
@@ -91,6 +96,44 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
   }
 
+  /// Pushes a routine back by its snooze duration: the log is marked
+  /// `snoozed` so Today shows the state, and a one-off reminder is scheduled.
+  Future<void> _onRoutineSnoozed(
+    TodayRoutineSnoozed event,
+    Emitter<TodayState> emit,
+  ) async {
+    final TodayRoutineItem? item = state.findItem(event.routineId);
+    if (item == null || item.status == TodayRoutineItemStatus.done) {
+      return;
+    }
+
+    await _appDatabase.upsertRoutineLog(
+      routineId: event.routineId,
+      dateKey: _dateKey(state.selectedDate),
+      status: 'snoozed',
+    );
+
+    final RoutineBundleRow? bundle = _bundleFor(event.routineId);
+    if (bundle != null) {
+      await _notificationService?.scheduleSnooze(
+        routineId: event.routineId,
+        snoozeMinutes: bundle.schedule.snoozeMinutes,
+        title: bundle.routine.title,
+      );
+    }
+
+    await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
+  }
+
+  RoutineBundleRow? _bundleFor(String routineId) {
+    for (final RoutineBundleRow bundle in _routineBundles) {
+      if (bundle.routine.id == routineId) {
+        return bundle;
+      }
+    }
+    return null;
+  }
+
   Future<void> _emitSelectedDateState(
     Emitter<TodayState> emit, {
     required DateTime selectedDate,
@@ -119,6 +162,8 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
               final TodayRoutineItemStatus status = switch (log?.status) {
                 'done' => TodayRoutineItemStatus.done,
                 'skipped' => TodayRoutineItemStatus.skipped,
+                'snoozed' => TodayRoutineItemStatus.snoozed,
+                'missed' => TodayRoutineItemStatus.missed,
                 _ => TodayRoutineItemStatus.pending,
               };
               final String reminderTime = bundle.schedule.reminderTime;

@@ -2,7 +2,7 @@ part of 'today_bloc.dart';
 
 enum TodayStatus { initial, loading, success, failure }
 
-enum TodayRoutineItemStatus { pending, done, skipped }
+enum TodayRoutineItemStatus { pending, done, skipped, snoozed, missed }
 
 class TodayRoutineItem extends Equatable {
   const TodayRoutineItem({

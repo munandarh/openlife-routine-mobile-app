@@ -21,7 +21,7 @@
 
 | Metric | Value |
 |---|---|
-| Tests passing | **184/184** |
+| Tests passing | **184/184** before Sprint 17 (CI is the source of truth) |
 | Flutter analyze | 0 errors, 0 warnings (1 info: deps order) |
 | Source files | 88 Dart |
 | Test files | 30 |
@@ -47,8 +47,8 @@
 - [x] Welcome screen
 - [x] Privacy-first screen
 - [x] Routine benefit screen
-- [/] **Notification permission request screen** — currently integrated as info panel, needs dedicated screen with rationale + request CTA
-- [ ] **Choose starter template or start empty screen** — not implemented; first-run after notification permission currently goes straight to Today
+- [x] **Notification permission request screen** — dedicated `NotificationPermissionPage` with rationale + request CTA
+- [x] **Choose starter template or start empty screen** — slide 4 of the onboarding PageView; picking a starter creates its routines on Get Started, skipping starts empty (Sprint 17)
 
 ### Routine Creation (PRD §8.3 + §13.1, M2)
 
@@ -59,7 +59,7 @@
 - [x] Snooze duration (default 10)
 - [x] Active (bool, default true)
 - [x] **Notes field** — entity + DB schema v2 + BLoC events + export/import + new routine form UI
-- [/] **Icon override (Enum/SVG, default by category)** — `iconKey` exists in entity but no UI picker
+- [ ] **Icon override (Enum/SVG, default by category)** — not started. `Routine` has no `iconKey` field; needs entity + DB migration v3 + export/import + form UI. `iconKey` currently exists only on `RoutineTemplate`
 
 ### Today Screen (PRD §8.2, M3)
 
@@ -76,8 +76,8 @@
 ### Daily Checklist (PRD §8.5, M3)
 
 - [x] Pending, Done, Skipped statuses
-- [/] **Snoozed status** — service supports snooze action; UI status enum exists but RoutineCard doesn't render "Snoozed" badge
-- [ ] **Missed status** — end-of-day job not implemented; PRD requires routines that aren't completed by EOD to flip to `missed`
+- [x] **Snoozed status** — `TodayRoutineSnoozed` writes the log and schedules a one-off reminder via `AppNotificationService.scheduleSnooze`; Today renders a Snoozed badge and a Snooze action (Sprint 17)
+- [x] **Missed status** — `MissedStateService.markYesterdayPendingAsMissed()` runs in `bootstrap()`; Today renders a Missed badge (Sprint 17). Note this fires on next app start rather than at midnight — a true EOD job needs background execution, tracked as a v1.1 item
 
 ### Reminder Engine (PRD §8.4, M4)
 
@@ -126,8 +126,8 @@
 - [x] Daily complete animation
 - [x] Progress ring animation
 - [x] Haptic feedback
-- [ ] **Real Rive `.riv` assets** — wrapper is in place; need to ship actual `.riv` files
-- [ ] **Vector illustrations integration** — 14 PNGs in `assets/vector/` need to be wired into the app
+- [ ] **Real Rive `.riv` assets** — wrapper is in place and `_showFallback` still short-circuits it; need to ship actual `.riv` files
+- [x] **Vector illustrations integration** — 10 MVP PNGs wired via `AssetVectors`; onboarding heroes fill their card with `BoxFit.cover`
 
 ### Privacy (PRD §14.3)
 
@@ -173,7 +173,7 @@
 ### Multi-language (PRD §10.3, v1.1)
 
 - [x] English support
-- [/] **Real Indonesian translations** — language switching wired but most UI text is hardcoded English; only `id`/`en` preference persisted
+- [/] **Real Indonesian translations** — `lib/l10n/app_en.arb` + `app_id.arb` and the generated `AppLocalizations` exist, but **no page imports `AppLocalizations`**: every screen still renders hardcoded English. The preference is persisted and the delegates are registered, so this is a mechanical string-replacement pass across ~30 pages
 
 ### Reset Data (PRD v1.0)
 
@@ -189,25 +189,21 @@
 - [x] `LICENSE` (Apache 2.0)
 - [x] `CONTRIBUTING.md`
 - [x] `CODE_OF_CONDUCT.md`
-- [ ] **`CHANGELOG.md`** — does not exist yet
-- [ ] **`SECURITY.md`** — does not exist yet
-- [x] `ROADMAP.md` (`document-openlife/roadmap.md`)
+- [x] `CHANGELOG.md`
+- [x] `SECURITY.md`
+- [ ] **`ROADMAP.md`** — does not exist (the referenced `document-openlife/` directory is not in the repo)
 - [x] `docs/PRD.md`
-- [x] `docs/architecture.md`
-- [x] `docs/design-system.md`
-- [x] `docs/animation-guidelines.md`
-- [ ] **`docs/contribution-guide.md`** — not yet split
-- [/] **ADRs (Architecture Decision Records)** — only 1 ADR exists (`0001-sprint0-foundation-stack.md`); need at least:
-  - [ ] 0002-choose-drift-over-sqflite.md
-  - [ ] 0003-choose-rive-for-animation.md
-  - [ ] 0004-offline-first-core.md
-  - [ ] 0005-bloc-over-cubit.md
+- [ ] **`docs/architecture.md`** — does not exist
+- [ ] **`docs/design-system.md`** — does not exist
+- [ ] **`docs/animation-guidelines.md`** — does not exist
+- [ ] **`docs/contribution-guide.md`** — not yet split out of `CONTRIBUTING.md`
+- [x] **ADRs** — 0001 foundation, 0002 drift-over-sqflite, 0003 rive, 0004 bloc-over-cubit, 0005 offline-first
 
 ### GitHub Templates
 
 - [x] `.github/PULL_REQUEST_TEMPLATE.md`
-- [ ] `.github/ISSUE_TEMPLATE/bug_report.md`
-- [ ] `.github/ISSUE_TEMPLATE/feature_request.md`
+- [x] `.github/ISSUE_TEMPLATE/bug_report.md`
+- [x] `.github/ISSUE_TEMPLATE/feature_request.md`
 - [ ] `.github/ISSUE_TEMPLATE/question.md`
 
 ### README Quality (PRD §17.2)
@@ -222,7 +218,7 @@
 - [x] Contribution guide (in `CONTRIBUTING.md`)
 - [x] License
 - [ ] **Support / donation link** — placeholder
-- [ ] **Badges** (CI, license, version)
+- [x] **Badges** — license, Flutter, tests, platform (the tests badge is a hardcoded count, not a live CI badge)
 
 ---
 
@@ -260,7 +256,7 @@
 - [x] Bloc tests for all Blocs
 - [x] Widget tests for shared widgets
 - [x] Widget tests for critical flows (today, onboarding)
-- [/] **Integration test for end-to-end create-routine-and-schedule** — only partial
+- [ ] **Integration test for end-to-end create-routine-and-schedule** — no `integration_test/` directory exists; coverage is widget/bloc tests only
 - [x] 80%+ coverage on tested layers
 
 ---
@@ -336,16 +332,21 @@ To make these loadable by Flutter, register them under `flutter:` in
 
 ## Tier 1 — Recommended Next (Do First)
 
-These are the **highest-leverage gaps** relative to PRD MVP DoD:
+Verified against the code on 2026-08-16, not against this file's history.
 
-1. **Rive / vector asset integration** — wrapper ready but no real `.riv` files; 14 PNGs in `assets/vector/` are uncommitted and unused.
-2. **Onboarding screen 4 (notification permission)** — currently a Slide 2 info panel, needs dedicated request screen.
-3. **Onboarding screen 5 (starter template picker)** — entirely missing from first-run flow.
-4. **Greeting + Next routine card on Today** — PRD §8.2 requires both, only progress card exists.
-5. **Notes field on Routine** — entity lacks the field; PRD §16.1 requires it.
-6. **Icon override picker on New Routine** — entity has `iconKey` but no UI.
-7. **End-of-day "missed" job** — routine status exists, no logic flips pending to missed at EOD.
-8. **Real i18n (full EN + ID translations)** — language switching wired, but strings hardcoded.
+1. **Full i18n pass** — the ARB files and generated `AppLocalizations` are in
+   place but unused; every screen still renders hardcoded English. Largest
+   remaining MVP gap and the one the PRD calls out by name.
+2. **Icon override picker** — needs `iconKey` on `Routine`, a DB migration to
+   schema v3, export/import support, and the form UI.
+3. **Real Rive `.riv` assets** — `OpenLifeRiveView` still short-circuits to the
+   PNG/icon path via `_showFallback`.
+4. **Integration test** — no `integration_test/` directory; the
+   create-routine → schedule → notification path is untested end to end.
+5. **Accessibility** — no text-scale test, icon-only buttons need an audit for
+   semantic labels.
+6. **Missing docs** — `ROADMAP.md`, `docs/architecture.md`,
+   `docs/design-system.md`, `docs/animation-guidelines.md`.
 
 ## Tier 2 — Repo Readiness
 
@@ -382,6 +383,7 @@ These are the **highest-leverage gaps** relative to PRD MVP DoD:
 | **Sprint 14** | ✅ | i18n framework (100+ EN/ID ARB strings, gen-l10n wired, delegates ready) |
 | **Sprint 15** | ✅ | CHANGELOG, SECURITY, 4 more ADRs, README enhanced, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE |
 | **Sprint 16** | ✅ | GitHub Release notes, portfolio pitch in README, final APK (90.8 MB) |
+| **Sprint 17** | ✅ | Onboarding Soft Card redesign, illustrations filling hero cards, starter template slide restored + made functional, snooze action, missed/snoozed badges, language screen refresh |
 
 ## Sprint Plan Going Forward
 

@@ -94,7 +94,10 @@ class AppDependencies {
   }
 
   TodayBloc createTodayBloc() {
-    return TodayBloc(appDatabase: appDatabase);
+    return TodayBloc(
+      appDatabase: appDatabase,
+      notificationService: notificationService,
+    );
   }
 
   TemplateBloc createTemplateBloc() {

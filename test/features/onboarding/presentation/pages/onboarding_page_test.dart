@@ -130,6 +130,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Private by default'), findsOneWidget);
 
+    // Navigate to slide 4, the starter template picker.
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
+    await tester.pumpAndSettle();
+    expect(find.text('Start with a template'), findsOneWidget);
+    expect(find.text('Morning Routine'), findsOneWidget);
+
     // Last slide swaps the arrow for a check and offers "Back" instead of
     // "Skip".
     expect(find.byIcon(Icons.check_rounded), findsOneWidget);
@@ -220,6 +226,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Go to last page.
+    await tester.tap(find.byKey(onboardingPrimaryActionKey));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(onboardingPrimaryActionKey));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(onboardingPrimaryActionKey));

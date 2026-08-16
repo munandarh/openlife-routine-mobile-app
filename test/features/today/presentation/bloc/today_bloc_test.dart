@@ -105,5 +105,53 @@ void main() {
             ),
       ],
     );
+    blocTest<TodayBloc, TodayState>(
+      'snoozing a pending routine marks it snoozed',
+      build: () => TodayBloc(
+        appDatabase: appDatabase,
+        nowProvider: () => DateTime(2026, 7, 1, 9),
+      ),
+      act: (TodayBloc bloc) async {
+        bloc.add(const TodayStarted());
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const TodayRoutineSnoozed('routine-1'));
+      },
+      skip: 2,
+      expect: () => <Matcher>[
+        isA<TodayState>()
+            .having(
+              (TodayState state) => state.items.first.status,
+              'first.status',
+              TodayRoutineItemStatus.snoozed,
+            )
+            .having(
+              (TodayState state) => state.completedCount,
+              'completedCount',
+              0,
+            ),
+      ],
+    );
+
+    blocTest<TodayBloc, TodayState>(
+      'snoozing a completed routine is ignored',
+      build: () => TodayBloc(
+        appDatabase: appDatabase,
+        nowProvider: () => DateTime(2026, 7, 1, 9),
+      ),
+      act: (TodayBloc bloc) async {
+        bloc.add(const TodayStarted());
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const TodayRoutineCompletionToggled('routine-1'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const TodayRoutineSnoozed('routine-1'));
+        await Future<void>.delayed(Duration.zero);
+      },
+      verify: (TodayBloc bloc) {
+        expect(
+          bloc.state.items.first.status,
+          TodayRoutineItemStatus.done,
+        );
+      },
+    );
   });
 }

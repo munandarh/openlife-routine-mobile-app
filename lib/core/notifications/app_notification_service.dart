@@ -145,6 +145,44 @@ class AppNotificationService {
     }
   }
 
+  /// Schedules a one-off reminder [snoozeMinutes] from now for [routineId].
+  ///
+  /// Used both by the notification's Snooze action and by the in-app snooze
+  /// control on Today. The snoozed reminder reuses a dedicated notification
+  /// id so it never collides with the weekly schedule.
+  Future<void> scheduleSnooze({
+    required String routineId,
+    required int snoozeMinutes,
+    String? title,
+  }) async {
+    if (_disabled) {
+      return;
+    }
+
+    await _plugin.zonedSchedule(
+      id: _notificationId(routineId, 99),
+      title: title ?? 'Snoozed reminder',
+      body: 'Reminder for ${title ?? routineId}',
+      scheduledDate: tz.TZDateTime.now(
+        tz.local,
+      ).add(Duration(minutes: snoozeMinutes)),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          _channelName,
+          channelDescription: _channelDescription,
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      payload: _routinePayload(
+        routineId: routineId,
+        snoozeMinutes: snoozeMinutes,
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
   Future<void> cancelRoutine(String routineId) async {
     if (_disabled) {
       return;
@@ -203,25 +241,9 @@ class AppNotificationService {
     }
 
     if (response.actionId == 'snooze') {
-      final int snoozeMinutes = _snoozeMinutesFromPayload(response.payload);
-      await _plugin.zonedSchedule(
-        id: _notificationId(routineId, 99),
-        title: 'Snoozed reminder',
-        body: 'Reminder for $routineId',
-        scheduledDate: tz.TZDateTime.now(
-          tz.local,
-        ).add(Duration(minutes: snoozeMinutes)),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-        ),
-        payload: response.payload,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      await scheduleSnooze(
+        routineId: routineId,
+        snoozeMinutes: _snoozeMinutesFromPayload(response.payload),
       );
     }
 

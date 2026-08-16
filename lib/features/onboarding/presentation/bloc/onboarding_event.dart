@@ -29,6 +29,17 @@ final class OnboardingLanguageSelected extends OnboardingEvent {
   List<Object?> get props => <Object?>[languageCode];
 }
 
+/// Emitted when a starter template is picked on the last slide. A null
+/// [templateId] means "start empty".
+final class OnboardingTemplateSelected extends OnboardingEvent {
+  const OnboardingTemplateSelected(this.templateId);
+
+  final String? templateId;
+
+  @override
+  List<Object?> get props => <Object?>[templateId];
+}
+
 final class OnboardingNextPressed extends OnboardingEvent {
   const OnboardingNextPressed();
 }

@@ -37,3 +37,12 @@ final class TodayRoutineSkipped extends TodayEvent {
   @override
   List<Object?> get props => <Object?>[routineId];
 }
+
+final class TodayRoutineSnoozed extends TodayEvent {
+  const TodayRoutineSnoozed(this.routineId);
+
+  final String routineId;
+
+  @override
+  List<Object?> get props => <Object?>[routineId];
+}

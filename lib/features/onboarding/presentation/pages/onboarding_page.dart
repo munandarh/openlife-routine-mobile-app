@@ -10,6 +10,10 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
+import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
+import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
@@ -52,6 +56,47 @@ class _OnboardingViewState extends State<_OnboardingView> {
     super.dispose();
   }
 
+  /// Creates the routines of the chosen starter template, then leaves the
+  /// first-run flow. A null [templateId] means the user chose to start empty.
+  Future<void> _applyStarterAndLeave(
+    BuildContext context,
+    String? templateId,
+  ) async {
+    if (templateId != null) {
+      final RoutineBloc routineBloc = AppScope.read(
+        context,
+      ).createRoutineBloc();
+      final List<RoutineTemplate> templates = await const TemplateRepository()
+          .getTemplates();
+
+      for (final RoutineTemplate template in templates) {
+        if (template.id != templateId) {
+          continue;
+        }
+
+        for (final TemplateRoutineItem item in template.routines) {
+          routineBloc.add(
+            RoutineCreateRequested(
+              title: item.title,
+              category: RoutineCategory.values.firstWhere(
+                (RoutineCategory category) => category.name == item.category,
+                orElse: () => RoutineCategory.custom,
+              ),
+              reminderTime: item.reminderTime,
+              repeatDays: item.repeatDays,
+            ),
+          );
+        }
+      }
+    }
+
+    if (!context.mounted) {
+      return;
+    }
+
+    context.go(OpenLifeRoute.today.path);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OnboardingBloc, OnboardingState>(
@@ -71,8 +116,12 @@ class _OnboardingViewState extends State<_OnboardingView> {
           );
         }
 
-        if (state.status == OnboardingStatus.completed ||
-            state.status == OnboardingStatus.skipped) {
+        if (state.status == OnboardingStatus.completed) {
+          unawaited(_applyStarterAndLeave(context, state.selectedTemplateId));
+          return;
+        }
+
+        if (state.status == OnboardingStatus.skipped) {
           context.go(OpenLifeRoute.today.path);
         }
       },
@@ -134,18 +183,33 @@ class _OnboardingViewState extends State<_OnboardingView> {
                               'We will ask for notification permission later, only when reminder scheduling is ready.',
                         ),
                       ),
-                      const _OnboardingSlide(
+                      _OnboardingSlide(
                         title: 'Private by default',
                         description:
                             'Your routines stay on-device first. No account required to start, and no forced cloud setup.',
-                        hero: _HeroCard(
+                        hero: const _HeroCard(
                           illustration: AssetVectors.onboardingPrivateByDefault,
                           fallbackIcon: Icons.lock_outline_rounded,
                         ),
-                        footer: _InfoPanel(
-                          title: 'Static fallback ready',
+                        footer: const _InfoPanel(
+                          title: 'On-device storage',
                           message:
-                              'Sprint 2 uses lightweight static hero panels now. Rive can replace these later without changing the flow.',
+                              'Routines and history live in a local database on this phone. Export a JSON backup any time from Settings.',
+                        ),
+                      ),
+                      _OnboardingSlide(
+                        title: 'Start with a template',
+                        description:
+                            'Pick a starter to begin, or start empty and add routines yourself.',
+                        hero: const _HeroCard(
+                          illustration: AssetVectors.onboardingStarterTemplate,
+                          fallbackIcon: Icons.dashboard_customize_outlined,
+                        ),
+                        footer: _StarterTemplatePicker(
+                          selectedTemplateId: state.selectedTemplateId,
+                          onSelected: (String? templateId) {
+                            bloc.add(OnboardingTemplateSelected(templateId));
+                          },
                         ),
                       ),
                     ],
@@ -470,6 +534,142 @@ class _NextButton extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Interactive starter picker on the last slide. Selecting a chip stores the
+/// template id in the bloc; "Start empty" clears it. The routines are created
+/// when the user taps Get Started.
+class _StarterTemplatePicker extends StatelessWidget {
+  const _StarterTemplatePicker({
+    required this.selectedTemplateId,
+    required this.onSelected,
+  });
+
+  final String? selectedTemplateId;
+  final ValueChanged<String?> onSelected;
+
+  static const List<_StarterOption> _options = <_StarterOption>[
+    _StarterOption(
+      id: 'morning',
+      label: 'Morning Routine',
+      icon: Icons.wb_sunny_outlined,
+    ),
+    _StarterOption(
+      id: 'hydration',
+      label: 'Hydration',
+      icon: Icons.water_drop_outlined,
+    ),
+    _StarterOption(
+      id: 'vitamin',
+      label: 'Vitamin',
+      icon: Icons.medication_outlined,
+    ),
+    _StarterOption(id: 'sleep', label: 'Sleep', icon: Icons.bedtime_outlined),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Pick a starter',
+          style: textTheme.labelLarge?.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: <Widget>[
+            for (final _StarterOption option in _options)
+              _StarterChip(
+                option: option,
+                isSelected: option.id == selectedTemplateId,
+                onTap: () => onSelected(
+                  option.id == selectedTemplateId ? null : option.id,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          selectedTemplateId == null
+              ? 'Nothing selected — you will start with an empty list.'
+              : 'These routines are added when you tap Get Started. You can '
+                    'edit or delete them any time.',
+          style: textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _StarterOption {
+  const _StarterOption({
+    required this.id,
+    required this.label,
+    required this.icon,
+  });
+
+  final String id;
+  final String label;
+  final IconData icon;
+}
+
+class _StarterChip extends StatelessWidget {
+  const _StarterChip({
+    required this.option,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final _StarterOption option;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      onTap: onTap,
+      child: Ink(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primarySoft : AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.border,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              isSelected ? Icons.check_rounded : option.icon,
+              size: 16,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              option.label,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
+              ),
+            ),
+          ],
         ),
       ),
     );

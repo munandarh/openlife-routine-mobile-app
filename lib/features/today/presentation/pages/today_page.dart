@@ -10,8 +10,8 @@ import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
-import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
@@ -220,14 +220,28 @@ class _TodayViewState extends State<_TodayView> {
                         statusLabel: switch (item.status) {
                           TodayRoutineItemStatus.done => 'Done',
                           TodayRoutineItemStatus.skipped => 'Skipped',
+                          TodayRoutineItemStatus.snoozed => 'Snoozed',
+                          TodayRoutineItemStatus.missed => 'Missed',
                           TodayRoutineItemStatus.pending when item.isDueNow =>
                             'Due Now',
                           _ => null,
                         },
+                        statusForeground: switch (item.status) {
+                          TodayRoutineItemStatus.snoozed => AppColors.secondary,
+                          TodayRoutineItemStatus.missed => AppColors.danger,
+                          _ => null,
+                        },
+                        statusBackground: switch (item.status) {
+                          TodayRoutineItemStatus.snoozed =>
+                            AppColors.secondarySoft,
+                          TodayRoutineItemStatus.missed => AppColors.dangerSoft,
+                          _ => null,
+                        },
                         secondaryActionLabel:
-                            item.status == TodayRoutineItemStatus.pending
-                            ? 'Skip'
-                            : 'Undo',
+                            item.status == TodayRoutineItemStatus.done ||
+                                item.status == TodayRoutineItemStatus.skipped
+                            ? 'Undo'
+                            : 'Skip',
                         icon: _iconForCategory(item.category),
                         iconBackground: _iconBackgroundForCategory(
                           item.category,
@@ -266,6 +280,17 @@ class _TodayViewState extends State<_TodayView> {
 
                           context.read<TodayBloc>().add(
                             TodayRoutineCompletionToggled(item.routineId),
+                          );
+                        },
+                        extraActionLabel:
+                            item.status == TodayRoutineItemStatus.pending ||
+                                item.status == TodayRoutineItemStatus.missed
+                            ? 'Snooze'
+                            : null,
+                        onExtraAction: () {
+                          HapticFeedback.selectionClick();
+                          context.read<TodayBloc>().add(
+                            TodayRoutineSnoozed(item.routineId),
                           );
                         },
                       ),

@@ -8,18 +8,23 @@ final class OnboardingState extends Equatable {
     required this.pageIndex,
     required this.selectedLanguageCode,
     required this.totalPages,
+    this.selectedTemplateId,
   });
 
   const OnboardingState.initial()
     : status = OnboardingStatus.initial,
       pageIndex = 0,
       selectedLanguageCode = 'en',
-      totalPages = 3;
+      totalPages = 4,
+      selectedTemplateId = null;
 
   final OnboardingStatus status;
   final int pageIndex;
   final String selectedLanguageCode;
   final int totalPages;
+
+  /// Starter template chosen on the last slide, or null for "start empty".
+  final String? selectedTemplateId;
 
   bool get isLastPage => pageIndex == totalPages - 1;
 
@@ -27,12 +32,17 @@ final class OnboardingState extends Equatable {
     OnboardingStatus? status,
     int? pageIndex,
     String? selectedLanguageCode,
+    String? selectedTemplateId,
+    bool clearSelectedTemplate = false,
   }) {
     return OnboardingState(
       status: status ?? this.status,
       pageIndex: pageIndex ?? this.pageIndex,
       selectedLanguageCode: selectedLanguageCode ?? this.selectedLanguageCode,
       totalPages: totalPages,
+      selectedTemplateId: clearSelectedTemplate
+          ? null
+          : selectedTemplateId ?? this.selectedTemplateId,
     );
   }
 
@@ -42,5 +52,6 @@ final class OnboardingState extends Equatable {
     pageIndex,
     selectedLanguageCode,
     totalPages,
+    selectedTemplateId,
   ];
 }

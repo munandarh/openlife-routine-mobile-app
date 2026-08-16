@@ -12,10 +12,14 @@ class RoutineCard extends StatelessWidget {
     required this.iconBackground,
     required this.iconColor,
     this.statusLabel,
+    this.statusForeground,
+    this.statusBackground,
     this.secondaryActionLabel,
+    this.extraActionLabel,
     this.onTap,
     this.onCheckTap,
     this.onSecondaryAction,
+    this.onExtraAction,
     this.isDone = false,
     this.isDueNow = false,
     super.key,
@@ -27,10 +31,23 @@ class RoutineCard extends StatelessWidget {
   final Color iconBackground;
   final Color iconColor;
   final String? statusLabel;
+
+  /// Text colour of the status badge. Falls back to the due-now / primary
+  /// pair when omitted.
+  final Color? statusForeground;
+
+  /// Background colour of the status badge.
+  final Color? statusBackground;
+
   final String? secondaryActionLabel;
+
+  /// Optional third action rendered next to the secondary one (e.g. Snooze).
+  final String? extraActionLabel;
+
   final VoidCallback? onTap;
   final VoidCallback? onCheckTap;
   final VoidCallback? onSecondaryAction;
+  final VoidCallback? onExtraAction;
   final bool isDone;
   final bool isDueNow;
 
@@ -99,9 +116,11 @@ class RoutineCard extends StatelessWidget {
                             vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: isDueNow
-                                ? AppColors.accentSoft
-                                : AppColors.primarySoft,
+                            color:
+                                statusBackground ??
+                                (isDueNow
+                                    ? AppColors.accentSoft
+                                    : AppColors.primarySoft),
                             borderRadius: BorderRadius.circular(
                               AppRadius.small,
                             ),
@@ -109,36 +128,24 @@ class RoutineCard extends StatelessWidget {
                           child: Text(
                             statusLabel!,
                             style: AppTextStyles.label.copyWith(
-                              color: isDueNow
-                                  ? AppColors.warning
-                                  : AppColors.primary,
+                              color:
+                                  statusForeground ??
+                                  (isDueNow
+                                      ? AppColors.warning
+                                      : AppColors.primary),
                             ),
                           ),
                         ),
-                      if (secondaryActionLabel != null) ...<Widget>[
-                        InkWell(
-                          borderRadius: BorderRadius.circular(AppRadius.small),
+                      if (secondaryActionLabel != null)
+                        _CardAction(
+                          label: secondaryActionLabel!,
                           onTap: onSecondaryAction,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
-                              vertical: AppSpacing.xs,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primarySoft,
-                              borderRadius: BorderRadius.circular(
-                                AppRadius.small,
-                              ),
-                            ),
-                            child: Text(
-                              secondaryActionLabel!,
-                              style: AppTextStyles.label.copyWith(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
                         ),
-                      ],
+                      if (extraActionLabel != null)
+                        _CardAction(
+                          label: extraActionLabel!,
+                          onTap: onExtraAction,
+                        ),
                     ],
                   ),
                 ],
@@ -147,6 +154,35 @@ class RoutineCard extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
             _CheckCircle(isDone: isDone, onTap: onCheckTap),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CardAction extends StatelessWidget {
+  const _CardAction({required this.label, this.onTap});
+
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.small),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.primarySoft,
+          borderRadius: BorderRadius.circular(AppRadius.small),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.label.copyWith(color: AppColors.primary),
         ),
       ),
     );

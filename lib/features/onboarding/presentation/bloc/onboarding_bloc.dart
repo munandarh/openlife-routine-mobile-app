@@ -12,6 +12,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     on<OnboardingStarted>(_onStarted);
     on<OnboardingPageChanged>(_onPageChanged);
     on<OnboardingLanguageSelected>(_onLanguageSelected);
+    on<OnboardingTemplateSelected>(_onTemplateSelected);
     on<OnboardingNextPressed>(_onNextPressed);
     on<OnboardingBackPressed>(_onBackPressed);
     on<OnboardingSkipped>(_onSkipped);
@@ -58,6 +59,19 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       state.copyWith(
         status: OnboardingStatus.ready,
         selectedLanguageCode: event.languageCode,
+      ),
+    );
+  }
+
+  void _onTemplateSelected(
+    OnboardingTemplateSelected event,
+    Emitter<OnboardingState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        status: OnboardingStatus.ready,
+        selectedTemplateId: event.templateId,
+        clearSelectedTemplate: event.templateId == null,
       ),
     );
   }

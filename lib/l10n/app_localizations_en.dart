@@ -371,6 +371,91 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsDoingGreat => "You're doing great this week!";
 
   @override
+  String get routineDetailTitle => 'Routine Detail';
+
+  @override
+  String get routineNotFound => 'Routine not found.';
+
+  @override
+  String get scheduleSection => 'Schedule';
+
+  @override
+  String get reminderBehavior => 'Reminder behavior';
+
+  @override
+  String get routineActive => 'Routine is active';
+
+  @override
+  String get routineDisabled => 'Routine is disabled';
+
+  @override
+  String get deleteRoutine => 'Delete routine';
+
+  @override
+  String snoozeForMinutes(int minutes) {
+    return 'Snooze for $minutes minutes';
+  }
+
+  @override
+  String get categoryMealRoutine => 'Meal routine';
+
+  @override
+  String get categoryWaterRoutine => 'Hydration routine';
+
+  @override
+  String get categoryVitaminRoutine => 'Vitamin routine';
+
+  @override
+  String get categoryMedicineRoutine => 'Medicine routine';
+
+  @override
+  String get categorySleepRoutine => 'Sleep routine';
+
+  @override
+  String get categoryExerciseRoutine => 'Exercise routine';
+
+  @override
+  String get categoryBreakRoutine => 'Break routine';
+
+  @override
+  String get categoryCustomRoutine => 'Custom routine';
+
+  @override
+  String get weekdayMon => 'Mon';
+
+  @override
+  String get weekdayTue => 'Tue';
+
+  @override
+  String get weekdayWed => 'Wed';
+
+  @override
+  String get weekdayThu => 'Thu';
+
+  @override
+  String get weekdayFri => 'Fri';
+
+  @override
+  String get weekdaySat => 'Sat';
+
+  @override
+  String get weekdaySun => 'Sun';
+
+  @override
+  String get dataResetDone => 'All data has been reset.';
+
+  @override
+  String get notificationRequested => 'Notification permission requested.';
+
+  @override
+  String get preparingYourDay => 'Preparing your day';
+
+  @override
+  String importFailed(Object error) {
+    return 'Import failed: $error';
+  }
+
+  @override
   String get exportData => 'Export Data';
 
   @override

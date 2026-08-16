@@ -8,6 +8,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
@@ -34,6 +35,7 @@ class _RoutineDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return BlocConsumer<RoutineBloc, RoutineState>(
       listener: (BuildContext context, RoutineState state) {
         if (state.deleted) {
@@ -62,7 +64,7 @@ class _RoutineDetailView extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        'Routine Detail',
+                        l10n.routineDetailTitle,
                         textAlign: TextAlign.center,
                         style: textTheme.headlineMedium,
                       ),
@@ -76,7 +78,7 @@ class _RoutineDetailView extends StatelessWidget {
                   const Center(child: CircularProgressIndicator()),
                 ] else if (routine == null) ...<Widget>[
                   Text(
-                    state.errorMessage ?? 'Routine not found.',
+                    state.errorMessage ?? l10n.routineNotFound,
                     style: textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -101,7 +103,7 @@ class _RoutineDetailView extends StatelessWidget {
                         Text(routine.title, style: textTheme.headlineMedium),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          _categoryLabel(routine.category),
+                          _categoryLabel(routine.category, l10n),
                           style: textTheme.bodyLarge?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -111,25 +113,25 @@ class _RoutineDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _DetailCard(
-                    title: 'Schedule',
+                    title: l10n.scheduleSection,
                     rows: <String>[
-                      _formatRepeatDays(routine.repeatDays),
+                      _formatRepeatDays(routine.repeatDays, l10n),
                       _formatTime(routine.reminderTime),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.cardGap),
                   _DetailCard(
-                    title: 'Reminder behavior',
+                    title: l10n.reminderBehavior,
                     rows: <String>[
-                      'Snooze for ${routine.snoozeMinutes} minutes',
+                      l10n.snoozeForMinutes(routine.snoozeMinutes),
                       routine.isEnabled
-                          ? 'Routine is active'
-                          : 'Routine is disabled',
+                          ? l10n.routineActive
+                          : l10n.routineDisabled,
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xxl),
                   PrimaryButton(
-                    label: 'Edit routine',
+                    label: l10n.editRoutine,
                     onPressed: () => context.push(
                       Uri(
                         path: OpenLifeRoute.newRoutine.path,
@@ -139,7 +141,7 @@ class _RoutineDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   PrimaryButton(
-                    label: 'Delete routine',
+                    label: l10n.deleteRoutine,
                     isSecondary: true,
                     onPressed: () {
                       context.read<RoutineBloc>().add(
@@ -156,28 +158,28 @@ class _RoutineDetailView extends StatelessWidget {
     );
   }
 
-  String _categoryLabel(RoutineCategory category) {
+  String _categoryLabel(RoutineCategory category, AppLocalizations l10n) {
     return switch (category) {
-      RoutineCategory.meal => 'Meal routine',
-      RoutineCategory.water => 'Hydration routine',
-      RoutineCategory.vitamin => 'Vitamin routine',
-      RoutineCategory.medicine => 'Medicine routine',
-      RoutineCategory.sleep => 'Sleep routine',
-      RoutineCategory.exercise => 'Exercise routine',
-      RoutineCategory.breakTime => 'Break routine',
-      RoutineCategory.custom => 'Custom routine',
+      RoutineCategory.meal => l10n.categoryMealRoutine,
+      RoutineCategory.water => l10n.categoryWaterRoutine,
+      RoutineCategory.vitamin => l10n.categoryVitaminRoutine,
+      RoutineCategory.medicine => l10n.categoryMedicineRoutine,
+      RoutineCategory.sleep => l10n.categorySleepRoutine,
+      RoutineCategory.exercise => l10n.categoryExerciseRoutine,
+      RoutineCategory.breakTime => l10n.categoryBreakRoutine,
+      RoutineCategory.custom => l10n.categoryCustomRoutine,
     };
   }
 
-  String _formatRepeatDays(List<int> repeatDays) {
-    const List<String> labels = <String>[
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun',
+  String _formatRepeatDays(List<int> repeatDays, AppLocalizations l10n) {
+    final List<String> labels = <String>[
+      l10n.weekdayMon,
+      l10n.weekdayTue,
+      l10n.weekdayWed,
+      l10n.weekdayThu,
+      l10n.weekdayFri,
+      l10n.weekdaySat,
+      l10n.weekdaySun,
     ];
     return repeatDays.map((int day) => labels[day - 1]).join(', ');
   }

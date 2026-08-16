@@ -101,8 +101,8 @@ class SettingsPage extends StatelessWidget {
                           ).notificationService.requestPermissions();
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Notification permission requested.'),
+                              SnackBar(
+                                content: Text(l10n.notificationRequested),
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
@@ -364,7 +364,7 @@ class SettingsPage extends StatelessWidget {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Import failed: $e'),
+                        content: Text(l10n.importFailed(e)),
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
@@ -404,8 +404,8 @@ class SettingsPage extends StatelessWidget {
                 }
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('All data has been reset.'),
+                    SnackBar(
+                      content: Text(l10n.dataResetDone),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );

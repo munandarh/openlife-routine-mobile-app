@@ -99,7 +99,11 @@ void main() {
       var tapped = false;
 
       await tester.pumpWidget(
-        MaterialApp(home: TodayEmptyPage(onCreateRoutine: () => tapped = true)),
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: TodayEmptyPage(onCreateRoutine: () => tapped = true),
+        ),
       );
 
       await tester.tap(find.text('Create routine'));

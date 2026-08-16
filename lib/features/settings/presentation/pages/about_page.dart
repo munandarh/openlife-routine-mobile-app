@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -9,12 +10,13 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          const SliverAppBar(
-            title: Text('About Open Source'),
+          SliverAppBar(
+            title: Text(l10n.aboutTitle),
             pinned: true,
           ),
           SliverPadding(
@@ -32,14 +34,14 @@ class AboutPage extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
-                        'OpenLife Routine',
+                        l10n.appTitle,
                         style: textTheme.headlineMedium?.copyWith(
                           color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Version 1.0.0',
+                        l10n.aboutVersion,
                         style: textTheme.bodyLarge?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -50,35 +52,26 @@ class AboutPage extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xl),
                 _InfoCard(
                   icon: Icons.code_outlined,
-                  title: 'Open source',
-                  body:
-                      'OpenLife Routine is free and open-source software. The full source '
-                      'code is available on GitHub under the Apache 2.0 license.',
+                  title: l10n.aboutOpenSource,
+                  body: l10n.aboutOpenSourceBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.build_outlined,
-                  title: 'Built with Flutter',
-                  body:
-                      'This app is built with Flutter and Dart, using Clean Architecture, '
-                      'BLoC state management, Drift SQLite, local notifications, and Rive animations.',
+                  title: l10n.aboutBuiltWith,
+                  body: l10n.aboutBuiltWithBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.favorite_outline,
-                  title: 'Portfolio project',
-                  body:
-                      'OpenLife Routine was built as a production-quality open-source '
-                      'portfolio project to demonstrate Flutter engineering, architecture, '
-                      'and product design skills.',
+                  title: l10n.aboutPortfolio,
+                  body: l10n.aboutPortfolioBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.gavel_outlined,
-                  title: 'License',
-                  body:
-                      'Apache License 2.0 — Free for personal and commercial use. '
-                      'The OpenLife Routine name and logo are reserved for the official project.',
+                  title: l10n.aboutLicense,
+                  body: l10n.aboutLicenseBody,
                 ),
               ]),
             ),

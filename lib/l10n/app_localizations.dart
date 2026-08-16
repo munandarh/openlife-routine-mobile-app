@@ -794,6 +794,168 @@ abstract class AppLocalizations {
   /// **'You\'re doing great this week!'**
   String get insightsDoingGreat;
 
+  /// No description provided for @routineDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Detail'**
+  String get routineDetailTitle;
+
+  /// No description provided for @routineNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine not found.'**
+  String get routineNotFound;
+
+  /// No description provided for @scheduleSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleSection;
+
+  /// No description provided for @reminderBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder behavior'**
+  String get reminderBehavior;
+
+  /// No description provided for @routineActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine is active'**
+  String get routineActive;
+
+  /// No description provided for @routineDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine is disabled'**
+  String get routineDisabled;
+
+  /// No description provided for @deleteRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete routine'**
+  String get deleteRoutine;
+
+  /// No description provided for @snoozeForMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze for {minutes} minutes'**
+  String snoozeForMinutes(int minutes);
+
+  /// No description provided for @categoryMealRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal routine'**
+  String get categoryMealRoutine;
+
+  /// No description provided for @categoryWaterRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Hydration routine'**
+  String get categoryWaterRoutine;
+
+  /// No description provided for @categoryVitaminRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Vitamin routine'**
+  String get categoryVitaminRoutine;
+
+  /// No description provided for @categoryMedicineRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine routine'**
+  String get categoryMedicineRoutine;
+
+  /// No description provided for @categorySleepRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep routine'**
+  String get categorySleepRoutine;
+
+  /// No description provided for @categoryExerciseRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise routine'**
+  String get categoryExerciseRoutine;
+
+  /// No description provided for @categoryBreakRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Break routine'**
+  String get categoryBreakRoutine;
+
+  /// No description provided for @categoryCustomRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom routine'**
+  String get categoryCustomRoutine;
+
+  /// No description provided for @weekdayMon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get weekdayMon;
+
+  /// No description provided for @weekdayTue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get weekdayTue;
+
+  /// No description provided for @weekdayWed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get weekdayWed;
+
+  /// No description provided for @weekdayThu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get weekdayThu;
+
+  /// No description provided for @weekdayFri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get weekdayFri;
+
+  /// No description provided for @weekdaySat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get weekdaySat;
+
+  /// No description provided for @weekdaySun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get weekdaySun;
+
+  /// No description provided for @dataResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All data has been reset.'**
+  String get dataResetDone;
+
+  /// No description provided for @notificationRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission requested.'**
+  String get notificationRequested;
+
+  /// No description provided for @preparingYourDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your day'**
+  String get preparingYourDay;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed: {error}'**
+  String importFailed(Object error);
+
   /// No description provided for @exportData.
   ///
   /// In en, this message translates to:

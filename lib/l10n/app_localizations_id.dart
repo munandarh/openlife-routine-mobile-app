@@ -372,6 +372,91 @@ class AppLocalizationsId extends AppLocalizations {
   String get insightsDoingGreat => "Kamu hebat minggu ini!";
 
   @override
+  String get routineDetailTitle => 'Detail Rutinitas';
+
+  @override
+  String get routineNotFound => 'Rutinitas tidak ditemukan.';
+
+  @override
+  String get scheduleSection => 'Jadwal';
+
+  @override
+  String get reminderBehavior => 'Perilaku pengingat';
+
+  @override
+  String get routineActive => 'Rutinitas aktif';
+
+  @override
+  String get routineDisabled => 'Rutinitas nonaktif';
+
+  @override
+  String get deleteRoutine => 'Hapus rutinitas';
+
+  @override
+  String snoozeForMinutes(int minutes) {
+    return 'Tunda $minutes menit';
+  }
+
+  @override
+  String get categoryMealRoutine => 'Rutinitas makan';
+
+  @override
+  String get categoryWaterRoutine => 'Rutinitas hidrasi';
+
+  @override
+  String get categoryVitaminRoutine => 'Rutinitas vitamin';
+
+  @override
+  String get categoryMedicineRoutine => 'Rutinitas obat';
+
+  @override
+  String get categorySleepRoutine => 'Rutinitas tidur';
+
+  @override
+  String get categoryExerciseRoutine => 'Rutinitas olahraga';
+
+  @override
+  String get categoryBreakRoutine => 'Rutinitas istirahat';
+
+  @override
+  String get categoryCustomRoutine => 'Rutinitas kustom';
+
+  @override
+  String get weekdayMon => 'Sen';
+
+  @override
+  String get weekdayTue => 'Sel';
+
+  @override
+  String get weekdayWed => 'Rab';
+
+  @override
+  String get weekdayThu => 'Kam';
+
+  @override
+  String get weekdayFri => 'Jum';
+
+  @override
+  String get weekdaySat => 'Sab';
+
+  @override
+  String get weekdaySun => 'Min';
+
+  @override
+  String get dataResetDone => 'Semua data telah direset.';
+
+  @override
+  String get notificationRequested => 'Izin notifikasi diminta.';
+
+  @override
+  String get preparingYourDay => 'Menyiapkan harimu';
+
+  @override
+  String importFailed(Object error) {
+    return 'Impor gagal: $error';
+  }
+
+  @override
   String get exportData => 'Ekspor Data';
 
   @override

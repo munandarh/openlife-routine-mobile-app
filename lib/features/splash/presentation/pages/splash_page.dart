@@ -5,6 +5,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({
@@ -61,6 +62,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Container(
@@ -116,7 +118,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Text(
-                      'OpenLife Routine',
+                      l10n.appTitle,
                       style: AppTextStyles.pageTitle.copyWith(
                         color: AppColors.textPrimary,
                       ),
@@ -124,7 +126,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'Calm daily routines, private by default.',
+                      l10n.appTagline,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -155,7 +157,7 @@ class _SplashPageState extends State<SplashPage> {
                           ),
                           SizedBox(width: AppSpacing.sm),
                           Text(
-                            'Preparing your day',
+                            l10n.preparingYourDay,
                             style: TextStyle(
                               fontFamily: AppTextStyles.fontFamily,
                               fontSize: 12,

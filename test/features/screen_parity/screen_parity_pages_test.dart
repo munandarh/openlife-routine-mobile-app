@@ -16,6 +16,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: SplashPage(
             hasCompletedOnboarding: false,
             initialNotificationRoutineId: null,

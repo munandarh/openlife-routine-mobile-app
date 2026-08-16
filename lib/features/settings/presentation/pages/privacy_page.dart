@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class PrivacyPage extends StatelessWidget {
   const PrivacyPage({super.key});
@@ -9,12 +10,13 @@ class PrivacyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          const SliverAppBar(
-            title: Text('Privacy & Data'),
+          SliverAppBar(
+            title: Text(l10n.privacyTitle),
             pinned: true,
           ),
           SliverPadding(
@@ -23,46 +25,36 @@ class PrivacyPage extends StatelessWidget {
               delegate: SliverChildListDelegate(<Widget>[
                 _InfoCard(
                   icon: Icons.phone_android_outlined,
-                  title: 'Your data stays on your device',
-                  body:
-                      'OpenLife Routine stores all your routines, schedules, and logs locally '
-                      'on your phone. No data is sent to any server.',
+                  title: l10n.privacyLocal,
+                  body: l10n.privacyLocalBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.no_accounts_outlined,
-                  title: 'No account required',
-                  body:
-                      'You can use all features without creating an account. There is no '
-                      'login, no registration, and no personal information collected.',
+                  title: l10n.privacyNoAccount,
+                  body: l10n.privacyNoAccountBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.wifi_off_outlined,
-                  title: 'Works offline',
-                  body:
-                      'All core features work without an internet connection. Reminders '
-                      'are scheduled locally and trigger even when you are offline.',
+                  title: l10n.privacyOffline,
+                  body: l10n.privacyOfflineBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.file_download_outlined,
-                  title: 'You control your data',
-                  body:
-                      'You can export your data as JSON at any time from Settings. You can '
-                      'also import a backup or reset all data from your device.',
+                  title: l10n.privacyControl,
+                  body: l10n.privacyControlBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _InfoCard(
                   icon: Icons.security_outlined,
-                  title: 'No tracking or analytics',
-                  body:
-                      'This app does not use third-party analytics, advertising trackers, '
-                      'or any form of user monitoring. Your routine is yours alone.',
+                  title: l10n.privacyNoTracking,
+                  body: l10n.privacyNoTrackingBody,
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 Text(
-                  'OpenLife Routine is not a medical app.',
+                  l10n.privacyDisclaimer,
                   style: textTheme.bodyLarge?.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -70,8 +62,7 @@ class PrivacyPage extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'It is a lifestyle and routine reminder app designed to help you build '
-                  'better days. It does not diagnose, treat, or cure any condition.',
+                  l10n.privacyDisclaimerBody,
                   style: textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),

@@ -10,6 +10,7 @@ import 'package:openlife_routine/features/settings/data/services/export_import_s
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -17,6 +18,8 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (BuildContext context, SettingsState state) {
         final TextTheme textTheme = Theme.of(context).textTheme;
@@ -39,7 +42,7 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Settings',
+                l10n.settingsTitle,
                 style: textTheme.headlineMedium?.copyWith(
                   color: AppColors.primary,
                 ),
@@ -63,33 +66,35 @@ class SettingsPage extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
                   _SettingsSection(
-                    title: 'Preferences',
+                    title: l10n.preferencesSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.palette_outlined,
-                        title: 'Theme',
+                        title: l10n.themeSetting,
                         trailing: state.themeMode == 'system'
-                            ? 'System'
+                            ? l10n.systemTheme
                             : state.themeMode == 'dark'
-                            ? 'Dark'
-                            : 'Light',
+                            ? l10n.darkTheme
+                            : l10n.lightTheme,
                         onTap: () => _showThemePicker(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.language_outlined,
-                        title: 'Language',
-                        trailing: state.languageCode == 'id' ? 'Bahasa' : 'English',
+                        title: l10n.languageSetting,
+                        trailing: state.languageCode == 'id'
+                            ? l10n.bahasaLang
+                            : l10n.englishLang,
                         onTap: () => _showLanguagePicker(context),
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _SettingsSection(
-                    title: 'Notifications',
+                    title: l10n.notificationsSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.notifications_active_outlined,
-                        title: 'Routine alerts',
+                        title: l10n.routineAlerts,
                         onTap: () async {
                           await AppScope.read(
                             context,
@@ -108,24 +113,24 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _SettingsSection(
-                    title: 'Data',
+                    title: l10n.dataSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.file_upload_outlined,
-                        title: 'Export routines',
-                        trailing: 'JSON',
+                        title: l10n.exportSetting,
+                        trailing: l10n.exportJson,
                         onTap: () => _exportData(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.file_download_outlined,
-                        title: 'Import routines',
-                        trailing: 'JSON',
+                        title: l10n.importSetting,
+                        trailing: l10n.exportJson,
                         onTap: () => _showImportDialog(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.delete_outline_rounded,
-                        title: 'Reset all data',
-                        trailing: 'Destructive',
+                        title: l10n.resetSetting,
+                        trailing: l10n.resetDestructive,
                         trailingColor: AppColors.danger,
                         onTap: () => _showResetDialog(context),
                       ),
@@ -133,16 +138,16 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _SettingsSection(
-                    title: 'Privacy',
+                    title: l10n.privacySection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.shield_outlined,
-                        title: 'Privacy & data',
+                        title: l10n.privacySetting,
                         onTap: () => context.push(OpenLifeRoute.privacy.path),
                       ),
                       _SettingsItemData(
                         icon: Icons.code_outlined,
-                        title: 'About open source',
+                        title: l10n.aboutSetting,
                         onTap: () => context.push(OpenLifeRoute.about.path),
                       ),
                     ],
@@ -157,6 +162,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showThemePicker(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -171,13 +177,13 @@ class SettingsPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Text(
-                'Choose theme',
+                l10n.chooseTheme,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: AppSpacing.lg),
               ListTile(
                 leading: const Icon(Icons.brightness_auto_outlined),
-                title: const Text('System'),
+                title: Text(l10n.systemTheme),
                 onTap: () {
                   context.read<SettingsBloc>().add(
                     const SettingsThemeChanged('system'),
@@ -187,7 +193,7 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.light_mode_outlined),
-                title: const Text('Light'),
+                title: Text(l10n.lightTheme),
                 onTap: () {
                   context.read<SettingsBloc>().add(
                     const SettingsThemeChanged('light'),
@@ -197,7 +203,7 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.dark_mode_outlined),
-                title: const Text('Dark'),
+                title: Text(l10n.darkTheme),
                 onTap: () {
                   context.read<SettingsBloc>().add(
                     const SettingsThemeChanged('dark'),
@@ -213,6 +219,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showLanguagePicker(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -227,13 +234,13 @@ class SettingsPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Text(
-                'Choose language',
+                l10n.chooseLanguage,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: AppSpacing.lg),
               ListTile(
                 leading: const Text('🇬🇧'),
-                title: const Text('English'),
+                title: Text(l10n.englishLang),
                 onTap: () {
                   context.read<SettingsBloc>().add(
                     const SettingsLanguageChanged('en'),
@@ -243,7 +250,7 @@ class SettingsPage extends StatelessWidget {
               ),
               ListTile(
                 leading: const Text('🇮🇩'),
-                title: const Text('Bahasa Indonesia'),
+                title: Text(l10n.bahasaLang),
                 onTap: () {
                   context.read<SettingsBloc>().add(
                     const SettingsLanguageChanged('id'),
@@ -270,11 +277,12 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showExportResultDialog(BuildContext context, String json) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Export Data'),
+          title: Text(l10n.exportData),
           content: SizedBox(
             width: double.maxFinite,
             height: 300,
@@ -288,7 +296,7 @@ class SettingsPage extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Close'),
+              child: Text(l10n.closeAction),
             ),
           ],
         );
@@ -297,13 +305,14 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showImportDialog(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final TextEditingController controller = TextEditingController();
 
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Import Data'),
+          title: Text(l10n.importData),
           content: SizedBox(
             width: double.maxFinite,
             height: 200,
@@ -313,7 +322,7 @@ class SettingsPage extends StatelessWidget {
               expands: true,
               textAlignVertical: TextAlignVertical.top,
               decoration: const InputDecoration(
-                hintText: 'Paste JSON backup here...',
+                hintText: l10n.pasteJsonHint,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -321,7 +330,7 @@ class SettingsPage extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancelAction),
             ),
             FilledButton(
               onPressed: () async {
@@ -356,7 +365,7 @@ class SettingsPage extends StatelessWidget {
                   }
                 }
               },
-              child: const Text('Import'),
+              child: Text(l10n.importAction),
             ),
           ],
         );
@@ -365,18 +374,19 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showResetDialog(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Reset All Data'),
+          title: Text(l10n.resetAllData),
           content: const Text(
-            'This will permanently delete all your routines, schedules, and logs. This action cannot be undone.',
+            l10n.resetWarning,
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancelAction),
             ),
             FilledButton(
               style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
@@ -397,7 +407,7 @@ class SettingsPage extends StatelessWidget {
                   );
                 }
               },
-              child: const Text('Reset'),
+              child: Text(l10n.resetButton),
             ),
           ],
         );

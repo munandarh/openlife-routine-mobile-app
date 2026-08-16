@@ -14,6 +14,7 @@ import 'package:openlife_routine/features/routines/domain/entities/routine.dart'
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
 import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
@@ -127,6 +128,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
       },
       builder: (BuildContext context, OnboardingState state) {
         final OnboardingBloc bloc = context.read<OnboardingBloc>();
+        final AppLocalizations l10n = AppLocalizations.of(context)!;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -155,9 +157,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                     },
                     children: <Widget>[
                       _OnboardingSlide(
-                        title: 'Build better days',
-                        description:
-                            'Design a routine that fits your life. Gentle nudges, not rigid rules.',
+                        title: l10n.onboardingSlide1Title,
+                        description: l10n.onboardingSlide1Desc,
                         hero: const _HeroCard(
                           illustration: AssetVectors.onboardingBuildBetterDays,
                           fallbackIcon: Icons.fact_check_outlined,
@@ -169,24 +170,21 @@ class _OnboardingViewState extends State<_OnboardingView> {
                           },
                         ),
                       ),
-                      const _OnboardingSlide(
-                        title: 'Never miss what matters',
-                        description:
-                            'Receive calm reminders for meals, water, vitamins, and small routines that support your day.',
+                      _OnboardingSlide(
+                        title: l10n.onboardingSlide2Title,
+                        description: l10n.onboardingSlide2Desc,
                         hero: _HeroCard(
                           illustration: AssetVectors.onboardingSmartRoutines,
                           fallbackIcon: Icons.notifications_active_outlined,
                         ),
                         footer: _InfoPanel(
-                          title: 'Notification education',
-                          message:
-                              'We will ask for notification permission later, only when reminder scheduling is ready.',
+                          title: l10n.notificationEducationTitle,
+                          message: l10n.notificationEducationMessage,
                         ),
                       ),
                       _OnboardingSlide(
-                        title: 'Private by default',
-                        description:
-                            'Your routines stay on-device first. No account required to start, and no forced cloud setup.',
+                        title: l10n.onboardingSlide3Title,
+                        description: l10n.onboardingSlide3Desc,
                         hero: const _HeroCard(
                           illustration: AssetVectors.onboardingPrivateByDefault,
                           fallbackIcon: Icons.lock_outline_rounded,
@@ -198,9 +196,8 @@ class _OnboardingViewState extends State<_OnboardingView> {
                         ),
                       ),
                       _OnboardingSlide(
-                        title: 'Start with a template',
-                        description:
-                            'Pick a starter to begin, or start empty and add routines yourself.',
+                        title: l10n.startWithTemplate,
+                        description: l10n.onboardingSlide4Desc,
                         hero: const _HeroCard(
                           illustration: AssetVectors.onboardingStarterTemplate,
                           fallbackIcon: Icons.dashboard_customize_outlined,
@@ -274,7 +271,7 @@ class _TopBar extends StatelessWidget {
           const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Text(
-            'OpenLife Routine',
+            AppLocalizations.of(context)!.appTitle,
             style: textTheme.titleMedium?.copyWith(color: AppColors.primary),
           ),
         ],
@@ -452,13 +449,19 @@ class _BottomBar extends StatelessWidget {
         TextButton(
           onPressed: onSecondaryPressed,
           style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
-          child: Text(isLastPage ? 'Back' : 'Skip'),
+          child: Text(
+            isLastPage
+                ? AppLocalizations.of(context)!.backButton
+                : AppLocalizations.of(context)!.skipButton,
+          ),
         ),
         const Spacer(),
         _NextButton(
           key: onboardingPrimaryActionKey,
           progress: progress,
-          label: isLastPage ? 'Get Started' : 'Continue',
+          label: isLastPage
+              ? AppLocalizations.of(context)!.getStarted
+              : AppLocalizations.of(context)!.continueButton,
           icon: isLastPage ? Icons.check_rounded : Icons.arrow_forward_rounded,
           onPressed: onPrimaryPressed,
         ),
@@ -579,7 +582,7 @@ class _StarterTemplatePicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Pick a starter',
+          AppLocalizations.of(context)!.pickStarter,
           style: textTheme.labelLarge?.copyWith(
             color: AppColors.textSecondary,
           ),

@@ -11,6 +11,7 @@ import 'package:openlife_routine/core/theme/app_theme.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class OpenLifeApp extends StatefulWidget {
   const OpenLifeApp({required this.dependencies, super.key});
@@ -73,6 +74,7 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
               themeMode: _themeModeFromString(state.themeMode),
               routerConfig: _appRouter.router,
               localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+                AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,

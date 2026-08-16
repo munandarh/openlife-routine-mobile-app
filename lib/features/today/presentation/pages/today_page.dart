@@ -207,8 +207,7 @@ class _TodayViewState extends State<_TodayView> {
                         'There is nothing scheduled for this date. Add one or pick another day.',
                     buttonLabel: l10n.createRoutine,
                     icon: Icons.calendar_today_outlined,
-                    onPressed: () =>
-                        context.push(OpenLifeRoute.newRoutine.path),
+                    onPressed: () => _openNewRoutine(context),
                   )
                 else
                   ...state.items.map(
@@ -316,7 +315,7 @@ class _TodayViewState extends State<_TodayView> {
           child: FloatingActionButton(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
-            onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
+            onPressed: () => _openNewRoutine(context),
             child: const Icon(Icons.add),
           ),
         ),
@@ -333,6 +332,20 @@ class _TodayViewState extends State<_TodayView> {
     final String displayMinute = time.minute.toString().padLeft(2, '0');
     final String suffix = time.period == DayPeriod.pm ? 'PM' : 'AM';
     return '$displayHour:$displayMinute $suffix';
+  }
+
+  /// Opens the create-routine form and reloads Today when it closes.
+  ///
+  /// TodayBloc is seeded once by TodayPage, and pushing keeps this page
+  /// alive underneath, so without this the list still shows the state from
+  /// before the routine was created.
+  Future<void> _openNewRoutine(BuildContext context) async {
+    await context.push(OpenLifeRoute.newRoutine.path);
+    if (!context.mounted) {
+      return;
+    }
+
+    context.read<TodayBloc>().add(const TodayStarted());
   }
 
   static String _supportiveSubtitle(TodayState state, AppLocalizations l10n) {

@@ -19,9 +19,9 @@ feature count. Ten of its thirteen criteria are met.
 | Local notifications | ✅ | Weekly schedule, snooze, timezone, tap-to-open |
 | Today checklist | ✅ | Pending, done, skipped, snoozed, missed |
 | Daily progress | ✅ | Completion percentage and counts |
-| English + Indonesian | 🚧 | Delegate registered; first-run and Settings localized, remaining screens still hardcoded English |
+| English + Indonesian | ✅ | Every screen reads from the ARBs; 176 keys. `TemplateRepository` seed data is the one exception |
 | Manual backup/export | ✅ | JSON export, import, validation |
-| Open-source docs | 🚧 | README, CONTRIBUTING, SECURITY, CHANGELOG, 5 ADRs, architecture doc done; design-system and animation guidelines outstanding |
+| Open-source docs | ✅ | README, CONTRIBUTING, SECURITY, CHANGELOG, ROADMAP, 5 ADRs, architecture, design-system and animation guidelines |
 | Rive animations | 🚧 | The Rive → PNG → icon chain is live and tested; no `.riv` files have been produced yet, and that is now the only thing missing |
 | APK on GitHub Releases | ⬜ | Requires a signed build |
 
@@ -30,11 +30,8 @@ feature count. Ten of its thirteen criteria are met.
 1. Produce the `.riv` files for the key moments (onboarding hero, empty state,
    completion check) — PRD §7.1 lists this as P0. The code path is ready:
    drop a file into `assets/rive/` and `OpenLifeRiveView` picks it up.
-2. Finish the localization pass on Today, Routines, Templates, Insights, New
-   Routine and Routine Detail.
-3. `docs/design-system.md` and `docs/animation-guidelines.md`.
-4. Screenshots and a demo recording from a real device.
-5. Publish the release APK.
+2. Screenshots and a demo recording from a real device.
+3. Publish the release APK.
 
 ## v1.1 — Better Routine Experience
 

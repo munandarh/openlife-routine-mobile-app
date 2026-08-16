@@ -173,7 +173,7 @@
 ### Multi-language (PRD §10.3, v1.1)
 
 - [x] English support
-- [/] **Real Indonesian translations** — `lib/l10n/app_en.arb` + `app_id.arb` and the generated `AppLocalizations` exist, but **no page imports `AppLocalizations`**: every screen still renders hardcoded English. The preference is persisted and the delegates are registered, so this is a mechanical string-replacement pass across ~30 pages
+- [x] **Real Indonesian translations** — complete as of Sprint 21. `AppLocalizations.delegate` is registered (it never was, which is why the ARBs sat unused) and every screen reads its copy from the ARBs. 176 keys, including two parameterised. The only user-facing text left in English is the `TemplateRepository` seed data, which is domain data and needs a design decision rather than a string swap
 
 ### Reset Data (PRD v1.0)
 
@@ -256,7 +256,7 @@
 - [x] Bloc tests for all Blocs
 - [x] Widget tests for shared widgets
 - [x] Widget tests for critical flows (today, onboarding)
-- [ ] **Integration test for end-to-end create-routine-and-schedule** — no `integration_test/` directory exists; coverage is widget/bloc tests only
+- [x] **Integration test for end-to-end create-routine-and-schedule** — `test/features/end_to_end/create_routine_flow_test.dart` drives Today → form → save → Today against a real in-memory database. Deliberately under `test/` rather than `integration_test/` so CI actually runs it; a device-run variant would additionally cover real notification scheduling and platform sqlite
 - [x] 80%+ coverage on tested layers
 
 ---
@@ -348,9 +348,8 @@ in PRD priority order.
 
 Then, below the DoD line:
 
-4. **Finish the i18n pass** (PRD §7.1 **P1**) — Today, Routines, Templates,
-   Insights, New Routine and Routine Detail still render hardcoded English.
-5. **Integration test** — no `integration_test/` directory.
+4. ~~Finish the i18n pass~~ ✅ done (Sprint 21).
+5. ~~Integration test~~ ✅ done (Sprint 22).
 6. **Accessibility** — no text-scale test; icon-only buttons need a semantic
    label audit.
 
@@ -397,6 +396,8 @@ revision of this file wrongly implied otherwise.
 | **Sprint 18** | ✅ | AppLocalizations delegate registered (it never was); first-run flow, Settings, Privacy, About and Today empty state localized |
 | **Sprint 19** | ✅ | ROADMAP.md, architecture / design-system / animation docs, question issue template |
 | **Sprint 20** | ✅ | Rive gate opened: bundle probe + real Rive → PNG → icon chain, `.asset()` takes a PNG fallback |
+| **Sprint 21** | ✅ | i18n complete: delegate registered, all screens localized, 176 keys across en/id |
+| **Sprint 22** | ✅ | End-to-end create-routine test; fixed Today not reloading after a routine is created |
 
 ## Sprint Plan Going Forward
 

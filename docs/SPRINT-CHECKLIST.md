@@ -126,7 +126,7 @@
 - [x] Daily complete animation
 - [x] Progress ring animation
 - [x] Haptic feedback
-- [ ] **Real Rive `.riv` assets** — wrapper is in place and `_showFallback` still short-circuits it; need to ship actual `.riv` files
+- [/] **Real Rive `.riv` assets** — the code path is open as of Sprint 20: `OpenLifeRiveView` probes the bundle and renders Rive when the asset exists, degrading to PNG then icon when it does not. What remains is producing the `.riv` files themselves in the Rive editor; dropping them into `assets/rive/` needs no code change
 - [x] **Vector illustrations integration** — 10 MVP PNGs wired via `AssetVectors`; onboarding heroes fill their card with `BoxFit.cover`
 
 ### Privacy (PRD §14.3)
@@ -337,10 +337,11 @@ Ten of the thirteen DoD criteria are met; these are the three that are not,
 in PRD priority order.
 
 1. **Rive `.riv` assets** — PRD §7.1 lists "Basic Rive Animations" as **P0**
-   and §24 requires them in key screens. `OpenLifeRiveView` and the PNG
-   fallback are ready; the `.riv` files themselves do not exist, and
-   `_showFallback` currently short-circuits the Rive path unconditionally, so
-   dropping assets in would have no effect until that gate is removed.
+   and §24 requires them in key screens. The engineering half is done
+   (Sprint 20): the gate is open and the Rive → PNG → icon chain is live and
+   tested. The blocker is now purely the artwork — the `.riv` files have to be
+   authored in the Rive editor. This is the last P0 item that code cannot
+   close on its own.
 2. **APK on GitHub Releases** — §24 and Milestone 6. Needs a signed build.
 3. **Architecture docs** — §24 and Milestone 6. ✅ done, see
    `docs/architecture.md`.
@@ -395,6 +396,7 @@ revision of this file wrongly implied otherwise.
 | **Sprint 17** | ✅ | Onboarding Soft Card redesign, illustrations filling hero cards, starter template slide restored + made functional, snooze action, missed/snoozed badges, language screen refresh |
 | **Sprint 18** | ✅ | AppLocalizations delegate registered (it never was); first-run flow, Settings, Privacy, About and Today empty state localized |
 | **Sprint 19** | ✅ | ROADMAP.md, architecture / design-system / animation docs, question issue template |
+| **Sprint 20** | ✅ | Rive gate opened: bundle probe + real Rive → PNG → icon chain, `.asset()` takes a PNG fallback |
 
 ## Sprint Plan Going Forward
 

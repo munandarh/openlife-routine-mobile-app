@@ -209,6 +209,47 @@ void main() {
       final Image image = tester.widget<Image>(find.byType(Image));
       expect(image.fit, BoxFit.contain);
     });
+
+    testWidgets('asset: falls back to the PNG when the .riv is missing', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.asset(
+              assetName: 'assets/rive/not_produced_yet.riv',
+              illustrationPath: AssetVectors.todayNotificationBell.path,
+              fallbackIcon: Icons.error_outline,
+              size: 120,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The PNG layer sits between Rive and the icon, so the icon must not win.
+      expect(find.byType(Image), findsOneWidget);
+      expect(find.byIcon(Icons.error_outline), findsNothing);
+    });
+
+    testWidgets('asset: falls through to the icon with no PNG given', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: OpenLifeRiveView.asset(
+              assetName: 'assets/rive/not_produced_yet.riv',
+              fallbackIcon: Icons.error_outline,
+              size: 120,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.error_outline), findsOneWidget);
+      expect(find.byType(Image), findsNothing);
+    });
   });
 }
-

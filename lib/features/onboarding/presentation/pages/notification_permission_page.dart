@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
 class NotificationPermissionPage extends StatefulWidget {
@@ -56,6 +57,8 @@ class _NotificationPermissionPageState
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -97,7 +100,7 @@ class _NotificationPermissionPageState
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Text(
-                      'Get gentle reminders',
+                      l10n.getGentleReminders,
                       style: AppTextStyles.pageTitle.copyWith(
                         color: AppColors.textPrimary,
                       ),
@@ -105,26 +108,26 @@ class _NotificationPermissionPageState
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      'OpenLife can remind you about routines at the right time, without noisy pressure.',
+                      l10n.getGentleRemindersDesc,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xl),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.schedule_outlined,
-                      label: 'Scheduled reminders',
+                      label: l10n.scheduledReminders,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.do_not_disturb_on_outlined,
-                      label: 'Quiet and respectful',
+                      label: l10n.quietAndRespectful,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.lock_outline_rounded,
-                      label: 'Private on device',
+                      label: l10n.privateOnDevice,
                     ),
                   ],
                 ),
@@ -132,14 +135,14 @@ class _NotificationPermissionPageState
             ),
             const SizedBox(height: AppSpacing.xxl),
             PrimaryButton(
-              label: 'Allow notifications',
+              label: l10n.allowNotifications,
               icon: Icons.notifications_active_outlined,
               isLoading: _isLoading,
               onPressed: () => _allowNotifications(),
             ),
             const SizedBox(height: AppSpacing.md),
             PrimaryButton(
-              label: 'Not now',
+              label: l10n.notNow,
               isSecondary: true,
               onPressed: _skip,
             ),

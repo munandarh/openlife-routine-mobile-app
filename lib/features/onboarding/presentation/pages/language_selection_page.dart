@@ -7,6 +7,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
@@ -57,6 +58,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -81,14 +84,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           ),
                           const SizedBox(height: AppSpacing.lg),
                           Text(
-                            'Choose your language',
+                            l10n.chooseYourLanguage,
                             style: AppTextStyles.pageTitle.copyWith(
                               color: AppColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
-                            'Pick the language you want to see first. You can change it later in settings.',
+                            l10n.chooseLanguageDesc,
                             style: AppTextStyles.body.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -96,7 +99,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           const SizedBox(height: AppSpacing.xl),
                           _LanguageCard(
                             code: 'EN',
-                            title: 'English',
+                            title: l10n.englishLang,
                             subtitle: 'Default app language',
                             isSelected: _selectedLanguageCode == 'en',
                             onTap: () => _selectLanguage('en'),
@@ -104,7 +107,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           const SizedBox(height: AppSpacing.md),
                           _LanguageCard(
                             code: 'ID',
-                            title: 'Bahasa Indonesia',
+                            title: l10n.bahasaLang,
                             subtitle: 'Bahasa utama untuk pengguna lokal',
                             isSelected: _selectedLanguageCode == 'id',
                             onTap: () => _selectLanguage('id'),
@@ -115,7 +118,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   PrimaryButton(
-                    label: 'Continue',
+                    label: l10n.continueButton,
                     isLoading: _isSaving,
                     onPressed: () => _continue(),
                   ),
@@ -141,7 +144,7 @@ class _BrandRow extends StatelessWidget {
         const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
         const SizedBox(width: AppSpacing.sm),
         Text(
-          'OpenLife Routine',
+          AppLocalizations.of(context)!.appTitle,
           style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
         ),
       ],

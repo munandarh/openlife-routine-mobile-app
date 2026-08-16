@@ -5,6 +5,7 @@ import 'package:openlife_routine/features/onboarding/presentation/pages/language
 import 'package:openlife_routine/features/onboarding/presentation/pages/notification_permission_page.dart';
 import 'package:openlife_routine/features/splash/presentation/pages/splash_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 void main() {
   group('SplashPage', () {
@@ -37,6 +38,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: NotificationPermissionPage(
             onAllowNotifications: (_) async {
               allowed = true;
@@ -65,6 +68,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: LanguageSelectionPage(
             onLanguageSelected: (_, code) async {
               languageCode = code;

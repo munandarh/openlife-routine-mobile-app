@@ -166,7 +166,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text('Repeat', style: textTheme.titleLarge),
+                Text(l10n.repeatLabel, style: textTheme.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
@@ -325,47 +325,48 @@ class _CategoryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<_CategoryOption> options = <_CategoryOption>[
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final List<_CategoryOption> options = <_CategoryOption>[
       _CategoryOption(
         category: RoutineCategory.meal,
-        label: 'Meal',
+        label: l10n.categoryMeal,
         icon: Icons.restaurant_outlined,
-        background: Color(0xFFFFF1C8),
+        background: const Color(0xFFFFF1C8),
         foreground: AppColors.warning,
       ),
       _CategoryOption(
         category: RoutineCategory.water,
-        label: 'Water',
+        label: l10n.categoryWater,
         icon: Icons.water_drop_outlined,
         background: AppColors.primarySoft,
         foreground: AppColors.primary,
       ),
       _CategoryOption(
         category: RoutineCategory.vitamin,
-        label: 'Vitamin',
+        label: l10n.categoryVitamin,
         icon: Icons.medication_outlined,
-        background: Color(0xFFFFF1C8),
+        background: const Color(0xFFFFF1C8),
         foreground: AppColors.warning,
       ),
       _CategoryOption(
         category: RoutineCategory.medicine,
-        label: 'Medicine',
+        label: l10n.categoryMedicine,
         icon: Icons.vaccines_outlined,
-        background: Color(0xFFFFE0DF),
+        background: const Color(0xFFFFE0DF),
         foreground: AppColors.danger,
       ),
       _CategoryOption(
         category: RoutineCategory.sleep,
-        label: 'Sleep',
+        label: l10n.categorySleep,
         icon: Icons.bedtime_outlined,
-        background: Color(0xFFDDEBF5),
+        background: const Color(0xFFDDEBF5),
         foreground: AppColors.secondary,
       ),
       _CategoryOption(
         category: RoutineCategory.exercise,
-        label: 'Exercise',
+        label: l10n.categoryExercise,
         icon: Icons.fitness_center_outlined,
-        background: Color(0xFFDDEBF5),
+        background: const Color(0xFFDDEBF5),
         foreground: AppColors.secondary,
       ),
     ];

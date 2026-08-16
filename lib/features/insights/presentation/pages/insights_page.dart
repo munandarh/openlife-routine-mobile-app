@@ -8,6 +8,7 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_bl
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
@@ -32,6 +33,7 @@ class _InsightsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return BlocBuilder<InsightsBloc, InsightsState>(
       builder: (BuildContext context, InsightsState state) {
@@ -65,7 +67,7 @@ class _InsightsView extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Insights',
+                l10n.insightsTitle,
                 style: textTheme.headlineMedium?.copyWith(
                   color: AppColors.primary,
                 ),
@@ -106,7 +108,7 @@ class _InsightsView extends StatelessWidget {
                 Expanded(
                   child: _MetricCard(
                     value: completionPercent,
-                    label: 'Completed this week',
+                    label: l10n.completedThisWeek,
                     icon: Icons.adjust_outlined,
                     iconColor: AppColors.primary,
                   ),
@@ -115,7 +117,7 @@ class _InsightsView extends StatelessWidget {
                 Expanded(
                   child: _MetricCard(
                     value: streakLabel,
-                    label: 'Best streak',
+                    label: l10n.bestStreak,
                     icon: Icons.local_fire_department_outlined,
                     iconColor: AppColors.warning,
                   ),
@@ -134,7 +136,7 @@ class _InsightsView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("This Week's Flow", style: textTheme.titleLarge),
+                  Text(l10n.thisWeeksFlow, style: textTheme.titleLarge),
                   const SizedBox(height: AppSpacing.lg),
                   Expanded(
                     child: Row(
@@ -186,7 +188,7 @@ class _InsightsView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            Text('Focus Areas', style: textTheme.titleLarge),
+            Text(l10n.focusAreas, style: textTheme.titleLarge),
             const SizedBox(height: AppSpacing.lg),
             if (state.totalRoutines > 0) ...<Widget>[
               if (state.weeklyCompletionRate >= 0.7)
@@ -194,26 +196,26 @@ class _InsightsView extends StatelessWidget {
                   icon: Icons.celebration_outlined,
                   title: "You're doing great this week!",
                   message:
-                      'Keep up the momentum — consistency builds better days.',
+                      l10n.insightsMomentum,
                 )
               else if (state.mostMissedRoutine != null)
                 _InsightBanner(
                   icon: Icons.self_improvement_outlined,
-                  title: 'Small progress still counts.',
+                  title: l10n.insightsSmallProgress,
                   message:
                       'Some routines were missed this week. Try again tomorrow — every step matters.',
                 )
               else
                 _InsightBanner(
                   icon: Icons.water_drop_outlined,
-                  title: 'Build your routine rhythm.',
+                  title: l10n.insightsBuildRhythm,
                   message:
                       'Add routines and start tracking to see your weekly insights here.',
                 ),
             ] else
               _InsightBanner(
                 icon: Icons.event_note_outlined,
-                title: 'No routines tracked yet.',
+                title: l10n.insightsNoData,
                 message:
                     'Create your first routine and start building insights over time.',
               ),

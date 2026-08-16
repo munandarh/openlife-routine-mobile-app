@@ -335,6 +335,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get snoozeAction => 'Snooze';
 
   @override
+  String get categoryMeal => 'Meal';
+
+  @override
+  String get categoryWater => 'Water';
+
+  @override
+  String get categoryVitamin => 'Vitamin';
+
+  @override
+  String get categoryMedicine => 'Medicine';
+
+  @override
+  String get categorySleep => 'Sleep';
+
+  @override
+  String get categoryExercise => 'Exercise';
+
+  @override
+  String get repeatLabel => 'Repeat';
+
+  @override
+  String get insightsNoData => 'No routines tracked yet.';
+
+  @override
+  String get insightsBuildRhythm => 'Build your routine rhythm.';
+
+  @override
+  String get insightsMomentum => 'Keep up the momentum — consistency builds better days.';
+
+  @override
+  String get insightsSmallProgress => 'Small progress still counts.';
+
+  @override
   String get exportData => 'Export Data';
 
   @override

@@ -722,6 +722,72 @@ abstract class AppLocalizations {
   /// **'Snooze'**
   String get snoozeAction;
 
+  /// No description provided for @categoryMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get categoryMeal;
+
+  /// No description provided for @categoryWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get categoryWater;
+
+  /// No description provided for @categoryVitamin.
+  ///
+  /// In en, this message translates to:
+  /// **'Vitamin'**
+  String get categoryVitamin;
+
+  /// No description provided for @categoryMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine'**
+  String get categoryMedicine;
+
+  /// No description provided for @categorySleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get categorySleep;
+
+  /// No description provided for @categoryExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get categoryExercise;
+
+  /// No description provided for @repeatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get repeatLabel;
+
+  /// No description provided for @insightsNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines tracked yet.'**
+  String get insightsNoData;
+
+  /// No description provided for @insightsBuildRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your routine rhythm.'**
+  String get insightsBuildRhythm;
+
+  /// No description provided for @insightsMomentum.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the momentum — consistency builds better days.'**
+  String get insightsMomentum;
+
+  /// No description provided for @insightsSmallProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Small progress still counts.'**
+  String get insightsSmallProgress;
+
   /// No description provided for @exportData.
   ///
   /// In en, this message translates to:

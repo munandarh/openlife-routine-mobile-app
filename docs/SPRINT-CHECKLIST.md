@@ -229,7 +229,7 @@
 - [x] Tap targets ≥ 44×44
 - [x] Color contrast (tested in design system)
 - [x] Semantic labels (most widgets)
-- [x] **Text scaling support** — `test/shared/accessibility/text_scale_test.dart` pumps Today and the first-run flow at 1.5x; a RenderFlex overflow raises a Flutter error, so the pump is the assertion
+- [x] **Text scaling support** — `test/shared/accessibility/text_scale_test.dart` pumps Today and the first-run flow at 1.5x; a RenderFlex overflow raises a Flutter error, so the pump is the assertion. The test immediately caught one: `WeekDateSelector`'s day cell had a fixed 40x40 box around two stacked labels and overflowed by 10 px. Its height now follows `MediaQuery.textScalerOf`; width stays fixed because seven cells must fit across the screen
 - [ ] **Reduced-motion setting** — deferred to v1.1
 - [x] **Dynamic text scale test** — see above
 - [x] **Icon-only buttons have semantic labels** — `IconCircleButton` takes a `semanticLabel` and hides itself from the semantics tree when it has none, so decorative chrome is not announced as a control. The back, close, more-options and add-routine controls are labelled. Note the profile and bell icons on five screens have no `onPressed` at all — they are decorative placeholders, flagged rather than wired up

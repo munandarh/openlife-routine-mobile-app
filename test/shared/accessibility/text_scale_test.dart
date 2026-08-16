@@ -109,7 +109,14 @@ void main() {
     );
 
     // Decorative chrome must not be announced as a control the user can use.
-    expect(find.byType(ExcludeSemantics), findsOneWidget);
+    // Scoped to the widget: Flutter's own widgets use ExcludeSemantics too.
+    expect(
+      find.descendant(
+        of: find.byType(IconCircleButton),
+        matching: find.byType(ExcludeSemantics),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a labelled IconCircleButton exposes its label', (

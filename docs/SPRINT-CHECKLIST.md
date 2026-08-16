@@ -229,11 +229,22 @@
 - [x] Tap targets ≥ 44×44
 - [x] Color contrast (tested in design system)
 - [x] Semantic labels (most widgets)
-- [/] **Text scaling support** — `test/shared/accessibility/text_scale_test.dart` covers the first-run flow end to end at 1.5x, plus `WeekDateSelector` in isolation. A RenderFlex overflow raises a Flutter error, so the pump is the assertion.
-  - Fixed: `WeekDateSelector`'s day cell had a fixed 40x40 box around two stacked labels and overflowed by 10 px. Its height now follows `MediaQuery.textScalerOf`; width stays fixed because seven cells must fit across the screen.
-  - **Still open:** the whole Today screen at 1.5x still overflows somewhere else. The week selector was one site, not the only one. Finding the rest needs the render tree from a live run — reproduce with a widget test that pumps `OpenLifeApp` at `textScaleFactorTestValue = 1.5` and read the RenderFlex trace
+- [ ] **Text scaling support** — **not achieved.** Three attempts in Sprint 23
+  failed to get Today through a 1.5x pass:
+  - `WeekDateSelector` was confirmed as one overflow site (two stacked labels
+    in a fixed 40x40 box, overflowing by 10 px). Its height now follows
+    `MediaQuery.textScalerOf` — a directionally correct change that is
+    **not proven to be sufficient**: the widget still failed a 1.5x pump
+    afterwards, so either that fix is incomplete or the cell has a second
+    constraint.
+  - Whatever else on Today overflows was never located. Reading the
+    `RenderFlex` trace needs a live run; it was not reachable from CI's log
+    tail in the environment this was done in.
+  - To pick this up: pump `OpenLifeApp` with
+    `tester.platformDispatcher.textScaleFactorTestValue = 1.5`, run locally,
+    and read the trace. Do not lower the scale to make it pass.
+- [ ] **Dynamic text scale test** — no passing text-scale test exists
 - [ ] **Reduced-motion setting** — deferred to v1.1
-- [x] **Dynamic text scale test** — see above
 - [x] **Icon-only buttons have semantic labels** — `IconCircleButton` takes a `semanticLabel` and hides itself from the semantics tree when it has none, so decorative chrome is not announced as a control. The back, close, more-options and add-routine controls are labelled. Note the profile and bell icons on five screens have no `onPressed` at all — they are decorative placeholders, flagged rather than wired up
 
 ### Performance (PRD §14.1)
@@ -352,8 +363,9 @@ Then, below the DoD line:
 
 4. ~~Finish the i18n pass~~ ✅ done (Sprint 21).
 5. ~~Integration test~~ ✅ done (Sprint 22).
-6. **Accessibility** — semantic labels done (Sprint 23); one text-scale gap
-   left: Today still overflows at 1.5x somewhere beyond the week selector.
+6. **Accessibility** — semantic labels done (Sprint 23). Text scaling is
+   **open**: Today overflows at 1.5x and the site was not found. This is a
+   real user-facing defect, not a missing test.
 
 Deliberately **not** Tier 1: the icon override picker. PRD §8.3 marks the Icon
 field `Required: No`, so it is a v1.1 nicety, not an MVP gap — an earlier
@@ -400,7 +412,7 @@ revision of this file wrongly implied otherwise.
 | **Sprint 20** | ✅ | Rive gate opened: bundle probe + real Rive → PNG → icon chain, `.asset()` takes a PNG fallback |
 | **Sprint 21** | ✅ | i18n complete: delegate registered, all screens localized, 176 keys across en/id |
 | **Sprint 22** | ✅ | End-to-end create-routine test; fixed Today not reloading after a routine is created |
-| **Sprint 23** | ✅ | Accessibility: semantic labels on icon-only controls, decorative chrome excluded from semantics, week selector text-scale fix. One text-scale gap left on Today |
+| **Sprint 23** | ◐ | Semantic labels on icon-only controls + decorative chrome excluded from semantics (done). Text scaling attempted and **not** completed: Today still overflows at 1.5x |
 
 ## Sprint Plan Going Forward
 

@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/routines_empty_page.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
@@ -33,6 +34,7 @@ class _RoutinesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return BlocBuilder<RoutineBloc, RoutineState>(
@@ -56,7 +58,7 @@ class _RoutinesView extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Routines',
+                l10n.routinesTab,
                 style: textTheme.headlineMedium?.copyWith(
                   color: AppColors.primary,
                 ),
@@ -90,21 +92,21 @@ class _RoutinesView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Discover Routines',
+                    l10n.discoverRoutines,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Add structured, calm habits to your day with a single tap.',
+                    l10n.addStructured,
                     style: textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   PrimaryButton(
-                    label: 'Browse Templates',
+                    label: l10n.browseTemplates,
                     icon: Icons.dashboard_customize_outlined,
                     onPressed: () => context.push(OpenLifeRoute.templates.path),
                   ),
@@ -112,14 +114,14 @@ class _RoutinesView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xxl),
-            Text('Your routines', style: textTheme.titleLarge),
+            Text(l10n.yourRoutines, style: textTheme.titleLarge),
             const SizedBox(height: AppSpacing.lg),
             if (state.status == RoutineStatus.loading &&
                 state.routines.isEmpty) ...<Widget>[
               const Center(child: CircularProgressIndicator()),
             ] else if (state.routines.isEmpty) ...<Widget>[
               AppEmptyState(
-                title: 'No routines yet',
+                title: l10n.noRoutinesYet,
                 description:
                     'Start one small routine today. Your list will update here automatically.',
                 buttonLabel: 'Create Routine',
@@ -150,7 +152,7 @@ class _RoutinesView extends StatelessWidget {
             ],
             const SizedBox(height: AppSpacing.cardGap),
             PrimaryButton(
-              label: 'Create routine',
+              label: l10n.createRoutine,
               icon: Icons.add,
               onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
             ),

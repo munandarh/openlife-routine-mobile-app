@@ -698,6 +698,30 @@ abstract class AppLocalizations {
   /// **'Undo'**
   String get undoAction;
 
+  /// No description provided for @skippedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skippedStatus;
+
+  /// No description provided for @snoozedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed'**
+  String get snoozedStatus;
+
+  /// No description provided for @missedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed'**
+  String get missedStatus;
+
+  /// No description provided for @snoozeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get snoozeAction;
+
   /// No description provided for @exportData.
   ///
   /// In en, this message translates to:

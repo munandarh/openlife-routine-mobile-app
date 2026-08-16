@@ -323,6 +323,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get undoAction => 'Undo';
 
   @override
+  String get skippedStatus => 'Skipped';
+
+  @override
+  String get snoozedStatus => 'Snoozed';
+
+  @override
+  String get missedStatus => 'Missed';
+
+  @override
+  String get snoozeAction => 'Snooze';
+
+  @override
   String get exportData => 'Export Data';
 
   @override

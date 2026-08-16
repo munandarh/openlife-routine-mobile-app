@@ -2,6 +2,7 @@
 ///
 /// All functions are pure (no side effects) so they can be tested
 /// without a Flutter binding.
+library;
 
 /// Returns a friendly English greeting for the given hour of the day
 /// (0-23).

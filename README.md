@@ -59,7 +59,7 @@ lib/
 └── shared/       # Widgets, illustrations, navigation
 ```
 
-📖 Full docs: [`docs/PRD.md`](docs/PRD.md) · [`docs/architecture.md`](docs/architecture.md) · [`docs/design-system.md`](docs/design-system.md)
+📖 Full docs: [`docs/PRD.md`](docs/PRD.md) · [`docs/architecture.md`](docs/architecture.md) · [`docs/design-system.md`](docs/design-system.md) · [`docs/animation-guidelines.md`](docs/animation-guidelines.md) · [`ROADMAP.md`](ROADMAP.md)
 
 ---
 

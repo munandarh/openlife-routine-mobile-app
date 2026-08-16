@@ -191,11 +191,11 @@
 - [x] `CODE_OF_CONDUCT.md`
 - [x] `CHANGELOG.md`
 - [x] `SECURITY.md`
-- [ ] **`ROADMAP.md`** — does not exist (the referenced `document-openlife/` directory is not in the repo)
+- [x] `ROADMAP.md` — derived from PRD §22, status verified against `lib/`
 - [x] `docs/PRD.md`
-- [ ] **`docs/architecture.md`** — does not exist
-- [ ] **`docs/design-system.md`** — does not exist
-- [ ] **`docs/animation-guidelines.md`** — does not exist
+- [x] `docs/architecture.md` — layers, DI, Drift schema and migrations, notifications, i18n, testing, known constraints
+- [x] `docs/design-system.md` — colour, type, spacing, radius, elevation tokens and component rules
+- [x] `docs/animation-guidelines.md` — when motion is warranted, durations and curves in use, Rive scope, haptics
 - [ ] **`docs/contribution-guide.md`** — not yet split out of `CONTRIBUTING.md`
 - [x] **ADRs** — 0001 foundation, 0002 drift-over-sqflite, 0003 rive, 0004 bloc-over-cubit, 0005 offline-first
 
@@ -204,7 +204,7 @@
 - [x] `.github/PULL_REQUEST_TEMPLATE.md`
 - [x] `.github/ISSUE_TEMPLATE/bug_report.md`
 - [x] `.github/ISSUE_TEMPLATE/feature_request.md`
-- [ ] `.github/ISSUE_TEMPLATE/question.md`
+- [x] `.github/ISSUE_TEMPLATE/question.md`
 
 ### README Quality (PRD §17.2)
 
@@ -332,21 +332,30 @@ To make these loadable by Flutter, register them under `flutter:` in
 
 ## Tier 1 — Recommended Next (Do First)
 
-Verified against the code on 2026-08-16, not against this file's history.
+Re-derived from PRD §24 (Definition of Done) rather than from sprint history.
+Ten of the thirteen DoD criteria are met; these are the three that are not,
+in PRD priority order.
 
-1. **Full i18n pass** — the ARB files and generated `AppLocalizations` are in
-   place but unused; every screen still renders hardcoded English. Largest
-   remaining MVP gap and the one the PRD calls out by name.
-2. **Icon override picker** — needs `iconKey` on `Routine`, a DB migration to
-   schema v3, export/import support, and the form UI.
-3. **Real Rive `.riv` assets** — `OpenLifeRiveView` still short-circuits to the
-   PNG/icon path via `_showFallback`.
-4. **Integration test** — no `integration_test/` directory; the
-   create-routine → schedule → notification path is untested end to end.
-5. **Accessibility** — no text-scale test, icon-only buttons need an audit for
-   semantic labels.
-6. **Missing docs** — `ROADMAP.md`, `docs/architecture.md`,
-   `docs/design-system.md`, `docs/animation-guidelines.md`.
+1. **Rive `.riv` assets** — PRD §7.1 lists "Basic Rive Animations" as **P0**
+   and §24 requires them in key screens. `OpenLifeRiveView` and the PNG
+   fallback are ready; the `.riv` files themselves do not exist, and
+   `_showFallback` currently short-circuits the Rive path unconditionally, so
+   dropping assets in would have no effect until that gate is removed.
+2. **APK on GitHub Releases** — §24 and Milestone 6. Needs a signed build.
+3. **Architecture docs** — §24 and Milestone 6. ✅ done, see
+   `docs/architecture.md`.
+
+Then, below the DoD line:
+
+4. **Finish the i18n pass** (PRD §7.1 **P1**) — Today, Routines, Templates,
+   Insights, New Routine and Routine Detail still render hardcoded English.
+5. **Integration test** — no `integration_test/` directory.
+6. **Accessibility** — no text-scale test; icon-only buttons need a semantic
+   label audit.
+
+Deliberately **not** Tier 1: the icon override picker. PRD §8.3 marks the Icon
+field `Required: No`, so it is a v1.1 nicety, not an MVP gap — an earlier
+revision of this file wrongly implied otherwise.
 
 ## Tier 2 — Repo Readiness
 
@@ -384,6 +393,8 @@ Verified against the code on 2026-08-16, not against this file's history.
 | **Sprint 15** | ✅ | CHANGELOG, SECURITY, 4 more ADRs, README enhanced, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE |
 | **Sprint 16** | ✅ | GitHub Release notes, portfolio pitch in README, final APK (90.8 MB) |
 | **Sprint 17** | ✅ | Onboarding Soft Card redesign, illustrations filling hero cards, starter template slide restored + made functional, snooze action, missed/snoozed badges, language screen refresh |
+| **Sprint 18** | ✅ | AppLocalizations delegate registered (it never was); first-run flow, Settings, Privacy, About and Today empty state localized |
+| **Sprint 19** | ✅ | ROADMAP.md, architecture / design-system / animation docs, question issue template |
 
 ## Sprint Plan Going Forward
 

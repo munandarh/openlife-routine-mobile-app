@@ -788,6 +788,12 @@ abstract class AppLocalizations {
   /// **'Small progress still counts.'**
   String get insightsSmallProgress;
 
+  /// No description provided for @insightsDoingGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing great this week!'**
+  String get insightsDoingGreat;
+
   /// No description provided for @exportData.
   ///
   /// In en, this message translates to:

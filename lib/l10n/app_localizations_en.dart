@@ -368,6 +368,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsSmallProgress => 'Small progress still counts.';
 
   @override
+  String get insightsDoingGreat => "You're doing great this week!";
+
+  @override
   String get exportData => 'Export Data';
 
   @override

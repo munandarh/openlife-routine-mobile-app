@@ -194,7 +194,7 @@ class _InsightsView extends StatelessWidget {
               if (state.weeklyCompletionRate >= 0.7)
                 _InsightBanner(
                   icon: Icons.celebration_outlined,
-                  title: "You're doing great this week!",
+                  title: l10n.insightsDoingGreat,
                   message:
                       l10n.insightsMomentum,
                 )

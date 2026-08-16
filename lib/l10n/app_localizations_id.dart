@@ -369,6 +369,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get insightsSmallProgress => 'Kemajuan kecil tetap berarti.';
 
   @override
+  String get insightsDoingGreat => "Kamu hebat minggu ini!";
+
+  @override
   String get exportData => 'Ekspor Data';
 
   @override

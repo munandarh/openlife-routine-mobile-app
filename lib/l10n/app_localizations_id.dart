@@ -336,6 +336,42 @@ class AppLocalizationsId extends AppLocalizations {
   String get snoozeAction => 'Tunda';
 
   @override
+  String get categoryMeal => 'Makan';
+
+  @override
+  String get categoryWater => 'Air';
+
+  @override
+  String get categoryVitamin => 'Vitamin';
+
+  @override
+  String get categoryMedicine => 'Obat';
+
+  @override
+  String get categorySleep => 'Tidur';
+
+  @override
+  String get categoryExercise => 'Olahraga';
+
+  @override
+  String get repeatLabel => 'Ulangi';
+
+  @override
+  String get insightsNoData => 'Belum ada rutinitas yang terlacak.';
+
+  @override
+  String get insightsBuildRhythm => 'Bangun ritme rutinitasmu.';
+
+  @override
+  String get insightsMomentum => 'Pertahankan momentumnya — konsistensi membangun hari yang lebih baik.';
+
+  @override
+  String get insightsSmallProgress => 'Kemajuan kecil tetap berarti.';
+
+  @override
+  String get insightsDoingGreat => "Kamu hebat minggu ini!";
+
+  @override
   String get exportData => 'Ekspor Data';
 
   @override

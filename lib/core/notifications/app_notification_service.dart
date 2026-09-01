@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart'
     as domain;
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -28,8 +29,22 @@ class AppNotificationService {
   final StreamController<String> _routineTapController =
       StreamController<String>.broadcast();
   bool _disabled = false;
+  Locale _locale = const Locale('en');
 
   Stream<String> get routineTapStream => _routineTapController.stream;
+
+  /// Notifications are built outside any widget tree, so the service keeps its
+  /// own copy of the chosen language and resolves strings from the generated
+  /// delegate directly.
+  void setLanguageCode(String languageCode) {
+    _locale = Locale(languageCode);
+  }
+
+  Future<AppLocalizations> _strings() {
+    return AppLocalizations.delegate.isSupported(_locale)
+        ? AppLocalizations.delegate.load(_locale)
+        : AppLocalizations.delegate.load(const Locale('en'));
+  }
 
   Future<String?> initialize() async {
     if (_disabled) {
@@ -39,17 +54,25 @@ class AppNotificationService {
     tz.initializeTimeZones();
     await _setLocalTimeZone();
 
-    await _plugin.initialize(
-      settings: const InitializationSettings(
-        android: AndroidInitializationSettings('ic_notification'),
-        iOS: DarwinInitializationSettings(
-          requestAlertPermission: false,
-          requestBadgePermission: false,
-          requestSoundPermission: false,
+    try {
+      await _plugin.initialize(
+        settings: const InitializationSettings(
+          android: AndroidInitializationSettings('ic_notification'),
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: false,
+            requestBadgePermission: false,
+            requestSoundPermission: false,
+          ),
         ),
-      ),
-      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
-    );
+        onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+      );
+    } on PlatformException catch (error) {
+      // Losing reminders is bad; failing to open the app at all is worse.
+      // Disable the stack and let the rest of the app run.
+      debugPrint('Notification init failed (${error.code}): ${error.message}');
+      _disabled = true;
+      return null;
+    }
 
     final NotificationAppLaunchDetails? launchDetails = await _plugin
         .getNotificationAppLaunchDetails();
@@ -110,11 +133,13 @@ class AppNotificationService {
       return;
     }
 
+    final AppLocalizations strings = await _strings();
+
     for (final int weekday in routine.repeatDays) {
-      await _plugin.zonedSchedule(
+      await _zonedScheduleWithFallback(
         id: _notificationId(routine.id, weekday),
         title: routine.title,
-        body: 'Reminder for ${routine.title}',
+        body: strings.notificationReminderBody(routine.title),
         scheduledDate: _nextWeeklyDate(
           weekday: weekday,
           reminderTime: routine.reminderTime,
@@ -129,7 +154,7 @@ class AppNotificationService {
             actions: <AndroidNotificationAction>[
               AndroidNotificationAction(
                 'snooze',
-                'Snooze ${routine.snoozeMinutes} min',
+                strings.notificationSnoozeAction(routine.snoozeMinutes),
                 showsUserInterface: true,
               ),
             ],
@@ -138,11 +163,94 @@ class AppNotificationService {
         payload: _routinePayload(
           routineId: routine.id,
           snoozeMinutes: routine.snoozeMinutes,
+          title: routine.title,
         ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
     }
+  }
+
+  /// Schedules exactly when the OS allows it, and inexactly when it does not.
+  ///
+  /// From Android 12 the exact-alarm permission can be refused, and from
+  /// Android 14 it is not granted by default. `zonedSchedule` then throws
+  /// `exact_alarms_not_permitted`. A reminder that arrives in a loose window is
+  /// far better than a create-routine flow that fails, so the call is retried
+  /// inexactly instead of propagating.
+  Future<void> _zonedScheduleWithFallback({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduledDate,
+    required NotificationDetails notificationDetails,
+    required String payload,
+    DateTimeComponents? matchDateTimeComponents,
+  }) async {
+    try {
+      await _plugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: notificationDetails,
+        payload: payload,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    } on PlatformException catch (error) {
+      if (error.code != 'exact_alarms_not_permitted') {
+        rethrow;
+      }
+
+      await _plugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: notificationDetails,
+        payload: payload,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    }
+  }
+
+  /// Re-arms a single one-off reminder after the user snoozes, either from the
+  /// notification action or from the Today screen.
+  Future<void> scheduleSnoozedRoutine({
+    required String routineId,
+    required String title,
+    required DateTime scheduledFor,
+    String? payload,
+  }) async {
+    if (_disabled) {
+      return;
+    }
+
+    final AppLocalizations strings = await _strings();
+
+    await _zonedScheduleWithFallback(
+      id: _notificationId(routineId, _snoozeSlot),
+      title: title,
+      body: strings.notificationReminderBody(title),
+      scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          _channelName,
+          channelDescription: _channelDescription,
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      payload:
+          payload ??
+          _routinePayload(
+            routineId: routineId,
+            snoozeMinutes: 10,
+            title: title,
+          ),
+    );
   }
 
   Future<void> cancelRoutine(String routineId) async {
@@ -153,7 +261,7 @@ class AppNotificationService {
     for (int weekday = 1; weekday <= 7; weekday += 1) {
       await _plugin.cancel(id: _notificationId(routineId, weekday));
     }
-    await _plugin.cancel(id: _notificationId(routineId, 99));
+    await _plugin.cancel(id: _notificationId(routineId, _snoozeSlot));
   }
 
   Future<void> dispose() async {
@@ -204,24 +312,11 @@ class AppNotificationService {
 
     if (response.actionId == 'snooze') {
       final int snoozeMinutes = _snoozeMinutesFromPayload(response.payload);
-      await _plugin.zonedSchedule(
-        id: _notificationId(routineId, 99),
-        title: 'Snoozed reminder',
-        body: 'Reminder for $routineId',
-        scheduledDate: tz.TZDateTime.now(
-          tz.local,
-        ).add(Duration(minutes: snoozeMinutes)),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-        ),
+      await scheduleSnoozedRoutine(
+        routineId: routineId,
+        title: _titleFromPayload(response.payload) ?? routineId,
+        scheduledFor: DateTime.now().add(Duration(minutes: snoozeMinutes)),
         payload: response.payload,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     }
 
@@ -239,8 +334,23 @@ class AppNotificationService {
   static String _routinePayload({
     required String routineId,
     required int snoozeMinutes,
+    required String title,
   }) {
-    return '$routineId|$snoozeMinutes';
+    // Pipe-delimited with the title last, so a title containing '|' still
+    // round-trips and payloads written by older builds (id|minutes) still
+    // parse.
+    return '$routineId|$snoozeMinutes|$title';
+  }
+
+  static String? _titleFromPayload(String? payload) {
+    if (payload == null || payload.isEmpty) {
+      return null;
+    }
+    final List<String> parts = payload.split('|');
+    if (parts.length < 3) {
+      return null;
+    }
+    return parts.sublist(2).join('|');
   }
 
   static String? _routineIdFromPayload(String? payload) {
@@ -305,6 +415,10 @@ class AppNotificationService {
     return scheduled;
   }
 }
+
+/// Weekday slots 1-7 belong to the recurring schedule; a snooze uses its own
+/// slot so re-arming it never cancels a weekly reminder.
+const int _snoozeSlot = 99;
 
 const String _channelId = 'routine_reminders';
 const String _channelName = 'Routine reminders';

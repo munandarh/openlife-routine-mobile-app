@@ -23,7 +23,7 @@
 |---|---|
 | App version | 1.1.0+2 |
 | `flutter analyze` | 0 issues |
-| `flutter test` | **272 passing** |
+| `flutter test` | **275 passing** |
 | Database schema | v4 |
 | Localized strings | 275 keys × EN/ID |
 | Illustrations wired | 10 PNG / 10 MVP |
@@ -182,6 +182,7 @@
 - [x] `docs/design-system.md`
 - [x] `docs/animation-guidelines.md`
 - [x] `docs/contribution-guide.md`
+- [x] `docs/release-guide.md`
 - [x] `docs/adr/` — 6 ADRs
 
 ### GitHub templates
@@ -239,7 +240,13 @@ Run against `app-arm64-v8a-release.apk` on an Android 16 emulator:
 - [x] Snooze from the checklist shows "Snoozed until HH:MM"
 - [x] Insights + 7-day history render with correct data
 - [x] Language switch in Settings re-renders the whole app
-- [ ] Reminder actually fires at its scheduled time (needs a long-running device session)
+- [x] **A reminder fires at its scheduled time** — a routine set for 21:50 posted
+      at 21:50:00 with the right title and body
+- [x] The notification's Snooze action reschedules it ten minutes out
+- [x] Tapping a reminder opens that routine's detail screen
+- [x] Deleting a routine cancels every alarm it owned
+- [x] Release signing verified by building with a throwaway keystore and
+      checking the certificate on the output APK
 - [ ] Screen-reader pass
 
 ### Testing (PRD §14.5)
@@ -263,7 +270,7 @@ Everything below needs something a code change cannot provide.
 |---|---|---|
 | 1 | Six `.riv` animation files | Artwork authored in the Rive editor. Wiring is done; see `animation-guidelines.md` §4 |
 | 2 | Demo GIF / video | A screen recording |
-| 3 | GitHub Release with the signed APK | A release signing key + `gh release create` |
+| 3 | GitHub Release with the signed APK | Generating the upload key — the config and procedure are ready (`docs/release-guide.md`) |
 | 4 | Play Store listing | A developer account |
 | 5 | Device QA — notifications on OEM Android, screen reader, frame rate | Physical hardware |
 | 6 | Support / donation link | A funding account |

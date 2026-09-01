@@ -1,0 +1,17 @@
+# Copy to android/key.properties and fill in with your own upload key.
+# android/key.properties is gitignored — never commit it, and never commit the
+# .jks file it points at. Losing either means you can no longer ship an update
+# to an existing Play listing.
+#
+# Generate the keystore:
+#
+#   keytool -genkey -v \
+#     -keystore android/app/upload-keystore.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 \
+#     -alias upload
+#
+storePassword=<the store password you chose>
+keyPassword=<the key password you chose>
+keyAlias=upload
+# Relative to android/app/
+storeFile=upload-keystore.jks

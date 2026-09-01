@@ -89,6 +89,11 @@ test suite did not catch them.
   longer writes 30 days of `missed` logs or zeroes last week's rate.
 - **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
   registered the whole `assets/vector/` directory.
+- **Deleting a routine opened from a reminder threw and stranded the user.**
+  That screen is entered with `go`, so it has nothing behind it and `pop` threw
+  `GoError: There is nothing to pop`; the routine was deleted but the detail
+  page stayed on screen. Added `context.popOrGo(...)`, used by Routine Detail
+  and the New Routine form.
 
 ### Changed
 - Database schema v2 → v4 (`RoutineLogs.snoozedUntil`, `Routines.iconKey`).
@@ -117,17 +122,28 @@ test suite did not catch them.
   `rive_native` cannot load).
 - Release APKs are now built per ABI: 91.4 MB fat APK → 45.3 MB for arm64.
 
+### Added — release engineering
+- Release signing reads `android/key.properties` (gitignored) and falls back to
+  debug keys with a warning when it is absent, so a clone without the upload key
+  still builds. Template in `android/key.properties.example`, procedure in
+  `docs/release-guide.md`. Verified by signing a build with a throwaway keystore
+  and checking the certificate on the output.
+
 ### Verified on device
-Release build on an Android 16 emulator: clean launch, working notifications
-init, working language switch, starter template, snooze, insights and 7-day
-history. Screenshots in `docs/screenshots/`.
+Release build on an Android 16 emulator: clean launch, working notification
+init, language switch, starter template, insights and 7-day history.
+
+The reminder pipeline is now verified end to end rather than assumed:
+a routine scheduled for 21:50 fired **at 21:50:00** with the correct title and
+body, its Snooze action rescheduled it ten minutes out, tapping it opened that
+routine's detail screen, and deleting the routine cancelled every alarm it
+owned. Screenshots in `docs/screenshots/`.
 
 ### Known gaps
 - No `.riv` animation files yet — the app ships PNG illustrations through the
   same wrapper. See `docs/animation-guidelines.md` §4.
-- No published store release; the APK is built locally and signed with debug
-  keys (`android/app/build.gradle.kts` still has the signing TODO).
-- Reminders have not been observed firing over a long device session.
+- No published store release: the signing config is in place but no upload key
+  has been generated, so local builds are still debug-signed.
 - iOS compiles but has not been tested on a device.
 
 ## [1.0.0] — 2026-07-02

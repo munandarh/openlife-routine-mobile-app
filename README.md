@@ -107,9 +107,9 @@ flutter build apk --release --split-per-abi
 flutter build appbundle --release
 ```
 
-> The release build is currently signed with debug keys
-> (`android/app/build.gradle.kts` still carries the signing TODO). Add a real
-> keystore before publishing.
+> Release signing reads `android/key.properties` when present and falls back to
+> debug keys (with a warning) when it is absent, so a fresh clone still builds.
+> See [`docs/release-guide.md`](docs/release-guide.md) before publishing.
 
 Requires the Flutter stable channel with Dart SDK ^3.11.
 
@@ -139,6 +139,7 @@ CI runs `flutter analyze` and `flutter test` on every push and pull request.
 | [`docs/design-system.md`](docs/design-system.md) | Tokens, components, accessibility rules |
 | [`docs/animation-guidelines.md`](docs/animation-guidelines.md) | Motion principles + Rive status |
 | [`docs/contribution-guide.md`](docs/contribution-guide.md) | Long-form contributor guide |
+| [`docs/release-guide.md`](docs/release-guide.md) | Signing, build, smoke test and publish |
 | [`docs/SPRINT-CHECKLIST.md`](docs/SPRINT-CHECKLIST.md) | Implementation tracker against the PRD |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records |
 | [`ROADMAP.md`](ROADMAP.md) | What ships next |

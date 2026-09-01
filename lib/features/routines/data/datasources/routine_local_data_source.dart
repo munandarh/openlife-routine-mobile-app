@@ -19,6 +19,7 @@ class RoutineLocalDataSource {
               id: routine.id,
               title: routine.title,
               category: routine.category.name,
+              iconKey: Value(routine.iconKey),
               notes: Value(routine.notes),
               isEnabled: Value(routine.isEnabled),
               createdAt: routine.createdAt,
@@ -69,6 +70,8 @@ class RoutineLocalDataSource {
         RoutinesCompanion(
           title: Value(routine.title),
           category: Value(routine.category.name),
+          iconKey: Value(routine.iconKey),
+          notes: Value(routine.notes),
           isEnabled: Value(routine.isEnabled),
           updatedAt: Value(routine.updatedAt),
         ),
@@ -108,6 +111,8 @@ class RoutineLocalDataSource {
           .cast<int>(),
       isEnabled: bundle.routine.isEnabled,
       snoozeMinutes: bundle.schedule.snoozeMinutes,
+      iconKey: bundle.routine.iconKey,
+      notes: bundle.routine.notes,
       createdAt: bundle.routine.createdAt,
       updatedAt: bundle.routine.updatedAt,
     );

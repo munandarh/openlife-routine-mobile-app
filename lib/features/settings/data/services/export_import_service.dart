@@ -47,6 +47,7 @@ class ExportImportService {
                 id: drift.Value(map['id'] as String),
                 title: drift.Value(map['title'] as String),
                 category: drift.Value(map['category'] as String),
+                iconKey: drift.Value(map['iconKey'] as String?),
                 notes: drift.Value(map['notes'] as String?),
                 isEnabled: drift.Value((map['isEnabled'] as bool?) ?? true),
                 createdAt: drift.Value(
@@ -96,6 +97,11 @@ class ExportImportService {
                 routineId: drift.Value(map['routineId'] as String),
                 date: drift.Value(map['date'] as String),
                 status: drift.Value(map['status'] as String),
+                snoozedUntil: drift.Value(
+                  map['snoozedUntil'] == null
+                      ? null
+                      : DateTime.tryParse(map['snoozedUntil'] as String),
+                ),
                 createdAt: drift.Value(
                   DateTime.parse(map['createdAt'] as String),
                 ),
@@ -121,6 +127,7 @@ class ExportImportService {
       'id': r.id,
       'title': r.title,
       'category': r.category,
+      'iconKey': r.iconKey,
       'notes': r.notes,
       'isEnabled': r.isEnabled,
       'createdAt': r.createdAt.toIso8601String(),
@@ -145,6 +152,7 @@ class ExportImportService {
       'routineId': l.routineId,
       'date': l.date,
       'status': l.status,
+      'snoozedUntil': l.snoozedUntil?.toIso8601String(),
       'createdAt': l.createdAt.toIso8601String(),
       'updatedAt': l.updatedAt.toIso8601String(),
     };

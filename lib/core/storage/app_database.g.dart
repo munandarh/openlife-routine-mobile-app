@@ -41,6 +41,17 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _iconKeyMeta = const VerificationMeta(
+    'iconKey',
+  );
+  @override
+  late final GeneratedColumn<String> iconKey = GeneratedColumn<String>(
+    'icon_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
   late final GeneratedColumn<String> notes = GeneratedColumn<String>(
@@ -92,6 +103,7 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
     id,
     title,
     category,
+    iconKey,
     notes,
     isEnabled,
     createdAt,
@@ -129,6 +141,12 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
       );
     } else if (isInserting) {
       context.missing(_categoryMeta);
+    }
+    if (data.containsKey('icon_key')) {
+      context.handle(
+        _iconKeyMeta,
+        iconKey.isAcceptableOrUnknown(data['icon_key']!, _iconKeyMeta),
+      );
     }
     if (data.containsKey('notes')) {
       context.handle(
@@ -179,6 +197,10 @@ class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
         DriftSqlType.string,
         data['${effectivePrefix}category'],
       )!,
+      iconKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_key'],
+      ),
       notes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
@@ -208,6 +230,9 @@ class Routine extends DataClass implements Insertable<Routine> {
   final String id;
   final String title;
   final String category;
+
+  /// Optional icon override. Null means "use the category default".
+  final String? iconKey;
   final String? notes;
   final bool isEnabled;
   final DateTime createdAt;
@@ -216,6 +241,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     required this.id,
     required this.title,
     required this.category,
+    this.iconKey,
     this.notes,
     required this.isEnabled,
     required this.createdAt,
@@ -227,6 +253,9 @@ class Routine extends DataClass implements Insertable<Routine> {
     map['id'] = Variable<String>(id);
     map['title'] = Variable<String>(title);
     map['category'] = Variable<String>(category);
+    if (!nullToAbsent || iconKey != null) {
+      map['icon_key'] = Variable<String>(iconKey);
+    }
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
@@ -241,6 +270,9 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: Value(id),
       title: Value(title),
       category: Value(category),
+      iconKey: iconKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconKey),
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
@@ -259,6 +291,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       category: serializer.fromJson<String>(json['category']),
+      iconKey: serializer.fromJson<String?>(json['iconKey']),
       notes: serializer.fromJson<String?>(json['notes']),
       isEnabled: serializer.fromJson<bool>(json['isEnabled']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -272,6 +305,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
       'category': serializer.toJson<String>(category),
+      'iconKey': serializer.toJson<String?>(iconKey),
       'notes': serializer.toJson<String?>(notes),
       'isEnabled': serializer.toJson<bool>(isEnabled),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -283,6 +317,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     String? id,
     String? title,
     String? category,
+    Value<String?> iconKey = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     bool? isEnabled,
     DateTime? createdAt,
@@ -291,6 +326,7 @@ class Routine extends DataClass implements Insertable<Routine> {
     id: id ?? this.id,
     title: title ?? this.title,
     category: category ?? this.category,
+    iconKey: iconKey.present ? iconKey.value : this.iconKey,
     notes: notes.present ? notes.value : this.notes,
     isEnabled: isEnabled ?? this.isEnabled,
     createdAt: createdAt ?? this.createdAt,
@@ -301,6 +337,7 @@ class Routine extends DataClass implements Insertable<Routine> {
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       category: data.category.present ? data.category.value : this.category,
+      iconKey: data.iconKey.present ? data.iconKey.value : this.iconKey,
       notes: data.notes.present ? data.notes.value : this.notes,
       isEnabled: data.isEnabled.present ? data.isEnabled.value : this.isEnabled,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -314,6 +351,7 @@ class Routine extends DataClass implements Insertable<Routine> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('category: $category, ')
+          ..write('iconKey: $iconKey, ')
           ..write('notes: $notes, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('createdAt: $createdAt, ')
@@ -323,8 +361,16 @@ class Routine extends DataClass implements Insertable<Routine> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, category, notes, isEnabled, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    id,
+    title,
+    category,
+    iconKey,
+    notes,
+    isEnabled,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -332,6 +378,7 @@ class Routine extends DataClass implements Insertable<Routine> {
           other.id == this.id &&
           other.title == this.title &&
           other.category == this.category &&
+          other.iconKey == this.iconKey &&
           other.notes == this.notes &&
           other.isEnabled == this.isEnabled &&
           other.createdAt == this.createdAt &&
@@ -342,6 +389,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
   final Value<String> id;
   final Value<String> title;
   final Value<String> category;
+  final Value<String?> iconKey;
   final Value<String?> notes;
   final Value<bool> isEnabled;
   final Value<DateTime> createdAt;
@@ -351,6 +399,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.category = const Value.absent(),
+    this.iconKey = const Value.absent(),
     this.notes = const Value.absent(),
     this.isEnabled = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -361,6 +410,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     required String id,
     required String title,
     required String category,
+    this.iconKey = const Value.absent(),
     this.notes = const Value.absent(),
     this.isEnabled = const Value.absent(),
     required DateTime createdAt,
@@ -375,6 +425,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     Expression<String>? id,
     Expression<String>? title,
     Expression<String>? category,
+    Expression<String>? iconKey,
     Expression<String>? notes,
     Expression<bool>? isEnabled,
     Expression<DateTime>? createdAt,
@@ -385,6 +436,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (category != null) 'category': category,
+      if (iconKey != null) 'icon_key': iconKey,
       if (notes != null) 'notes': notes,
       if (isEnabled != null) 'is_enabled': isEnabled,
       if (createdAt != null) 'created_at': createdAt,
@@ -397,6 +449,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     Value<String>? id,
     Value<String>? title,
     Value<String>? category,
+    Value<String?>? iconKey,
     Value<String?>? notes,
     Value<bool>? isEnabled,
     Value<DateTime>? createdAt,
@@ -407,6 +460,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
       id: id ?? this.id,
       title: title ?? this.title,
       category: category ?? this.category,
+      iconKey: iconKey ?? this.iconKey,
       notes: notes ?? this.notes,
       isEnabled: isEnabled ?? this.isEnabled,
       createdAt: createdAt ?? this.createdAt,
@@ -426,6 +480,9 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
     }
     if (category.present) {
       map['category'] = Variable<String>(category.value);
+    }
+    if (iconKey.present) {
+      map['icon_key'] = Variable<String>(iconKey.value);
     }
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
@@ -451,6 +508,7 @@ class RoutinesCompanion extends UpdateCompanion<Routine> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('category: $category, ')
+          ..write('iconKey: $iconKey, ')
           ..write('notes: $notes, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('createdAt: $createdAt, ')
@@ -937,6 +995,17 @@ class $RoutineLogsTable extends RoutineLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _snoozedUntilMeta = const VerificationMeta(
+    'snoozedUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> snoozedUntil = GeneratedColumn<DateTime>(
+    'snoozed_until',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -965,6 +1034,7 @@ class $RoutineLogsTable extends RoutineLogs
     routineId,
     date,
     status,
+    snoozedUntil,
     createdAt,
     updatedAt,
   ];
@@ -1009,6 +1079,15 @@ class $RoutineLogsTable extends RoutineLogs
     } else if (isInserting) {
       context.missing(_statusMeta);
     }
+    if (data.containsKey('snoozed_until')) {
+      context.handle(
+        _snoozedUntilMeta,
+        snoozedUntil.isAcceptableOrUnknown(
+          data['snoozed_until']!,
+          _snoozedUntilMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1050,6 +1129,10 @@ class $RoutineLogsTable extends RoutineLogs
         DriftSqlType.string,
         data['${effectivePrefix}status'],
       )!,
+      snoozedUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}snoozed_until'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1071,7 +1154,13 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
   final String id;
   final String routineId;
   final String date;
+
+  /// One of: `done`, `skipped`, `missed`, `snoozed`.
   final String status;
+
+  /// Set only while [status] is `snoozed`: the moment the reminder is due
+  /// again. Null for every other status.
+  final DateTime? snoozedUntil;
   final DateTime createdAt;
   final DateTime updatedAt;
   const RoutineLog({
@@ -1079,6 +1168,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     required this.routineId,
     required this.date,
     required this.status,
+    this.snoozedUntil,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -1089,6 +1179,9 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     map['routine_id'] = Variable<String>(routineId);
     map['date'] = Variable<String>(date);
     map['status'] = Variable<String>(status);
+    if (!nullToAbsent || snoozedUntil != null) {
+      map['snoozed_until'] = Variable<DateTime>(snoozedUntil);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -1100,6 +1193,9 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       routineId: Value(routineId),
       date: Value(date),
       status: Value(status),
+      snoozedUntil: snoozedUntil == null && nullToAbsent
+          ? const Value.absent()
+          : Value(snoozedUntil),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1115,6 +1211,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       routineId: serializer.fromJson<String>(json['routineId']),
       date: serializer.fromJson<String>(json['date']),
       status: serializer.fromJson<String>(json['status']),
+      snoozedUntil: serializer.fromJson<DateTime?>(json['snoozedUntil']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1127,6 +1224,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       'routineId': serializer.toJson<String>(routineId),
       'date': serializer.toJson<String>(date),
       'status': serializer.toJson<String>(status),
+      'snoozedUntil': serializer.toJson<DateTime?>(snoozedUntil),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1137,6 +1235,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     String? routineId,
     String? date,
     String? status,
+    Value<DateTime?> snoozedUntil = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => RoutineLog(
@@ -1144,6 +1243,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     routineId: routineId ?? this.routineId,
     date: date ?? this.date,
     status: status ?? this.status,
+    snoozedUntil: snoozedUntil.present ? snoozedUntil.value : this.snoozedUntil,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1153,6 +1253,9 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       routineId: data.routineId.present ? data.routineId.value : this.routineId,
       date: data.date.present ? data.date.value : this.date,
       status: data.status.present ? data.status.value : this.status,
+      snoozedUntil: data.snoozedUntil.present
+          ? data.snoozedUntil.value
+          : this.snoozedUntil,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1165,6 +1268,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
           ..write('routineId: $routineId, ')
           ..write('date: $date, ')
           ..write('status: $status, ')
+          ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1172,8 +1276,15 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, routineId, date, status, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    id,
+    routineId,
+    date,
+    status,
+    snoozedUntil,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1182,6 +1293,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
           other.routineId == this.routineId &&
           other.date == this.date &&
           other.status == this.status &&
+          other.snoozedUntil == this.snoozedUntil &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1191,6 +1303,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
   final Value<String> routineId;
   final Value<String> date;
   final Value<String> status;
+  final Value<DateTime?> snoozedUntil;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -1199,6 +1312,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     this.routineId = const Value.absent(),
     this.date = const Value.absent(),
     this.status = const Value.absent(),
+    this.snoozedUntil = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1208,6 +1322,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     required String routineId,
     required String date,
     required String status,
+    this.snoozedUntil = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -1222,6 +1337,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     Expression<String>? routineId,
     Expression<String>? date,
     Expression<String>? status,
+    Expression<DateTime>? snoozedUntil,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -1231,6 +1347,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
       if (routineId != null) 'routine_id': routineId,
       if (date != null) 'date': date,
       if (status != null) 'status': status,
+      if (snoozedUntil != null) 'snoozed_until': snoozedUntil,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -1242,6 +1359,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     Value<String>? routineId,
     Value<String>? date,
     Value<String>? status,
+    Value<DateTime?>? snoozedUntil,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -1251,6 +1369,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
       routineId: routineId ?? this.routineId,
       date: date ?? this.date,
       status: status ?? this.status,
+      snoozedUntil: snoozedUntil ?? this.snoozedUntil,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -1272,6 +1391,9 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
+    if (snoozedUntil.present) {
+      map['snoozed_until'] = Variable<DateTime>(snoozedUntil.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1291,6 +1413,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
           ..write('routineId: $routineId, ')
           ..write('date: $date, ')
           ..write('status: $status, ')
+          ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -1323,6 +1446,7 @@ typedef $$RoutinesTableCreateCompanionBuilder =
       required String id,
       required String title,
       required String category,
+      Value<String?> iconKey,
       Value<String?> notes,
       Value<bool> isEnabled,
       required DateTime createdAt,
@@ -1334,6 +1458,7 @@ typedef $$RoutinesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> title,
       Value<String> category,
+      Value<String?> iconKey,
       Value<String?> notes,
       Value<bool> isEnabled,
       Value<DateTime> createdAt,
@@ -1405,6 +1530,11 @@ class $$RoutinesTableFilterComposer
 
   ColumnFilters<String> get category => $composableBuilder(
     column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1503,6 +1633,11 @@ class $$RoutinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get notes => $composableBuilder(
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
@@ -1541,6 +1676,9 @@ class $$RoutinesTableAnnotationComposer
 
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get iconKey =>
+      $composableBuilder(column: $table.iconKey, builder: (column) => column);
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
@@ -1639,6 +1777,7 @@ class $$RoutinesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> category = const Value.absent(),
+                Value<String?> iconKey = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -1648,6 +1787,7 @@ class $$RoutinesTableTableManager
                 id: id,
                 title: title,
                 category: category,
+                iconKey: iconKey,
                 notes: notes,
                 isEnabled: isEnabled,
                 createdAt: createdAt,
@@ -1659,6 +1799,7 @@ class $$RoutinesTableTableManager
                 required String id,
                 required String title,
                 required String category,
+                Value<String?> iconKey = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 required DateTime createdAt,
@@ -1668,6 +1809,7 @@ class $$RoutinesTableTableManager
                 id: id,
                 title: title,
                 category: category,
+                iconKey: iconKey,
                 notes: notes,
                 isEnabled: isEnabled,
                 createdAt: createdAt,
@@ -2114,6 +2256,7 @@ typedef $$RoutineLogsTableCreateCompanionBuilder =
       required String routineId,
       required String date,
       required String status,
+      Value<DateTime?> snoozedUntil,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -2124,6 +2267,7 @@ typedef $$RoutineLogsTableUpdateCompanionBuilder =
       Value<String> routineId,
       Value<String> date,
       Value<String> status,
+      Value<DateTime?> snoozedUntil,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -2172,6 +2316,11 @@ class $$RoutineLogsTableFilterComposer
 
   ColumnFilters<String> get status => $composableBuilder(
     column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2233,6 +2382,11 @@ class $$RoutineLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2284,6 +2438,11 @@ class $$RoutineLogsTableAnnotationComposer
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2347,6 +2506,7 @@ class $$RoutineLogsTableTableManager
                 Value<String> routineId = const Value.absent(),
                 Value<String> date = const Value.absent(),
                 Value<String> status = const Value.absent(),
+                Value<DateTime?> snoozedUntil = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -2355,6 +2515,7 @@ class $$RoutineLogsTableTableManager
                 routineId: routineId,
                 date: date,
                 status: status,
+                snoozedUntil: snoozedUntil,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -2365,6 +2526,7 @@ class $$RoutineLogsTableTableManager
                 required String routineId,
                 required String date,
                 required String status,
+                Value<DateTime?> snoozedUntil = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -2373,6 +2535,7 @@ class $$RoutineLogsTableTableManager
                 routineId: routineId,
                 date: date,
                 status: status,
+                snoozedUntil: snoozedUntil,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

@@ -22,6 +22,7 @@ class Routine extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.snoozeMinutes = 10,
+    this.iconKey,
     this.notes,
   });
 
@@ -32,6 +33,9 @@ class Routine extends Equatable {
   final List<int> repeatDays;
   final bool isEnabled;
   final int snoozeMinutes;
+
+  /// Optional icon override; null falls back to the category's default icon.
+  final String? iconKey;
   final String? notes;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -44,9 +48,12 @@ class Routine extends Equatable {
     List<int>? repeatDays,
     bool? isEnabled,
     int? snoozeMinutes,
+    String? iconKey,
     String? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool clearIconKey = false,
+    bool clearNotes = false,
   }) {
     return Routine(
       id: id ?? this.id,
@@ -56,7 +63,8 @@ class Routine extends Equatable {
       repeatDays: repeatDays ?? this.repeatDays,
       isEnabled: isEnabled ?? this.isEnabled,
       snoozeMinutes: snoozeMinutes ?? this.snoozeMinutes,
-      notes: notes ?? this.notes,
+      iconKey: clearIconKey ? null : iconKey ?? this.iconKey,
+      notes: clearNotes ? null : notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -71,6 +79,7 @@ class Routine extends Equatable {
     repeatDays,
     isEnabled,
     snoozeMinutes,
+    iconKey,
     notes,
     createdAt,
     updatedAt,

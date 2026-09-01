@@ -14,6 +14,9 @@ class Routines extends Table {
 
   TextColumn get category => text()();
 
+  /// Optional icon override. Null means "use the category default".
+  TextColumn get iconKey => text().nullable()();
+
   TextColumn get notes => text().nullable()();
 
   BoolColumn get isEnabled => boolean().withDefault(const Constant(true))();
@@ -50,7 +53,12 @@ class RoutineLogs extends Table {
 
   TextColumn get date => text()();
 
+  /// One of: `done`, `skipped`, `missed`, `snoozed`.
   TextColumn get status => text()();
+
+  /// Set only while [status] is `snoozed`: the moment the reminder is due
+  /// again. Null for every other status.
+  DateTimeColumn get snoozedUntil => dateTime().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
 
@@ -78,7 +86,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -88,6 +96,12 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: (Migrator migrator, int from, int to) async {
       if (from < 2) {
         await migrator.addColumn(routines, routines.notes);
+      }
+      if (from < 3) {
+        await migrator.addColumn(routineLogs, routineLogs.snoozedUntil);
+      }
+      if (from < 4) {
+        await migrator.addColumn(routines, routines.iconKey);
       }
     },
   );
@@ -182,6 +196,7 @@ extension RoutineLogQueries on AppDatabase {
     required String routineId,
     required String dateKey,
     required String status,
+    DateTime? snoozedUntil,
   }) async {
     final DateTime now = DateTime.now();
     final RoutineLogRowData? existingLog = await getRoutineLogByRoutineAndDate(
@@ -195,10 +210,27 @@ extension RoutineLogQueries on AppDatabase {
         routineId: Value(routineId),
         date: Value(dateKey),
         status: Value(status),
+        // Only a snoozed log carries a wake-up time; every other status
+        // clears whatever a previous snooze left behind.
+        snoozedUntil: Value(status == 'snoozed' ? snoozedUntil : null),
         createdAt: Value(existingLog?.createdAt ?? now),
         updatedAt: Value(now),
       ),
     );
+  }
+
+  /// All logs between [fromDateKey] and [toDateKey] inclusive, used by the
+  /// 7-day history and the missed-state sweep.
+  Future<List<RoutineLogRowData>> getRoutineLogsBetween(
+    String fromDateKey,
+    String toDateKey,
+  ) {
+    return (select(routineLogs)..where(
+          (RoutineLogsTable table) =>
+              table.date.isBiggerOrEqualValue(fromDateKey) &
+              table.date.isSmallerOrEqualValue(toDateKey),
+        ))
+        .get();
   }
 
   Future<void> deleteRoutineLog(String routineId, String dateKey) {

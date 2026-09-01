@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
@@ -15,14 +16,15 @@ class RoutinesEmptyPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Center(
+        // Scrollable so the card stays reachable at large OS text scales
+        // instead of overflowing a centred, unscrollable column.
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.pageMargin),
             child: AppEmptyState(
-              title: 'No routines yet',
-              description:
-                  'Create your first routine so the app can start guiding your day.',
-              buttonLabel: 'Create routine',
+              title: context.l10n.noRoutinesYet,
+              description: context.l10n.routinesEmptyDesc,
+              buttonLabel: context.l10n.createRoutine,
               icon: Icons.calendar_today_outlined,
               onPressed:
                   onCreateRoutine ??

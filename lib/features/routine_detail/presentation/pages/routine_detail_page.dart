@@ -3,11 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
+import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
+import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
@@ -42,6 +46,7 @@ class _RoutineDetailView extends StatelessWidget {
       },
       builder: (BuildContext context, RoutineState state) {
         final TextTheme textTheme = Theme.of(context).textTheme;
+        final AppLocalizations l10n = context.l10n;
         final Routine? routine = state.selectedRoutine;
 
         return Scaffold(
@@ -62,7 +67,7 @@ class _RoutineDetailView extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        'Routine Detail',
+                        l10n.routineDetailTitle,
                         textAlign: TextAlign.center,
                         style: textTheme.headlineMedium,
                       ),
@@ -76,7 +81,7 @@ class _RoutineDetailView extends StatelessWidget {
                   const Center(child: CircularProgressIndicator()),
                 ] else if (routine == null) ...<Widget>[
                   Text(
-                    state.errorMessage ?? 'Routine not found.',
+                    state.errorMessage ?? l10n.routineNotFound,
                     style: textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -93,15 +98,22 @@ class _RoutineDetailView extends StatelessWidget {
                       children: <Widget>[
                         CircleAvatar(
                           radius: 28,
-                          backgroundColor: _iconBackground(routine.category),
-                          foregroundColor: _iconColor(routine.category),
-                          child: Icon(_icon(routine.category)),
+                          backgroundColor:
+                              RoutineCategoryUi.background(routine.category),
+                          foregroundColor:
+                              RoutineCategoryUi.foreground(routine.category),
+                          child: Icon(
+                            RoutineCategoryUi.icon(
+                              routine.category,
+                              iconKey: routine.iconKey,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         Text(routine.title, style: textTheme.headlineMedium),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
-                          _categoryLabel(routine.category),
+                          RoutineCategoryUi.routineLabel(l10n, routine.category),
                           style: textTheme.bodyLarge?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -111,25 +123,36 @@ class _RoutineDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _DetailCard(
-                    title: 'Schedule',
+                    title: l10n.scheduleLabel,
                     rows: <String>[
-                      _formatRepeatDays(routine.repeatDays),
-                      _formatTime(routine.reminderTime),
+                      L10nFormatters.repeatDays(l10n, routine.repeatDays),
+                      L10nFormatters.timeOfDayLabel(
+                        context,
+                        routine.reminderTime,
+                      ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.cardGap),
                   _DetailCard(
-                    title: 'Reminder behavior',
+                    title: l10n.reminderBehavior,
                     rows: <String>[
-                      'Snooze for ${routine.snoozeMinutes} minutes',
+                      l10n.snoozeForMinutes(routine.snoozeMinutes),
                       routine.isEnabled
-                          ? 'Routine is active'
-                          : 'Routine is disabled',
+                          ? l10n.routineIsActive
+                          : l10n.routineIsDisabled,
                     ],
                   ),
+                  if (routine.notes != null &&
+                      routine.notes!.trim().isNotEmpty) ...<Widget>[
+                    const SizedBox(height: AppSpacing.cardGap),
+                    _DetailCard(
+                      title: l10n.notesLabel,
+                      rows: <String>[routine.notes!.trim()],
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xxl),
                   PrimaryButton(
-                    label: 'Edit routine',
+                    label: l10n.editRoutineAction,
                     onPressed: () => context.push(
                       Uri(
                         path: OpenLifeRoute.newRoutine.path,
@@ -139,7 +162,7 @@ class _RoutineDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   PrimaryButton(
-                    label: 'Delete routine',
+                    label: l10n.deleteRoutine,
                     isSecondary: true,
                     onPressed: () {
                       context.read<RoutineBloc>().add(
@@ -154,82 +177,6 @@ class _RoutineDetailView extends StatelessWidget {
         );
       },
     );
-  }
-
-  String _categoryLabel(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => 'Meal routine',
-      RoutineCategory.water => 'Hydration routine',
-      RoutineCategory.vitamin => 'Vitamin routine',
-      RoutineCategory.medicine => 'Medicine routine',
-      RoutineCategory.sleep => 'Sleep routine',
-      RoutineCategory.exercise => 'Exercise routine',
-      RoutineCategory.breakTime => 'Break routine',
-      RoutineCategory.custom => 'Custom routine',
-    };
-  }
-
-  String _formatRepeatDays(List<int> repeatDays) {
-    const List<String> labels = <String>[
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun',
-    ];
-    return repeatDays.map((int day) => labels[day - 1]).join(', ');
-  }
-
-  String _formatTime(String reminderTime) {
-    final List<String> parts = reminderTime.split(':');
-    final int hour = int.tryParse(parts.first) ?? 0;
-    final int minute = int.tryParse(parts.last) ?? 0;
-    final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-    final int displayHour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final String displayMinute = time.minute.toString().padLeft(2, '0');
-    final String suffix = time.period == DayPeriod.pm ? 'PM' : 'AM';
-    return '$displayHour:$displayMinute $suffix';
-  }
-
-  IconData _icon(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => Icons.restaurant_outlined,
-      RoutineCategory.water => Icons.water_drop_outlined,
-      RoutineCategory.vitamin => Icons.medication_outlined,
-      RoutineCategory.medicine => Icons.vaccines_outlined,
-      RoutineCategory.sleep => Icons.bedtime_outlined,
-      RoutineCategory.exercise => Icons.fitness_center_outlined,
-      RoutineCategory.breakTime => Icons.self_improvement_outlined,
-      RoutineCategory.custom => Icons.star_outline_rounded,
-    };
-  }
-
-  Color _iconBackground(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => const Color(0xFFFFF1C8),
-      RoutineCategory.water => const Color(0xFFDDEBF5),
-      RoutineCategory.vitamin => const Color(0xFFFFF1C8),
-      RoutineCategory.medicine => const Color(0xFFFFE0DF),
-      RoutineCategory.sleep => const Color(0xFFDDEBF5),
-      RoutineCategory.exercise => const Color(0xFFDDEBF5),
-      RoutineCategory.breakTime => AppColors.surfaceSoft,
-      RoutineCategory.custom => AppColors.primarySoft,
-    };
-  }
-
-  Color _iconColor(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => AppColors.warning,
-      RoutineCategory.water => AppColors.secondary,
-      RoutineCategory.vitamin => AppColors.warning,
-      RoutineCategory.medicine => AppColors.danger,
-      RoutineCategory.sleep => AppColors.secondary,
-      RoutineCategory.exercise => AppColors.secondary,
-      RoutineCategory.breakTime => AppColors.primary,
-      RoutineCategory.custom => AppColors.primary,
-    };
   }
 }
 

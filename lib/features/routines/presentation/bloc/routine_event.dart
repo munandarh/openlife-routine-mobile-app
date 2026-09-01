@@ -26,6 +26,8 @@ final class RoutineCreateRequested extends RoutineEvent {
     required this.category,
     required this.reminderTime,
     required this.repeatDays,
+    this.snoozeMinutes = 10,
+    this.iconKey,
     this.notes,
   });
 
@@ -33,6 +35,8 @@ final class RoutineCreateRequested extends RoutineEvent {
   final RoutineCategory category;
   final String reminderTime;
   final List<int> repeatDays;
+  final int snoozeMinutes;
+  final String? iconKey;
   final String? notes;
 
   @override
@@ -41,6 +45,8 @@ final class RoutineCreateRequested extends RoutineEvent {
     category,
     reminderTime,
     repeatDays,
+    snoozeMinutes,
+    iconKey,
     notes,
   ];
 }
@@ -53,6 +59,8 @@ final class RoutineUpdateRequested extends RoutineEvent {
     required this.reminderTime,
     required this.repeatDays,
     required this.isEnabled,
+    this.snoozeMinutes = 10,
+    this.iconKey,
     this.notes,
   });
 
@@ -62,6 +70,8 @@ final class RoutineUpdateRequested extends RoutineEvent {
   final String reminderTime;
   final List<int> repeatDays;
   final bool isEnabled;
+  final int snoozeMinutes;
+  final String? iconKey;
   final String? notes;
 
   @override
@@ -72,6 +82,8 @@ final class RoutineUpdateRequested extends RoutineEvent {
     reminderTime,
     repeatDays,
     isEnabled,
+    snoozeMinutes,
+    iconKey,
     notes,
   ];
 }

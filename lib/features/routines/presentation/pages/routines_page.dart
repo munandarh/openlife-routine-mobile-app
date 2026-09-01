@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
+import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/routines_empty_page.dart';
+import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
@@ -34,6 +38,7 @@ class _RoutinesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = context.l10n;
 
     return BlocBuilder<RoutineBloc, RoutineState>(
       builder: (BuildContext context, RoutineState state) {
@@ -56,7 +61,7 @@ class _RoutinesView extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Routines',
+                l10n.routinesTab,
                 style: textTheme.headlineMedium?.copyWith(
                   color: AppColors.primary,
                 ),
@@ -90,21 +95,21 @@ class _RoutinesView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Discover Routines',
+                    l10n.discoverRoutines,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Add structured, calm habits to your day with a single tap.',
+                    l10n.addStructured,
                     style: textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   PrimaryButton(
-                    label: 'Browse Templates',
+                    label: l10n.browseTemplates,
                     icon: Icons.dashboard_customize_outlined,
                     onPressed: () => context.push(OpenLifeRoute.templates.path),
                   ),
@@ -112,17 +117,16 @@ class _RoutinesView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xxl),
-            Text('Your routines', style: textTheme.titleLarge),
+            Text(l10n.yourRoutines, style: textTheme.titleLarge),
             const SizedBox(height: AppSpacing.lg),
             if (state.status == RoutineStatus.loading &&
                 state.routines.isEmpty) ...<Widget>[
               const Center(child: CircularProgressIndicator()),
             ] else if (state.routines.isEmpty) ...<Widget>[
               AppEmptyState(
-                title: 'No routines yet',
-                description:
-                    'Start one small routine today. Your list will update here automatically.',
-                buttonLabel: 'Create Routine',
+                title: l10n.noRoutinesYet,
+                description: l10n.routinesListEmptyDesc,
+                buttonLabel: l10n.createRoutine,
                 icon: Icons.calendar_today_outlined,
                 onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
               ),
@@ -132,12 +136,21 @@ class _RoutinesView extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
                   child: RoutineCard(
                     title: routine.title,
-                    timeLabel: _formatTime(routine.reminderTime),
-                    icon: _iconForCategory(routine.category),
-                    iconBackground: _iconBackgroundForCategory(
-                      routine.category,
+                    timeLabel: L10nFormatters.timeOfDayLabel(
+                      context,
+                      routine.reminderTime,
                     ),
-                    iconColor: _iconColorForCategory(routine.category),
+                    statusLabel: routine.isEnabled
+                        ? null
+                        : l10n.routineIsDisabled,
+                    statusTone: RoutineCardTone.muted,
+                    icon: RoutineCategoryUi.icon(
+                      routine.category,
+                      iconKey: routine.iconKey,
+                    ),
+                    iconBackground:
+                        RoutineCategoryUi.background(routine.category),
+                    iconColor: RoutineCategoryUi.foreground(routine.category),
                     onTap: () => context.push(
                       Uri(
                         path: OpenLifeRoute.routineDetail.path,
@@ -150,7 +163,7 @@ class _RoutinesView extends StatelessWidget {
             ],
             const SizedBox(height: AppSpacing.cardGap),
             PrimaryButton(
-              label: 'Create routine',
+              label: l10n.createRoutine,
               icon: Icons.add,
               onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
             ),
@@ -161,60 +174,5 @@ class _RoutinesView extends StatelessWidget {
   );
       },
     );
-  }
-
-  String _formatTime(String reminderTime) {
-    final List<String> parts = reminderTime.split(':');
-    if (parts.length != 2) {
-      return reminderTime;
-    }
-
-    final int hour = int.tryParse(parts[0]) ?? 0;
-    final int minute = int.tryParse(parts[1]) ?? 0;
-    final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-    final bool isPm = time.period == DayPeriod.pm;
-    final int displayHour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final String displayMinute = time.minute.toString().padLeft(2, '0');
-    final String suffix = isPm ? 'PM' : 'AM';
-    return '$displayHour:$displayMinute $suffix';
-  }
-
-  IconData _iconForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => Icons.restaurant_outlined,
-      RoutineCategory.water => Icons.water_drop_outlined,
-      RoutineCategory.vitamin => Icons.medication_outlined,
-      RoutineCategory.medicine => Icons.vaccines_outlined,
-      RoutineCategory.sleep => Icons.bedtime_outlined,
-      RoutineCategory.exercise => Icons.fitness_center_outlined,
-      RoutineCategory.breakTime => Icons.self_improvement_outlined,
-      RoutineCategory.custom => Icons.star_outline_rounded,
-    };
-  }
-
-  Color _iconBackgroundForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => const Color(0xFFFFF1C8),
-      RoutineCategory.water => const Color(0xFFDDEBF5),
-      RoutineCategory.vitamin => const Color(0xFFFFF1C8),
-      RoutineCategory.medicine => const Color(0xFFFFE0DF),
-      RoutineCategory.sleep => const Color(0xFFDDEBF5),
-      RoutineCategory.exercise => const Color(0xFFDDEBF5),
-      RoutineCategory.breakTime => AppColors.surfaceSoft,
-      RoutineCategory.custom => AppColors.primarySoft,
-    };
-  }
-
-  Color _iconColorForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => AppColors.warning,
-      RoutineCategory.water => AppColors.secondary,
-      RoutineCategory.vitamin => AppColors.warning,
-      RoutineCategory.medicine => AppColors.danger,
-      RoutineCategory.sleep => AppColors.secondary,
-      RoutineCategory.exercise => AppColors.secondary,
-      RoutineCategory.breakTime => AppColors.primary,
-      RoutineCategory.custom => AppColors.primary,
-    };
   }
 }

@@ -75,6 +75,8 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       reminderTime: event.reminderTime,
       repeatDays: event.repeatDays,
       isEnabled: true,
+      snoozeMinutes: event.snoozeMinutes,
+      iconKey: event.iconKey,
       notes: event.notes,
       createdAt: now,
       updatedAt: now,
@@ -168,6 +170,13 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       reminderTime: event.reminderTime,
       repeatDays: event.repeatDays,
       isEnabled: event.isEnabled,
+      snoozeMinutes: event.snoozeMinutes,
+      iconKey: event.iconKey,
+      notes: event.notes,
+      // copyWith keeps the old value for a null argument, so clearing a note
+      // or an icon override has to be explicit.
+      clearIconKey: event.iconKey == null,
+      clearNotes: event.notes == null,
       updatedAt: DateTime.now(),
     );
 

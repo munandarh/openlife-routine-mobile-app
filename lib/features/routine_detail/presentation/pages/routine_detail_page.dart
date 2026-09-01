@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/app/router/navigation_extensions.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
@@ -41,7 +42,7 @@ class _RoutineDetailView extends StatelessWidget {
     return BlocConsumer<RoutineBloc, RoutineState>(
       listener: (BuildContext context, RoutineState state) {
         if (state.deleted) {
-          context.pop();
+          context.popOrGo(OpenLifeRoute.today.path);
         }
       },
       builder: (BuildContext context, RoutineState state) {
@@ -62,7 +63,7 @@ class _RoutineDetailView extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     IconButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     ),
                     Expanded(

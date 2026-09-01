@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/app/router/navigation_extensions.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
@@ -94,7 +95,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
         }
 
         if (state.saved) {
-          context.pop();
+          context.popOrGo(OpenLifeRoute.today.path);
         }
 
         if (state.errorMessage != null) {
@@ -117,7 +118,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                 Row(
                   children: <Widget>[
                     IconButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
                       tooltip: l10n.closeAction,
                       icon: const Icon(Icons.close_rounded),
                     ),

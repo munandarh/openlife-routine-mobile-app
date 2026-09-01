@@ -200,8 +200,10 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     borderRadius: BorderRadius.circular(AppRadius.large),
                     border: Border.all(color: AppColors.border),
                   ),
+                  // Each day flexes to a seventh of the row. Fixed-width
+                  // chips overflowed a 360dp screen by 20px, which collapsed
+                  // the gaps and clipped Sunday.
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List<Widget>.generate(7, (int index) {
                       final int dayValue = index + 1;
                       final List<String> initials =
@@ -209,19 +211,26 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                       final List<String> names =
                           L10nFormatters.weekdayAbbreviations(l10n);
 
-                      return _RepeatChip(
-                        label: initials[index],
-                        semanticLabel: names[index],
-                        selected: _repeatDays.contains(dayValue),
-                        onTap: () {
-                          setState(() {
-                            if (_repeatDays.contains(dayValue)) {
-                              _repeatDays.remove(dayValue);
-                            } else {
-                              _repeatDays.add(dayValue);
-                            }
-                          });
-                        },
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.xxs,
+                          ),
+                          child: _RepeatChip(
+                            label: initials[index],
+                            semanticLabel: names[index],
+                            selected: _repeatDays.contains(dayValue),
+                            onTap: () {
+                              setState(() {
+                                if (_repeatDays.contains(dayValue)) {
+                                  _repeatDays.remove(dayValue);
+                                } else {
+                                  _repeatDays.add(dayValue);
+                                }
+                              });
+                            },
+                          ),
+                        ),
                       );
                     }),
                   ),
@@ -536,24 +545,33 @@ class _RepeatChip extends StatelessWidget {
       button: true,
       selected: selected,
       label: semanticLabel,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.pill),
-        onTap: onTap,
-        child: Ink(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: selected ? AppColors.primarySoft : AppColors.surfaceSoft,
-            borderRadius: BorderRadius.circular(AppRadius.pill),
+      child: Material(
+        // A real Material rather than `Ink`: it paints its own fill and shape,
+        // and clips the ripple to the pill without depending on an ancestor's
+        // ink layer.
+        color: selected ? AppColors.primarySoft : AppColors.surfaceSoft,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          side: BorderSide(
+            color: selected ? AppColors.primary : Colors.transparent,
+            width: 1.5,
           ),
-          child: Center(
-            child: ExcludeSemantics(
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: selected
-                      ? AppColors.primary
-                      : AppColors.textSecondary,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            height: 44,
+            child: Center(
+              child: ExcludeSemantics(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                    fontWeight: selected ? FontWeight.w700 : null,
+                  ),
                 ),
               ),
             ),

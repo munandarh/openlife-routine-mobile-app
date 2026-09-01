@@ -89,6 +89,13 @@ test suite did not catch them.
   longer writes 30 days of `missed` logs or zeroes last week's rate.
 - **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
   registered the whole `assets/vector/` directory.
+- **The Repeat day picker read as completely dead.** Seven fixed 44px chips
+  overflowed a 360dp screen by 20px, which collapsed every gap and clipped
+  Sunday out of reach, and `Ink` drew no pill, so the only feedback on tap was a
+  faint text-colour change. The chips now flex to a seventh of the row each and
+  are real `Material` pills with a filled selected state. Regression tests cover
+  320/360/411dp, tapping every weekday including the last, and the fill actually
+  changing.
 - **Deleting a routine opened from a reminder threw and stranded the user.**
   That screen is entered with `go`, so it has nothing behind it and `pop` threw
   `GoError: There is nothing to pop`; the routine was deleted but the detail

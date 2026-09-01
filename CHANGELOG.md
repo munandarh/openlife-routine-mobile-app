@@ -2,10 +2,138 @@
 
 All notable changes to OpenLife Routine will be documented in this file.
 
+## [1.1.0] — 2026-09-01
+
+The release that makes the v1.0 feature list true. Several things v1.0 claimed
+to ship were wired but not connected; this release connects them, fixes the
+data-loss bugs found on the way, and adds the tests that would have caught
+them.
+
+### Added
+- **Working Indonesian** — the generated `AppLocalizations` delegate is now
+  registered on `MaterialApp` and every screen reads through `context.l10n`.
+  275 keys across English and Indonesian, covering pages, dialogs, empty
+  states, template content and notification copy. Previously the ARB files
+  existed but no screen used them, so the language setting changed nothing.
+- **Snooze from inside the app** — `TodayRoutineSnoozed` records a snoozed log
+  with a wake-up time and re-arms the notification. Snooze was previously only
+  reachable from the notification action.
+- **`missed` and `snoozed` on the checklist** — both statuses now render, with
+  distinct colour tones so a missed routine cannot read like a completed one.
+- **A missed-state sweep that catches up** — `sweepMissedDays` closes out every
+  day since the last sweep, not just yesterday, bounded by a 30-day lookback
+  and resumed from a persisted watermark.
+- **Onboarding step 5** — the starter-template picker required by PRD §8.1.
+  Picking a template applies it before Today opens; "start empty" is an
+  explicit choice.
+- **Next-routine card** on Today (PRD §8.2).
+- **Icon override** on routines — `iconKey` on the entity, a 13-option picker
+  on the form, honoured everywhere a routine icon is drawn.
+- **7-day history screen** at `/insights/history`, with per-day done / skipped
+  / missed breakdown.
+- **Reduce motion** setting, suppressing the celebration overlay.
+- **`ApplyTemplateUseCase`** — one path for applying a template, shared by
+  onboarding and the Templates screen.
+- **Docs** — `architecture.md`, `design-system.md`, `animation-guidelines.md`,
+  `contribution-guide.md`, `ROADMAP.md`, question issue template.
+
+### Fixed
+- **Notes were lost on edit.** `updateRoutine` never wrote the `notes` column
+  and `_mapBundle` never read it, so a note survived creation and vanished on
+  the first edit.
+- **The snooze slider did nothing.** `snoozeMinutes` was not carried on the
+  create or update events, so every routine kept the 10-minute default.
+- **Insights over-counted the denominator.** Weekly completion divided by
+  `routines × 7`, ignoring repeat days, so a weekdays-only routine could never
+  exceed 71%.
+- **Skipped routines were reported as missed.** "Most missed" counted every
+  non-`done` log; it now counts only `missed`.
+- **The streak was always zero.** It broke on today's still-incomplete day; an
+  unfinished today no longer ends the streak.
+- **Layout overflowed at OS text scales** on the empty states, the language and
+  notification screens, and `PrimaryButton`.
+- **Card actions were unreachable by screen reader** — the completion circle
+  and each action chip are now their own semantics node.
+- **Applying a template leaked a BLoC** and could collide on generated ids.
+- **Notification copy was hardcoded English** and the snooze notification
+  showed the raw routine id instead of its title.
+- **Export/import dropped fields** — `iconKey` and `snoozedUntil` are now
+  included.
+
+### Fixed — found by running the release build on a device
+These only reproduce in a release build or on real hardware, which is why the
+test suite did not catch them.
+- **Notifications were dead in release builds.** The resource shrinker stripped
+  `ic_notification` (it is referenced only by name from Dart), so
+  `initialize()` threw `PlatformException(invalid_icon)` and the whole reminder
+  stack was disabled. Kept via `res/raw/keep.xml`, and initialization now
+  degrades instead of throwing.
+- **The onboarding language pick did nothing.** It was written to
+  `onboarding.language_code` while `MaterialApp.locale` read
+  `settings.language_code`. `SettingsRepository` is now the single owner of the
+  language, and the onboarding screens write through `SettingsBloc`.
+- **The app was not 16 KB page-size compatible**, which blocks a Play Store
+  release for Android 15+. `librive_text.so` from `rive 0.13` was 4 KB aligned;
+  upgrading to `rive 0.14` ships a 16 KB-aligned `librive_native.so`.
+- **Scheduling threw when the exact-alarm permission was denied**
+  (Android 12+, and not granted by default on 14+). It now falls back to an
+  inexact alarm instead of failing the create-routine flow.
+- **Launcher label read `openlife_routine`** instead of "OpenLife Routine".
+- **Action chips took a full row each.** A `Container` with an `alignment`
+  expands to the loose width a `Wrap` offers, so Skip and Snooze each claimed
+  their own line.
+- **The FAB covered the first routine's completion circle** — the offset
+  predated the bottom nav moving outside the page's `Stack`.
+- **A new routine back-filled the past as missed.** The sweep and Insights now
+  ignore days before a routine's `createdAt`, so adding a routine today no
+  longer writes 30 days of `missed` logs or zeroes last week's rate.
+- **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
+  registered the whole `assets/vector/` directory.
+
+### Changed
+- Database schema v2 → v4 (`RoutineLogs.snoozedUntil`, `Routines.iconKey`).
+- Category icons, tints and labels consolidated into `RoutineCategoryUi`;
+  weekday and time formatting into `L10nFormatters`.
+- `RoutineCard` takes a list of actions and an explicit status tone.
+- Greeting helpers return a locale-independent slot resolved through
+  localizations, instead of returning hardcoded English or Indonesian strings.
+- Onboarding is 4 slides (was 3).
+- Privacy and About screens share one `SettingsInfoCard`.
+- Empty-state pages scroll instead of centring an unscrollable column.
+
+### Tests
+- 188 → **272**, all passing, `flutter analyze` clean.
+- New suites: accessibility (text scaling, overflow, tap targets), localization
+  coverage (ARB parity, untranslated-copy detection, plurals, version
+  constant), missed-state sweep, snooze/missed/next-routine behaviour, insights
+  accuracy, routine field persistence, template application, bootstrap.
+- Five duplicated settings fakes replaced by one shared
+  `FakeSettingsRepository`; `localizedApp()` harness added for localized widget
+  tests.
+
+### Changed — build
+- `rive` upgraded 0.13 → 0.14 (new `RiveWidgetBuilder` API; the widget still
+  falls back to a PNG or an icon when no `.riv` is present or when
+  `rive_native` cannot load).
+- Release APKs are now built per ABI: 91.4 MB fat APK → 45.3 MB for arm64.
+
+### Verified on device
+Release build on an Android 16 emulator: clean launch, working notifications
+init, working language switch, starter template, snooze, insights and 7-day
+history. Screenshots in `docs/screenshots/`.
+
+### Known gaps
+- No `.riv` animation files yet — the app ships PNG illustrations through the
+  same wrapper. See `docs/animation-guidelines.md` §4.
+- No published store release; the APK is built locally and signed with debug
+  keys (`android/app/build.gradle.kts` still has the signing TODO).
+- Reminders have not been observed firing over a long device session.
+- iOS compiles but has not been tested on a device.
+
 ## [1.0.0] — 2026-07-02
 
 ### Added
-- **Onboarding** — 5-screen flow (language selection, notification permission, 3 value slides, starter template picker)
+- **Onboarding** — 4-screen flow (language selection, notification permission, 3 value slides; the starter template picker arrived in 1.1.0)
 - **Routine CRUD** — Create, edit, delete, enable/disable routines with 8 categories (meal, water, vitamin, medicine, sleep, exercise, break, custom)
 - **Today Checklist** — Daily progress ring, mark done, skip, undo, greeting with supportive subtitle
 - **Reminder Engine** — Local notifications with snooze, cancel/update on routine change, timezone-safe scheduling, duplicate prevention
@@ -16,8 +144,8 @@ All notable changes to OpenLife Routine will be documented in this file.
 - **Vector Illustrations** — 10 custom illustrations for onboarding, today, templates, insights, celebration
 - **Notes Field** — Optional notes on routines (DB schema v2)
 - **Snooze Duration** — Configurable snooze with slider in new routine form
-- **Missed State** — EOD job marks yesterday's pending routines as missed
-- **i18n Framework** — EN + ID ARB files with 100+ strings, `flutter_localizations` wired
+- **Missed State** — launch-time job marking yesterday's pending routines as missed (superseded in 1.1.0 by a catch-up sweep)
+- **i18n Framework** — EN + ID ARB files with 100+ strings (not yet connected to any screen; wired up in 1.1.0)
 - **Tests** — 188 unit + widget + BLoC tests
 - **Release APK** — `app-release.apk` (90.8 MB)
 
@@ -32,13 +160,11 @@ All notable changes to OpenLife Routine will be documented in this file.
 ### Documentation
 - `docs/PRD.md`
 - `docs/SPRINT-CHECKLIST.md`
-- `docs/architecture.md` (from `document-openlife/`)
-- `docs/design-system.md` (from `document-openlife/`)
-- `docs/animation-guidelines.md` (from `document-openlife/`)
 - `docs/adr/0001-sprint0-foundation-stack.md`
 - `CHANGELOG.md` (this file)
 - `SECURITY.md`
 - `CONTRIBUTING.md`
 - `CODE_OF_CONDUCT.md`
 
-[1.0.0]: https://github.com/harismunandar/openlife-routine/releases/tag/v1.0.0
+[1.0.0]: https://github.com/munandarh/openlife-routine-mobile-app/releases/tag/v1.0.0
+[1.1.0]: https://github.com/munandarh/openlife-routine-mobile-app/releases/tag/v1.1.0

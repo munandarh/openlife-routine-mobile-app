@@ -1,7 +1,7 @@
 name: openlife_routine
 description: Privacy-first, offline-first daily routine reminder app built with Flutter.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.11.0
@@ -20,7 +20,7 @@ dependencies:
   intl: ^0.20.2
   path: ^1.9.1
   path_provider: ^2.1.6
-  rive: ^0.13.0
+  rive: ^0.14.11
   shared_preferences: ^2.5.5
   sqlite3_flutter_libs: ^0.5.42
   timezone: ^0.11.1
@@ -37,5 +37,16 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  # Listed file by file rather than as a directory: registering the folder
+  # bundled the unused v2.0 family-care artwork too (~3.7 MB of the APK).
   assets:
-    - assets/vector/
+    - assets/vector/onboarding_build_better_days.png
+    - assets/vector/onboarding_smart_routines.png
+    - assets/vector/onboarding_private_by_default.png
+    - assets/vector/onboarding_starter_template.png
+    - assets/vector/today_notification_bell.png
+    - assets/vector/today_sleep_routine.png
+    - assets/vector/today_water_hydration.png
+    - assets/vector/today_vitamin_routine.png
+    - assets/vector/today_daily_celebration.png
+    - assets/vector/today_insights_workspace.png

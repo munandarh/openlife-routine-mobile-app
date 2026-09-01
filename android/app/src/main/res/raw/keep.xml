@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The notification icon is only ever referenced by name from Dart
+  (AndroidInitializationSettings('ic_notification')), so the release resource
+  shrinker sees no static reference and strips it. Without this, initializing
+  notifications throws PlatformException(invalid_icon) in release builds.
+-->
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_notification" />

@@ -63,10 +63,11 @@ final class AssetVectors {
     path: 'assets/vector/today_insights_workspace.png',
   );
 
-  /// All MVP-scope vector entries. The two `onboarding_build_better_days_alt.png`
-  /// and `future_family_care_*.png` files are intentionally excluded from
-  /// this registry so they don't ship in the app bundle. They remain in
-  /// `assets/vector/` for reference but are not loaded.
+  /// All MVP-scope vector entries.
+  ///
+  /// The `future_family_care_*.png` files stay in `assets/vector/` for the
+  /// v2.0 family mode but are absent from this registry *and* from the asset
+  /// list in `pubspec.yaml`, so they are not bundled into the app.
   static const List<AssetVectorEntry> entries = <AssetVectorEntry>[
     onboardingBuildBetterDays,
     onboardingSmartRoutines,

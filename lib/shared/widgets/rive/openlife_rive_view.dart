@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart' hide Image;
+import 'package:rive/rive.dart' as rive;
 
 /// A widget that renders illustrations in the app using one of three layers,
 /// in priority order:
@@ -26,12 +26,12 @@ class OpenLifeRiveView extends StatefulWidget {
     super.key,
   });
 
-  /// Wrap a `.riv` Rive animation. If the asset is missing, the
-  /// [fallbackIcon] is shown.
+  /// Wrap a `.riv` Rive animation. While the file loads — and if it fails to
+  /// load at all — the [fallbackIcon] is shown, so a missing or corrupt asset
+  /// degrades instead of throwing.
   ///
-  /// While `.riv` files are not yet bundled in the project, this widget
-  /// always renders the [fallbackIcon]. When assets are added, remove the
-  /// early fallback guard in [build] to enable Rive rendering.
+  /// No `.riv` files ship in the repository yet; see
+  /// `docs/animation-guidelines.md` §4.
   factory OpenLifeRiveView.asset({
     Key? key,
     required String assetName,
@@ -40,7 +40,7 @@ class OpenLifeRiveView extends StatefulWidget {
     String? stateMachine,
     BoxFit fit = BoxFit.contain,
     double size = 120,
-    void Function(Artboard)? onInit,
+    void Function(rive.RiveWidgetController)? onInit,
   }) {
     return OpenLifeRiveView._(
       key: key,
@@ -115,26 +115,56 @@ class OpenLifeRiveView extends StatefulWidget {
   /// being laid out in a [size] × [size] box.
   final bool expand;
 
-  /// Called when the Rive [Artboard] is initialized.
-  final void Function(Artboard)? onInit;
+  /// Called once the Rive controller is ready.
+  final void Function(rive.RiveWidgetController)? onInit;
 
   @override
   State<OpenLifeRiveView> createState() => _OpenLifeRiveViewState();
 }
 
 class _OpenLifeRiveViewState extends State<OpenLifeRiveView> {
-  static const bool _showFallback = true;
-
   /// Icon size used when an expanding illustration cannot be loaded.
   static const double _expandFallbackSize = 96;
 
   bool _imageFailed = false;
+  rive.FileLoader? _fileLoader;
+
+  @override
+  void initState() {
+    super.initState();
+    _createFileLoader();
+  }
 
   @override
   void didUpdateWidget(OpenLifeRiveView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.illustrationPath != widget.illustrationPath) {
       _imageFailed = false;
+    }
+    if (oldWidget.assetName != widget.assetName) {
+      _createFileLoader();
+    }
+  }
+
+  void _createFileLoader() {
+    final String? assetName = widget.assetName;
+    if (assetName == null) {
+      _fileLoader = null;
+      return;
+    }
+
+    try {
+      _fileLoader = rive.FileLoader.fromAsset(
+        assetName,
+        riveFactory: rive.Factory.flutter,
+      );
+    } on Object catch (error) {
+      // `Factory.flutter` resolves a symbol in the rive_native dynamic
+      // library. That library is absent under `flutter test` and can fail to
+      // load on an unsupported platform; either way the icon fallback is a
+      // better outcome than tearing down the screen.
+      debugPrint('Rive unavailable, falling back to icon: $error');
+      _fileLoader = null;
     }
   }
 
@@ -174,25 +204,50 @@ class _OpenLifeRiveViewState extends State<OpenLifeRiveView> {
       return SizedBox(width: widget.size, height: widget.size, child: content);
     }
 
-    // TODO(openlife): Remove `_showFallback` early-return when .riv files
-    // are bundled. RiveAnimation.asset will handle loading then.
-    if (_showFallback) {
+    final rive.FileLoader? fileLoader = _fileLoader;
+    if (fileLoader == null) {
       return _buildFallback();
     }
 
     return SizedBox(
       width: widget.size,
       height: widget.size,
-      child: RiveAnimation.asset(
-        widget.assetName!,
-        artboard: widget.artboard,
-        stateMachines: widget.stateMachine != null
-            ? <String>[widget.stateMachine!]
-            : const <String>[],
-        fit: widget.fit,
-        onInit: widget.onInit,
+      child: rive.RiveWidgetBuilder(
+        fileLoader: fileLoader,
+        artboardSelector: widget.artboard == null
+            ? const rive.ArtboardDefault()
+            : rive.ArtboardSelector.byName(widget.artboard!),
+        stateMachineSelector: widget.stateMachine == null
+            ? const rive.StateMachineDefault()
+            : rive.StateMachineSelector.byName(widget.stateMachine!),
+        onLoaded: (rive.RiveLoaded loaded) =>
+            widget.onInit?.call(loaded.controller),
+        builder: (BuildContext context, rive.RiveState state) {
+          return switch (state) {
+            // A missing or corrupt .riv must not take the screen down with
+            // it — the icon is the same fallback the PNG path uses.
+            rive.RiveLoading() || rive.RiveFailed() => _buildFallback(),
+            rive.RiveLoaded() => rive.RiveWidget(
+              controller: state.controller,
+              fit: _riveFit(widget.fit),
+            ),
+          };
+        },
       ),
     );
+  }
+
+  /// Maps the Flutter [BoxFit] callers already pass to Rive's own fit enum.
+  static rive.Fit _riveFit(BoxFit fit) {
+    return switch (fit) {
+      BoxFit.fill => rive.Fit.fill,
+      BoxFit.cover => rive.Fit.cover,
+      BoxFit.fitWidth => rive.Fit.fitWidth,
+      BoxFit.fitHeight => rive.Fit.fitHeight,
+      BoxFit.scaleDown => rive.Fit.scaleDown,
+      BoxFit.none => rive.Fit.none,
+      BoxFit.contain => rive.Fit.contain,
+    };
   }
 
   Widget _buildFallback() {

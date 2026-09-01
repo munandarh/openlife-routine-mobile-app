@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -116,7 +117,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Text(
-                      'OpenLife Routine',
+                      context.l10n.appTitle,
                       style: AppTextStyles.pageTitle.copyWith(
                         color: AppColors.textPrimary,
                       ),
@@ -124,7 +125,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'Calm daily routines, private by default.',
+                      context.l10n.appTagline,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -141,11 +142,11 @@ class _SplashPageState extends State<SplashPage> {
                         borderRadius: BorderRadius.circular(AppRadius.pill),
                         border: Border.all(color: AppColors.border),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          SizedBox(
+                          const SizedBox(
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(
@@ -153,10 +154,10 @@ class _SplashPageState extends State<SplashPage> {
                               color: AppColors.primary,
                             ),
                           ),
-                          SizedBox(width: AppSpacing.sm),
+                          const SizedBox(width: AppSpacing.sm),
                           Text(
-                            'Preparing your day',
-                            style: TextStyle(
+                            context.l10n.preparingYourDay,
+                            style: const TextStyle(
                               fontFamily: AppTextStyles.fontFamily,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,

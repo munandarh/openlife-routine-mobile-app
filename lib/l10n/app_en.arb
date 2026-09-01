@@ -2,11 +2,33 @@
   "@@locale": "en",
   "appTitle": "OpenLife Routine",
   "appTagline": "Calm daily routines, private by default.",
+  "preparingYourDay": "Preparing your day",
   "todayTab": "Today",
   "routinesTab": "Routines",
   "insightsTab": "Insights",
   "settingsTab": "Settings",
-  "templatesTitle": "Templates",
+  "continueButton": "Continue",
+  "getStarted": "Get Started",
+  "skipButton": "Skip",
+  "backButton": "Back",
+  "cancelAction": "Cancel",
+  "closeAction": "Close",
+  "createRoutine": "Create routine",
+  "chooseYourLanguage": "Choose your language",
+  "chooseLanguageDesc": "Pick the language you want to see first. You can change it later in settings.",
+  "englishLang": "English",
+  "englishSubtitle": "Default app language",
+  "bahasaLang": "Bahasa Indonesia",
+  "bahasaSubtitle": "Bahasa utama untuk pengguna lokal",
+  "bahasaShort": "Bahasa",
+  "notificationPermissionTitle": "Notification permission",
+  "getGentleReminders": "Get gentle reminders",
+  "getGentleRemindersDesc": "OpenLife can remind you about routines at the right time, without noisy pressure.",
+  "scheduledReminders": "Scheduled reminders",
+  "quietAndRespectful": "Quiet and respectful",
+  "privateOnDevice": "Private on device",
+  "allowNotifications": "Allow notifications",
+  "notNow": "Not now",
   "onboardingSlide1Title": "Build better days",
   "onboardingSlide1Desc": "Design a routine that fits your life. Gentle nudges, not rigid rules.",
   "onboardingSlide2Title": "Never miss what matters",
@@ -15,102 +37,277 @@
   "onboardingSlide3Desc": "Your routines stay on-device first. No account required to start, and no forced cloud setup.",
   "onboardingSlide4Title": "Start with a template",
   "onboardingSlide4Desc": "Pick a starter template to begin, or add routines yourself one at a time.",
+  "chooseStartingLanguage": "Choose your starting language",
+  "notificationEducationTitle": "Reminders you control",
+  "notificationEducationMessage": "You decide which routines send a reminder, and you can turn any of them off at any time.",
+  "privacyPanelTitle": "No account, no cloud",
+  "privacyPanelMessage": "Everything you create is stored in a local database on this device. Nothing is uploaded.",
+  "pickStarter": "Pick a starter",
+  "orStartEmpty": "Or, you can start empty and add routines later from the Routines tab.",
+  "startEmpty": "Start empty",
+  "templateApplied": "Template added. You can edit anything later.",
+  "onboardingStepCounter": "{current} / {total}",
+  "@onboardingStepCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "greetingMorning": "Good morning",
   "greetingAfternoon": "Good afternoon",
   "greetingEvening": "Good evening",
   "greetingNight": "Good night",
-  "todayEmptyTitle": "Nothing scheduled today",
-  "todayEmptyDesc": "Add a routine to see your day fill up with calm reminders.",
-  "dailyProgress": "Daily Progress",
-  "dailyRoutine": "Daily routine",
-  "allDone": "All Done!",
-  "allDoneMessage": "You completed all your routines for today. Great work!",
-  "stayConsistent": "Stay consistent",
-  "newRoutine": "New Routine",
-  "editRoutine": "Edit Routine",
-  "saveRoutine": "Save Routine",
-  "saveChanges": "Save Changes",
-  "createRoutine": "Create routine",
-  "routineName": "Routine Name",
-  "categoryLabel": "Category",
-  "timeLabel": "Time",
-  "notesOptional": "Notes (optional)",
-  "snoozeDuration": "Snooze duration",
-  "continueButton": "Continue",
-  "getStarted": "Get Started",
-  "skipButton": "Skip",
-  "backButton": "Back",
-  "notNow": "Not now",
-  "allowNotifications": "Allow notifications",
-  "startEmpty": "Start empty",
-  "startWithTemplate": "Start with a template",
-  "pickStarter": "Pick a starter",
-  "orStartEmpty": "Or, you can start empty and add routines later from the Routines tab.",
-  "noRoutinesYet": "No routines yet",
-  "noRoutinesDesc": "There is nothing scheduled for this date. Add one or pick another day.",
-  "themeSetting": "Theme",
-  "languageSetting": "Language",
-  "notificationsSetting": "Notifications",
-  "exportSetting": "Export routines",
-  "importSetting": "Import routines",
-  "resetSetting": "Reset all data",
-  "privacySetting": "Privacy & data",
-  "aboutSetting": "About open source",
   "calmDayAhead": "A calm day ahead. Add a routine whenever you are ready.",
   "allFinished": "You finished all your routines today. Great work.",
   "smallProgress": "Small progress still counts. Take it one step at a time.",
-  "addTemplate": "Add Template",
+  "dailyProgress": "Daily Progress",
+  "dailyRoutine": "Daily routine",
+  "noRoutinesScheduledForDay": "No routines scheduled for this day.",
+  "completedOfTotal": "{completed} of {total} routines completed.",
+  "@completedOfTotal": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "allDoneBadge": "ALL DONE",
+  "stayConsistentBadge": "STAY CONSISTENT",
+  "allDone": "All Done!",
+  "allDoneMessage": "You completed all your routines for today. Great work!",
+  "nextUp": "Next",
+  "nothingLeftToday": "Nothing left for today.",
+  "statusDone": "Done",
+  "statusSkipped": "Skipped",
+  "statusMissed": "Missed",
+  "statusSnoozed": "Snoozed",
+  "statusDueNow": "Due Now",
+  "skipAction": "Skip",
+  "undoAction": "Undo",
+  "snoozeAction": "Snooze",
+  "snoozedUntil": "Snoozed until {time}",
+  "@snoozedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEmptyTitle": "Nothing scheduled today",
+  "todayEmptyDesc": "Add a routine to see your day fill up with calm reminders.",
+  "noRoutinesYet": "No routines yet",
+  "noRoutinesForDateDesc": "There is nothing scheduled for this date. Add one or pick another day.",
+  "routinesEmptyDesc": "Create your first routine so the app can start guiding your day.",
+  "routinesListEmptyDesc": "Start one small routine today. Your list will update here automatically.",
+  "insightsEmptyTitle": "Insights will appear here",
+  "insightsEmptyDesc": "Complete a few routines first, then this screen will show your weekly rhythm.",
+  "templatesEmptyTitle": "No templates yet",
+  "templatesEmptyDesc": "Templates are ready to help once you start building a routine library.",
+  "browseRoutines": "Browse routines",
   "discoverRoutines": "Discover Routines",
   "addStructured": "Add structured, calm habits to your day with a single tap.",
   "browseTemplates": "Browse Templates",
   "yourRoutines": "Your routines",
+  "templatesTitle": "Templates",
+  "addTemplate": "Add Template",
+  "stepsCount": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@stepsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "templateAdded": "\"{title}\" routines added!",
+  "@templateAdded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "newRoutine": "New Routine",
+  "editRoutine": "Edit Routine",
+  "saveRoutine": "Save Routine",
+  "saveChanges": "Save Changes",
+  "routineName": "Routine Name",
+  "routineNameHint": "e.g., Morning Yoga",
+  "categoryLabel": "Category",
+  "iconLabel": "Icon",
+  "iconDefaultForCategory": "Default for category",
+  "timeLabel": "Time",
+  "repeatLabel": "Repeat",
+  "notesOptional": "Notes (optional)",
+  "notesHint": "e.g., Take with food",
+  "notesLabel": "Notes",
+  "snoozeDuration": "Snooze duration",
+  "minutesShort": "{minutes}m",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesLabel": "{minutes} min",
+  "@minutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "routineNameRequired": "Give your routine a name first.",
+  "repeatDaysRequired": "Pick at least one day to repeat.",
+  "categoryMeal": "Meal",
+  "categoryWater": "Water",
+  "categoryVitamin": "Vitamin",
+  "categoryMedicine": "Medicine",
+  "categorySleep": "Sleep",
+  "categoryExercise": "Exercise",
+  "categoryBreak": "Break",
+  "categoryCustom": "Custom",
+  "mealRoutine": "Meal routine",
+  "waterRoutine": "Hydration routine",
+  "vitaminRoutine": "Vitamin routine",
+  "medicineRoutine": "Medicine routine",
+  "sleepRoutine": "Sleep routine",
+  "exerciseRoutine": "Exercise routine",
+  "breakRoutine": "Break routine",
+  "customRoutine": "Custom routine",
+  "weekdayShortMon": "M",
+  "weekdayShortTue": "T",
+  "weekdayShortWed": "W",
+  "weekdayShortThu": "T",
+  "weekdayShortFri": "F",
+  "weekdayShortSat": "S",
+  "weekdayShortSun": "S",
+  "weekdayAbbrMon": "Mon",
+  "weekdayAbbrTue": "Tue",
+  "weekdayAbbrWed": "Wed",
+  "weekdayAbbrThu": "Thu",
+  "weekdayAbbrFri": "Fri",
+  "weekdayAbbrSat": "Sat",
+  "weekdayAbbrSun": "Sun",
+  "everyDay": "Every day",
+  "noRepeatDays": "No repeat days",
+  "routineDetailTitle": "Routine Detail",
+  "routineNotFound": "Routine not found.",
+  "scheduleLabel": "Schedule",
+  "reminderBehavior": "Reminder behavior",
+  "snoozeForMinutes": "Snooze for {minutes} minutes",
+  "@snoozeForMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "routineIsActive": "Routine is active",
+  "routineIsDisabled": "Routine is disabled",
+  "editRoutineAction": "Edit routine",
+  "deleteRoutine": "Delete routine",
   "insightsTitle": "Insights",
   "completedThisWeek": "Completed this week",
   "bestStreak": "Best streak",
+  "daysLabel": "{count, plural, =1{1 day} other{{count} days}}",
+  "@daysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "thisWeeksFlow": "This Week's Flow",
   "focusAreas": "Focus Areas",
+  "insightGreatTitle": "You're doing great this week!",
+  "insightGreatMessage": "Keep up the momentum — consistency builds better days.",
+  "insightSmallProgressTitle": "Small progress still counts.",
+  "insightSmallProgressMessage": "Some routines were missed this week. Try again tomorrow — every step matters.",
+  "insightBuildRhythmTitle": "Build your routine rhythm.",
+  "insightBuildRhythmMessage": "Add routines and start tracking to see your weekly insights here.",
+  "insightNoRoutinesTitle": "No routines tracked yet.",
+  "insightNoRoutinesMessage": "Create your first routine and start building insights over time.",
+  "sevenDayHistory": "7-Day History",
+  "viewHistory": "View 7-day history",
+  "historyEmpty": "No history for the last 7 days yet.",
+  "historyToday": "Today",
+  "historyYesterday": "Yesterday",
+  "historyDoneCount": "{done} of {total} done",
+  "@historyDoneCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mostCompleted": "Most completed",
+  "mostMissed": "Most missed",
+  "timesCount": "{count, plural, =1{1 time} other{{count} times}}",
+  "@timesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsTitle": "Settings",
   "preferencesSection": "Preferences",
   "notificationsSection": "Notifications",
   "dataSection": "Data",
   "privacySection": "Privacy",
-  "routineAlerts": "Routine alerts",
-  "exportJson": "JSON",
-  "importJson": "JSON",
-  "resetDestructive": "Destructive",
-  "privacyData": "Privacy & data",
-  "aboutOpenSource": "About open source",
-  "chooseTheme": "Choose theme",
-  "chooseLanguage": "Choose language",
+  "themeSetting": "Theme",
+  "languageSetting": "Language",
   "systemTheme": "System",
   "lightTheme": "Light",
   "darkTheme": "Dark",
-  "englishLang": "English",
-  "bahasaLang": "Bahasa Indonesia",
-  "chooseYourLanguage": "Choose your language",
-  "chooseLanguageDesc": "Pick the language you want to see first. You can change it later in settings.",
-  "notificationEducationTitle": "Notification education",
-  "notificationEducationMessage": "We will ask for notification permission later, only when reminder scheduling is ready.",
-  "getGentleReminders": "Get gentle reminders",
-  "getGentleRemindersDesc": "OpenLife can remind you about routines at the right time, without noisy pressure.",
-  "scheduledReminders": "Scheduled reminders",
-  "quietAndRespectful": "Quiet and respectful",
-  "privateOnDevice": "Private on device",
-  "markDone": "Done",
-  "skipAction": "Skip",
-  "dueNow": "Due Now",
-  "undoAction": "Undo",
+  "chooseTheme": "Choose theme",
+  "chooseLanguage": "Choose language",
+  "routineAlerts": "Routine alerts",
+  "notificationPermissionRequested": "Notification permission requested.",
+  "reducedMotionSetting": "Reduce motion",
+  "reducedMotionDescription": "Turn off celebration and looping animations.",
+  "exportSetting": "Export routines",
+  "importSetting": "Import routines",
+  "resetSetting": "Reset all data",
+  "exportJson": "JSON",
+  "resetDestructive": "Destructive",
+  "privacyData": "Privacy & data",
+  "aboutOpenSourceSetting": "About open source",
   "exportData": "Export Data",
   "importData": "Import Data",
   "pasteJsonHint": "Paste JSON backup here...",
-  "cancelAction": "Cancel",
   "importAction": "Import",
-  "closeAction": "Close",
+  "routinesImported": "{count, plural, =1{1 routine imported.} other{{count} routines imported.}}",
+  "@routinesImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFailed": "Import failed: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "resetAllData": "Reset All Data",
   "resetWarning": "This will permanently delete all your routines, schedules, and logs. This action cannot be undone.",
   "resetButton": "Reset",
-  "daysLabel": "days",
-  "stepsLabel": "steps",
+  "allDataReset": "All data has been reset.",
   "privacyTitle": "Privacy & Data",
   "privacyLocal": "Your data stays on your device",
   "privacyLocalBody": "OpenLife Routine stores all your routines, schedules, and logs locally on your phone. No data is sent to any server.",
@@ -125,7 +322,14 @@
   "privacyDisclaimer": "OpenLife Routine is not a medical app.",
   "privacyDisclaimerBody": "It is a lifestyle and routine reminder app designed to help you build better days. It does not diagnose, treat, or cure any condition.",
   "aboutTitle": "About Open Source",
-  "aboutVersion": "Version 1.0.0",
+  "aboutVersion": "Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "aboutOpenSource": "Open source",
   "aboutOpenSourceBody": "OpenLife Routine is free and open-source software. The full source code is available on GitHub under the Apache 2.0 license.",
   "aboutBuiltWith": "Built with Flutter",
@@ -133,5 +337,50 @@
   "aboutPortfolio": "Portfolio project",
   "aboutPortfolioBody": "OpenLife Routine was built as a production-quality open-source portfolio project to demonstrate Flutter engineering, architecture, and product design skills.",
   "aboutLicense": "License",
-  "aboutLicenseBody": "Apache License 2.0 — Free for personal and commercial use. The OpenLife Routine name and logo are reserved for the official project."
+  "aboutLicenseBody": "Apache License 2.0 — Free for personal and commercial use. The OpenLife Routine name and logo are reserved for the official project.",
+  "notificationSnoozedTitle": "Snoozed reminder",
+  "notificationSnoozeAction": "Snooze {minutes} min",
+  "@notificationSnoozeAction": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "templateMorningTitle": "Morning Routine",
+  "templateMorningDesc": "Start your day with intention and a gentle pace.",
+  "templateHydrationTitle": "Hydration Tracker",
+  "templateHydrationDesc": "Keep your water intake consistent throughout the day.",
+  "templateVitaminTitle": "Vitamin Routine",
+  "templateVitaminDesc": "Never miss a supplement with timed daily reminders.",
+  "templateSleepTitle": "Sleep Routine",
+  "templateSleepDesc": "Wind down your day with a calming evening rhythm.",
+  "templateProgrammerBreakTitle": "Programmer Break",
+  "templateProgrammerBreakDesc": "Eye rest and posture resets to combat screen fatigue.",
+  "badgePopular": "POPULAR",
+  "badgeNew": "NEW",
+  "templateRoutineWakeUp": "Wake Up",
+  "templateRoutineDrinkWater": "Drink Water",
+  "templateRoutineBreakfast": "Breakfast",
+  "templateRoutineMorningWater": "Morning Water",
+  "templateRoutineMiddayWater": "Midday Water",
+  "templateRoutineAfternoonWater": "Afternoon Water",
+  "templateRoutineEveningWater": "Evening Water",
+  "templateRoutineVitaminD3": "Vitamin D3",
+  "templateRoutineBComplex": "B Complex",
+  "templateRoutineReduceScreenTime": "Reduce Screen Time",
+  "templateRoutinePrepareBed": "Prepare Bed",
+  "templateRoutineEyeRest": "Eye Rest",
+  "templateRoutineStretching": "Stretching",
+  "templateRoutinePostureCheck": "Posture Check",
+  "notificationReminderBody": "Reminder for {title}",
+  "@notificationReminderBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationChannelName": "Routine reminders",
+  "notificationChannelDescription": "Reminder notifications for daily routines"
 }

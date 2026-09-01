@@ -2,136 +2,385 @@
   "@@locale": "id",
   "appTitle": "OpenLife Routine",
   "appTagline": "Rutinitas harian yang tenang, privat sejak awal.",
+  "preparingYourDay": "Menyiapkan harimu",
   "todayTab": "Hari Ini",
   "routinesTab": "Rutinitas",
   "insightsTab": "Wawasan",
   "settingsTab": "Pengaturan",
-  "templatesTitle": "Template",
+  "continueButton": "Lanjut",
+  "getStarted": "Mulai",
+  "skipButton": "Lewati",
+  "backButton": "Kembali",
+  "cancelAction": "Batal",
+  "closeAction": "Tutup",
+  "createRoutine": "Buat rutinitas",
+  "chooseYourLanguage": "Pilih bahasamu",
+  "chooseLanguageDesc": "Pilih bahasa yang ingin kamu lihat lebih dulu. Kamu bisa mengubahnya nanti di pengaturan.",
+  "englishLang": "English",
+  "englishSubtitle": "Bahasa bawaan aplikasi",
+  "bahasaLang": "Bahasa Indonesia",
+  "bahasaSubtitle": "Bahasa utama untuk pengguna lokal",
+  "bahasaShort": "Bahasa",
+  "notificationPermissionTitle": "Izin notifikasi",
+  "getGentleReminders": "Dapatkan pengingat yang lembut",
+  "getGentleRemindersDesc": "OpenLife bisa mengingatkan rutinitasmu di waktu yang tepat, tanpa tekanan yang berisik.",
+  "scheduledReminders": "Pengingat terjadwal",
+  "quietAndRespectful": "Tenang dan tidak mengganggu",
+  "privateOnDevice": "Privat di perangkatmu",
+  "allowNotifications": "Izinkan notifikasi",
+  "notNow": "Nanti saja",
   "onboardingSlide1Title": "Bangun hari yang lebih baik",
-  "onboardingSlide1Desc": "Rancang rutinitas yang sesuai dengan hidupmu. Pengingat lembut, bukan aturan kaku.",
-  "onboardingSlide2Title": "Jangan lewatkan yang penting",
-  "onboardingSlide2Desc": "Terima pengingat tenang untuk makan, minum, vitamin, dan rutinitas kecil yang mendukung harimu.",
+  "onboardingSlide1Desc": "Susun rutinitas yang sesuai dengan hidupmu. Dorongan lembut, bukan aturan kaku.",
+  "onboardingSlide2Title": "Jangan lewatkan hal penting",
+  "onboardingSlide2Desc": "Terima pengingat yang tenang untuk makan, minum air, vitamin, dan rutinitas kecil yang menopang harimu.",
   "onboardingSlide3Title": "Privat sejak awal",
-  "onboardingSlide3Desc": "Rutinitasmu tetap di perangkatmu. Tidak perlu akun untuk memulai, dan tidak ada pengaturan cloud yang dipaksakan.",
+  "onboardingSlide3Desc": "Rutinitasmu tersimpan di perangkat lebih dulu. Tanpa perlu akun, tanpa dipaksa memakai cloud.",
   "onboardingSlide4Title": "Mulai dengan template",
   "onboardingSlide4Desc": "Pilih template awal untuk memulai, atau tambahkan rutinitas sendiri satu per satu.",
+  "chooseStartingLanguage": "Pilih bahasa awalmu",
+  "notificationEducationTitle": "Pengingat yang kamu kendalikan",
+  "notificationEducationMessage": "Kamu yang menentukan rutinitas mana yang mengirim pengingat, dan bisa mematikannya kapan saja.",
+  "privacyPanelTitle": "Tanpa akun, tanpa cloud",
+  "privacyPanelMessage": "Semua yang kamu buat disimpan di database lokal pada perangkat ini. Tidak ada yang diunggah.",
+  "pickStarter": "Pilih titik awal",
+  "orStartEmpty": "Atau, kamu bisa mulai dari kosong dan menambah rutinitas nanti lewat tab Rutinitas.",
+  "startEmpty": "Mulai dari kosong",
+  "templateApplied": "Template ditambahkan. Kamu bisa mengubahnya nanti.",
+  "onboardingStepCounter": "{current} / {total}",
+  "@onboardingStepCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "greetingMorning": "Selamat pagi",
   "greetingAfternoon": "Selamat siang",
   "greetingEvening": "Selamat sore",
   "greetingNight": "Selamat malam",
-  "todayEmptyTitle": "Tidak ada jadwal hari ini",
-  "todayEmptyDesc": "Tambahkan rutinitas untuk melihat harimu terisi dengan pengingat yang tenang.",
+  "calmDayAhead": "Hari yang tenang menanti. Tambahkan rutinitas kapan pun kamu siap.",
+  "allFinished": "Semua rutinitasmu hari ini selesai. Kerja bagus.",
+  "smallProgress": "Kemajuan kecil tetap berarti. Jalani satu per satu.",
   "dailyProgress": "Progres Harian",
   "dailyRoutine": "Rutinitas harian",
+  "noRoutinesScheduledForDay": "Tidak ada rutinitas terjadwal untuk hari ini.",
+  "completedOfTotal": "{completed} dari {total} rutinitas selesai.",
+  "@completedOfTotal": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "allDoneBadge": "SEMUA SELESAI",
+  "stayConsistentBadge": "TETAP KONSISTEN",
   "allDone": "Semua Selesai!",
   "allDoneMessage": "Kamu menyelesaikan semua rutinitas hari ini. Kerja bagus!",
-  "stayConsistent": "Tetap konsisten",
+  "nextUp": "Berikutnya",
+  "nothingLeftToday": "Tidak ada lagi untuk hari ini.",
+  "statusDone": "Selesai",
+  "statusSkipped": "Dilewati",
+  "statusMissed": "Terlewat",
+  "statusSnoozed": "Ditunda",
+  "statusDueNow": "Waktunya",
+  "skipAction": "Lewati",
+  "undoAction": "Urungkan",
+  "snoozeAction": "Tunda",
+  "snoozedUntil": "Ditunda sampai {time}",
+  "@snoozedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEmptyTitle": "Belum ada jadwal hari ini",
+  "todayEmptyDesc": "Tambahkan rutinitas untuk mengisi harimu dengan pengingat yang tenang.",
+  "noRoutinesYet": "Belum ada rutinitas",
+  "noRoutinesForDateDesc": "Tidak ada yang terjadwal untuk tanggal ini. Tambahkan satu atau pilih hari lain.",
+  "routinesEmptyDesc": "Buat rutinitas pertamamu agar aplikasi bisa mulai menemani harimu.",
+  "routinesListEmptyDesc": "Mulai satu rutinitas kecil hari ini. Daftarmu akan diperbarui di sini secara otomatis.",
+  "insightsEmptyTitle": "Wawasan akan muncul di sini",
+  "insightsEmptyDesc": "Selesaikan beberapa rutinitas dulu, lalu layar ini akan menampilkan ritme mingguanmu.",
+  "templatesEmptyTitle": "Belum ada template",
+  "templatesEmptyDesc": "Template siap membantu begitu kamu mulai menyusun koleksi rutinitas.",
+  "browseRoutines": "Lihat rutinitas",
+  "discoverRoutines": "Jelajahi Rutinitas",
+  "addStructured": "Tambahkan kebiasaan yang tertata dan tenang ke harimu dengan sekali ketuk.",
+  "browseTemplates": "Lihat Template",
+  "yourRoutines": "Rutinitasmu",
+  "templatesTitle": "Template",
+  "addTemplate": "Tambah Template",
+  "stepsCount": "{count, plural, other{{count} langkah}}",
+  "@stepsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "templateAdded": "Rutinitas \"{title}\" ditambahkan!",
+  "@templateAdded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "newRoutine": "Rutinitas Baru",
-  "editRoutine": "Edit Rutinitas",
+  "editRoutine": "Ubah Rutinitas",
   "saveRoutine": "Simpan Rutinitas",
   "saveChanges": "Simpan Perubahan",
-  "createRoutine": "Buat rutinitas",
   "routineName": "Nama Rutinitas",
+  "routineNameHint": "mis. Yoga Pagi",
   "categoryLabel": "Kategori",
+  "iconLabel": "Ikon",
+  "iconDefaultForCategory": "Bawaan kategori",
   "timeLabel": "Waktu",
+  "repeatLabel": "Pengulangan",
   "notesOptional": "Catatan (opsional)",
+  "notesHint": "mis. Diminum setelah makan",
+  "notesLabel": "Catatan",
   "snoozeDuration": "Durasi tunda",
-  "continueButton": "Lanjutkan",
-  "getStarted": "Mulai",
-  "skipButton": "Lewati",
-  "backButton": "Kembali",
-  "notNow": "Nanti saja",
-  "allowNotifications": "Izinkan notifikasi",
-  "startEmpty": "Mulai kosong",
-  "startWithTemplate": "Mulai dengan template",
-  "pickStarter": "Pilih template",
-  "orStartEmpty": "Atau, kamu bisa mulai kosong dan menambahkan rutinitas nanti dari tab Rutinitas.",
-  "noRoutinesYet": "Belum ada rutinitas",
-  "noRoutinesDesc": "Tidak ada yang dijadwalkan untuk tanggal ini. Tambahkan satu atau pilih hari lain.",
-  "themeSetting": "Tema",
-  "languageSetting": "Bahasa",
-  "notificationsSetting": "Notifikasi",
-  "exportSetting": "Ekspor rutinitas",
-  "importSetting": "Impor rutinitas",
-  "resetSetting": "Hapus semua data",
-  "privacySetting": "Privasi & data",
-  "aboutSetting": "Tentang open source",
-  "calmDayAhead": "Hari yang tenang di depan. Tambahkan rutinitas kapan pun kamu siap.",
-  "allFinished": "Kamu menyelesaikan semua rutinitas hari ini. Kerja bagus.",
-  "smallProgress": "Kemajuan kecil tetap berarti. Jalani satu langkah demi satu langkah.",
-  "addTemplate": "Tambah Template",
-  "discoverRoutines": "Temukan Rutinitas",
-  "addStructured": "Tambahkan kebiasaan terstruktur dan tenang ke harimu dengan satu ketukan.",
-  "browseTemplates": "Jelajahi Template",
-  "yourRoutines": "Rutinitas Kamu",
+  "minutesShort": "{minutes}m",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesLabel": "{minutes} menit",
+  "@minutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "routineNameRequired": "Beri nama rutinitasmu dulu.",
+  "repeatDaysRequired": "Pilih minimal satu hari pengulangan.",
+  "categoryMeal": "Makan",
+  "categoryWater": "Minum",
+  "categoryVitamin": "Vitamin",
+  "categoryMedicine": "Obat",
+  "categorySleep": "Tidur",
+  "categoryExercise": "Olahraga",
+  "categoryBreak": "Istirahat",
+  "categoryCustom": "Kustom",
+  "mealRoutine": "Rutinitas makan",
+  "waterRoutine": "Rutinitas minum air",
+  "vitaminRoutine": "Rutinitas vitamin",
+  "medicineRoutine": "Rutinitas obat",
+  "sleepRoutine": "Rutinitas tidur",
+  "exerciseRoutine": "Rutinitas olahraga",
+  "breakRoutine": "Rutinitas istirahat",
+  "customRoutine": "Rutinitas kustom",
+  "weekdayShortMon": "S",
+  "weekdayShortTue": "S",
+  "weekdayShortWed": "R",
+  "weekdayShortThu": "K",
+  "weekdayShortFri": "J",
+  "weekdayShortSat": "S",
+  "weekdayShortSun": "M",
+  "weekdayAbbrMon": "Sen",
+  "weekdayAbbrTue": "Sel",
+  "weekdayAbbrWed": "Rab",
+  "weekdayAbbrThu": "Kam",
+  "weekdayAbbrFri": "Jum",
+  "weekdayAbbrSat": "Sab",
+  "weekdayAbbrSun": "Min",
+  "everyDay": "Setiap hari",
+  "noRepeatDays": "Tanpa pengulangan",
+  "routineDetailTitle": "Detail Rutinitas",
+  "routineNotFound": "Rutinitas tidak ditemukan.",
+  "scheduleLabel": "Jadwal",
+  "reminderBehavior": "Perilaku pengingat",
+  "snoozeForMinutes": "Tunda selama {minutes} menit",
+  "@snoozeForMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "routineIsActive": "Rutinitas aktif",
+  "routineIsDisabled": "Rutinitas nonaktif",
+  "editRoutineAction": "Ubah rutinitas",
+  "deleteRoutine": "Hapus rutinitas",
   "insightsTitle": "Wawasan",
   "completedThisWeek": "Selesai minggu ini",
-  "bestStreak": "Rekor terbaik",
+  "bestStreak": "Rentetan terbaik",
+  "daysLabel": "{count, plural, other{{count} hari}}",
+  "@daysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "thisWeeksFlow": "Alur Minggu Ini",
   "focusAreas": "Area Fokus",
+  "insightGreatTitle": "Minggu ini kamu luar biasa!",
+  "insightGreatMessage": "Jaga momentumnya — konsistensi membangun hari yang lebih baik.",
+  "insightSmallProgressTitle": "Kemajuan kecil tetap berarti.",
+  "insightSmallProgressMessage": "Ada rutinitas yang terlewat minggu ini. Coba lagi besok — setiap langkah berarti.",
+  "insightBuildRhythmTitle": "Bangun ritme rutinitasmu.",
+  "insightBuildRhythmMessage": "Tambahkan rutinitas dan mulai melacak untuk melihat wawasan mingguan di sini.",
+  "insightNoRoutinesTitle": "Belum ada rutinitas yang dilacak.",
+  "insightNoRoutinesMessage": "Buat rutinitas pertamamu dan mulai kumpulkan wawasan dari waktu ke waktu.",
+  "sevenDayHistory": "Riwayat 7 Hari",
+  "viewHistory": "Lihat riwayat 7 hari",
+  "historyEmpty": "Belum ada riwayat untuk 7 hari terakhir.",
+  "historyToday": "Hari ini",
+  "historyYesterday": "Kemarin",
+  "historyDoneCount": "{done} dari {total} selesai",
+  "@historyDoneCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mostCompleted": "Paling sering selesai",
+  "mostMissed": "Paling sering terlewat",
+  "timesCount": "{count, plural, other{{count} kali}}",
+  "@timesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsTitle": "Pengaturan",
   "preferencesSection": "Preferensi",
   "notificationsSection": "Notifikasi",
   "dataSection": "Data",
   "privacySection": "Privasi",
-  "routineAlerts": "Peringatan rutinitas",
-  "exportJson": "JSON",
-  "importJson": "JSON",
-  "resetDestructive": "Destruktif",
-  "privacyData": "Privasi & data",
-  "aboutOpenSource": "Tentang open source",
-  "chooseTheme": "Pilih tema",
-  "chooseLanguage": "Pilih bahasa",
+  "themeSetting": "Tema",
+  "languageSetting": "Bahasa",
   "systemTheme": "Sistem",
   "lightTheme": "Terang",
   "darkTheme": "Gelap",
-  "englishLang": "English",
-  "bahasaLang": "Bahasa Indonesia",
-  "chooseYourLanguage": "Pilih bahasa kamu",
-  "chooseLanguageDesc": "Pilih bahasa yang ingin kamu lihat pertama kali. Kamu bisa mengubahnya nanti di pengaturan.",
-  "notificationEducationTitle": "Edukasi notifikasi",
-  "notificationEducationMessage": "Kami akan meminta izin notifikasi nanti, hanya saat penjadwalan pengingat sudah siap.",
-  "getGentleReminders": "Dapatkan pengingat lembut",
-  "getGentleRemindersDesc": "OpenLife dapat mengingatkanmu tentang rutinitas di waktu yang tepat, tanpa tekanan yang bising.",
-  "scheduledReminders": "Pengingat terjadwal",
-  "quietAndRespectful": "Tenang dan hormat",
-  "privateOnDevice": "Privat di perangkat",
-  "markDone": "Selesai",
-  "skipAction": "Lewati",
-  "dueNow": "Sekarang",
-  "undoAction": "Batal",
+  "chooseTheme": "Pilih tema",
+  "chooseLanguage": "Pilih bahasa",
+  "routineAlerts": "Pengingat rutinitas",
+  "notificationPermissionRequested": "Izin notifikasi diminta.",
+  "reducedMotionSetting": "Kurangi animasi",
+  "reducedMotionDescription": "Matikan animasi perayaan dan animasi berulang.",
+  "exportSetting": "Ekspor rutinitas",
+  "importSetting": "Impor rutinitas",
+  "resetSetting": "Reset semua data",
+  "exportJson": "JSON",
+  "resetDestructive": "Merusak",
+  "privacyData": "Privasi & data",
+  "aboutOpenSourceSetting": "Tentang open source",
   "exportData": "Ekspor Data",
   "importData": "Impor Data",
   "pasteJsonHint": "Tempel cadangan JSON di sini...",
-  "cancelAction": "Batal",
   "importAction": "Impor",
-  "closeAction": "Tutup",
-  "resetAllData": "Hapus Semua Data",
-  "resetWarning": "Ini akan menghapus permanen semua rutinitas, jadwal, dan log. Tindakan ini tidak bisa dibatalkan.",
-  "resetButton": "Hapus",
-  "daysLabel": "hari",
-  "stepsLabel": "langkah",
+  "routinesImported": "{count, plural, other{{count} rutinitas diimpor.}}",
+  "@routinesImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFailed": "Impor gagal: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "resetAllData": "Reset Semua Data",
+  "resetWarning": "Ini akan menghapus permanen semua rutinitas, jadwal, dan riwayatmu. Tindakan ini tidak bisa dibatalkan.",
+  "resetButton": "Reset",
+  "allDataReset": "Semua data telah direset.",
   "privacyTitle": "Privasi & Data",
   "privacyLocal": "Datamu tetap di perangkatmu",
-  "privacyLocalBody": "OpenLife Routine menyimpan semua rutinitas, jadwal, dan log secara lokal di ponselmu. Tidak ada data yang dikirim ke server mana pun.",
-  "privacyNoAccount": "Tidak perlu akun",
-  "privacyNoAccountBody": "Kamu bisa menggunakan semua fitur tanpa membuat akun. Tidak ada login, tidak ada registrasi, dan tidak ada informasi pribadi yang dikumpulkan.",
-  "privacyOffline": "Bekerja offline",
-  "privacyOfflineBody": "Semua fitur inti berfungsi tanpa koneksi internet. Pengingat dijadwalkan secara lokal dan muncul bahkan saat kamu offline.",
-  "privacyControl": "Kamu mengontrol datamu",
-  "privacyControlBody": "Kamu bisa mengekspor data sebagai JSON kapan saja dari Pengaturan. Kamu juga bisa mengimpor cadangan atau menghapus semua data dari perangkatmu.",
+  "privacyLocalBody": "OpenLife Routine menyimpan semua rutinitas, jadwal, dan riwayatmu secara lokal di ponselmu. Tidak ada data yang dikirim ke server mana pun.",
+  "privacyNoAccount": "Tanpa perlu akun",
+  "privacyNoAccountBody": "Kamu bisa memakai semua fitur tanpa membuat akun. Tidak ada login, tidak ada registrasi, dan tidak ada informasi pribadi yang dikumpulkan.",
+  "privacyOffline": "Berfungsi offline",
+  "privacyOfflineBody": "Semua fitur inti bekerja tanpa koneksi internet. Pengingat dijadwalkan secara lokal dan tetap berbunyi saat kamu offline.",
+  "privacyControl": "Kamu yang mengendalikan datamu",
+  "privacyControlBody": "Kamu bisa mengekspor datamu sebagai JSON kapan saja dari Pengaturan. Kamu juga bisa mengimpor cadangan atau mereset semua data dari perangkatmu.",
   "privacyNoTracking": "Tanpa pelacakan atau analitik",
-  "privacyNoTrackingBody": "Aplikasi ini tidak menggunakan analitik pihak ketiga, pelacak iklan, atau bentuk pemantauan pengguna apa pun. Rutinitasmu adalah milikmu sendiri.",
+  "privacyNoTrackingBody": "Aplikasi ini tidak memakai analitik pihak ketiga, pelacak iklan, atau bentuk pemantauan pengguna apa pun. Rutinitasmu hanya milikmu.",
   "privacyDisclaimer": "OpenLife Routine bukan aplikasi medis.",
   "privacyDisclaimerBody": "Ini adalah aplikasi pengingat gaya hidup dan rutinitas yang dirancang untuk membantumu membangun hari yang lebih baik. Aplikasi ini tidak mendiagnosis, mengobati, atau menyembuhkan kondisi apa pun.",
   "aboutTitle": "Tentang Open Source",
-  "aboutVersion": "Versi 1.0.0",
+  "aboutVersion": "Versi {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "aboutOpenSource": "Open source",
-  "aboutOpenSourceBody": "OpenLife Routine adalah perangkat lunak gratis dan open-source. Kode sumber lengkap tersedia di GitHub di bawah lisensi Apache 2.0.",
+  "aboutOpenSourceBody": "OpenLife Routine adalah perangkat lunak gratis dan open-source. Seluruh kode sumbernya tersedia di GitHub dengan lisensi Apache 2.0.",
   "aboutBuiltWith": "Dibangun dengan Flutter",
-  "aboutBuiltWithBody": "Aplikasi ini dibangun dengan Flutter dan Dart, menggunakan Clean Architecture, state management BLoC, Drift SQLite, notifikasi lokal, dan animasi Rive.",
+  "aboutBuiltWithBody": "Aplikasi ini dibangun dengan Flutter dan Dart, memakai Clean Architecture, manajemen state BLoC, Drift SQLite, notifikasi lokal, dan animasi Rive.",
   "aboutPortfolio": "Proyek portofolio",
-  "aboutPortfolioBody": "OpenLife Routine dibangun sebagai proyek portofolio open-source berkualitas produksi untuk menunjukkan kemampuan Flutter engineering, arsitektur, dan desain produk.",
+  "aboutPortfolioBody": "OpenLife Routine dibangun sebagai proyek portofolio open-source berkualitas produksi untuk menunjukkan kemampuan rekayasa Flutter, arsitektur, dan desain produk.",
   "aboutLicense": "Lisensi",
-  "aboutLicenseBody": "Apache License 2.0 — Bebas untuk penggunaan pribadi dan komersial. Nama dan logo OpenLife Routine dilindungi untuk proyek resmi."
+  "aboutLicenseBody": "Apache License 2.0 — Bebas dipakai untuk keperluan pribadi maupun komersial. Nama dan logo OpenLife Routine dilindungi untuk proyek resmi.",
+  "notificationSnoozedTitle": "Pengingat ditunda",
+  "notificationSnoozeAction": "Tunda {minutes} mnt",
+  "@notificationSnoozeAction": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "templateMorningTitle": "Rutinitas Pagi",
+  "templateMorningDesc": "Mulai harimu dengan niat dan langkah yang tenang.",
+  "templateHydrationTitle": "Pelacak Hidrasi",
+  "templateHydrationDesc": "Jaga asupan air tetap konsisten sepanjang hari.",
+  "templateVitaminTitle": "Rutinitas Vitamin",
+  "templateVitaminDesc": "Jangan lewatkan suplemen dengan pengingat harian terjadwal.",
+  "templateSleepTitle": "Rutinitas Tidur",
+  "templateSleepDesc": "Tutup harimu dengan ritme malam yang menenangkan.",
+  "templateProgrammerBreakTitle": "Istirahat Programmer",
+  "templateProgrammerBreakDesc": "Istirahat mata dan perbaikan postur untuk melawan lelah layar.",
+  "badgePopular": "POPULER",
+  "badgeNew": "BARU",
+  "templateRoutineWakeUp": "Bangun Tidur",
+  "templateRoutineDrinkWater": "Minum Air",
+  "templateRoutineBreakfast": "Sarapan",
+  "templateRoutineMorningWater": "Air Pagi",
+  "templateRoutineMiddayWater": "Air Siang",
+  "templateRoutineAfternoonWater": "Air Sore",
+  "templateRoutineEveningWater": "Air Malam",
+  "templateRoutineVitaminD3": "Vitamin D3",
+  "templateRoutineBComplex": "Vitamin B Kompleks",
+  "templateRoutineReduceScreenTime": "Kurangi Waktu Layar",
+  "templateRoutinePrepareBed": "Siapkan Tempat Tidur",
+  "templateRoutineEyeRest": "Istirahatkan Mata",
+  "templateRoutineStretching": "Peregangan",
+  "templateRoutinePostureCheck": "Cek Postur",
+  "notificationReminderBody": "Pengingat untuk {title}",
+  "@notificationReminderBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationChannelName": "Pengingat rutinitas",
+  "notificationChannelDescription": "Notifikasi pengingat untuk rutinitas harian"
 }

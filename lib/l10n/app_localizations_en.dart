@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTagline => 'Calm daily routines, private by default.';
 
   @override
+  String get preparingYourDay => 'Preparing your day';
+
+  @override
   String get todayTab => 'Today';
 
   @override
@@ -27,7 +30,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTab => 'Settings';
 
   @override
-  String get templatesTitle => 'Templates';
+  String get continueButton => 'Continue';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get skipButton => 'Skip';
+
+  @override
+  String get backButton => 'Back';
+
+  @override
+  String get cancelAction => 'Cancel';
+
+  @override
+  String get closeAction => 'Close';
+
+  @override
+  String get createRoutine => 'Create routine';
+
+  @override
+  String get chooseYourLanguage => 'Choose your language';
+
+  @override
+  String get chooseLanguageDesc =>
+      'Pick the language you want to see first. You can change it later in settings.';
+
+  @override
+  String get englishLang => 'English';
+
+  @override
+  String get englishSubtitle => 'Default app language';
+
+  @override
+  String get bahasaLang => 'Bahasa Indonesia';
+
+  @override
+  String get bahasaSubtitle => 'Bahasa utama untuk pengguna lokal';
+
+  @override
+  String get bahasaShort => 'Bahasa';
+
+  @override
+  String get notificationPermissionTitle => 'Notification permission';
+
+  @override
+  String get getGentleReminders => 'Get gentle reminders';
+
+  @override
+  String get getGentleRemindersDesc =>
+      'OpenLife can remind you about routines at the right time, without noisy pressure.';
+
+  @override
+  String get scheduledReminders => 'Scheduled reminders';
+
+  @override
+  String get quietAndRespectful => 'Quiet and respectful';
+
+  @override
+  String get privateOnDevice => 'Private on device';
+
+  @override
+  String get allowNotifications => 'Allow notifications';
+
+  @override
+  String get notNow => 'Not now';
 
   @override
   String get onboardingSlide1Title => 'Build better days';
@@ -58,6 +126,41 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick a starter template to begin, or add routines yourself one at a time.';
 
   @override
+  String get chooseStartingLanguage => 'Choose your starting language';
+
+  @override
+  String get notificationEducationTitle => 'Reminders you control';
+
+  @override
+  String get notificationEducationMessage =>
+      'You decide which routines send a reminder, and you can turn any of them off at any time.';
+
+  @override
+  String get privacyPanelTitle => 'No account, no cloud';
+
+  @override
+  String get privacyPanelMessage =>
+      'Everything you create is stored in a local database on this device. Nothing is uploaded.';
+
+  @override
+  String get pickStarter => 'Pick a starter';
+
+  @override
+  String get orStartEmpty =>
+      'Or, you can start empty and add routines later from the Routines tab.';
+
+  @override
+  String get startEmpty => 'Start empty';
+
+  @override
+  String get templateApplied => 'Template added. You can edit anything later.';
+
+  @override
+  String onboardingStepCounter(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
   String get greetingMorning => 'Good morning';
 
   @override
@@ -68,121 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greetingNight => 'Good night';
-
-  @override
-  String get todayEmptyTitle => 'Nothing scheduled today';
-
-  @override
-  String get todayEmptyDesc =>
-      'Add a routine to see your day fill up with calm reminders.';
-
-  @override
-  String get dailyProgress => 'Daily Progress';
-
-  @override
-  String get dailyRoutine => 'Daily routine';
-
-  @override
-  String get allDone => 'All Done!';
-
-  @override
-  String get allDoneMessage =>
-      'You completed all your routines for today. Great work!';
-
-  @override
-  String get stayConsistent => 'Stay consistent';
-
-  @override
-  String get newRoutine => 'New Routine';
-
-  @override
-  String get editRoutine => 'Edit Routine';
-
-  @override
-  String get saveRoutine => 'Save Routine';
-
-  @override
-  String get saveChanges => 'Save Changes';
-
-  @override
-  String get createRoutine => 'Create routine';
-
-  @override
-  String get routineName => 'Routine Name';
-
-  @override
-  String get categoryLabel => 'Category';
-
-  @override
-  String get timeLabel => 'Time';
-
-  @override
-  String get notesOptional => 'Notes (optional)';
-
-  @override
-  String get snoozeDuration => 'Snooze duration';
-
-  @override
-  String get continueButton => 'Continue';
-
-  @override
-  String get getStarted => 'Get Started';
-
-  @override
-  String get skipButton => 'Skip';
-
-  @override
-  String get backButton => 'Back';
-
-  @override
-  String get notNow => 'Not now';
-
-  @override
-  String get allowNotifications => 'Allow notifications';
-
-  @override
-  String get startEmpty => 'Start empty';
-
-  @override
-  String get startWithTemplate => 'Start with a template';
-
-  @override
-  String get pickStarter => 'Pick a starter';
-
-  @override
-  String get orStartEmpty =>
-      'Or, you can start empty and add routines later from the Routines tab.';
-
-  @override
-  String get noRoutinesYet => 'No routines yet';
-
-  @override
-  String get noRoutinesDesc =>
-      'There is nothing scheduled for this date. Add one or pick another day.';
-
-  @override
-  String get themeSetting => 'Theme';
-
-  @override
-  String get languageSetting => 'Language';
-
-  @override
-  String get notificationsSetting => 'Notifications';
-
-  @override
-  String get exportSetting => 'Export routines';
-
-  @override
-  String get importSetting => 'Import routines';
-
-  @override
-  String get resetSetting => 'Reset all data';
-
-  @override
-  String get privacySetting => 'Privacy & data';
-
-  @override
-  String get aboutSetting => 'About open source';
 
   @override
   String get calmDayAhead =>
@@ -196,7 +184,105 @@ class AppLocalizationsEn extends AppLocalizations {
       'Small progress still counts. Take it one step at a time.';
 
   @override
-  String get addTemplate => 'Add Template';
+  String get dailyProgress => 'Daily Progress';
+
+  @override
+  String get dailyRoutine => 'Daily routine';
+
+  @override
+  String get noRoutinesScheduledForDay => 'No routines scheduled for this day.';
+
+  @override
+  String completedOfTotal(int completed, int total) {
+    return '$completed of $total routines completed.';
+  }
+
+  @override
+  String get allDoneBadge => 'ALL DONE';
+
+  @override
+  String get stayConsistentBadge => 'STAY CONSISTENT';
+
+  @override
+  String get allDone => 'All Done!';
+
+  @override
+  String get allDoneMessage =>
+      'You completed all your routines for today. Great work!';
+
+  @override
+  String get nextUp => 'Next';
+
+  @override
+  String get nothingLeftToday => 'Nothing left for today.';
+
+  @override
+  String get statusDone => 'Done';
+
+  @override
+  String get statusSkipped => 'Skipped';
+
+  @override
+  String get statusMissed => 'Missed';
+
+  @override
+  String get statusSnoozed => 'Snoozed';
+
+  @override
+  String get statusDueNow => 'Due Now';
+
+  @override
+  String get skipAction => 'Skip';
+
+  @override
+  String get undoAction => 'Undo';
+
+  @override
+  String get snoozeAction => 'Snooze';
+
+  @override
+  String snoozedUntil(String time) {
+    return 'Snoozed until $time';
+  }
+
+  @override
+  String get todayEmptyTitle => 'Nothing scheduled today';
+
+  @override
+  String get todayEmptyDesc =>
+      'Add a routine to see your day fill up with calm reminders.';
+
+  @override
+  String get noRoutinesYet => 'No routines yet';
+
+  @override
+  String get noRoutinesForDateDesc =>
+      'There is nothing scheduled for this date. Add one or pick another day.';
+
+  @override
+  String get routinesEmptyDesc =>
+      'Create your first routine so the app can start guiding your day.';
+
+  @override
+  String get routinesListEmptyDesc =>
+      'Start one small routine today. Your list will update here automatically.';
+
+  @override
+  String get insightsEmptyTitle => 'Insights will appear here';
+
+  @override
+  String get insightsEmptyDesc =>
+      'Complete a few routines first, then this screen will show your weekly rhythm.';
+
+  @override
+  String get templatesEmptyTitle => 'No templates yet';
+
+  @override
+  String get templatesEmptyDesc =>
+      'Templates are ready to help once you start building a routine library.';
+
+  @override
+  String get browseRoutines => 'Browse routines';
 
   @override
   String get discoverRoutines => 'Discover Routines';
@@ -212,6 +298,214 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourRoutines => 'Your routines';
 
   @override
+  String get templatesTitle => 'Templates';
+
+  @override
+  String get addTemplate => 'Add Template';
+
+  @override
+  String stepsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String templateAdded(String title) {
+    return '\"$title\" routines added!';
+  }
+
+  @override
+  String get newRoutine => 'New Routine';
+
+  @override
+  String get editRoutine => 'Edit Routine';
+
+  @override
+  String get saveRoutine => 'Save Routine';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get routineName => 'Routine Name';
+
+  @override
+  String get routineNameHint => 'e.g., Morning Yoga';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get iconLabel => 'Icon';
+
+  @override
+  String get iconDefaultForCategory => 'Default for category';
+
+  @override
+  String get timeLabel => 'Time';
+
+  @override
+  String get repeatLabel => 'Repeat';
+
+  @override
+  String get notesOptional => 'Notes (optional)';
+
+  @override
+  String get notesHint => 'e.g., Take with food';
+
+  @override
+  String get notesLabel => 'Notes';
+
+  @override
+  String get snoozeDuration => 'Snooze duration';
+
+  @override
+  String minutesShort(int minutes) {
+    return '${minutes}m';
+  }
+
+  @override
+  String minutesLabel(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get routineNameRequired => 'Give your routine a name first.';
+
+  @override
+  String get repeatDaysRequired => 'Pick at least one day to repeat.';
+
+  @override
+  String get categoryMeal => 'Meal';
+
+  @override
+  String get categoryWater => 'Water';
+
+  @override
+  String get categoryVitamin => 'Vitamin';
+
+  @override
+  String get categoryMedicine => 'Medicine';
+
+  @override
+  String get categorySleep => 'Sleep';
+
+  @override
+  String get categoryExercise => 'Exercise';
+
+  @override
+  String get categoryBreak => 'Break';
+
+  @override
+  String get categoryCustom => 'Custom';
+
+  @override
+  String get mealRoutine => 'Meal routine';
+
+  @override
+  String get waterRoutine => 'Hydration routine';
+
+  @override
+  String get vitaminRoutine => 'Vitamin routine';
+
+  @override
+  String get medicineRoutine => 'Medicine routine';
+
+  @override
+  String get sleepRoutine => 'Sleep routine';
+
+  @override
+  String get exerciseRoutine => 'Exercise routine';
+
+  @override
+  String get breakRoutine => 'Break routine';
+
+  @override
+  String get customRoutine => 'Custom routine';
+
+  @override
+  String get weekdayShortMon => 'M';
+
+  @override
+  String get weekdayShortTue => 'T';
+
+  @override
+  String get weekdayShortWed => 'W';
+
+  @override
+  String get weekdayShortThu => 'T';
+
+  @override
+  String get weekdayShortFri => 'F';
+
+  @override
+  String get weekdayShortSat => 'S';
+
+  @override
+  String get weekdayShortSun => 'S';
+
+  @override
+  String get weekdayAbbrMon => 'Mon';
+
+  @override
+  String get weekdayAbbrTue => 'Tue';
+
+  @override
+  String get weekdayAbbrWed => 'Wed';
+
+  @override
+  String get weekdayAbbrThu => 'Thu';
+
+  @override
+  String get weekdayAbbrFri => 'Fri';
+
+  @override
+  String get weekdayAbbrSat => 'Sat';
+
+  @override
+  String get weekdayAbbrSun => 'Sun';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get noRepeatDays => 'No repeat days';
+
+  @override
+  String get routineDetailTitle => 'Routine Detail';
+
+  @override
+  String get routineNotFound => 'Routine not found.';
+
+  @override
+  String get scheduleLabel => 'Schedule';
+
+  @override
+  String get reminderBehavior => 'Reminder behavior';
+
+  @override
+  String snoozeForMinutes(int minutes) {
+    return 'Snooze for $minutes minutes';
+  }
+
+  @override
+  String get routineIsActive => 'Routine is active';
+
+  @override
+  String get routineIsDisabled => 'Routine is disabled';
+
+  @override
+  String get editRoutineAction => 'Edit routine';
+
+  @override
+  String get deleteRoutine => 'Delete routine';
+
+  @override
   String get insightsTitle => 'Insights';
 
   @override
@@ -221,10 +515,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bestStreak => 'Best streak';
 
   @override
+  String daysLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get thisWeeksFlow => 'This Week\'s Flow';
 
   @override
   String get focusAreas => 'Focus Areas';
+
+  @override
+  String get insightGreatTitle => 'You\'re doing great this week!';
+
+  @override
+  String get insightGreatMessage =>
+      'Keep up the momentum — consistency builds better days.';
+
+  @override
+  String get insightSmallProgressTitle => 'Small progress still counts.';
+
+  @override
+  String get insightSmallProgressMessage =>
+      'Some routines were missed this week. Try again tomorrow — every step matters.';
+
+  @override
+  String get insightBuildRhythmTitle => 'Build your routine rhythm.';
+
+  @override
+  String get insightBuildRhythmMessage =>
+      'Add routines and start tracking to see your weekly insights here.';
+
+  @override
+  String get insightNoRoutinesTitle => 'No routines tracked yet.';
+
+  @override
+  String get insightNoRoutinesMessage =>
+      'Create your first routine and start building insights over time.';
+
+  @override
+  String get sevenDayHistory => '7-Day History';
+
+  @override
+  String get viewHistory => 'View 7-day history';
+
+  @override
+  String get historyEmpty => 'No history for the last 7 days yet.';
+
+  @override
+  String get historyToday => 'Today';
+
+  @override
+  String get historyYesterday => 'Yesterday';
+
+  @override
+  String historyDoneCount(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get mostCompleted => 'Most completed';
+
+  @override
+  String get mostMissed => 'Most missed';
+
+  @override
+  String timesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '1 time',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get settingsTitle => 'Settings';
@@ -242,28 +612,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacySection => 'Privacy';
 
   @override
-  String get routineAlerts => 'Routine alerts';
+  String get themeSetting => 'Theme';
 
   @override
-  String get exportJson => 'JSON';
-
-  @override
-  String get importJson => 'JSON';
-
-  @override
-  String get resetDestructive => 'Destructive';
-
-  @override
-  String get privacyData => 'Privacy & data';
-
-  @override
-  String get aboutOpenSource => 'Open source';
-
-  @override
-  String get chooseTheme => 'Choose theme';
-
-  @override
-  String get chooseLanguage => 'Choose language';
+  String get languageSetting => 'Language';
 
   @override
   String get systemTheme => 'System';
@@ -275,52 +627,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get darkTheme => 'Dark';
 
   @override
-  String get englishLang => 'English';
+  String get chooseTheme => 'Choose theme';
 
   @override
-  String get bahasaLang => 'Bahasa Indonesia';
+  String get chooseLanguage => 'Choose language';
 
   @override
-  String get chooseYourLanguage => 'Choose your language';
+  String get routineAlerts => 'Routine alerts';
 
   @override
-  String get chooseLanguageDesc =>
-      'Pick the language you want to see first. You can change it later in settings.';
+  String get notificationPermissionRequested =>
+      'Notification permission requested.';
 
   @override
-  String get notificationEducationTitle => 'Notification education';
+  String get reducedMotionSetting => 'Reduce motion';
 
   @override
-  String get notificationEducationMessage =>
-      'We will ask for notification permission later, only when reminder scheduling is ready.';
+  String get reducedMotionDescription =>
+      'Turn off celebration and looping animations.';
 
   @override
-  String get getGentleReminders => 'Get gentle reminders';
+  String get exportSetting => 'Export routines';
 
   @override
-  String get getGentleRemindersDesc =>
-      'OpenLife can remind you about routines at the right time, without noisy pressure.';
+  String get importSetting => 'Import routines';
 
   @override
-  String get scheduledReminders => 'Scheduled reminders';
+  String get resetSetting => 'Reset all data';
 
   @override
-  String get quietAndRespectful => 'Quiet and respectful';
+  String get exportJson => 'JSON';
 
   @override
-  String get privateOnDevice => 'Private on device';
+  String get resetDestructive => 'Destructive';
 
   @override
-  String get markDone => 'Done';
+  String get privacyData => 'Privacy & data';
 
   @override
-  String get skipAction => 'Skip';
-
-  @override
-  String get dueNow => 'Due Now';
-
-  @override
-  String get undoAction => 'Undo';
+  String get aboutOpenSourceSetting => 'About open source';
 
   @override
   String get exportData => 'Export Data';
@@ -332,13 +677,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pasteJsonHint => 'Paste JSON backup here...';
 
   @override
-  String get cancelAction => 'Cancel';
-
-  @override
   String get importAction => 'Import';
 
   @override
-  String get closeAction => 'Close';
+  String routinesImported(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routines imported.',
+      one: '1 routine imported.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importFailed(String error) {
+    return 'Import failed: $error';
+  }
 
   @override
   String get resetAllData => 'Reset All Data';
@@ -351,10 +706,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetButton => 'Reset';
 
   @override
-  String get daysLabel => 'days';
-
-  @override
-  String get stepsLabel => 'steps';
+  String get allDataReset => 'All data has been reset.';
 
   @override
   String get privacyTitle => 'Privacy & Data';
@@ -405,7 +757,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutTitle => 'About Open Source';
 
   @override
-  String get aboutVersion => 'Version 1.0.0';
+  String aboutVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get aboutOpenSource => 'Open source';
 
   @override
   String get aboutOpenSourceBody =>
@@ -431,4 +788,107 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aboutLicenseBody =>
       'Apache License 2.0 — Free for personal and commercial use. The OpenLife Routine name and logo are reserved for the official project.';
+
+  @override
+  String get notificationSnoozedTitle => 'Snoozed reminder';
+
+  @override
+  String notificationSnoozeAction(int minutes) {
+    return 'Snooze $minutes min';
+  }
+
+  @override
+  String get templateMorningTitle => 'Morning Routine';
+
+  @override
+  String get templateMorningDesc =>
+      'Start your day with intention and a gentle pace.';
+
+  @override
+  String get templateHydrationTitle => 'Hydration Tracker';
+
+  @override
+  String get templateHydrationDesc =>
+      'Keep your water intake consistent throughout the day.';
+
+  @override
+  String get templateVitaminTitle => 'Vitamin Routine';
+
+  @override
+  String get templateVitaminDesc =>
+      'Never miss a supplement with timed daily reminders.';
+
+  @override
+  String get templateSleepTitle => 'Sleep Routine';
+
+  @override
+  String get templateSleepDesc =>
+      'Wind down your day with a calming evening rhythm.';
+
+  @override
+  String get templateProgrammerBreakTitle => 'Programmer Break';
+
+  @override
+  String get templateProgrammerBreakDesc =>
+      'Eye rest and posture resets to combat screen fatigue.';
+
+  @override
+  String get badgePopular => 'POPULAR';
+
+  @override
+  String get badgeNew => 'NEW';
+
+  @override
+  String get templateRoutineWakeUp => 'Wake Up';
+
+  @override
+  String get templateRoutineDrinkWater => 'Drink Water';
+
+  @override
+  String get templateRoutineBreakfast => 'Breakfast';
+
+  @override
+  String get templateRoutineMorningWater => 'Morning Water';
+
+  @override
+  String get templateRoutineMiddayWater => 'Midday Water';
+
+  @override
+  String get templateRoutineAfternoonWater => 'Afternoon Water';
+
+  @override
+  String get templateRoutineEveningWater => 'Evening Water';
+
+  @override
+  String get templateRoutineVitaminD3 => 'Vitamin D3';
+
+  @override
+  String get templateRoutineBComplex => 'B Complex';
+
+  @override
+  String get templateRoutineReduceScreenTime => 'Reduce Screen Time';
+
+  @override
+  String get templateRoutinePrepareBed => 'Prepare Bed';
+
+  @override
+  String get templateRoutineEyeRest => 'Eye Rest';
+
+  @override
+  String get templateRoutineStretching => 'Stretching';
+
+  @override
+  String get templateRoutinePostureCheck => 'Posture Check';
+
+  @override
+  String notificationReminderBody(String title) {
+    return 'Reminder for $title';
+  }
+
+  @override
+  String get notificationChannelName => 'Routine reminders';
+
+  @override
+  String get notificationChannelDescription =>
+      'Reminder notifications for daily routines';
 }

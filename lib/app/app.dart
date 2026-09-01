@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_dependencies.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/app_locales.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_theme.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class OpenLifeApp extends StatefulWidget {
   const OpenLifeApp({required this.dependencies, super.key});
@@ -63,24 +64,32 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
       dependencies: widget.dependencies,
       child: BlocProvider<SettingsBloc>.value(
         value: _settingsBloc,
-        child: BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (BuildContext context, SettingsState state) {
-            return MaterialApp.router(
-              title: 'OpenLife Routine',
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light(),
-              darkTheme: AppTheme.dark(),
-              themeMode: _themeModeFromString(state.themeMode),
-              routerConfig: _appRouter.router,
-              localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: AppLocales.supportedLocales,
-              locale: AppLocales.localeFromCode(state.languageCode),
+        child: BlocListener<SettingsBloc, SettingsState>(
+          listenWhen: (SettingsState previous, SettingsState current) =>
+              previous.languageCode != current.languageCode,
+          listener: (BuildContext context, SettingsState state) {
+            // Reminders are composed outside the widget tree, so the service
+            // keeps its own copy of the active language.
+            widget.dependencies.notificationService.setLanguageCode(
+              state.languageCode,
             );
           },
+          child: BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (BuildContext context, SettingsState state) {
+              return MaterialApp.router(
+                onGenerateTitle: (BuildContext context) =>
+                    context.l10n.appTitle,
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light(),
+                darkTheme: AppTheme.dark(),
+                themeMode: _themeModeFromString(state.themeMode),
+                routerConfig: _appRouter.router,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocales.supportedLocales,
+                locale: AppLocales.localeFromCode(state.languageCode),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class OpenLifeBottomNav extends StatelessWidget {
   const OpenLifeBottomNav({required this.currentRoute, super.key});
@@ -68,7 +70,7 @@ class OpenLifeBottomNav extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
-                        route.label,
+                        _label(context.l10n, route),
                         style: AppTextStyles.label.copyWith(
                           color: isSelected
                               ? AppColors.primary
@@ -85,4 +87,16 @@ class OpenLifeBottomNav extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Bottom-nav labels come from the active locale, not the route enum's
+/// English `label`, which stays for debugging and route naming.
+String _label(AppLocalizations l10n, OpenLifeRoute route) {
+  return switch (route) {
+    OpenLifeRoute.today => l10n.todayTab,
+    OpenLifeRoute.routines => l10n.routinesTab,
+    OpenLifeRoute.insights => l10n.insightsTab,
+    OpenLifeRoute.settings => l10n.settingsTab,
+    _ => route.label,
+  };
 }

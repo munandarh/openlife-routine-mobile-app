@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
-import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
@@ -38,12 +41,11 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
       if (widget.onLanguageSelected != null) {
         await widget.onLanguageSelected!(context, _selectedLanguageCode);
       } else {
-        await AppScope.read(
-          context,
-        ).onboardingRepository.setPreferredLanguageCode(_selectedLanguageCode);
-        if (!mounted) {
-          return;
-        }
+        // SettingsBloc owns the language: it persists the choice and drives
+        // `MaterialApp.locale`, so the next screen is already translated.
+        context.read<SettingsBloc>().add(
+          SettingsLanguageChanged(_selectedLanguageCode),
+        );
         context.go(OpenLifeRoute.notificationPermission.path);
       }
 
@@ -81,14 +83,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           ),
                           const SizedBox(height: AppSpacing.lg),
                           Text(
-                            'Choose your language',
+                            context.l10n.chooseYourLanguage,
                             style: AppTextStyles.pageTitle.copyWith(
                               color: AppColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
-                            'Pick the language you want to see first. You can change it later in settings.',
+                            context.l10n.chooseLanguageDesc,
                             style: AppTextStyles.body.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -96,16 +98,16 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           const SizedBox(height: AppSpacing.xl),
                           _LanguageCard(
                             code: 'EN',
-                            title: 'English',
-                            subtitle: 'Default app language',
+                            title: context.l10n.englishLang,
+                            subtitle: context.l10n.englishSubtitle,
                             isSelected: _selectedLanguageCode == 'en',
                             onTap: () => _selectLanguage('en'),
                           ),
                           const SizedBox(height: AppSpacing.md),
                           _LanguageCard(
                             code: 'ID',
-                            title: 'Bahasa Indonesia',
-                            subtitle: 'Bahasa utama untuk pengguna lokal',
+                            title: context.l10n.bahasaLang,
+                            subtitle: context.l10n.bahasaSubtitle,
                             isSelected: _selectedLanguageCode == 'id',
                             onTap: () => _selectLanguage('id'),
                           ),
@@ -115,7 +117,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   PrimaryButton(
-                    label: 'Continue',
+                    label: context.l10n.continueButton,
                     isLoading: _isSaving,
                     onPressed: () => _continue(),
                   ),
@@ -140,9 +142,11 @@ class _BrandRow extends StatelessWidget {
       children: <Widget>[
         const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
         const SizedBox(width: AppSpacing.sm),
-        Text(
-          'OpenLife Routine',
-          style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
+        Flexible(
+          child: Text(
+            context.l10n.appTitle,
+            style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
+          ),
         ),
       ],
     );

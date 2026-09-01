@@ -20,18 +20,21 @@ const List<RoutineTemplate> _seedTemplates = <RoutineTemplate>[
     badge: 'POPULAR',
     routines: <TemplateRoutineItem>[
       TemplateRoutineItem(
+        titleKey: 'wakeUp',
         title: 'Wake Up',
         category: 'custom',
         reminderTime: '06:30',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'drinkWater',
         title: 'Drink Water',
         category: 'water',
         reminderTime: '07:00',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'breakfast',
         title: 'Breakfast',
         category: 'meal',
         reminderTime: '07:30',
@@ -48,24 +51,28 @@ const List<RoutineTemplate> _seedTemplates = <RoutineTemplate>[
     routineCount: 4,
     routines: <TemplateRoutineItem>[
       TemplateRoutineItem(
+        titleKey: 'morningWater',
         title: 'Morning Water',
         category: 'water',
         reminderTime: '08:00',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'middayWater',
         title: 'Midday Water',
         category: 'water',
         reminderTime: '12:00',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'afternoonWater',
         title: 'Afternoon Water',
         category: 'water',
         reminderTime: '15:00',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'eveningWater',
         title: 'Evening Water',
         category: 'water',
         reminderTime: '19:00',
@@ -82,12 +89,14 @@ const List<RoutineTemplate> _seedTemplates = <RoutineTemplate>[
     routineCount: 2,
     routines: <TemplateRoutineItem>[
       TemplateRoutineItem(
+        titleKey: 'vitaminD3',
         title: 'Vitamin D3',
         category: 'vitamin',
         reminderTime: '08:30',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'bComplex',
         title: 'B Complex',
         category: 'vitamin',
         reminderTime: '13:00',
@@ -104,12 +113,14 @@ const List<RoutineTemplate> _seedTemplates = <RoutineTemplate>[
     routineCount: 2,
     routines: <TemplateRoutineItem>[
       TemplateRoutineItem(
+        titleKey: 'reduceScreenTime',
         title: 'Reduce Screen Time',
         category: 'sleep',
         reminderTime: '21:30',
         repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
       ),
       TemplateRoutineItem(
+        titleKey: 'prepareBed',
         title: 'Prepare Bed',
         category: 'sleep',
         reminderTime: '22:00',
@@ -127,18 +138,21 @@ const List<RoutineTemplate> _seedTemplates = <RoutineTemplate>[
     badge: 'NEW',
     routines: <TemplateRoutineItem>[
       TemplateRoutineItem(
+        titleKey: 'eyeRest',
         title: 'Eye Rest',
         category: 'breakTime',
         reminderTime: '10:00',
         repeatDays: <int>[1, 2, 3, 4, 5],
       ),
       TemplateRoutineItem(
+        titleKey: 'stretching',
         title: 'Stretching',
         category: 'breakTime',
         reminderTime: '12:00',
         repeatDays: <int>[1, 2, 3, 4, 5],
       ),
       TemplateRoutineItem(
+        titleKey: 'postureCheck',
         title: 'Posture Check',
         category: 'breakTime',
         reminderTime: '15:00',

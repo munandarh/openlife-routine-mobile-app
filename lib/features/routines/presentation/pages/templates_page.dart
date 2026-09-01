@@ -1,17 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
-import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
-import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
+import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_event.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_state.dart';
+import 'package:openlife_routine/features/templates/presentation/utils/template_l10n.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
@@ -81,6 +85,7 @@ class _TemplatesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = context.l10n;
 
     return BlocBuilder<TemplateBloc, TemplateState>(
       builder: (BuildContext context, TemplateState state) {
@@ -110,7 +115,7 @@ class _TemplatesView extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    'Templates',
+                    l10n.templatesTitle,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
@@ -134,7 +139,7 @@ class _TemplatesView extends StatelessWidget {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(<Widget>[
                       Text(
-                        'Discover Routines',
+                        l10n.discoverRoutines,
                         style: textTheme.displayLarge?.copyWith(
                           color: AppColors.primary,
                           fontSize: 22,
@@ -142,7 +147,7 @@ class _TemplatesView extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Add structured, calm habits to your day with a single tap.',
+                        l10n.addStructured,
                         style: textTheme.bodyLarge?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -152,17 +157,19 @@ class _TemplatesView extends StatelessWidget {
                         (RoutineTemplate template) => Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
                           child: _TemplateCard(
-                            title: template.title,
-                            description: template.description,
-                            badge: template.badge,
+                            title: TemplateL10n.title(l10n, template),
+                            description:
+                                TemplateL10n.description(l10n, template),
+                            badge: TemplateL10n.badge(l10n, template),
                             icon: _iconForKey(template.iconKey),
                             iconBackground: _iconBgForKey(template.iconKey),
                             iconColor: _iconColorForKey(template.iconKey),
                             illustrationPath:
                                 _illustrationForKey(template.iconKey),
-                            meta: '${template.routineCount} steps',
+                            meta: l10n.stepsCount(template.routineCount),
                             isPrimary: template.isPrimary,
-                            onApply: () => _applyTemplate(context, template),
+                            onApply: () =>
+                                unawaited(_applyTemplate(context, template)),
                           ),
                         ),
                       ),
@@ -177,28 +184,25 @@ class _TemplatesView extends StatelessWidget {
     );
   }
 
-  void _applyTemplate(BuildContext context, RoutineTemplate template) {
-    final RoutineBloc routineBloc = AppScope.read(context).createRoutineBloc();
+  Future<void> _applyTemplate(
+    BuildContext context,
+    RoutineTemplate template,
+  ) async {
+    final AppLocalizations l10n = context.l10n;
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final ApplyTemplateUseCase applyTemplate = AppScope.read(
+      context,
+    ).createApplyTemplateUseCase();
 
-    for (final TemplateRoutineItem item in template.routines) {
-      final RoutineCategory category = RoutineCategory.values.firstWhere(
-        (RoutineCategory c) => c.name == item.category,
-        orElse: () => RoutineCategory.custom,
-      );
+    await applyTemplate(
+      template,
+      titleResolver: (TemplateRoutineItem item) =>
+          TemplateL10n.routineTitle(l10n, item),
+    );
 
-      routineBloc.add(
-        RoutineCreateRequested(
-          title: item.title,
-          category: category,
-          reminderTime: item.reminderTime,
-          repeatDays: item.repeatDays,
-        ),
-      );
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       SnackBar(
-        content: Text('"${template.title}" routines added!'),
+        content: Text(l10n.templateAdded(TemplateL10n.title(l10n, template))),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -290,7 +294,7 @@ class _TemplateCard extends StatelessWidget {
           Text(meta, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: AppSpacing.lg),
           PrimaryButton(
-            label: 'Add Template',
+            label: context.l10n.addTemplate,
             isSecondary: !isPrimary,
             icon: Icons.add,
             onPressed: onApply,

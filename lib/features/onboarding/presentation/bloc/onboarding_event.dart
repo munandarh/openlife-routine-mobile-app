@@ -20,13 +20,16 @@ final class OnboardingPageChanged extends OnboardingEvent {
   List<Object?> get props => <Object?>[pageIndex];
 }
 
-final class OnboardingLanguageSelected extends OnboardingEvent {
-  const OnboardingLanguageSelected(this.languageCode);
+/// Emitted when the user picks a starter template on the final step, or
+/// clears the pick to start empty.
+final class OnboardingTemplateSelected extends OnboardingEvent {
+  const OnboardingTemplateSelected(this.templateId);
 
-  final String languageCode;
+  /// Null means "start empty".
+  final String? templateId;
 
   @override
-  List<Object?> get props => <Object?>[languageCode];
+  List<Object?> get props => <Object?>[templateId];
 }
 
 final class OnboardingNextPressed extends OnboardingEvent {

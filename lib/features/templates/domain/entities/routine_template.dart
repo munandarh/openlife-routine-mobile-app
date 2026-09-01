@@ -39,6 +39,7 @@ class RoutineTemplate extends Equatable {
 
 class TemplateRoutineItem extends Equatable {
   const TemplateRoutineItem({
+    required this.titleKey,
     required this.title,
     required this.category,
     required this.reminderTime,
@@ -46,6 +47,9 @@ class TemplateRoutineItem extends Equatable {
     this.snoozeMinutes = 10,
   });
 
+  /// Stable identifier used to look up the localized routine name. [title]
+  /// stays as the English fallback for tests and unknown keys.
+  final String titleKey;
   final String title;
   final String category;
   final String reminderTime;
@@ -54,6 +58,7 @@ class TemplateRoutineItem extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
+    titleKey,
     title,
     category,
     reminderTime,

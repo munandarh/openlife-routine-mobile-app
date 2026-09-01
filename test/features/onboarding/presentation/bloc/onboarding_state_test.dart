@@ -3,17 +3,21 @@ import 'package:openlife_routine/features/onboarding/presentation/bloc/onboardin
 
 void main() {
   group('OnboardingState.initial', () {
-    test('totalPages is 3', () {
+    test('totalPages covers the four PRD onboarding slides', () {
       const OnboardingState state = OnboardingState.initial();
-      expect(state.totalPages, 3);
+      expect(state.totalPages, 4);
     });
 
-    test('isLastPage is true on the last page (index 2)', () {
+    test('starts with no starter template chosen', () {
+      const OnboardingState state = OnboardingState.initial();
+      expect(state.selectedTemplateId, isNull);
+    });
+
+    test('isLastPage is true on the last page (index 3)', () {
       const OnboardingState state = OnboardingState(
         status: OnboardingStatus.ready,
-        pageIndex: 2,
-        selectedLanguageCode: 'en',
-        totalPages: 3,
+        pageIndex: 3,
+        totalPages: 4,
       );
       expect(state.isLastPage, true);
     });
@@ -22,10 +26,23 @@ void main() {
       const OnboardingState state = OnboardingState(
         status: OnboardingStatus.ready,
         pageIndex: 1,
-        selectedLanguageCode: 'en',
-        totalPages: 3,
+        totalPages: 4,
       );
       expect(state.isLastPage, false);
+    });
+
+    test('copyWith can clear the template back to start-empty', () {
+      const OnboardingState state = OnboardingState(
+        status: OnboardingStatus.ready,
+        pageIndex: 3,
+        totalPages: 4,
+        selectedTemplateId: 'morning',
+      );
+
+      expect(state.copyWith(selectedTemplateId: 'sleep').selectedTemplateId,
+          'sleep');
+      expect(state.copyWith(clearSelectedTemplate: true).selectedTemplateId,
+          isNull);
     });
   });
 

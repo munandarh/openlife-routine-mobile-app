@@ -11,7 +11,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       super(const OnboardingState.initial()) {
     on<OnboardingStarted>(_onStarted);
     on<OnboardingPageChanged>(_onPageChanged);
-    on<OnboardingLanguageSelected>(_onLanguageSelected);
+    on<OnboardingTemplateSelected>(_onTemplateSelected);
     on<OnboardingNextPressed>(_onNextPressed);
     on<OnboardingBackPressed>(_onBackPressed);
     on<OnboardingSkipped>(_onSkipped);
@@ -20,20 +20,8 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
 
   final OnboardingRepository _repository;
 
-  Future<void> _onStarted(
-    OnboardingStarted event,
-    Emitter<OnboardingState> emit,
-  ) async {
-    emit(state.copyWith(status: OnboardingStatus.loading));
-
-    final String languageCode = await _repository.getPreferredLanguageCode();
-
-    emit(
-      state.copyWith(
-        status: OnboardingStatus.ready,
-        selectedLanguageCode: languageCode,
-      ),
-    );
+  void _onStarted(OnboardingStarted event, Emitter<OnboardingState> emit) {
+    emit(state.copyWith(status: OnboardingStatus.ready));
   }
 
   void _onPageChanged(
@@ -48,16 +36,15 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     );
   }
 
-  Future<void> _onLanguageSelected(
-    OnboardingLanguageSelected event,
+  void _onTemplateSelected(
+    OnboardingTemplateSelected event,
     Emitter<OnboardingState> emit,
-  ) async {
-    await _repository.setPreferredLanguageCode(event.languageCode);
-
+  ) {
     emit(
       state.copyWith(
         status: OnboardingStatus.ready,
-        selectedLanguageCode: event.languageCode,
+        selectedTemplateId: event.templateId,
+        clearSelectedTemplate: event.templateId == null,
       ),
     );
   }

@@ -51,6 +51,7 @@ void main() {
   group('TemplateRoutineItem', () {
     test('creates with all fields', () {
       const TemplateRoutineItem item = TemplateRoutineItem(
+        titleKey: 'drinkwater',
         title: 'Drink Water',
         category: 'water',
         reminderTime: '08:00',
@@ -67,12 +68,14 @@ void main() {
 
     test('equality works for identical items', () {
       const TemplateRoutineItem a = TemplateRoutineItem(
+        titleKey: 'meditate',
         title: 'Meditate',
         category: 'custom',
         reminderTime: '06:30',
         repeatDays: <int>[1, 3, 5],
       );
       const TemplateRoutineItem b = TemplateRoutineItem(
+        titleKey: 'meditate',
         title: 'Meditate',
         category: 'custom',
         reminderTime: '06:30',

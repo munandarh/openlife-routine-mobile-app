@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -64,12 +65,19 @@ class _NotificationPermissionPageState
           children: <Widget>[
             Row(
               children: <Widget>[
-                _BrandPill(
-                  icon: Icons.notifications_active_outlined,
-                  label: 'Notification permission',
+                // Flexible so the pill yields width to the Skip action rather
+                // than pushing it off-screen at large text scales.
+                Flexible(
+                  child: _BrandPill(
+                    icon: Icons.notifications_active_outlined,
+                    label: context.l10n.notificationPermissionTitle,
+                  ),
                 ),
                 const Spacer(),
-                TextButton(onPressed: _skip, child: const Text('Skip')),
+                TextButton(
+                  onPressed: _skip,
+                  child: Text(context.l10n.skipButton),
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -97,7 +105,7 @@ class _NotificationPermissionPageState
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Text(
-                      'Get gentle reminders',
+                      context.l10n.getGentleReminders,
                       style: AppTextStyles.pageTitle.copyWith(
                         color: AppColors.textPrimary,
                       ),
@@ -105,26 +113,26 @@ class _NotificationPermissionPageState
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      'OpenLife can remind you about routines at the right time, without noisy pressure.',
+                      context.l10n.getGentleRemindersDesc,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xl),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.schedule_outlined,
-                      label: 'Scheduled reminders',
+                      label: context.l10n.scheduledReminders,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.do_not_disturb_on_outlined,
-                      label: 'Quiet and respectful',
+                      label: context.l10n.quietAndRespectful,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    const _FeatureChip(
+                    _FeatureChip(
                       icon: Icons.lock_outline_rounded,
-                      label: 'Private on device',
+                      label: context.l10n.privateOnDevice,
                     ),
                   ],
                 ),
@@ -132,14 +140,14 @@ class _NotificationPermissionPageState
             ),
             const SizedBox(height: AppSpacing.xxl),
             PrimaryButton(
-              label: 'Allow notifications',
+              label: context.l10n.allowNotifications,
               icon: Icons.notifications_active_outlined,
               isLoading: _isLoading,
               onPressed: () => _allowNotifications(),
             ),
             const SizedBox(height: AppSpacing.md),
             PrimaryButton(
-              label: 'Not now',
+              label: context.l10n.notNow,
               isSecondary: true,
               onPressed: _skip,
             ),
@@ -173,9 +181,13 @@ class _BrandPill extends StatelessWidget {
         children: <Widget>[
           Icon(icon, size: 18, color: AppColors.primary),
           const SizedBox(width: AppSpacing.sm),
-          Text(
-            label,
-            style: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
+          Flexible(
+            child: Text(
+              label,
+              style: AppTextStyles.label.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
         ],
       ),
@@ -206,10 +218,12 @@ class _FeatureChip extends StatelessWidget {
         children: <Widget>[
           Icon(icon, size: 18, color: AppColors.secondary),
           const SizedBox(width: AppSpacing.sm),
-          Text(
-            label,
-            style: AppTextStyles.bodyEmphasis.copyWith(
-              color: AppColors.textPrimary,
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.bodyEmphasis.copyWith(
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
         ],

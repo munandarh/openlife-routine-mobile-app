@@ -5,26 +5,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
+import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
+import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
+import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
+import 'package:openlife_routine/features/templates/presentation/bloc/template_event.dart';
+import 'package:openlife_routine/features/templates/presentation/bloc/template_state.dart';
+import 'package:openlife_routine/features/templates/presentation/utils/template_l10n.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 /// Key for the circular primary action (Continue / Get Started).
 const Key onboardingPrimaryActionKey = Key('onboardingPrimaryAction');
 
+/// Key for the "start empty" option on the starter-template step.
+const Key onboardingStartEmptyKey = Key('onboardingStartEmpty');
+
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<OnboardingBloc>(
-      create: (BuildContext context) => OnboardingBloc(
-        repository: AppScope.read(context).onboardingRepository,
-      )..add(const OnboardingStarted()),
+    return MultiBlocProvider(
+      providers: <BlocProvider<StateStreamableSource<Object?>>>[
+        BlocProvider<OnboardingBloc>(
+          create: (BuildContext context) => OnboardingBloc(
+            repository: AppScope.read(context).onboardingRepository,
+          )..add(const OnboardingStarted()),
+        ),
+        BlocProvider<TemplateBloc>(
+          create: (BuildContext context) =>
+              AppScope.read(context).createTemplateBloc()
+                ..add(const TemplatesLoaded()),
+        ),
+      ],
       child: const _OnboardingView(),
     );
   }
@@ -39,6 +62,7 @@ class _OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<_OnboardingView> {
   late final PageController _pageController;
+  bool _isFinishing = false;
 
   @override
   void initState() {
@@ -52,8 +76,48 @@ class _OnboardingViewState extends State<_OnboardingView> {
     super.dispose();
   }
 
+  /// Applies the chosen starter template (if any) before handing control to the
+  /// bloc, so the user lands on a Today screen that already has routines.
+  Future<void> _finish(OnboardingState state) async {
+    if (_isFinishing) {
+      return;
+    }
+    setState(() => _isFinishing = true);
+
+    final OnboardingBloc bloc = context.read<OnboardingBloc>();
+    try {
+      final String? templateId = state.selectedTemplateId;
+      if (templateId != null) {
+        final AppLocalizations l10n = context.l10n;
+        final TemplateState templates = context.read<TemplateBloc>().state;
+        final RoutineTemplate? template = templates.templates
+            .where((RoutineTemplate t) => t.id == templateId)
+            .firstOrNull;
+
+        if (template != null) {
+          final ApplyTemplateUseCase applyTemplate = AppScope.read(
+            context,
+          ).createApplyTemplateUseCase();
+          await applyTemplate(
+            template,
+            titleResolver: (TemplateRoutineItem item) =>
+                TemplateL10n.routineTitle(l10n, item),
+          );
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isFinishing = false);
+      }
+    }
+
+    bloc.add(const OnboardingNextPressed());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     return BlocConsumer<OnboardingBloc, OnboardingState>(
       listenWhen: (OnboardingState previous, OnboardingState current) {
         return previous.pageIndex != current.pageIndex ||
@@ -106,46 +170,50 @@ class _OnboardingViewState extends State<_OnboardingView> {
                     },
                     children: <Widget>[
                       _OnboardingSlide(
-                        title: 'Build better days',
-                        description:
-                            'Design a routine that fits your life. Gentle nudges, not rigid rules.',
+                        title: l10n.onboardingSlide1Title,
+                        description: l10n.onboardingSlide1Desc,
                         hero: const _HeroCard(
                           illustration: AssetVectors.onboardingBuildBetterDays,
                           fallbackIcon: Icons.fact_check_outlined,
                         ),
-                        footer: _LanguageSelector(
-                          selectedLanguageCode: state.selectedLanguageCode,
-                          onSelected: (String languageCode) {
-                            bloc.add(OnboardingLanguageSelected(languageCode));
-                          },
-                        ),
+                        footer: const _LanguageSelector(),
                       ),
-                      const _OnboardingSlide(
-                        title: 'Never miss what matters',
-                        description:
-                            'Receive calm reminders for meals, water, vitamins, and small routines that support your day.',
-                        hero: _HeroCard(
+                      _OnboardingSlide(
+                        title: l10n.onboardingSlide2Title,
+                        description: l10n.onboardingSlide2Desc,
+                        hero: const _HeroCard(
                           illustration: AssetVectors.onboardingSmartRoutines,
                           fallbackIcon: Icons.notifications_active_outlined,
                         ),
                         footer: _InfoPanel(
-                          title: 'Notification education',
-                          message:
-                              'We will ask for notification permission later, only when reminder scheduling is ready.',
+                          title: l10n.notificationEducationTitle,
+                          message: l10n.notificationEducationMessage,
                         ),
                       ),
-                      const _OnboardingSlide(
-                        title: 'Private by default',
-                        description:
-                            'Your routines stay on-device first. No account required to start, and no forced cloud setup.',
-                        hero: _HeroCard(
+                      _OnboardingSlide(
+                        title: l10n.onboardingSlide3Title,
+                        description: l10n.onboardingSlide3Desc,
+                        hero: const _HeroCard(
                           illustration: AssetVectors.onboardingPrivateByDefault,
                           fallbackIcon: Icons.lock_outline_rounded,
                         ),
                         footer: _InfoPanel(
-                          title: 'Static fallback ready',
-                          message:
-                              'Sprint 2 uses lightweight static hero panels now. Rive can replace these later without changing the flow.',
+                          title: l10n.privacyPanelTitle,
+                          message: l10n.privacyPanelMessage,
+                        ),
+                      ),
+                      _OnboardingSlide(
+                        title: l10n.onboardingSlide4Title,
+                        description: l10n.onboardingSlide4Desc,
+                        hero: const _HeroCard(
+                          illustration: AssetVectors.onboardingStarterTemplate,
+                          fallbackIcon: Icons.dashboard_customize_outlined,
+                        ),
+                        footer: _StarterTemplatePicker(
+                          selectedTemplateId: state.selectedTemplateId,
+                          onSelected: (String? templateId) {
+                            bloc.add(OnboardingTemplateSelected(templateId));
+                          },
                         ),
                       ),
                     ],
@@ -160,9 +228,15 @@ class _OnboardingViewState extends State<_OnboardingView> {
                   ),
                   child: _BottomBar(
                     isLastPage: state.isLastPage,
+                    isBusy: _isFinishing,
                     progress: (state.pageIndex + 1) / state.totalPages,
-                    onPrimaryPressed: () =>
-                        bloc.add(const OnboardingNextPressed()),
+                    onPrimaryPressed: () {
+                      if (state.isLastPage) {
+                        unawaited(_finish(state));
+                        return;
+                      }
+                      bloc.add(const OnboardingNextPressed());
+                    },
                     onSecondaryPressed: () {
                       if (state.isLastPage) {
                         bloc.add(const OnboardingBackPressed());
@@ -204,13 +278,13 @@ class _TopBar extends StatelessWidget {
           _CircleIconButton(
             icon: Icons.arrow_back_ios_new_rounded,
             onPressed: onBack,
-            tooltip: 'Back',
+            tooltip: context.l10n.backButton,
           )
         else ...<Widget>[
           const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Text(
-            'OpenLife Routine',
+            context.l10n.appTitle,
             style: textTheme.titleMedium?.copyWith(color: AppColors.primary),
           ),
         ],
@@ -275,7 +349,7 @@ class _StepCounter extends StatelessWidget {
         border: Border.all(color: AppColors.border),
       ),
       child: Text(
-        '$current / $total',
+        context.l10n.onboardingStepCounter(current, total),
         style: Theme.of(
           context,
         ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
@@ -371,31 +445,36 @@ class _HeroCard extends StatelessWidget {
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.isLastPage,
+    required this.isBusy,
     required this.progress,
     required this.onPrimaryPressed,
     required this.onSecondaryPressed,
   });
 
   final bool isLastPage;
+  final bool isBusy;
   final double progress;
   final VoidCallback onPrimaryPressed;
   final VoidCallback onSecondaryPressed;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     return Row(
       children: <Widget>[
         TextButton(
-          onPressed: onSecondaryPressed,
+          onPressed: isBusy ? null : onSecondaryPressed,
           style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
-          child: Text(isLastPage ? 'Back' : 'Skip'),
+          child: Text(isLastPage ? l10n.backButton : l10n.skipButton),
         ),
         const Spacer(),
         _NextButton(
           key: onboardingPrimaryActionKey,
           progress: progress,
-          label: isLastPage ? 'Get Started' : 'Continue',
+          label: isLastPage ? l10n.getStarted : l10n.continueButton,
           icon: isLastPage ? Icons.check_rounded : Icons.arrow_forward_rounded,
+          isBusy: isBusy,
           onPressed: onPrimaryPressed,
         ),
       ],
@@ -408,6 +487,7 @@ class _NextButton extends StatelessWidget {
     required this.progress,
     required this.label,
     required this.icon,
+    required this.isBusy,
     required this.onPressed,
     super.key,
   });
@@ -415,6 +495,7 @@ class _NextButton extends StatelessWidget {
   final double progress;
   final String label;
   final IconData icon;
+  final bool isBusy;
   final VoidCallback onPressed;
 
   @override
@@ -461,9 +542,20 @@ class _NextButton extends StatelessWidget {
                   shape: const CircleBorder(),
                   child: InkWell(
                     customBorder: const CircleBorder(),
-                    onTap: onPressed,
+                    onTap: isBusy ? null : onPressed,
                     child: Center(
-                      child: Icon(icon, color: Colors.white, size: 22),
+                      child: isBusy
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : Icon(icon, color: Colors.white, size: 22),
                     ),
                   ),
                 ),
@@ -476,102 +568,174 @@ class _NextButton extends StatelessWidget {
   }
 }
 
+/// Language chips on slide 1.
+///
+/// Reads and writes `SettingsBloc`, the single owner of the app language, so
+/// switching here retranslates the slide immediately.
 class _LanguageSelector extends StatelessWidget {
-  const _LanguageSelector({
-    required this.selectedLanguageCode,
-    required this.onSelected,
-  });
-
-  final String selectedLanguageCode;
-  final ValueChanged<String> onSelected;
+  const _LanguageSelector();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Choose your starting language',
-          style: Theme.of(
-            context,
-          ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Row(
+    final AppLocalizations l10n = context.l10n;
+
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (BuildContext context, SettingsState settings) {
+        void select(String code) {
+          context.read<SettingsBloc>().add(SettingsLanguageChanged(code));
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _LanguageChip(
-              label: 'English',
-              value: 'en',
-              selectedValue: selectedLanguageCode,
-              onSelected: onSelected,
+            Text(
+              l10n.chooseStartingLanguage,
+              style: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            _LanguageChip(
-              label: 'Bahasa',
-              value: 'id',
-              selectedValue: selectedLanguageCode,
-              onSelected: onSelected,
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: <Widget>[
+                _SelectableChip(
+                  label: l10n.englishLang,
+                  selected: settings.languageCode == 'en',
+                  onTap: () => select('en'),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _SelectableChip(
+                  label: l10n.bahasaShort,
+                  selected: settings.languageCode == 'id',
+                  onTap: () => select('id'),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
-class _LanguageChip extends StatelessWidget {
-  const _LanguageChip({
-    required this.label,
-    required this.value,
-    required this.selectedValue,
+/// Final onboarding step: pick one of the seed templates, or start empty.
+///
+/// The pick is only recorded here; it is applied when the user taps
+/// "Get Started" so backing out of the step leaves no routines behind.
+class _StarterTemplatePicker extends StatelessWidget {
+  const _StarterTemplatePicker({
+    required this.selectedTemplateId,
     required this.onSelected,
   });
 
-  final String label;
-  final String value;
-  final String selectedValue;
-  final ValueChanged<String> onSelected;
+  final String? selectedTemplateId;
+  final ValueChanged<String?> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final bool selected = value == selectedValue;
+    final AppLocalizations l10n = context.l10n;
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppRadius.pill),
-      onTap: () => onSelected(value),
-      child: Ink(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.primarySoft : AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(
-            color: selected ? AppColors.primary : AppColors.border,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+    return BlocBuilder<TemplateBloc, TemplateState>(
+      builder: (BuildContext context, TemplateState state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            if (selected) ...<Widget>[
-              Container(
-                width: 7,
-                height: 7,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-            ],
             Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: selected ? AppColors.primary : AppColors.textSecondary,
-              ),
+              l10n.pickStarter,
+              style: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: <Widget>[
+                for (final RoutineTemplate template in state.templates)
+                  _SelectableChip(
+                    label: TemplateL10n.title(l10n, template),
+                    selected: template.id == selectedTemplateId,
+                    onTap: () => onSelected(template.id),
+                  ),
+                _SelectableChip(
+                  key: onboardingStartEmptyKey,
+                  label: l10n.startEmpty,
+                  selected: selectedTemplateId == null,
+                  onTap: () => onSelected(null),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l10n.orStartEmpty,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             ),
           ],
+        );
+      },
+    );
+  }
+}
+
+/// Pill-shaped single choice used by both the language and template pickers.
+class _SelectableChip extends StatelessWidget {
+  const _SelectableChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: onTap,
+        child: Ink(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primarySoft : AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+            border: Border.all(
+              color: selected ? AppColors.primary : AppColors.border,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (selected) ...<Widget>[
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+              ],
+              Text(
+                label,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: selected
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

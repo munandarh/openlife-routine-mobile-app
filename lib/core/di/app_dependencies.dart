@@ -19,6 +19,7 @@ import 'package:openlife_routine/features/settings/data/services/export_import_s
 import 'package:openlife_routine/features/settings/domain/repositories/settings_repository.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/templates/domain/repositories/template_repository.dart';
+import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +30,6 @@ class AppDependencies {
     required this.notificationConfig,
     required this.onboardingRepository,
     required this.hasCompletedOnboarding,
-    required this.preferredLanguageCode,
     required this.appDatabase,
     required this.routineRepository,
     required this.notificationService,
@@ -41,7 +41,6 @@ class AppDependencies {
   final NotificationStackConfig notificationConfig;
   final OnboardingRepository onboardingRepository;
   final bool hasCompletedOnboarding;
-  final String preferredLanguageCode;
   final AppDatabase appDatabase;
   final RoutineRepository routineRepository;
   final AppNotificationService notificationService;
@@ -54,8 +53,6 @@ class AppDependencies {
         SharedPrefsOnboardingRepository(preferences);
     final bool hasCompletedOnboarding = await onboardingRepository
         .hasCompletedOnboarding();
-    final String preferredLanguageCode = await onboardingRepository
-        .getPreferredLanguageCode();
     final AppDatabase appDatabase = AppDatabase();
     final RoutineRepository routineRepository = DriftRoutineRepository(
       RoutineLocalDataSource(appDatabase),
@@ -63,17 +60,19 @@ class AppDependencies {
     final AppNotificationService notificationService = AppNotificationService();
     final String? initialNotificationRoutineId = await notificationService
         .initialize();
-    await notificationService.syncRoutineSchedules(appDatabase);
     final SettingsRepository settingsRepository = SharedPrefsSettingsRepository(
       preferences,
     );
+    // Reminder text is rendered by the service, so it needs the chosen
+    // language before any schedule is written.
+    notificationService.setLanguageCode(await settingsRepository.getLanguageCode());
+    await notificationService.syncRoutineSchedules(appDatabase);
 
     return AppDependencies(
       databaseConfig: const LocalDatabaseConfig.recommended(),
       notificationConfig: const NotificationStackConfig.recommended(),
       onboardingRepository: onboardingRepository,
       hasCompletedOnboarding: hasCompletedOnboarding,
-      preferredLanguageCode: preferredLanguageCode,
       appDatabase: appDatabase,
       routineRepository: routineRepository,
       notificationService: notificationService,
@@ -94,7 +93,10 @@ class AppDependencies {
   }
 
   TodayBloc createTodayBloc() {
-    return TodayBloc(appDatabase: appDatabase);
+    return TodayBloc(
+      appDatabase: appDatabase,
+      notificationService: notificationService,
+    );
   }
 
   TemplateBloc createTemplateBloc() {
@@ -107,6 +109,13 @@ class AppDependencies {
 
   SettingsBloc createSettingsBloc() {
     return SettingsBloc(repository: settingsRepository);
+  }
+
+  ApplyTemplateUseCase createApplyTemplateUseCase() {
+    return ApplyTemplateUseCase(
+      repository: routineRepository,
+      notificationService: notificationService,
+    );
   }
 
   ExportImportService createExportImportService() {

@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 
 class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
-  InsightsBloc({required AppDatabase appDatabase})
+  InsightsBloc({required AppDatabase appDatabase, DateTime Function()? nowProvider})
     : _appDatabase = appDatabase,
+      _nowProvider = nowProvider ?? DateTime.now,
       super(const InsightsState()) {
     on<InsightsStarted>(_onStarted);
   }
 
   final AppDatabase _appDatabase;
+  final DateTime Function() _nowProvider;
 
   Future<void> _onStarted(
     InsightsStarted event,
@@ -21,114 +25,117 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
     );
 
     try {
-      final DateTime now = DateTime.now();
-      final int mondayOffset = -(now.weekday - 1);
-      final DateTime monday = DateTime(
-        now.year,
-        now.month,
-        now.day,
-      ).add(Duration(days: mondayOffset));
+      final DateTime now = _nowProvider();
+      final DateTime today = DateTime(now.year, now.month, now.day);
+      final DateTime monday = today.subtract(Duration(days: now.weekday - 1));
+      final DateTime historyStart = today.subtract(const Duration(days: 6));
 
-      final List<String> weekDates = List<String>.generate(7, (int i) {
-        final DateTime d = monday.add(Duration(days: i));
-        final String m = d.month.toString().padLeft(2, '0');
-        final String day = d.day.toString().padLeft(2, '0');
-        return '${d.year}-$m-$day';
-      });
+      final List<RoutineBundleRow> bundles = (await _appDatabase
+              .getRoutineBundles())
+          .where((RoutineBundleRow b) => b.routine.isEnabled)
+          .toList();
 
-      // Collect all logs for this week.
-      final List<RoutineLogRowData> allLogs = <RoutineLogRowData>[];
-      for (final String dateKey in weekDates) {
-        allLogs.addAll(await _appDatabase.getRoutineLogsByDate(dateKey));
+      // One range query covering both the current week and the 7-day history.
+      final DateTime rangeStart = monday.isBefore(historyStart)
+          ? monday
+          : historyStart;
+      final DateTime rangeEnd = monday.add(const Duration(days: 6));
+      final List<RoutineLogRowData> logs = await _appDatabase
+          .getRoutineLogsBetween(_dateKey(rangeStart), _dateKey(rangeEnd));
+
+      final Map<String, List<RoutineLogRowData>> logsByDate =
+          <String, List<RoutineLogRowData>>{};
+      for (final RoutineLogRowData log in logs) {
+        logsByDate.putIfAbsent(log.date, () => <RoutineLogRowData>[]).add(log);
       }
 
-      // Total routines scheduled per day (from active routines).
-      final List<RoutineBundleRow> bundles = await _appDatabase
-          .getRoutineBundles();
-      final int activeRoutineCount = bundles
-          .where((b) => b.routine.isEnabled)
-          .length;
-
-      // Weekly completion: percentage of completed logs vs total possible.
-      final int totalPossible = activeRoutineCount * 7;
-      final int completed = allLogs.where((log) => log.status == 'done').length;
-      final double rate = totalPossible > 0 ? completed / totalPossible : 0.0;
-
-      // Daily completion per day.
+      // --- current week -------------------------------------------------
+      int weekScheduled = 0;
+      int weekCompleted = 0;
       final List<double> dailyCompletion = <double>[];
-      for (final String dateKey in weekDates) {
-        final List<RoutineLogRowData> dayLogs = allLogs
-            .where((log) => log.date == dateKey)
-            .toList();
-        final int dayCompleted = dayLogs
-            .where((log) => log.status == 'done')
-            .length;
-        dailyCompletion.add(
-          activeRoutineCount > 0 ? dayCompleted / activeRoutineCount : 0.0,
+
+      for (int i = 0; i < 7; i += 1) {
+        final DateTime day = monday.add(Duration(days: i));
+        final int scheduled = _scheduledOn(bundles, day);
+        final int done = _countStatus(logsByDate[_dateKey(day)], 'done');
+
+        weekScheduled += scheduled;
+        weekCompleted += done;
+        dailyCompletion.add(scheduled == 0 ? 0 : done / scheduled);
+      }
+
+      // --- 7-day history -------------------------------------------------
+      final List<InsightsDaySummary> history = <InsightsDaySummary>[];
+      for (int i = 0; i < 7; i += 1) {
+        final DateTime day = historyStart.add(Duration(days: i));
+        final List<RoutineLogRowData>? dayLogs = logsByDate[_dateKey(day)];
+        history.add(
+          InsightsDaySummary(
+            date: day,
+            scheduled: _scheduledOn(bundles, day),
+            done: _countStatus(dayLogs, 'done'),
+            skipped: _countStatus(dayLogs, 'skipped'),
+            missed: _countStatus(dayLogs, 'missed'),
+          ),
         );
       }
 
-      // Most completed / missed routines.
+      // --- per-routine metrics -------------------------------------------
+      final Map<String, String> titles = <String, String>{
+        for (final RoutineBundleRow b in bundles) b.routine.id: b.routine.title,
+      };
       final Map<String, int> completedByRoutine = <String, int>{};
       final Map<String, int> missedByRoutine = <String, int>{};
-      for (final RoutineLogRowData log in allLogs) {
-        if (log.status == 'done') {
-          completedByRoutine[log.routineId] =
-              (completedByRoutine[log.routineId] ?? 0) + 1;
-        } else {
-          missedByRoutine[log.routineId] =
-              (missedByRoutine[log.routineId] ?? 0) + 1;
+
+      for (final RoutineLogRowData log in logs) {
+        switch (log.status) {
+          case 'done':
+            completedByRoutine[log.routineId] =
+                (completedByRoutine[log.routineId] ?? 0) + 1;
+          case 'missed':
+            // Only genuine misses count here — a deliberate skip is a choice,
+            // not a failure, and must not be surfaced as one.
+            missedByRoutine[log.routineId] =
+                (missedByRoutine[log.routineId] ?? 0) + 1;
         }
       }
 
-      RoutineMetric? mostCompleted;
-      if (completedByRoutine.isNotEmpty) {
-        final MapEntry<String, int> top = completedByRoutine.entries.reduce(
-          (a, b) => a.value >= b.value ? a : b,
-        );
-        mostCompleted = RoutineMetric(routineId: top.key, count: top.value);
-      }
-
-      RoutineMetric? mostMissed;
-      if (missedByRoutine.isNotEmpty) {
-        final MapEntry<String, int> top = missedByRoutine.entries.reduce(
-          (a, b) => a.value >= b.value ? a : b,
-        );
-        mostMissed = RoutineMetric(routineId: top.key, count: top.value);
-      }
-
-      // Streak: consecutive days working backwards from today with 100%.
+      // --- streak ----------------------------------------------------------
+      // Walk back from today, but a still-incomplete today does not break the
+      // streak: an unfinished day only counts once it is over.
       int streak = 0;
-      final DateTime today = DateTime(now.year, now.month, now.day);
-      for (int i = 0; i < 7; i += 1) {
-        final DateTime checkDate = today.subtract(Duration(days: i));
-        final String dateKey = _dateKey(checkDate);
-        final List<RoutineLogRowData> dayLogs = await _appDatabase
-            .getRoutineLogsByDate(dateKey);
-        final int dayDone = dayLogs.where((log) => log.status == 'done').length;
-
-        // Count enabled routines for this day.
-        final int scheduledThatDay = bundles.where((b) {
-          return b.routine.isEnabled;
-        }).length;
-
-        if (scheduledThatDay > 0 && dayDone == scheduledThatDay) {
-          streak += 1;
-        } else {
-          break;
+      for (int i = 0; i < 30; i += 1) {
+        final DateTime day = today.subtract(Duration(days: i));
+        final int scheduled = _scheduledOn(bundles, day);
+        if (scheduled == 0) {
+          continue;
         }
+
+        final int done = _countStatus(logsByDate[_dateKey(day)], 'done');
+        if (done >= scheduled) {
+          streak += 1;
+          continue;
+        }
+        if (i == 0) {
+          continue;
+        }
+        break;
       }
 
       emit(
         state.copyWith(
           status: InsightsStatus.success,
-          weeklyCompletionRate: rate,
-          totalCompleted: completed,
-          totalRoutines: totalPossible,
+          weeklyCompletionRate: weekScheduled == 0
+              ? 0
+              : weekCompleted / weekScheduled,
+          totalCompleted: weekCompleted,
+          totalRoutines: weekScheduled,
           streak: streak,
-          mostCompletedRoutine: mostCompleted,
-          mostMissedRoutine: mostMissed,
+          mostCompletedRoutine: _topMetric(completedByRoutine, titles),
+          mostMissedRoutine: _topMetric(missedByRoutine, titles),
           dailyCompletion: dailyCompletion,
+          history: history,
+          overwriteMetrics: true,
         ),
       );
     } on Exception catch (e) {
@@ -138,6 +145,64 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
           errorMessage: e.toString(),
         ),
       );
+    }
+  }
+
+  /// How many enabled routines actually repeat on [day]'s weekday.
+  ///
+  /// A routine only counts from the day it was created; otherwise a routine
+  /// added today drags last week's completion rate to zero.
+  static int _scheduledOn(List<RoutineBundleRow> bundles, DateTime day) {
+    int count = 0;
+    for (final RoutineBundleRow bundle in bundles) {
+      if (!_repeatDays(bundle.schedule.repeatDays).contains(day.weekday)) {
+        continue;
+      }
+      final DateTime createdAt = bundle.routine.createdAt;
+      if (day.isBefore(DateTime(createdAt.year, createdAt.month, createdAt.day))) {
+        continue;
+      }
+      count += 1;
+    }
+    return count;
+  }
+
+  static int _countStatus(List<RoutineLogRowData>? logs, String status) {
+    if (logs == null) {
+      return 0;
+    }
+    int count = 0;
+    for (final RoutineLogRowData log in logs) {
+      if (log.status == status) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  static RoutineMetric? _topMetric(
+    Map<String, int> counts,
+    Map<String, String> titles,
+  ) {
+    if (counts.isEmpty) {
+      return null;
+    }
+    final MapEntry<String, int> top = counts.entries.reduce(
+      (MapEntry<String, int> a, MapEntry<String, int> b) =>
+          a.value >= b.value ? a : b,
+    );
+    return RoutineMetric(
+      routineId: top.key,
+      title: titles[top.key] ?? top.key,
+      count: top.value,
+    );
+  }
+
+  static List<int> _repeatDays(String encodedRepeatDays) {
+    try {
+      return (jsonDecode(encodedRepeatDays) as List<dynamic>).cast<int>();
+    } on FormatException {
+      return const <int>[];
     }
   }
 

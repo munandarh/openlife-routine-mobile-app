@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
+import 'package:openlife_routine/features/insights/presentation/pages/insights_history_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/language_selection_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/notification_permission_page.dart';
@@ -92,6 +93,13 @@ final class AppRouter {
                  child: const InsightsPage(),
                  currentRoute: OpenLifeRoute.insights,
                );
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.insightsHistory.path,
+             name: OpenLifeRoute.insightsHistory.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const InsightsHistoryPage();
              },
            ),
            GoRoute(
@@ -200,6 +208,11 @@ enum OpenLifeRoute {
     Icons.dashboard_customize_outlined,
   ),
   insights('/insights', 'Insights', Icons.insights_outlined),
+  insightsHistory(
+    '/insights/history',
+    '7-Day History',
+    Icons.history_outlined,
+  ),
   settings('/settings', 'Settings', Icons.settings_outlined),
   newRoutine('/routines/new', 'New Routine', Icons.add_circle_outline),
   routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz),
@@ -237,6 +250,7 @@ enum OpenLifeRoute {
     OpenLifeRoute.routines => 'routines',
     OpenLifeRoute.templates => 'templates',
     OpenLifeRoute.insights => 'insights',
+    OpenLifeRoute.insightsHistory => 'insightsHistory',
     OpenLifeRoute.settings => 'settings',
     OpenLifeRoute.newRoutine => 'newRoutine',
     OpenLifeRoute.routineDetail => 'routineDetail',

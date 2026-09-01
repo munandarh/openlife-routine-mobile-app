@@ -7,18 +7,21 @@ class SettingsState extends Equatable {
     this.status = SettingsLoadStatus.initial,
     this.themeMode = 'system',
     this.languageCode = 'en',
+    this.reducedMotion = false,
     this.errorMessage,
   });
 
   final SettingsLoadStatus status;
   final String themeMode;
   final String languageCode;
+  final bool reducedMotion;
   final String? errorMessage;
 
   SettingsState copyWith({
     SettingsLoadStatus? status,
     String? themeMode,
     String? languageCode,
+    bool? reducedMotion,
     String? errorMessage,
     bool clearErrorMessage = false,
   }) {
@@ -26,6 +29,7 @@ class SettingsState extends Equatable {
       status: status ?? this.status,
       themeMode: themeMode ?? this.themeMode,
       languageCode: languageCode ?? this.languageCode,
+      reducedMotion: reducedMotion ?? this.reducedMotion,
       errorMessage: clearErrorMessage
           ? null
           : errorMessage ?? this.errorMessage,
@@ -37,6 +41,7 @@ class SettingsState extends Equatable {
     status,
     themeMode,
     languageCode,
+    reducedMotion,
     errorMessage,
   ];
 }

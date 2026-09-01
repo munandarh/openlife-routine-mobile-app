@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:openlife_routine/core/app_info.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
-import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -9,14 +12,12 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = context.l10n;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          const SliverAppBar(
-            title: Text('About Open Source'),
-            pinned: true,
-          ),
+          SliverAppBar(title: Text(l10n.aboutTitle), pinned: true),
           SliverPadding(
             padding: const EdgeInsets.all(AppSpacing.pageMargin),
             sliver: SliverList(
@@ -32,14 +33,14 @@ class AboutPage extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
-                        'OpenLife Routine',
+                        l10n.appTitle,
                         style: textTheme.headlineMedium?.copyWith(
                           color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Version 1.0.0',
+                        l10n.aboutVersion(AppInfo.version),
                         style: textTheme.bodyLarge?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -48,95 +49,30 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                _InfoCard(
+                SettingsInfoCard(
                   icon: Icons.code_outlined,
-                  title: 'Open source',
-                  body:
-                      'OpenLife Routine is free and open-source software. The full source '
-                      'code is available on GitHub under the Apache 2.0 license.',
+                  title: l10n.aboutOpenSource,
+                  body: l10n.aboutOpenSourceBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                _InfoCard(
+                SettingsInfoCard(
                   icon: Icons.build_outlined,
-                  title: 'Built with Flutter',
-                  body:
-                      'This app is built with Flutter and Dart, using Clean Architecture, '
-                      'BLoC state management, Drift SQLite, local notifications, and Rive animations.',
+                  title: l10n.aboutBuiltWith,
+                  body: l10n.aboutBuiltWithBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                _InfoCard(
+                SettingsInfoCard(
                   icon: Icons.favorite_outline,
-                  title: 'Portfolio project',
-                  body:
-                      'OpenLife Routine was built as a production-quality open-source '
-                      'portfolio project to demonstrate Flutter engineering, architecture, '
-                      'and product design skills.',
+                  title: l10n.aboutPortfolio,
+                  body: l10n.aboutPortfolioBody,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                _InfoCard(
+                SettingsInfoCard(
                   icon: Icons.gavel_outlined,
-                  title: 'License',
-                  body:
-                      'Apache License 2.0 — Free for personal and commercial use. '
-                      'The OpenLife Routine name and logo are reserved for the official project.',
+                  title: l10n.aboutLicense,
+                  body: l10n.aboutLicenseBody,
                 ),
               ]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  const _InfoCard({
-    required this.icon,
-    required this.title,
-    required this.body,
-  });
-
-  final IconData icon;
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: AppColors.primarySoft,
-            foregroundColor: AppColors.primary,
-            child: Icon(icon, size: 24),
-          ),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  body,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
             ),
           ),
         ],

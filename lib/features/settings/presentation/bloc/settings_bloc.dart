@@ -10,6 +10,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsStarted>(_onStarted);
     on<SettingsThemeChanged>(_onThemeChanged);
     on<SettingsLanguageChanged>(_onLanguageChanged);
+    on<SettingsReducedMotionChanged>(_onReducedMotionChanged);
   }
 
   final SettingsRepository _repository;
@@ -28,12 +29,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     try {
       final String themeMode = await _repository.getThemeMode();
       final String languageCode = await _repository.getLanguageCode();
+      final bool reducedMotion = await _repository.getReducedMotion();
 
       emit(
         state.copyWith(
           status: SettingsLoadStatus.success,
           themeMode: themeMode,
           languageCode: languageCode,
+          reducedMotion: reducedMotion,
         ),
       );
     } on Exception catch (e) {
@@ -60,5 +63,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   ) async {
     await _repository.setLanguageCode(event.code);
     emit(state.copyWith(languageCode: event.code));
+  }
+
+  Future<void> _onReducedMotionChanged(
+    SettingsReducedMotionChanged event,
+    Emitter<SettingsState> emit,
+  ) async {
+    await _repository.setReducedMotion(event.enabled);
+    emit(state.copyWith(reducedMotion: event.enabled));
   }
 }

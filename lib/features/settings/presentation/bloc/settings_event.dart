@@ -28,3 +28,12 @@ final class SettingsLanguageChanged extends SettingsEvent {
   @override
   List<Object?> get props => <Object?>[code];
 }
+
+final class SettingsReducedMotionChanged extends SettingsEvent {
+  const SettingsReducedMotionChanged(this.enabled);
+
+  final bool enabled;
+
+  @override
+  List<Object?> get props => <Object?>[enabled];
+}

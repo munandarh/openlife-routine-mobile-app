@@ -6,6 +6,8 @@ import 'package:openlife_routine/features/onboarding/presentation/pages/notifica
 import 'package:openlife_routine/features/splash/presentation/pages/splash_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   group('SplashPage', () {
     testWidgets('renders splash content and advances', (
@@ -14,8 +16,8 @@ void main() {
       var advanced = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: SplashPage(
+        localizedApp(
+          SplashPage(
             hasCompletedOnboarding: false,
             initialNotificationRoutineId: null,
             onReady: (_) async {
@@ -36,8 +38,8 @@ void main() {
       var allowed = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: NotificationPermissionPage(
+        localizedApp(
+          NotificationPermissionPage(
             onAllowNotifications: (_) async {
               allowed = true;
             },
@@ -64,8 +66,8 @@ void main() {
       String? languageCode;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: LanguageSelectionPage(
+        localizedApp(
+          LanguageSelectionPage(
             onLanguageSelected: (_, code) async {
               languageCode = code;
             },
@@ -94,7 +96,7 @@ void main() {
       var tapped = false;
 
       await tester.pumpWidget(
-        MaterialApp(home: TodayEmptyPage(onCreateRoutine: () => tapped = true)),
+        localizedApp(TodayEmptyPage(onCreateRoutine: () => tapped = true)),
       );
 
       await tester.tap(find.text('Create routine'));
@@ -104,9 +106,39 @@ void main() {
     });
 
     testWidgets('insights empty state renders', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: InsightsEmptyPage()));
+      await tester.pumpWidget(localizedApp(const InsightsEmptyPage()));
 
       expect(find.text('Insights will appear here'), findsOneWidget);
+    });
+  });
+
+  group('Localization parity', () {
+    testWidgets('language selection renders Indonesian copy', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        localizedApp(
+          const LanguageSelectionPage(),
+          locale: const Locale('id'),
+        ),
+      );
+
+      expect(find.text('Pilih bahasamu'), findsOneWidget);
+      expect(find.text('Lanjut'), findsOneWidget);
+    });
+
+    testWidgets('today empty state renders Indonesian copy', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        localizedApp(
+          const TodayEmptyPage(),
+          locale: const Locale('id'),
+        ),
+      );
+
+      expect(find.text('Belum ada jadwal hari ini'), findsOneWidget);
+      expect(find.text('Buat rutinitas'), findsOneWidget);
     });
   });
 }

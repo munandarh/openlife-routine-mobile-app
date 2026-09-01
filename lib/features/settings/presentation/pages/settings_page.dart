@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -10,6 +11,7 @@ import 'package:openlife_routine/features/settings/data/services/export_import_s
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -20,6 +22,7 @@ class SettingsPage extends StatelessWidget {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (BuildContext context, SettingsState state) {
         final TextTheme textTheme = Theme.of(context).textTheme;
+        final AppLocalizations l10n = context.l10n;
 
         return CustomScrollView(
           slivers: <Widget>[
@@ -39,15 +42,13 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Settings',
+                l10n.settingsTitle,
                 style: textTheme.headlineMedium?.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               actions: const <Widget>[
-                IconCircleButton(
-                  icon: Icons.notifications_none_rounded,
-                ),
+                IconCircleButton(icon: Icons.notifications_none_rounded),
                 SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
@@ -63,69 +64,80 @@ class SettingsPage extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
                   _SettingsSection(
-                    title: 'Preferences',
+                    title: l10n.preferencesSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.palette_outlined,
-                        title: 'Theme',
-                        trailing: state.themeMode == 'system'
-                            ? 'System'
-                            : state.themeMode == 'dark'
-                            ? 'Dark'
-                            : 'Light',
+                        title: l10n.themeSetting,
+                        trailing: _themeLabel(l10n, state.themeMode),
                         onTap: () => _showThemePicker(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.language_outlined,
-                        title: 'Language',
-                        trailing: state.languageCode == 'id' ? 'Bahasa' : 'English',
+                        title: l10n.languageSetting,
+                        trailing: state.languageCode == 'id'
+                            ? l10n.bahasaShort
+                            : l10n.englishLang,
                         onTap: () => _showLanguagePicker(context),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  _SettingsSection(
-                    title: 'Notifications',
-                    items: <_SettingsItemData>[
                       _SettingsItemData(
-                        icon: Icons.notifications_active_outlined,
-                        title: 'Routine alerts',
-                        onTap: () async {
-                          await AppScope.read(
-                            context,
-                          ).notificationService.requestPermissions();
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Notification permission requested.'),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          }
+                        icon: Icons.motion_photos_off_outlined,
+                        title: l10n.reducedMotionSetting,
+                        subtitle: l10n.reducedMotionDescription,
+                        toggleValue: state.reducedMotion,
+                        onToggle: (bool value) {
+                          context.read<SettingsBloc>().add(
+                            SettingsReducedMotionChanged(value),
+                          );
                         },
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _SettingsSection(
-                    title: 'Data',
+                    title: l10n.notificationsSection,
+                    items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.notifications_active_outlined,
+                        title: l10n.routineAlerts,
+                        onTap: () async {
+                          final ScaffoldMessengerState messenger =
+                              ScaffoldMessenger.of(context);
+                          final String message =
+                              l10n.notificationPermissionRequested;
+                          await AppScope.read(
+                            context,
+                          ).notificationService.requestPermissions();
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(message),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  _SettingsSection(
+                    title: l10n.dataSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.file_upload_outlined,
-                        title: 'Export routines',
-                        trailing: 'JSON',
+                        title: l10n.exportSetting,
+                        trailing: l10n.exportJson,
                         onTap: () => _exportData(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.file_download_outlined,
-                        title: 'Import routines',
-                        trailing: 'JSON',
+                        title: l10n.importSetting,
+                        trailing: l10n.exportJson,
                         onTap: () => _showImportDialog(context),
                       ),
                       _SettingsItemData(
                         icon: Icons.delete_outline_rounded,
-                        title: 'Reset all data',
-                        trailing: 'Destructive',
+                        title: l10n.resetSetting,
+                        trailing: l10n.resetDestructive,
                         trailingColor: AppColors.danger,
                         onTap: () => _showResetDialog(context),
                       ),
@@ -133,16 +145,16 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _SettingsSection(
-                    title: 'Privacy',
+                    title: l10n.privacySection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.shield_outlined,
-                        title: 'Privacy & data',
+                        title: l10n.privacyData,
                         onTap: () => context.push(OpenLifeRoute.privacy.path),
                       ),
                       _SettingsItemData(
                         icon: Icons.code_outlined,
-                        title: 'About open source',
+                        title: l10n.aboutOpenSourceSetting,
                         onTap: () => context.push(OpenLifeRoute.about.path),
                       ),
                     ],
@@ -156,7 +168,17 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  static String _themeLabel(AppLocalizations l10n, String themeMode) {
+    return switch (themeMode) {
+      'dark' => l10n.darkTheme,
+      'light' => l10n.lightTheme,
+      _ => l10n.systemTheme,
+    };
+  }
+
   void _showThemePicker(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -165,47 +187,43 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
       builder: (BuildContext sheetContext) {
-        return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                'Choose theme',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ListTile(
-                leading: const Icon(Icons.brightness_auto_outlined),
-                title: const Text('System'),
-                onTap: () {
-                  context.read<SettingsBloc>().add(
-                    const SettingsThemeChanged('system'),
-                  );
-                  Navigator.pop(sheetContext);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.light_mode_outlined),
-                title: const Text('Light'),
-                onTap: () {
-                  context.read<SettingsBloc>().add(
-                    const SettingsThemeChanged('light'),
-                  );
-                  Navigator.pop(sheetContext);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.dark_mode_outlined),
-                title: const Text('Dark'),
-                onTap: () {
-                  context.read<SettingsBloc>().add(
-                    const SettingsThemeChanged('dark'),
-                  );
-                  Navigator.pop(sheetContext);
-                },
-              ),
-            ],
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  l10n.chooseTheme,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                _ThemeOption(
+                  icon: Icons.brightness_auto_outlined,
+                  label: l10n.systemTheme,
+                  mode: 'system',
+                  parentContext: context,
+                  sheetContext: sheetContext,
+                ),
+                _ThemeOption(
+                  icon: Icons.light_mode_outlined,
+                  label: l10n.lightTheme,
+                  mode: 'light',
+                  parentContext: context,
+                  sheetContext: sheetContext,
+                ),
+                _ThemeOption(
+                  icon: Icons.dark_mode_outlined,
+                  label: l10n.darkTheme,
+                  mode: 'dark',
+                  parentContext: context,
+                  sheetContext: sheetContext,
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -213,6 +231,8 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showLanguagePicker(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -221,37 +241,42 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
       builder: (BuildContext sheetContext) {
-        return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                'Choose language',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ListTile(
-                leading: const Text('🇬🇧'),
-                title: const Text('English'),
-                onTap: () {
-                  context.read<SettingsBloc>().add(
-                    const SettingsLanguageChanged('en'),
-                  );
-                  Navigator.pop(sheetContext);
-                },
-              ),
-              ListTile(
-                leading: const Text('🇮🇩'),
-                title: const Text('Bahasa Indonesia'),
-                onTap: () {
-                  context.read<SettingsBloc>().add(
-                    const SettingsLanguageChanged('id'),
-                  );
-                  Navigator.pop(sheetContext);
-                },
-              ),
-            ],
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  l10n.chooseLanguage,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                ListTile(
+                  leading: const Text('🇬🇧'),
+                  title: Text(l10n.englishLang),
+                  onTap: () {
+                    context.read<SettingsBloc>().add(
+                      const SettingsLanguageChanged('en'),
+                    );
+                    Navigator.pop(sheetContext);
+                  },
+                ),
+                ListTile(
+                  leading: const Text('🇮🇩'),
+                  title: Text(l10n.bahasaLang),
+                  onTap: () {
+                    context.read<SettingsBloc>().add(
+                      const SettingsLanguageChanged('id'),
+                    );
+                    Navigator.pop(sheetContext);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -270,11 +295,13 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showExportResultDialog(BuildContext context, String json) {
+    final AppLocalizations l10n = context.l10n;
+
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Export Data'),
+          title: Text(l10n.exportData),
           content: SizedBox(
             width: double.maxFinite,
             height: 300,
@@ -288,7 +315,7 @@ class SettingsPage extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Close'),
+              child: Text(l10n.closeAction),
             ),
           ],
         );
@@ -297,13 +324,14 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showImportDialog(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
     final TextEditingController controller = TextEditingController();
 
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Import Data'),
+          title: Text(l10n.importData),
           content: SizedBox(
             width: double.maxFinite,
             height: 200,
@@ -312,16 +340,16 @@ class SettingsPage extends StatelessWidget {
               maxLines: null,
               expands: true,
               textAlignVertical: TextAlignVertical.top,
-              decoration: const InputDecoration(
-                hintText: 'Paste JSON backup here...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l10n.pasteJsonHint,
+                border: const OutlineInputBorder(),
               ),
             ),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancelAction),
             ),
             FilledButton(
               onPressed: () async {
@@ -329,34 +357,35 @@ class SettingsPage extends StatelessWidget {
                 if (json.isEmpty) {
                   return;
                 }
+
+                final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
+                  context,
+                );
+                final ExportImportService service = AppScope.read(
+                  context,
+                ).createExportImportService();
+
                 try {
-                  final ExportImportService service = AppScope.read(
-                    context,
-                  ).createExportImportService();
                   final int count = await service.importFromJson(json);
                   if (dialogContext.mounted) {
                     Navigator.pop(dialogContext);
                   }
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('$count routines imported.'),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  }
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text(l10n.routinesImported(count)),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 } on Exception catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Import failed: $e'),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  }
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text(l10n.importFailed(e.toString())),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 }
               },
-              child: const Text('Import'),
+              child: Text(l10n.importAction),
             ),
           ],
         );
@@ -365,42 +394,72 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _showResetDialog(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Reset All Data'),
-          content: const Text(
-            'This will permanently delete all your routines, schedules, and logs. This action cannot be undone.',
-          ),
+          title: Text(l10n.resetAllData),
+          content: Text(l10n.resetWarning),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancelAction),
             ),
             FilledButton(
               style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
               onPressed: () async {
+                final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
+                  context,
+                );
                 final ExportImportService service = AppScope.read(
                   context,
                 ).createExportImportService();
+
                 await service.resetAllData();
                 if (dialogContext.mounted) {
                   Navigator.pop(dialogContext);
                 }
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('All data has been reset.'),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.allDataReset),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               },
-              child: const Text('Reset'),
+              child: Text(l10n.resetButton),
             ),
           ],
         );
+      },
+    );
+  }
+}
+
+class _ThemeOption extends StatelessWidget {
+  const _ThemeOption({
+    required this.icon,
+    required this.label,
+    required this.mode,
+    required this.parentContext,
+    required this.sheetContext,
+  });
+
+  final IconData icon;
+  final String label;
+  final String mode;
+  final BuildContext parentContext;
+  final BuildContext sheetContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(label),
+      onTap: () {
+        parentContext.read<SettingsBloc>().add(SettingsThemeChanged(mode));
+        Navigator.pop(sheetContext);
       },
     );
   }
@@ -432,9 +491,22 @@ class _SettingsSection extends StatelessWidget {
           ),
           child: Column(
             children: items.map((_SettingsItemData item) {
+              if (item.onToggle != null) {
+                return SwitchListTile.adaptive(
+                  secondary: Icon(item.icon, color: AppColors.primary),
+                  title: Text(item.title),
+                  subtitle: item.subtitle == null
+                      ? null
+                      : Text(item.subtitle!),
+                  value: item.toggleValue ?? false,
+                  onChanged: item.onToggle,
+                );
+              }
+
               return ListTile(
                 leading: Icon(item.icon, color: AppColors.primary),
                 title: Text(item.title),
+                subtitle: item.subtitle == null ? null : Text(item.subtitle!),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -465,14 +537,22 @@ class _SettingsItemData {
   const _SettingsItemData({
     required this.icon,
     required this.title,
+    this.subtitle,
     this.trailing,
     this.trailingColor,
     this.onTap,
+    this.toggleValue,
+    this.onToggle,
   });
 
   final IconData icon;
   final String title;
+  final String? subtitle;
   final String? trailing;
   final Color? trailingColor;
   final VoidCallback? onTap;
+
+  /// Set both [toggleValue] and [onToggle] to render the row as a switch.
+  final bool? toggleValue;
+  final ValueChanged<bool>? onToggle;
 }

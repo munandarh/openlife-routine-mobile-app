@@ -45,7 +45,13 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
           width: double.infinity,
-          height: 56,
+          // A minimum rather than a fixed height, so the button grows with the
+          // OS text scale instead of clipping its label.
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
+          ),
           decoration: BoxDecoration(
             color: widget.isSecondary
                 ? AppColors.primarySoft
@@ -86,12 +92,17 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                               ),
                               const SizedBox(width: AppSpacing.sm),
                             ],
-                            Text(
-                              widget.label,
-                              style: AppTextStyles.button.copyWith(
-                                color: widget.isSecondary
-                                    ? AppColors.primary
-                                    : Colors.white,
+                            // Flexible so a long or scaled-up label wraps
+                            // instead of overflowing the pill.
+                            Flexible(
+                              child: Text(
+                                widget.label,
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.button.copyWith(
+                                  color: widget.isSecondary
+                                      ? AppColors.primary
+                                      : Colors.white,
+                                ),
                               ),
                             ),
                           ],

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
-import 'package:openlife_routine/features/today/presentation/widgets/greeting_helper.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
+
+import '../../../../support/localized_app.dart';
 
 void main() {
   group('TodayGreeting', () {
     testWidgets('renders the greeting text for the given hour', (
-    WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: TodayGreeting(hour: 9),
-          ),
-        ),
+        localizedApp(const Scaffold(body: TodayGreeting(hour: 9))),
       );
 
       expect(find.text('Good morning'), findsOneWidget);
@@ -22,89 +19,67 @@ void main() {
 
     testWidgets('renders greeting for afternoon', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: TodayGreeting(hour: 14),
-          ),
-        ),
+        localizedApp(const Scaffold(body: TodayGreeting(hour: 14))),
       );
 
       expect(find.text('Good afternoon'), findsOneWidget);
     });
 
-    testWidgets('renders localized greeting for Indonesian', (
-    WidgetTester tester,
+    testWidgets('follows the app locale without an explicit flag', (
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: TodayGreeting(hour: 9, useIndonesian: true),
-          ),
+        localizedApp(
+          const Scaffold(body: TodayGreeting(hour: 9)),
+          locale: const Locale('id'),
         ),
       );
 
       expect(find.text('Selamat pagi'), findsOneWidget);
     });
 
-    testWidgets('uses greetingForHour default if no hour provided', (
-    WidgetTester tester,
+    testWidgets('derives the hour from the clock when none is given', (
+      WidgetTester tester,
     ) async {
-      // Without an hour, the widget derives hour from DateTime.now().
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: TodayGreeting(),
-          ),
-        ),
+        localizedApp(const Scaffold(body: TodayGreeting())),
       );
 
-      // Should be one of the 4 English greetings.
-      final texts = tester
+      final List<String?> texts = tester
           .widgetList<Text>(find.byType(Text))
-          .map((t) => t.data)
+          .map((Text t) => t.data)
           .toList();
+
       expect(
         texts.any(
-          (t) =>
-              t == 'Good morning' ||
-              t == 'Good afternoon' ||
-              t == 'Good evening' ||
-              t == 'Good night',
+          (String? t) => <String>[
+            'Good morning',
+            'Good afternoon',
+            'Good evening',
+            'Good night',
+          ].contains(t),
         ),
-        true,
+        isTrue,
       );
-    });
-
-    testWidgets('greetingForHour utility: hour 5 is morning, 4 is night', (
-    WidgetTester tester,
-    ) async {
-      // Verify boundary semantics directly via the helper.
-      expect(greetingForHour(5), 'Good morning');
-      expect(greetingForHour(4), 'Good night');
     });
 
     testWidgets('uses a consistent style for greeting text', (
-    WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: TodayGreeting(hour: 9),
-          ),
-        ),
+        localizedApp(const Scaffold(body: TodayGreeting(hour: 9))),
       );
 
       final Text greetingText = tester.widget<Text>(find.text('Good morning'));
-      // The text must have a non-null style (it uses a theme-derived style).
       expect(greetingText.style, isNotNull);
     });
 
     testWidgets('renders an optional subtitle when provided', (
-    WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
+        localizedApp(
+          const Scaffold(
             body: TodayGreeting(
               hour: 9,
               subtitle: 'You are doing well today',

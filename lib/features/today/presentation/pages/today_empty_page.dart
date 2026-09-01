@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
@@ -16,14 +17,15 @@ class TodayEmptyPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Center(
+        // Scrollable so the card stays reachable at large OS text scales
+        // instead of overflowing a centred, unscrollable column.
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.pageMargin),
             child: AppEmptyState(
-              title: 'Nothing scheduled today',
-              description:
-                  'Add a routine to see your day fill up with calm reminders.',
-              buttonLabel: 'Create routine',
+              title: context.l10n.todayEmptyTitle,
+              description: context.l10n.todayEmptyDesc,
+              buttonLabel: context.l10n.createRoutine,
               icon: Icons.event_note_outlined,
               illustrationPath: AssetVectors.todayNotificationBell.path,
               onPressed:

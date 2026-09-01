@@ -8,10 +8,10 @@ void main() {
       bool isDone = false,
       bool isDueNow = false,
       String? statusLabel,
-      String? secondaryActionLabel,
+      RoutineCardTone statusTone = RoutineCardTone.positive,
+      List<RoutineCardAction> actions = const <RoutineCardAction>[],
       VoidCallback? onTap,
       VoidCallback? onCheckTap,
-      VoidCallback? onSecondaryAction,
     }) {
       return MaterialApp(
         home: Scaffold(
@@ -24,10 +24,10 @@ void main() {
             isDone: isDone,
             isDueNow: isDueNow,
             statusLabel: statusLabel,
-            secondaryActionLabel: secondaryActionLabel,
+            statusTone: statusTone,
+            actions: actions,
             onTap: onTap,
             onCheckTap: onCheckTap,
-            onSecondaryAction: onSecondaryAction,
           ),
         ),
       );
@@ -116,19 +116,87 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('calls onSecondaryAction when secondary label tapped', (
+    testWidgets('renders every action chip and routes its callback', (
       WidgetTester tester,
     ) async {
-      bool tapped = false;
+      String? pressed;
       await tester.pumpWidget(
         buildCard(
-          secondaryActionLabel: 'Skip',
-          onSecondaryAction: () => tapped = true,
+          actions: <RoutineCardAction>[
+            RoutineCardAction(
+              label: 'Skip',
+              onPressed: () => pressed = 'Skip',
+            ),
+            RoutineCardAction(
+              label: 'Snooze',
+              onPressed: () => pressed = 'Snooze',
+            ),
+          ],
         ),
       );
 
+      expect(find.text('Skip'), findsOneWidget);
+      expect(find.text('Snooze'), findsOneWidget);
+
+      await tester.tap(find.text('Snooze'));
+      expect(pressed, 'Snooze');
+
       await tester.tap(find.text('Skip'));
-      expect(tapped, isTrue);
+      expect(pressed, 'Skip');
+    });
+
+    testWidgets('status tone changes the chip colours', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildCard(
+          statusLabel: 'Missed',
+          statusTone: RoutineCardTone.attention,
+        ),
+      );
+      final Color attention = tester
+          .widget<Text>(find.text('Missed'))
+          .style!
+          .color!;
+
+      await tester.pumpWidget(
+        buildCard(
+          statusLabel: 'Missed',
+          statusTone: RoutineCardTone.muted,
+        ),
+      );
+      final Color muted = tester
+          .widget<Text>(find.text('Missed'))
+          .style!
+          .color!;
+
+      // A missed chip must not be painted like a neutral one.
+      expect(attention, isNot(muted));
+    });
+
+    testWidgets('completion circle exposes a semantic label', (
+      WidgetTester tester,
+    ) async {
+      final SemanticsHandle handle = tester.ensureSemantics();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: RoutineCard(
+              title: 'Breakfast',
+              timeLabel: '07:00 AM',
+              icon: Icons.restaurant_outlined,
+              iconBackground: const Color(0xFFFFF1C8),
+              iconColor: const Color(0xFFC39B42),
+              checkSemanticLabel: 'Done',
+              onCheckTap: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.bySemanticsLabel('Done'), findsOneWidget);
+      handle.dispose();
     });
 
     testWidgets('calls onTap when card tapped', (WidgetTester tester) async {

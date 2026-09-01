@@ -1,84 +1,120 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/greeting_helper.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
+
+import '../../../../support/localized_app.dart';
 
 void main() {
-  group('GreetingHelper', () {
-    test('morning greeting for 5am (boundary)', () {
-      expect(
-        greetingForHour(5),
-        'Good morning',
+  group('greetingSlotForHour (English boundaries)', () {
+    test('5am starts the morning slot', () {
+      expect(greetingSlotForHour(5), GreetingSlot.morning);
+    });
+
+    test('11am is still morning', () {
+      expect(greetingSlotForHour(11), GreetingSlot.morning);
+    });
+
+    test('12pm switches to afternoon', () {
+      expect(greetingSlotForHour(12), GreetingSlot.afternoon);
+    });
+
+    test('17:00 is still afternoon', () {
+      expect(greetingSlotForHour(17), GreetingSlot.afternoon);
+    });
+
+    test('18:00 switches to evening', () {
+      expect(greetingSlotForHour(18), GreetingSlot.evening);
+    });
+
+    test('23:00 is still evening', () {
+      expect(greetingSlotForHour(23), GreetingSlot.evening);
+    });
+
+    test('midnight through 4am is night', () {
+      expect(greetingSlotForHour(0), GreetingSlot.night);
+      expect(greetingSlotForHour(4), GreetingSlot.night);
+    });
+  });
+
+  group('greetingSlotIdForHour (Indonesian boundaries)', () {
+    test('splits the afternoon into siang and sore', () {
+      expect(greetingSlotIdForHour(12), GreetingSlot.afternoon);
+      expect(greetingSlotIdForHour(14), GreetingSlot.afternoon);
+      expect(greetingSlotIdForHour(15), GreetingSlot.evening);
+      expect(greetingSlotIdForHour(18), GreetingSlot.evening);
+      expect(greetingSlotIdForHour(19), GreetingSlot.night);
+    });
+
+    test('shares the morning boundary with English', () {
+      expect(greetingSlotIdForHour(6), GreetingSlot.morning);
+      expect(greetingSlotIdForHour(0), GreetingSlot.night);
+    });
+  });
+
+  group('greetingSlotFor', () {
+    test('picks Indonesian boundaries only for the id locale', () {
+      // 16:00 is "sore" in Indonesian but still "afternoon" in English.
+      expect(greetingSlotFor(16, 'id'), GreetingSlot.evening);
+      expect(greetingSlotFor(16, 'en'), GreetingSlot.afternoon);
+    });
+
+    test('falls back to English boundaries for unknown languages', () {
+      expect(greetingSlotFor(16, 'fr'), GreetingSlot.afternoon);
+    });
+  });
+
+  group('greetingLabel', () {
+    test('resolves every slot in English', () async {
+      final AppLocalizations l10n = await l10nFor();
+
+      expect(greetingLabel(l10n, GreetingSlot.morning), 'Good morning');
+      expect(greetingLabel(l10n, GreetingSlot.afternoon), 'Good afternoon');
+      expect(greetingLabel(l10n, GreetingSlot.evening), 'Good evening');
+      expect(greetingLabel(l10n, GreetingSlot.night), 'Good night');
+    });
+
+    test('resolves every slot in Indonesian', () async {
+      final AppLocalizations l10n = await l10nFor(const Locale('id'));
+
+      expect(greetingLabel(l10n, GreetingSlot.morning), 'Selamat pagi');
+      expect(greetingLabel(l10n, GreetingSlot.afternoon), 'Selamat siang');
+      expect(greetingLabel(l10n, GreetingSlot.evening), 'Selamat sore');
+      expect(greetingLabel(l10n, GreetingSlot.night), 'Selamat malam');
+    });
+  });
+
+  group('greetingForContext', () {
+    testWidgets('reads the greeting from the active locale', (
+      WidgetTester tester,
+    ) async {
+      late String english;
+      late String indonesian;
+
+      await tester.pumpWidget(
+        localizedApp(
+          Builder(
+            builder: (BuildContext context) {
+              english = greetingForContext(context, 9);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
       );
-    });
-
-    test('morning greeting for 6am', () {
-      expect(
-        greetingForHour(6),
-        'Good morning',
+      await tester.pumpWidget(
+        localizedApp(
+          Builder(
+            builder: (BuildContext context) {
+              indonesian = greetingForContext(context, 9);
+              return const SizedBox.shrink();
+            },
+          ),
+          locale: const Locale('id'),
+        ),
       );
-    });
 
-    test('morning greeting for 11:59am', () {
-      expect(
-        greetingForHour(11),
-        'Good morning',
-      );
-    });
-
-    test('afternoon greeting for 12pm', () {
-      expect(
-        greetingForHour(12),
-        'Good afternoon',
-      );
-    });
-
-    test('afternoon greeting for 17:59pm', () {
-      expect(
-        greetingForHour(17),
-        'Good afternoon',
-      );
-    });
-
-    test('evening greeting for 18pm', () {
-      expect(
-        greetingForHour(18),
-        'Good evening',
-      );
-    });
-
-    test('evening greeting for 23:59pm', () {
-      expect(
-        greetingForHour(23),
-        'Good evening',
-      );
-    });
-
-    test('night greeting for 0am', () {
-      expect(
-        greetingForHour(0),
-        'Good night',
-      );
-    });
-
-    test('night greeting for 4:59am', () {
-      expect(
-        greetingForHour(4),
-        'Good night',
-      );
-    });
-
-    test('greetingIdiForHour returns the correct Indonesian phrase', () {
-      expect(greetingIdiForHour(6), 'Selamat pagi');
-      expect(greetingIdiForHour(12), 'Selamat siang');
-      expect(greetingIdiForHour(18), 'Selamat sore');
-      expect(greetingIdiForHour(20), 'Selamat malam');
-      expect(greetingIdiForHour(0), 'Selamat malam');
-    });
-
-    test('greetingForHour accepts DateTime hour component', () {
-      final DateTime morningTime = DateTime(2026, 7, 1, 9, 30);
-      final DateTime nightTime = DateTime(2026, 7, 1, 2, 15);
-      expect(greetingForHour(morningTime.hour), 'Good morning');
-      expect(greetingForHour(nightTime.hour), 'Good night');
+      expect(english, 'Good morning');
+      expect(indonesian, 'Selamat pagi');
     });
   });
 }

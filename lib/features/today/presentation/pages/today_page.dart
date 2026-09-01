@@ -4,14 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
+import 'package:openlife_routine/core/localization/l10n_extensions.dart';
+import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
-import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
+import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
+import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
-import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
+import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
@@ -42,9 +46,15 @@ class _TodayView extends StatefulWidget {
 class _TodayViewState extends State<_TodayView> {
   bool _showCelebration = false;
 
+  bool get _reducedMotion {
+    final SettingsBloc? settings = context.read<SettingsBloc?>();
+    return settings?.state.reducedMotion ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = context.l10n;
 
     return Stack(
       children: <Widget>[
@@ -60,7 +70,9 @@ class _TodayViewState extends State<_TodayView> {
             if (state.totalCount > 0 &&
                 state.completedCount == state.totalCount) {
               HapticFeedback.mediumImpact();
-              setState(() => _showCelebration = true);
+              if (!_reducedMotion) {
+                setState(() => _showCelebration = true);
+              }
             }
           },
           builder: (BuildContext context, TodayState state) {
@@ -73,8 +85,10 @@ class _TodayViewState extends State<_TodayView> {
             }
 
             final List<WeekDateItem> weekItems = _buildWeekItems(
+              l10n,
               state.selectedDate,
             );
+            final TodayRoutineItem? nextRoutine = state.nextRoutine;
 
             return CustomScrollView(
               slivers: <Widget>[
@@ -87,34 +101,32 @@ class _TodayViewState extends State<_TodayView> {
                     ),
                   ),
                   title: Text(
-                    'Today',
+                    l10n.todayTab,
                     style: textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                     ),
                   ),
                   actions: const <Widget>[
-                    IconCircleButton(
-                      icon: Icons.notifications_none_rounded,
-                    ),
+                    IconCircleButton(icon: Icons.notifications_none_rounded),
                     SizedBox(width: AppSpacing.pageMargin),
                   ],
-              pinned: true,
-              backgroundColor: AppColors.background,
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.pageMargin,
-                  AppSpacing.md,
-                  AppSpacing.pageMargin,
-                  0,
+                  pinned: true,
+                  backgroundColor: AppColors.background,
                 ),
-                child: TodayGreeting(
-                  subtitle: _supportiveSubtitle(state),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.pageMargin,
+                      AppSpacing.md,
+                      AppSpacing.pageMargin,
+                      0,
+                    ),
+                    child: TodayGreeting(
+                      subtitle: _supportiveSubtitle(l10n, state),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SliverPadding(
+                SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.pageMargin,
                     AppSpacing.xl,
@@ -123,172 +135,65 @@ class _TodayViewState extends State<_TodayView> {
                   ),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(<Widget>[
-                      Container(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: <Color>[AppColors.primarySoft, Color(0xFFE9F2D7)],
-                    ),
-                    borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Daily Progress', style: textTheme.titleLarge),
-                            const SizedBox(height: AppSpacing.md),
-                            Text(
-                              state.totalCount == 0
-                                  ? 'No routines scheduled for this day.'
-                                  : '${state.completedCount} of ${state.totalCount} routines completed.',
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.sm,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.pill,
-                                ),
-                              ),
-                              child: Text(
-                                state.completedCount == state.totalCount &&
-                                        state.totalCount > 0
-                                    ? 'ALL DONE'
-                                    : 'STAY CONSISTENT',
-                                style: textTheme.labelMedium?.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ProgressRing(
-                        progress: state.progress,
-                        label: '${state.completedCount}/${state.totalCount}',
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                WeekDateSelector(
-                  selectedIndex: _selectedWeekIndex(state.selectedDate),
-                  items: weekItems,
-                  onSelected: (int index) {
-                    context.read<TodayBloc>().add(
-                      TodayDateSelected(
-                        _startOfWeek(
-                          state.selectedDate,
-                        ).add(Duration(days: index)),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: AppSpacing.xxxl),
-                Text('Daily routine', style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.lg),
-                if (state.status == TodayStatus.loading)
-                  const Center(child: CircularProgressIndicator())
-                else if (state.items.isEmpty)
-                  AppEmptyState(
-                    title: 'No routines yet',
-                    description:
-                        'There is nothing scheduled for this date. Add one or pick another day.',
-                    buttonLabel: 'Create routine',
-                    icon: Icons.calendar_today_outlined,
-                    onPressed: () =>
-                        context.push(OpenLifeRoute.newRoutine.path),
-                  )
-                else
-                  ...state.items.map(
-                    (TodayRoutineItem item) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: AppSpacing.cardGap,
-                      ),
-                      child: RoutineCard(
-                        title: item.title,
-                        timeLabel: _formatTime(item.reminderTime),
-                        statusLabel: switch (item.status) {
-                          TodayRoutineItemStatus.done => 'Done',
-                          TodayRoutineItemStatus.skipped => 'Skipped',
-                          TodayRoutineItemStatus.pending when item.isDueNow =>
-                            'Due Now',
-                          _ => null,
-                        },
-                        secondaryActionLabel:
-                            item.status == TodayRoutineItemStatus.pending
-                            ? 'Skip'
-                            : 'Undo',
-                        icon: _iconForCategory(item.category),
-                        iconBackground: _iconBackgroundForCategory(
-                          item.category,
-                        ),
-                        iconColor: _iconColorForCategory(item.category),
-                        isDone: item.status == TodayRoutineItemStatus.done,
-                        isDueNow: item.isDueNow,
-                        onTap: () => context.push(
-                          Uri(
-                            path: OpenLifeRoute.routineDetail.path,
-                            queryParameters: <String, String>{
-                              'id': item.routineId,
-                            },
-                          ).toString(),
-                        ),
-                        onCheckTap: () {
-                          HapticFeedback.lightImpact();
+                      _ProgressCard(state: state),
+                      const SizedBox(height: AppSpacing.lg),
+                      _NextRoutineCard(item: nextRoutine),
+                      const SizedBox(height: AppSpacing.xl),
+                      WeekDateSelector(
+                        selectedIndex: _selectedWeekIndex(state.selectedDate),
+                        items: weekItems,
+                        onSelected: (int index) {
                           context.read<TodayBloc>().add(
-                            TodayRoutineCompletionToggled(item.routineId),
-                          );
-                        },
-                        onSecondaryAction: () {
-                          if (item.status == TodayRoutineItemStatus.pending) {
-                            context.read<TodayBloc>().add(
-                              TodayRoutineSkipped(item.routineId),
-                            );
-                            return;
-                          }
-
-                          if (item.status == TodayRoutineItemStatus.skipped) {
-                            context.read<TodayBloc>().add(
-                              TodayRoutineSkipped(item.routineId),
-                            );
-                            return;
-                          }
-
-                          context.read<TodayBloc>().add(
-                            TodayRoutineCompletionToggled(item.routineId),
+                            TodayDateSelected(
+                              _startOfWeek(
+                                state.selectedDate,
+                              ).add(Duration(days: index)),
+                            ),
                           );
                         },
                       ),
-                    ),
+                      const SizedBox(height: AppSpacing.xxxl),
+                      Text(l10n.dailyRoutine, style: textTheme.titleLarge),
+                      const SizedBox(height: AppSpacing.lg),
+                      if (state.items.isEmpty)
+                        AppEmptyState(
+                          title: l10n.noRoutinesYet,
+                          description: l10n.noRoutinesForDateDesc,
+                          buttonLabel: l10n.createRoutine,
+                          icon: Icons.calendar_today_outlined,
+                          onPressed: () =>
+                              context.push(OpenLifeRoute.newRoutine.path),
+                        )
+                      else
+                        ...state.items.map(
+                          (TodayRoutineItem item) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.cardGap,
+                            ),
+                            child: _TodayRoutineCard(item: item),
+                          ),
+                        ),
+                    ]),
                   ),
-              ]),
-            ),
-          ),
-        ],
-      );
+                ),
+              ],
+            );
           },
         ),
-        // Celebration overlay.
         if (_showCelebration)
           _CelebrationOverlay(
             onDismiss: () => setState(() => _showCelebration = false),
           ),
         Positioned(
           right: AppSpacing.pageMargin,
-          bottom: 104,
+          // The shell already keeps the bottom nav outside this Stack, so the
+          // FAB only needs to clear the body edge. A larger offset pushed it
+          // up over the first routine card's completion circle.
+          bottom: AppSpacing.xl,
           child: FloatingActionButton(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
+            tooltip: l10n.createRoutine,
             onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
             child: const Icon(Icons.add),
           ),
@@ -297,25 +202,14 @@ class _TodayViewState extends State<_TodayView> {
     );
   }
 
-  static String _formatTime(String reminderTime) {
-    final List<String> parts = reminderTime.split(':');
-    final int hour = int.tryParse(parts.first) ?? 0;
-    final int minute = int.tryParse(parts.last) ?? 0;
-    final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
-    final int displayHour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final String displayMinute = time.minute.toString().padLeft(2, '0');
-    final String suffix = time.period == DayPeriod.pm ? 'PM' : 'AM';
-    return '$displayHour:$displayMinute $suffix';
-  }
-
-  static String _supportiveSubtitle(TodayState state) {
+  static String _supportiveSubtitle(AppLocalizations l10n, TodayState state) {
     if (state.totalCount == 0) {
-      return 'A calm day ahead. Add a routine whenever you are ready.';
+      return l10n.calmDayAhead;
     }
     if (state.completedCount == state.totalCount) {
-      return 'You finished all your routines today. Great work.';
+      return l10n.allFinished;
     }
-    return 'Small progress still counts. Take it one step at a time.';
+    return l10n.smallProgress;
   }
 
   static DateTime _startOfWeek(DateTime selectedDate) {
@@ -326,8 +220,11 @@ class _TodayViewState extends State<_TodayView> {
     return selectedDate.weekday - 1;
   }
 
-  static List<WeekDateItem> _buildWeekItems(DateTime selectedDate) {
-    const List<String> weekdays = <String>['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  static List<WeekDateItem> _buildWeekItems(
+    AppLocalizations l10n,
+    DateTime selectedDate,
+  ) {
+    final List<String> weekdays = L10nFormatters.weekdayInitials(l10n);
     final DateTime start = _startOfWeek(selectedDate);
     return List<WeekDateItem>.generate(7, (int index) {
       final DateTime date = start.add(Duration(days: index));
@@ -337,44 +234,248 @@ class _TodayViewState extends State<_TodayView> {
       );
     });
   }
+}
 
-  static IconData _iconForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => Icons.restaurant_outlined,
-      RoutineCategory.water => Icons.water_drop_outlined,
-      RoutineCategory.vitamin => Icons.medication_outlined,
-      RoutineCategory.medicine => Icons.vaccines_outlined,
-      RoutineCategory.sleep => Icons.bedtime_outlined,
-      RoutineCategory.exercise => Icons.fitness_center_outlined,
-      RoutineCategory.breakTime => Icons.self_improvement_outlined,
-      RoutineCategory.custom => Icons.star_outline_rounded,
+/// Daily completion hero: counts on the left, animated ring on the right.
+class _ProgressCard extends StatelessWidget {
+  const _ProgressCard({required this.state});
+
+  final TodayState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final AppLocalizations l10n = context.l10n;
+    final bool allDone =
+        state.totalCount > 0 && state.completedCount == state.totalCount;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: <Color>[AppColors.primarySoft, Color(0xFFE9F2D7)],
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(l10n.dailyProgress, style: textTheme.titleLarge),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  state.totalCount == 0
+                      ? l10n.noRoutinesScheduledForDay
+                      : l10n.completedOfTotal(
+                          state.completedCount,
+                          state.totalCount,
+                        ),
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                  ),
+                  child: Text(
+                    allDone ? l10n.allDoneBadge : l10n.stayConsistentBadge,
+                    style: textTheme.labelMedium?.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ProgressRing(
+            progress: state.progress,
+            label: '${state.completedCount}/${state.totalCount}',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Next — 08:30 Vitamin D3" strip required by PRD §8.2.
+///
+/// Shows the earliest routine still awaiting an answer; once everything is
+/// resolved it flips to a short all-clear line rather than disappearing, so the
+/// layout does not jump.
+class _NextRoutineCard extends StatelessWidget {
+  const _NextRoutineCard({required this.item});
+
+  final TodayRoutineItem? item;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final TodayRoutineItem? next = item;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: next == null
+                ? AppColors.surfaceSoft
+                : RoutineCategoryUi.background(next.category),
+            foregroundColor: next == null
+                ? AppColors.textSecondary
+                : RoutineCategoryUi.foreground(next.category),
+            child: Icon(
+              next == null
+                  ? Icons.check_circle_outline
+                  : RoutineCategoryUi.icon(
+                      next.category,
+                      iconKey: next.iconKey,
+                    ),
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  l10n.nextUp,
+                  style: textTheme.labelMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  next == null
+                      ? l10n.nothingLeftToday
+                      : '${L10nFormatters.timeOfDayLabel(context, next.reminderTime)} — ${next.title}',
+                  style: textTheme.titleMedium,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One row in the Today checklist, wired to the bloc's done/skip/snooze events.
+class _TodayRoutineCard extends StatelessWidget {
+  const _TodayRoutineCard({required this.item});
+
+  final TodayRoutineItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    final TodayBloc bloc = context.read<TodayBloc>();
+
+    return RoutineCard(
+      title: item.title,
+      timeLabel: L10nFormatters.timeOfDayLabel(context, item.reminderTime),
+      statusLabel: _statusLabel(context, l10n),
+      statusTone: _statusTone(),
+      actions: _actions(bloc, l10n),
+      icon: RoutineCategoryUi.icon(item.category, iconKey: item.iconKey),
+      iconBackground: RoutineCategoryUi.background(item.category),
+      iconColor: RoutineCategoryUi.foreground(item.category),
+      isDone: item.status == TodayRoutineItemStatus.done,
+      isDueNow: item.isDueNow,
+      checkSemanticLabel: item.status == TodayRoutineItemStatus.done
+          ? l10n.undoAction
+          : l10n.statusDone,
+      onTap: () => context.push(
+        Uri(
+          path: OpenLifeRoute.routineDetail.path,
+          queryParameters: <String, String>{'id': item.routineId},
+        ).toString(),
+      ),
+      onCheckTap: () {
+        HapticFeedback.lightImpact();
+        bloc.add(TodayRoutineCompletionToggled(item.routineId));
+      },
+    );
+  }
+
+  String? _statusLabel(BuildContext context, AppLocalizations l10n) {
+    return switch (item.status) {
+      TodayRoutineItemStatus.done => l10n.statusDone,
+      TodayRoutineItemStatus.skipped => l10n.statusSkipped,
+      TodayRoutineItemStatus.missed => l10n.statusMissed,
+      TodayRoutineItemStatus.snoozed => item.snoozedUntil == null
+          ? l10n.statusSnoozed
+          : l10n.snoozedUntil(
+              L10nFormatters.timeLabel(
+                context,
+                TimeOfDay.fromDateTime(item.snoozedUntil!),
+              ),
+            ),
+      TodayRoutineItemStatus.pending when item.isDueNow => l10n.statusDueNow,
+      TodayRoutineItemStatus.pending => null,
     };
   }
 
-  static Color _iconBackgroundForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => const Color(0xFFFFF1C8),
-      RoutineCategory.water => const Color(0xFFDDEBF5),
-      RoutineCategory.vitamin => const Color(0xFFFFF1C8),
-      RoutineCategory.medicine => const Color(0xFFFFE0DF),
-      RoutineCategory.sleep => const Color(0xFFDDEBF5),
-      RoutineCategory.exercise => const Color(0xFFDDEBF5),
-      RoutineCategory.breakTime => AppColors.surfaceSoft,
-      RoutineCategory.custom => AppColors.primarySoft,
+  RoutineCardTone _statusTone() {
+    return switch (item.status) {
+      TodayRoutineItemStatus.done => RoutineCardTone.positive,
+      TodayRoutineItemStatus.missed => RoutineCardTone.attention,
+      TodayRoutineItemStatus.skipped => RoutineCardTone.muted,
+      TodayRoutineItemStatus.snoozed => RoutineCardTone.muted,
+      TodayRoutineItemStatus.pending => item.isDueNow
+          ? RoutineCardTone.attention
+          : RoutineCardTone.positive,
     };
   }
 
-  static Color _iconColorForCategory(RoutineCategory category) {
-    return switch (category) {
-      RoutineCategory.meal => AppColors.warning,
-      RoutineCategory.water => AppColors.secondary,
-      RoutineCategory.vitamin => AppColors.warning,
-      RoutineCategory.medicine => AppColors.danger,
-      RoutineCategory.sleep => AppColors.secondary,
-      RoutineCategory.exercise => AppColors.secondary,
-      RoutineCategory.breakTime => AppColors.primary,
-      RoutineCategory.custom => AppColors.primary,
-    };
+  List<RoutineCardAction> _actions(TodayBloc bloc, AppLocalizations l10n) {
+    // Skip and Snooze are only offered while the routine is still open;
+    // anything already resolved offers a single Undo instead.
+    if (item.isOpen) {
+      return <RoutineCardAction>[
+        RoutineCardAction(
+          label: l10n.skipAction,
+          onPressed: () => bloc.add(TodayRoutineSkipped(item.routineId)),
+        ),
+        RoutineCardAction(
+          label: l10n.snoozeAction,
+          onPressed: () => bloc.add(TodayRoutineSnoozed(item.routineId)),
+        ),
+      ];
+    }
+
+    if (item.status == TodayRoutineItemStatus.missed) {
+      return const <RoutineCardAction>[];
+    }
+
+    return <RoutineCardAction>[
+      RoutineCardAction(
+        label: l10n.undoAction,
+        onPressed: () {
+          if (item.status == TodayRoutineItemStatus.skipped) {
+            bloc.add(TodayRoutineSkipped(item.routineId));
+            return;
+          }
+          bloc.add(TodayRoutineCompletionToggled(item.routineId));
+        },
+      ),
+    ];
   }
 }
 
@@ -414,6 +515,8 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     return GestureDetector(
       onTap: widget.onDismiss,
       child: Container(
@@ -432,25 +535,24 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   OpenLifeRiveView.illustration(
-                    illustrationPath:
-                        AssetVectors.todayDailyCelebration.path,
+                    illustrationPath: AssetVectors.todayDailyCelebration.path,
                     fallbackIcon: Icons.celebration_outlined,
                     size: 120,
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  const Text(
-                    'All Done!',
-                    style: TextStyle(
+                  Text(
+                    l10n.allDone,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  const Text(
-                    'You completed all your routines for today. Great work!',
+                  Text(
+                    l10n.allDoneMessage,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       color: AppColors.textSecondary,
                     ),

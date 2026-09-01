@@ -2,7 +2,7 @@ part of 'today_bloc.dart';
 
 enum TodayStatus { initial, loading, success, failure }
 
-enum TodayRoutineItemStatus { pending, done, skipped }
+enum TodayRoutineItemStatus { pending, done, skipped, missed, snoozed }
 
 class TodayRoutineItem extends Equatable {
   const TodayRoutineItem({
@@ -12,6 +12,8 @@ class TodayRoutineItem extends Equatable {
     required this.reminderTime,
     required this.status,
     required this.isDueNow,
+    this.iconKey,
+    this.snoozedUntil,
   });
 
   final String routineId;
@@ -21,6 +23,18 @@ class TodayRoutineItem extends Equatable {
   final TodayRoutineItemStatus status;
   final bool isDueNow;
 
+  /// Icon override stored on the routine, if any.
+  final String? iconKey;
+
+  /// When [status] is [TodayRoutineItemStatus.snoozed], the moment the
+  /// reminder comes back.
+  final DateTime? snoozedUntil;
+
+  /// True while the routine still needs an answer today.
+  bool get isOpen =>
+      status == TodayRoutineItemStatus.pending ||
+      status == TodayRoutineItemStatus.snoozed;
+
   @override
   List<Object?> get props => <Object?>[
     routineId,
@@ -29,6 +43,8 @@ class TodayRoutineItem extends Equatable {
     reminderTime,
     status,
     isDueNow,
+    iconKey,
+    snoozedUntil,
   ];
 }
 
@@ -39,31 +55,59 @@ class TodayState extends Equatable {
     required this.items,
     required this.completedCount,
     required this.totalCount,
-    required this.errorMessage,
     required this.hasRoutines,
+    this.errorMessage,
   });
 
-  factory TodayState.initial(DateTime selectedDate) {
-    return TodayState(
-      status: TodayStatus.initial,
-      selectedDate: selectedDate,
-      items: const <TodayRoutineItem>[],
-      completedCount: 0,
-      totalCount: 0,
-      errorMessage: null,
-      hasRoutines: true,
-    );
-  }
+  const TodayState.initial(this.selectedDate)
+    : status = TodayStatus.initial,
+      items = const <TodayRoutineItem>[],
+      completedCount = 0,
+      totalCount = 0,
+      // Assume routines exist until the first load says otherwise, so the
+      // screen shows a spinner rather than flashing the empty state.
+      hasRoutines = true,
+      errorMessage = null;
 
   final TodayStatus status;
   final DateTime selectedDate;
   final List<TodayRoutineItem> items;
   final int completedCount;
   final int totalCount;
-  final String? errorMessage;
   final bool hasRoutines;
+  final String? errorMessage;
 
   double get progress => totalCount == 0 ? 0 : completedCount / totalCount;
+
+  /// The next routine still awaiting an answer, ordered by reminder time.
+  ///
+  /// Drives the "Next" card required by PRD §8.2.
+  TodayRoutineItem? get nextRoutine {
+    for (final TodayRoutineItem item in items) {
+      if (item.isOpen) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  int get skippedCount => _countOf(TodayRoutineItemStatus.skipped);
+
+  int get missedCount => _countOf(TodayRoutineItemStatus.missed);
+
+  int get snoozedCount => _countOf(TodayRoutineItemStatus.snoozed);
+
+  int get pendingCount => _countOf(TodayRoutineItemStatus.pending);
+
+  int _countOf(TodayRoutineItemStatus status) {
+    int count = 0;
+    for (final TodayRoutineItem item in items) {
+      if (item.status == status) {
+        count += 1;
+      }
+    }
+    return count;
+  }
 
   TodayRoutineItem? findItem(String routineId) {
     for (final TodayRoutineItem item in items) {
@@ -80,8 +124,8 @@ class TodayState extends Equatable {
     List<TodayRoutineItem>? items,
     int? completedCount,
     int? totalCount,
-    String? errorMessage,
     bool? hasRoutines,
+    String? errorMessage,
     bool clearErrorMessage = false,
   }) {
     return TodayState(
@@ -90,10 +134,10 @@ class TodayState extends Equatable {
       items: items ?? this.items,
       completedCount: completedCount ?? this.completedCount,
       totalCount: totalCount ?? this.totalCount,
+      hasRoutines: hasRoutines ?? this.hasRoutines,
       errorMessage: clearErrorMessage
           ? null
-          : (errorMessage ?? this.errorMessage),
-      hasRoutines: hasRoutines ?? this.hasRoutines,
+          : errorMessage ?? this.errorMessage,
     );
   }
 
@@ -104,7 +148,7 @@ class TodayState extends Equatable {
     items,
     completedCount,
     totalCount,
-    errorMessage,
     hasRoutines,
+    errorMessage,
   ];
 }

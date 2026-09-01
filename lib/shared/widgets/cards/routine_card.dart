@@ -4,6 +4,21 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 
+/// Colour treatment for the small status chip on a [RoutineCard].
+///
+/// A "Missed" chip must not read like a "Done" chip, so the tone is chosen by
+/// the caller rather than derived from `isDueNow` alone.
+enum RoutineCardTone { positive, attention, muted }
+
+/// One tappable chip in a routine card's action row (Skip, Snooze, Undo…).
+class RoutineCardAction {
+  const RoutineCardAction({required this.label, this.onPressed, this.key});
+
+  final String label;
+  final VoidCallback? onPressed;
+  final Key? key;
+}
+
 class RoutineCard extends StatelessWidget {
   const RoutineCard({
     required this.title,
@@ -12,10 +27,11 @@ class RoutineCard extends StatelessWidget {
     required this.iconBackground,
     required this.iconColor,
     this.statusLabel,
-    this.secondaryActionLabel,
+    this.statusTone = RoutineCardTone.positive,
+    this.actions = const <RoutineCardAction>[],
     this.onTap,
     this.onCheckTap,
-    this.onSecondaryAction,
+    this.checkSemanticLabel,
     this.isDone = false,
     this.isDueNow = false,
     super.key,
@@ -27,10 +43,13 @@ class RoutineCard extends StatelessWidget {
   final Color iconBackground;
   final Color iconColor;
   final String? statusLabel;
-  final String? secondaryActionLabel;
+  final RoutineCardTone statusTone;
+  final List<RoutineCardAction> actions;
   final VoidCallback? onTap;
   final VoidCallback? onCheckTap;
-  final VoidCallback? onSecondaryAction;
+
+  /// Spoken label for the completion circle, which is otherwise icon-only.
+  final String? checkSemanticLabel;
   final bool isDone;
   final bool isDueNow;
 
@@ -66,6 +85,9 @@ class RoutineCard extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                // Hug the content: the card sizes to its text, it does not
+                // stretch to whatever height the row is offered.
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _AnimatedStrikethroughText(
                     text: title,
@@ -74,79 +96,119 @@ class RoutineCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Wrap(
                     spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.xs,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceSoft,
-                          borderRadius: BorderRadius.circular(AppRadius.small),
-                        ),
-                        child: Text(
-                          timeLabel,
-                          style: AppTextStyles.label.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
+                      _Chip(
+                        label: timeLabel,
+                        background: AppColors.surfaceSoft,
+                        foreground: AppColors.textSecondary,
                       ),
                       if (statusLabel != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: AppSpacing.xs,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDueNow
-                                ? AppColors.accentSoft
-                                : AppColors.primarySoft,
-                            borderRadius: BorderRadius.circular(
-                              AppRadius.small,
-                            ),
-                          ),
-                          child: Text(
-                            statusLabel!,
-                            style: AppTextStyles.label.copyWith(
-                              color: isDueNow
-                                  ? AppColors.warning
-                                  : AppColors.primary,
-                            ),
-                          ),
+                        _Chip(
+                          label: statusLabel!,
+                          background: _statusBackground,
+                          foreground: _statusForeground,
                         ),
-                      if (secondaryActionLabel != null) ...<Widget>[
-                        InkWell(
-                          borderRadius: BorderRadius.circular(AppRadius.small),
-                          onTap: onSecondaryAction,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
-                              vertical: AppSpacing.xs,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primarySoft,
-                              borderRadius: BorderRadius.circular(
-                                AppRadius.small,
-                              ),
-                            ),
-                            child: Text(
-                              secondaryActionLabel!,
-                              style: AppTextStyles.label.copyWith(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      for (final RoutineCardAction action in actions)
+                        _ActionChip(key: action.key, action: action),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            _CheckCircle(isDone: isDone, onTap: onCheckTap),
+            _CheckCircle(
+              isDone: isDone,
+              onTap: onCheckTap,
+              semanticLabel: checkSemanticLabel,
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Color get _statusBackground {
+    return switch (statusTone) {
+      RoutineCardTone.positive => AppColors.primarySoft,
+      RoutineCardTone.attention => AppColors.accentSoft,
+      RoutineCardTone.muted => AppColors.surfaceSoft,
+    };
+  }
+
+  Color get _statusForeground {
+    return switch (statusTone) {
+      RoutineCardTone.positive => AppColors.primary,
+      RoutineCardTone.attention => AppColors.warning,
+      RoutineCardTone.muted => AppColors.textSecondary,
+    };
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    required this.label,
+    required this.background,
+    required this.foreground,
+  });
+
+  final String label;
+  final Color background;
+  final Color foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(AppRadius.small),
+      ),
+      child: Text(
+        label,
+        style: AppTextStyles.label.copyWith(color: foreground),
+      ),
+    );
+  }
+}
+
+class _ActionChip extends StatelessWidget {
+  const _ActionChip({required this.action, super.key});
+
+  final RoutineCardAction action;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      // Its own node, so a screen reader can reach "Skip" and "Snooze"
+      // separately instead of hearing them merged into the card's label.
+      container: true,
+      label: action.label,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.small),
+        onTap: action.onPressed,
+        child: Container(
+          // Floor the tap target at 44px without an `alignment`: a Container
+          // with an alignment expands to the loose width the Wrap offers,
+          // which pushed every action chip onto its own full-width row.
+          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.circular(AppRadius.small),
+          ),
+          child: Text(
+            action.label,
+            style: AppTextStyles.label.copyWith(color: AppColors.primary),
+          ),
         ),
       ),
     );
@@ -154,40 +216,47 @@ class RoutineCard extends StatelessWidget {
 }
 
 class _CheckCircle extends StatelessWidget {
-  const _CheckCircle({required this.isDone, this.onTap});
+  const _CheckCircle({required this.isDone, this.onTap, this.semanticLabel});
 
   final bool isDone;
   final VoidCallback? onTap;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppRadius.pill),
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(
-            color: isDone ? Colors.transparent : AppColors.border,
-            width: 2,
-          ),
-        ),
-        child: AnimatedSwitcher(
+    return Semantics(
+      button: true,
+      container: true,
+      checked: isDone,
+      label: semanticLabel,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: onTap,
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          switchInCurve: Curves.easeOutBack,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(scale: animation, child: child);
-          },
-          child: Icon(
-            isDone ? Icons.check_rounded : Icons.circle_outlined,
-            key: ValueKey<bool>(isDone),
-            color: isDone ? AppColors.success : AppColors.border,
+          curve: Curves.easeOutCubic,
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+            border: Border.all(
+              color: isDone ? Colors.transparent : AppColors.border,
+              width: 2,
+            ),
+          ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            switchInCurve: Curves.easeOutBack,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: Icon(
+              isDone ? Icons.check_rounded : Icons.circle_outlined,
+              key: ValueKey<bool>(isDone),
+              color: isDone ? AppColors.success : AppColors.border,
+            ),
           ),
         ),
       ),

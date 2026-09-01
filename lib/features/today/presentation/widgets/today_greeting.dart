@@ -6,19 +6,11 @@ import 'package:openlife_routine/features/today/presentation/widgets/greeting_he
 /// screen. Displays a time-of-day greeting ("Good morning", "Selamat
 /// siang", etc.) and an optional supportive subtitle.
 class TodayGreeting extends StatelessWidget {
-  const TodayGreeting({
-    this.hour,
-    this.useIndonesian = false,
-    this.subtitle,
-    super.key,
-  });
+  const TodayGreeting({this.hour, this.subtitle, super.key});
 
   /// Hour of the day (0-23). When null, the widget derives the hour
   /// from `DateTime.now()`.
   final int? hour;
-
-  /// When true, uses Indonesian greetings. Defaults to false (English).
-  final bool useIndonesian;
 
   /// Optional subtitle text shown below the greeting.
   final String? subtitle;
@@ -26,9 +18,7 @@ class TodayGreeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int effectiveHour = hour ?? DateTime.now().hour;
-    final String greeting = useIndonesian
-        ? greetingIdiForHour(effectiveHour)
-        : greetingForHour(effectiveHour);
+    final String greeting = greetingForContext(context, effectiveHour);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),

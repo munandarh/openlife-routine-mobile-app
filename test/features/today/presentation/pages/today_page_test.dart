@@ -14,7 +14,8 @@ import 'package:openlife_routine/features/onboarding/domain/repositories/onboard
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
-import 'package:openlife_routine/features/settings/domain/repositories/settings_repository.dart';
+
+import '../../../../support/fake_settings_repository.dart';
 
 void main() {
   late AppDatabase appDatabase;
@@ -66,12 +67,11 @@ void main() {
       notificationConfig: const NotificationStackConfig.recommended(),
       onboardingRepository: _FakeOnboardingRepository(),
       hasCompletedOnboarding: true,
-      preferredLanguageCode: 'en',
       appDatabase: appDatabase,
       routineRepository: routineRepository,
       notificationService: AppNotificationService.noop(),
       initialNotificationRoutineId: null,
-      settingsRepository: _FakeSettingsRepository(),
+      settingsRepository: FakeSettingsRepository(),
     );
   }
 
@@ -192,29 +192,12 @@ class _FakeOnboardingRepository implements OnboardingRepository {
   @override
   Future<void> completeOnboarding() async {}
 
-  @override
-  Future<String> getPreferredLanguageCode() async => 'en';
 
   @override
   Future<bool> hasCompletedOnboarding() async => false;
 
-  @override
-  Future<void> setPreferredLanguageCode(String languageCode) async {}
 
   @override
   Future<void> skipOnboarding() async {}
 }
 
-class _FakeSettingsRepository implements SettingsRepository {
-  @override
-  Future<String> getThemeMode() async => 'system';
-
-  @override
-  Future<void> setThemeMode(String mode) async {}
-
-  @override
-  Future<String> getLanguageCode() async => 'en';
-
-  @override
-  Future<void> setLanguageCode(String code) async {}
-}

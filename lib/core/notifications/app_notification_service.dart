@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,17 +17,30 @@ class AppNotificationService {
   AppNotificationService({
     FlutterLocalNotificationsPlugin? plugin,
     MethodChannel? timezoneChannel,
+    bool? isIOS,
   }) : _plugin = plugin ?? FlutterLocalNotificationsPlugin(),
        _timezoneChannel =
-           timezoneChannel ?? const MethodChannel('openlife_routine/timezone');
+           timezoneChannel ?? const MethodChannel('openlife_routine/timezone'),
+       _isIOS = isIOS ?? defaultTargetPlatform == TargetPlatform.iOS;
 
   AppNotificationService.noop()
     : _plugin = FlutterLocalNotificationsPlugin(),
       _timezoneChannel = const MethodChannel('openlife_routine/timezone'),
+      _isIOS = false,
       _disabled = true;
+
+  /// iOS keeps at most [iosPendingLimit] pending notification requests and
+  /// silently discards the rest, so the full-set sync has to choose which
+  /// reminders survive rather than letting the OS pick arbitrarily. Android
+  /// has no such cap.
+  static const int iosPendingLimit = 64;
+
+  /// Held back from the weekly budget so a snooze can always be scheduled.
+  static const int _iosSnoozeReserve = 4;
 
   final FlutterLocalNotificationsPlugin _plugin;
   final MethodChannel _timezoneChannel;
+  final bool _isIOS;
   final StreamController<String> _routineTapController =
       StreamController<String>.broadcast();
   final StreamController<String> _routineActionController =
@@ -69,14 +83,22 @@ class AppNotificationService {
     tz.initializeTimeZones();
     await _setLocalTimeZone();
 
+    // iOS fixes its action buttons at registration time, so the categories
+    // have to be built here, from the language already chosen. This is why
+    // `setLanguageCode` runs before `initialize` at startup.
+    final AppLocalizations strings = await _strings();
+
     try {
       await _plugin.initialize(
-        settings: const InitializationSettings(
-          android: AndroidInitializationSettings('ic_notification'),
+        settings: InitializationSettings(
+          android: const AndroidInitializationSettings('ic_notification'),
           iOS: DarwinInitializationSettings(
+            // Asked for explicitly in `requestPermissions`, after onboarding
+            // has explained why, rather than in the first frame.
             requestAlertPermission: false,
             requestBadgePermission: false,
             requestSoundPermission: false,
+            notificationCategories: routineNotificationCategories(strings),
           ),
         ),
         onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
@@ -113,6 +135,13 @@ class AppNotificationService {
           AndroidFlutterLocalNotificationsPlugin
         >()
         ?.requestExactAlarmsPermission();
+    // Without this iOS never shows the permission prompt, and every reminder
+    // is silently dropped with no error to notice.
+    await _plugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
   Future<void> syncRoutineSchedules(AppDatabase appDatabase) async {
@@ -122,24 +151,86 @@ class AppNotificationService {
 
     final List<RoutineBundleRow> bundles = await appDatabase
         .getRoutineBundles();
+    final List<domain.Routine> routines = bundles
+        .map(_routineFromBundle)
+        .toList();
 
     // Rebuild each routine's own weekly slots rather than `cancelAll()`, which
     // also dropped any pending snooze and dismissed a reminder that was on
     // screen — every time the app was opened.
-    for (final RoutineBundleRow bundle in bundles) {
-      final domain.Routine routine = domain.Routine(
-        id: bundle.routine.id,
-        title: bundle.routine.title,
-        category: domain.RoutineCategory.values.byName(bundle.routine.category),
-        reminderTime: bundle.schedule.reminderTime,
-        repeatDays: _decodeRepeatDays(bundle.schedule.repeatDays),
-        isEnabled: bundle.routine.isEnabled,
-        snoozeMinutes: bundle.schedule.snoozeMinutes,
-        createdAt: bundle.routine.createdAt,
-        updatedAt: bundle.routine.updatedAt,
-      );
-      await scheduleRoutine(routine);
+    for (final domain.Routine routine in routines) {
+      await cancelRoutine(routine.id);
     }
+
+    final AppLocalizations strings = await _strings();
+    for (final RoutineReminderSlot slot in plannedSlots(
+      routines,
+      isIOS: _isIOS,
+    )) {
+      await _scheduleSlot(
+        routine: slot.routine,
+        weekday: slot.weekday,
+        strings: strings,
+      );
+    }
+  }
+
+  /// Every weekday of every enabled routine, in the order they will fire.
+  ///
+  /// On Android that is simply all of them. On iOS the list is trimmed to what
+  /// the OS will actually keep, soonest first, so the reminders that survive
+  /// are the next ones due rather than whichever ones iOS happened to accept.
+  /// Trimming here — in the whole-set sync that runs at every launch — is what
+  /// makes the surviving set deterministic.
+  @visibleForTesting
+  static List<RoutineReminderSlot> plannedSlots(
+    List<domain.Routine> routines, {
+    required bool isIOS,
+  }) {
+    final List<RoutineReminderSlot> slots = <RoutineReminderSlot>[];
+
+    for (final domain.Routine routine in routines) {
+      if (!routine.isEnabled) {
+        continue;
+      }
+      for (final int weekday in routine.repeatDays) {
+        slots.add(
+          RoutineReminderSlot(
+            routine: routine,
+            weekday: weekday,
+            firesAt: _nextWeeklyDate(
+              weekday: weekday,
+              reminderTime: routine.reminderTime,
+            ),
+          ),
+        );
+      }
+    }
+
+    if (!isIOS) {
+      return slots;
+    }
+
+    slots.sort(
+      (RoutineReminderSlot a, RoutineReminderSlot b) =>
+          a.firesAt.compareTo(b.firesAt),
+    );
+    final int budget = iosPendingLimit - _iosSnoozeReserve;
+    return slots.length <= budget ? slots : slots.sublist(0, budget);
+  }
+
+  static domain.Routine _routineFromBundle(RoutineBundleRow bundle) {
+    return domain.Routine(
+      id: bundle.routine.id,
+      title: bundle.routine.title,
+      category: domain.RoutineCategory.values.byName(bundle.routine.category),
+      reminderTime: bundle.schedule.reminderTime,
+      repeatDays: _decodeRepeatDays(bundle.schedule.repeatDays),
+      isEnabled: bundle.routine.isEnabled,
+      snoozeMinutes: bundle.schedule.snoozeMinutes,
+      createdAt: bundle.routine.createdAt,
+      updatedAt: bundle.routine.updatedAt,
+    );
   }
 
   Future<void> scheduleRoutine(domain.Routine routine) async {
@@ -155,43 +246,39 @@ class AppNotificationService {
     final AppLocalizations strings = await _strings();
 
     for (final int weekday in routine.repeatDays) {
-      await _zonedScheduleWithFallback(
-        id: routineNotificationId(routine.id, weekday),
-        title: routine.title,
-        body: strings.notificationReminderBody(routine.title),
-        scheduledDate: _nextWeeklyDate(
-          weekday: weekday,
-          reminderTime: routine.reminderTime,
-        ),
-        notificationDetails: NotificationDetails(
-          android: AndroidNotificationDetails(
-            routineChannelId,
-            routineChannelName,
-            channelDescription: routineChannelDescription,
-            importance: Importance.max,
-            priority: Priority.high,
-            // Both handled without opening the app: a reminder you have to
-            // launch the app to answer is a reminder people stop answering.
-            actions: <AndroidNotificationAction>[
-              AndroidNotificationAction(
-                notificationDoneActionId,
-                strings.notificationDoneAction,
-              ),
-              AndroidNotificationAction(
-                notificationSnoozeActionId,
-                strings.notificationSnoozeAction(routine.snoozeMinutes),
-              ),
-            ],
-          ),
-        ),
-        payload: RoutineNotificationPayload(
-          routineId: routine.id,
-          snoozeMinutes: routine.snoozeMinutes,
-          title: routine.title,
-        ).encode(),
-        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      await _scheduleSlot(
+        routine: routine,
+        weekday: weekday,
+        strings: strings,
       );
     }
+  }
+
+  /// One weekly reminder for one routine on one weekday.
+  Future<void> _scheduleSlot({
+    required domain.Routine routine,
+    required int weekday,
+    required AppLocalizations strings,
+  }) async {
+    await _zonedScheduleWithFallback(
+      id: routineNotificationId(routine.id, weekday),
+      title: routine.title,
+      body: strings.notificationReminderBody(routine.title),
+      scheduledDate: _nextWeeklyDate(
+        weekday: weekday,
+        reminderTime: routine.reminderTime,
+      ),
+      notificationDetails: routineNotificationDetails(
+        strings: strings,
+        snoozeMinutes: routine.snoozeMinutes,
+      ),
+      payload: RoutineNotificationPayload(
+        routineId: routine.id,
+        snoozeMinutes: routine.snoozeMinutes,
+        title: routine.title,
+      ).encode(),
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+    );
   }
 
   /// Schedules exactly when the OS allows it, and inexactly when it does not.
@@ -259,24 +346,9 @@ class AppNotificationService {
       title: title,
       body: strings.notificationReminderBody(title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
-      notificationDetails: NotificationDetails(
-        android: AndroidNotificationDetails(
-          routineChannelId,
-          routineChannelName,
-          channelDescription: routineChannelDescription,
-          importance: Importance.max,
-          priority: Priority.high,
-          actions: <AndroidNotificationAction>[
-            AndroidNotificationAction(
-              notificationDoneActionId,
-              strings.notificationDoneAction,
-            ),
-            AndroidNotificationAction(
-              notificationSnoozeActionId,
-              strings.notificationSnoozeAction(snoozeMinutes),
-            ),
-          ],
-        ),
+      notificationDetails: routineNotificationDetails(
+        strings: strings,
+        snoozeMinutes: snoozeMinutes,
       ),
       payload:
           payload ??
@@ -458,4 +530,16 @@ class AppNotificationService {
   }
 }
 
+/// One routine's reminder on one weekday, with the moment it next fires.
+@immutable
+class RoutineReminderSlot {
+  const RoutineReminderSlot({
+    required this.routine,
+    required this.weekday,
+    required this.firesAt,
+  });
 
+  final domain.Routine routine;
+  final int weekday;
+  final tz.TZDateTime firesAt;
+}

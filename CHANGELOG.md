@@ -4,6 +4,38 @@ All notable changes to OpenLife Routine will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **iOS reminders.** The notification stack was Android-only in every path
+  that mattered, and none of it failed loudly:
+  - the `openlife_routine/timezone` channel existed only in `MainActivity.kt`,
+    so on iOS `tz.local` stayed at the package default of UTC and every
+    reminder would have fired seven hours from the chosen time in WIB;
+  - nothing ever asked iOS for notification permission, so every reminder was
+    dropped silently;
+  - `NotificationDetails` was built with only an `android:` section in all
+    three scheduling paths, so the Done and Snooze buttons could not appear on
+    iOS at all.
+  Each is now handled, and the reminder's presentation is built in one shared
+  place so a platform cannot be remembered in one path and forgotten in
+  another.
+- **A budget for the iOS 64-notification cap.** iOS keeps only 64 pending
+  requests and discards the rest without a word; seven weekly slots per routine
+  means a tenth routine already exceeds it. The launch sync now trims the set
+  itself, soonest first, so the reminders that survive are the next ones due
+  rather than whichever ones iOS happened to accept. Android is unaffected.
+
+### Changed
+- The chosen language is now read before the notification stack initialises,
+  because iOS bakes its action labels into the category registered there and
+  cannot relabel them afterwards.
+
+### Testing
+- 393 tests (up from 378), covering the iOS budget's ordering and bounds, the
+  category and its action options, and platform parity in the shared details
+  builder.
+
+## [1.2.0] — 2026-09-02
+
 Reminders and notifications, made to actually work end to end.
 
 ### Added

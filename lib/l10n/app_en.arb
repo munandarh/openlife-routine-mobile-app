@@ -339,6 +339,10 @@
   "aboutLicense": "License",
   "aboutLicenseBody": "Apache License 2.0 — Free for personal and commercial use. The OpenLife Routine name and logo are reserved for the official project.",
   "notificationSnoozedTitle": "Snoozed reminder",
+  "notificationSnoozeActionGeneric": "Snooze",
+  "@notificationSnoozeActionGeneric": {
+    "description": "iOS action label. iOS registers notification categories once at startup, so the label cannot carry a per-routine snooze duration the way the Android one does."
+  },
   "notificationSnoozeAction": "Snooze {minutes} min",
   "@notificationSnoozeAction": {
     "placeholders": {

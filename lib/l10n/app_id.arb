@@ -339,6 +339,10 @@
   "aboutLicense": "Lisensi",
   "aboutLicenseBody": "Apache License 2.0 — Bebas dipakai untuk keperluan pribadi maupun komersial. Nama dan logo OpenLife Routine dilindungi untuk proyek resmi.",
   "notificationSnoozedTitle": "Pengingat ditunda",
+  "notificationSnoozeActionGeneric": "Tunda",
+  "@notificationSnoozeActionGeneric": {
+    "description": "iOS action label. iOS registers notification categories once at startup, so the label cannot carry a per-routine snooze duration the way the Android one does."
+  },
   "notificationSnoozeAction": "Tunda {minutes} mnt",
   "@notificationSnoozeAction": {
     "placeholders": {

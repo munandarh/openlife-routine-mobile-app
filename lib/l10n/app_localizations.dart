@@ -1490,6 +1490,12 @@ abstract class AppLocalizations {
   /// **'Snoozed reminder'**
   String get notificationSnoozedTitle;
 
+  /// iOS action label. iOS registers notification categories once at startup, so the label cannot carry a per-routine snooze duration the way the Android one does.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get notificationSnoozeActionGeneric;
+
   /// No description provided for @notificationSnoozeAction.
   ///
   /// In en, this message translates to:

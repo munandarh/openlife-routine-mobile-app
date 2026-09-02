@@ -150,9 +150,85 @@ const String routineChannelName = 'Routine reminders';
 const String routineChannelDescription =
     'Reminder notifications for daily routines';
 
+/// iOS attaches actions to a category registered once at startup, not to the
+/// individual notification the way Android does. Every routine reminder is
+/// posted under this id so the Done and Snooze buttons appear on iOS too.
+const String routineCategoryId = 'routine_reminder';
+
 /// Slot for a one-off snooze. Weekday slots 1-7 belong to the recurring
 /// schedule, so re-arming a snooze never cancels a weekly reminder.
 const int routineSnoozeSlot = 99;
+
+/// The one place a routine reminder's presentation is described.
+///
+/// The reminder is scheduled from three places (the weekly schedule, an
+/// in-app snooze, and the background isolate's snooze), and iOS was originally
+/// missing from all three because each built its own [NotificationDetails]
+/// with only an `android:` section. Building it here means a platform cannot
+/// be forgotten in one site and remembered in another.
+NotificationDetails routineNotificationDetails({
+  required AppLocalizations strings,
+  required int snoozeMinutes,
+}) {
+  return NotificationDetails(
+    android: AndroidNotificationDetails(
+      routineChannelId,
+      routineChannelName,
+      channelDescription: routineChannelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+      // Both handled without opening the app: a reminder you have to launch
+      // the app to answer is a reminder people stop answering.
+      actions: <AndroidNotificationAction>[
+        AndroidNotificationAction(
+          notificationDoneActionId,
+          strings.notificationDoneAction,
+        ),
+        AndroidNotificationAction(
+          notificationSnoozeActionId,
+          strings.notificationSnoozeAction(snoozeMinutes),
+        ),
+      ],
+    ),
+    iOS: const DarwinNotificationDetails(
+      categoryIdentifier: routineCategoryId,
+      // The buttons themselves come from the category registered at startup;
+      // see [routineNotificationCategories].
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    ),
+  );
+}
+
+/// The iOS categories to register in `DarwinInitializationSettings`.
+///
+/// Unlike Android, iOS fixes the action labels at registration time, so the
+/// snooze button cannot show each routine's own duration — hence the generic
+/// label. Neither action carries `foreground`, which is what lets iOS answer
+/// a reminder without opening the app, the same as Android.
+List<DarwinNotificationCategory> routineNotificationCategories(
+  AppLocalizations strings,
+) {
+  return <DarwinNotificationCategory>[
+    DarwinNotificationCategory(
+      routineCategoryId,
+      actions: <DarwinNotificationAction>[
+        DarwinNotificationAction.plain(
+          notificationDoneActionId,
+          strings.notificationDoneAction,
+        ),
+        DarwinNotificationAction.plain(
+          notificationSnoozeActionId,
+          strings.notificationSnoozeActionGeneric,
+        ),
+      ],
+      options: <DarwinNotificationCategoryOption>{
+        DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
+      },
+    ),
+  ];
+}
 
 /// Stable notification id for a routine on a given slot.
 int routineNotificationId(String routineId, int slot) {
@@ -195,24 +271,9 @@ Future<void> rescheduleSnoozeFromBackground({
   final FlutterLocalNotificationsPlugin plugin =
       FlutterLocalNotificationsPlugin();
 
-  final NotificationDetails details = NotificationDetails(
-    android: AndroidNotificationDetails(
-      routineChannelId,
-      routineChannelName,
-      channelDescription: routineChannelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-      actions: <AndroidNotificationAction>[
-        AndroidNotificationAction(
-          notificationDoneActionId,
-          strings.notificationDoneAction,
-        ),
-        AndroidNotificationAction(
-          notificationSnoozeActionId,
-          strings.notificationSnoozeAction(payload.snoozeMinutes),
-        ),
-      ],
-    ),
+  final NotificationDetails details = routineNotificationDetails(
+    strings: strings,
+    snoozeMinutes: payload.snoozeMinutes,
   );
 
   try {

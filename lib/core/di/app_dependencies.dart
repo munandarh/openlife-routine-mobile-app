@@ -57,17 +57,19 @@ class AppDependencies {
     final RoutineRepository routineRepository = DriftRoutineRepository(
       RoutineLocalDataSource(appDatabase),
     );
-    final AppNotificationService notificationService = AppNotificationService();
-    final String? initialNotificationRoutineId = await notificationService
-        .initialize();
     final SettingsRepository settingsRepository = SharedPrefsSettingsRepository(
       preferences,
     );
+    final AppNotificationService notificationService = AppNotificationService();
     // Reminder text is rendered by the service, so it needs the chosen
-    // language before any schedule is written.
+    // language before any schedule is written — and before `initialize`,
+    // because iOS bakes the action labels into the category it registers
+    // there and cannot relabel them afterwards.
     notificationService.setLanguageCode(
       await settingsRepository.getLanguageCode(),
     );
+    final String? initialNotificationRoutineId = await notificationService
+        .initialize();
     // Lets a notification action handled while the app is alive write the same
     // log the background isolate would.
     notificationService.attachDatabase(appDatabase);

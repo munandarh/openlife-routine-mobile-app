@@ -793,6 +793,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationSnoozedTitle => 'Snoozed reminder';
 
   @override
+  String get notificationSnoozeActionGeneric => 'Snooze';
+
+  @override
   String notificationSnoozeAction(int minutes) {
     return 'Snooze $minutes min';
   }

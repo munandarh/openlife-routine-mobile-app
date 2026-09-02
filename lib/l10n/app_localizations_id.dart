@@ -790,6 +790,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get notificationSnoozedTitle => 'Pengingat ditunda';
 
   @override
+  String get notificationSnoozeActionGeneric => 'Tunda';
+
+  @override
   String notificationSnoozeAction(int minutes) {
     return 'Tunda $minutes mnt';
   }

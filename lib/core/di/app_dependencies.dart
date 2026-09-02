@@ -65,7 +65,12 @@ class AppDependencies {
     );
     // Reminder text is rendered by the service, so it needs the chosen
     // language before any schedule is written.
-    notificationService.setLanguageCode(await settingsRepository.getLanguageCode());
+    notificationService.setLanguageCode(
+      await settingsRepository.getLanguageCode(),
+    );
+    // Lets a notification action handled while the app is alive write the same
+    // log the background isolate would.
+    notificationService.attachDatabase(appDatabase);
     await notificationService.syncRoutineSchedules(appDatabase);
 
     return AppDependencies(

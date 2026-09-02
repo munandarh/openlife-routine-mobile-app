@@ -53,6 +53,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
   Set<int> _repeatDays = <int>{1, 2, 3};
   bool _seededFromExisting = false;
   int _snoozeMinutes = 10;
+  bool _isEnabled = true;
 
   /// Null means "use the category default icon".
   String? _iconKey;
@@ -91,6 +92,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
           _repeatDays = routine.repeatDays.toSet();
           _snoozeMinutes = routine.snoozeMinutes;
           _iconKey = routine.iconKey;
+          _isEnabled = routine.isEnabled;
           _seededFromExisting = true;
           setState(() {});
         }
@@ -272,6 +274,31 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     ),
                   ],
                 ),
+                const SizedBox(height: AppSpacing.xxl),
+                // PRD 8.3 lists Active as a routine field, and 13.1 requires
+                // enable/disable. Without it the only way to stop a reminder
+                // was to delete the routine and lose its history.
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.large),
+                    border: Border.all(color: context.palette.border),
+                  ),
+                  child: SwitchListTile.adaptive(
+                    value: _isEnabled,
+                    onChanged: (bool value) {
+                      setState(() => _isEnabled = value);
+                    },
+                    secondary: Icon(
+                      _isEnabled
+                          ? Icons.notifications_active_outlined
+                          : Icons.notifications_off_outlined,
+                      color: AppColors.primary,
+                    ),
+                    title: Text(l10n.routineActiveLabel),
+                    subtitle: Text(l10n.routineActiveDescription),
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.xxxl),
                 PrimaryButton(
                   label: isEditing ? l10n.saveChanges : l10n.saveRoutine,
@@ -315,7 +342,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
           category: _selectedCategory,
           reminderTime: L10nFormatters.serializeTime(_selectedTime),
           repeatDays: repeatDays,
-          isEnabled: true,
+          isEnabled: _isEnabled,
           snoozeMinutes: _snoozeMinutes,
           iconKey: _iconKey,
           notes: notes,
@@ -330,6 +357,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
         category: _selectedCategory,
         reminderTime: L10nFormatters.serializeTime(_selectedTime),
         repeatDays: repeatDays,
+        isEnabled: _isEnabled,
         snoozeMinutes: _snoozeMinutes,
         iconKey: _iconKey,
         notes: notes,

@@ -384,5 +384,8 @@
   "notificationChannelName": "Pengingat rutinitas",
   "notificationChannelDescription": "Notifikasi pengingat untuk rutinitas harian",
   "copyAction": "Salin",
-  "copiedToClipboard": "Cadangan disalin ke papan klip."
+  "copiedToClipboard": "Cadangan disalin ke papan klip.",
+  "notificationDoneAction": "Selesai",
+  "routineActiveLabel": "Aktif",
+  "routineActiveDescription": "Kirim pengingat untuk rutinitas ini."
 }

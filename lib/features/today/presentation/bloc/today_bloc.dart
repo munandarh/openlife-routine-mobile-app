@@ -23,6 +23,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
          ),
        ) {
     on<TodayStarted>(_onStarted);
+    on<TodayRefreshRequested>(_onRefreshRequested);
     on<TodayDateSelected>(_onDateSelected);
     on<TodayRoutineCompletionToggled>(_onRoutineCompletionToggled);
     on<TodayRoutineSkipped>(_onRoutineSkipped);
@@ -39,6 +40,19 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
 
   Future<void> _onStarted(TodayStarted event, Emitter<TodayState> emit) async {
     emit(state.copyWith(status: TodayStatus.loading, clearErrorMessage: true));
+    _routineBundles = await _appDatabase.getRoutineBundles();
+    await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
+  }
+
+  /// Reloads the routine list and re-emits for the day already in view.
+  ///
+  /// Deliberately does not show the loading spinner: this runs on resume and
+  /// after returning from another screen, where a flash of blank Today would
+  /// be worse than a frame of slightly stale data.
+  Future<void> _onRefreshRequested(
+    TodayRefreshRequested event,
+    Emitter<TodayState> emit,
+  ) async {
     _routineBundles = await _appDatabase.getRoutineBundles();
     await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
   }
@@ -71,6 +85,9 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         dateKey: dateKey,
         status: 'done',
       );
+      // Answering here should also clear the reminder still sitting in the
+      // notification shade.
+      await _notificationService?.dismissShownRoutine(event.routineId);
     }
 
     await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
@@ -94,6 +111,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         dateKey: dateKey,
         status: 'skipped',
       );
+      await _notificationService?.dismissShownRoutine(event.routineId);
     }
 
     await _emitSelectedDateState(emit, selectedDate: state.selectedDate);

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:openlife_routine/core/notifications/notification_actions.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart'
     as domain;
@@ -28,10 +29,24 @@ class AppNotificationService {
   final MethodChannel _timezoneChannel;
   final StreamController<String> _routineTapController =
       StreamController<String>.broadcast();
+  final StreamController<String> _routineActionController =
+      StreamController<String>.broadcast();
   bool _disabled = false;
   Locale _locale = const Locale('en');
 
+  /// Set once at startup so a notification action handled while the app is
+  /// alive can write the same log the background isolate would.
+  AppDatabase? _database;
+
+  void attachDatabase(AppDatabase database) {
+    _database = database;
+  }
+
   Stream<String> get routineTapStream => _routineTapController.stream;
+
+  /// Emits when a notification action changed a routine, so open screens can
+  /// reload instead of showing stale state.
+  Stream<String> get routineActionStream => _routineActionController.stream;
 
   /// Notifications are built outside any widget tree, so the service keeps its
   /// own copy of the chosen language and resolves strings from the generated
@@ -65,6 +80,8 @@ class AppNotificationService {
           ),
         ),
         onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+        onDidReceiveBackgroundNotificationResponse:
+            handleNotificationActionInBackground,
       );
     } on PlatformException catch (error) {
       // Losing reminders is bad; failing to open the app at all is worse.
@@ -76,7 +93,9 @@ class AppNotificationService {
 
     final NotificationAppLaunchDetails? launchDetails = await _plugin
         .getNotificationAppLaunchDetails();
-    return _routineIdFromPayload(launchDetails?.notificationResponse?.payload);
+    return RoutineNotificationPayload.decode(
+      launchDetails?.notificationResponse?.payload,
+    )?.routineId;
   }
 
   Future<void> requestPermissions() async {
@@ -104,9 +123,9 @@ class AppNotificationService {
     final List<RoutineBundleRow> bundles = await appDatabase
         .getRoutineBundles();
 
-    // ponytail: app only owns local reminders right now, so reset all and rebuild.
-    await _plugin.cancelAll();
-
+    // Rebuild each routine's own weekly slots rather than `cancelAll()`, which
+    // also dropped any pending snooze and dismissed a reminder that was on
+    // screen — every time the app was opened.
     for (final RoutineBundleRow bundle in bundles) {
       final domain.Routine routine = domain.Routine(
         id: bundle.routine.id,
@@ -137,7 +156,7 @@ class AppNotificationService {
 
     for (final int weekday in routine.repeatDays) {
       await _zonedScheduleWithFallback(
-        id: _notificationId(routine.id, weekday),
+        id: routineNotificationId(routine.id, weekday),
         title: routine.title,
         body: strings.notificationReminderBody(routine.title),
         scheduledDate: _nextWeeklyDate(
@@ -146,25 +165,30 @@ class AppNotificationService {
         ),
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
+            routineChannelId,
+            routineChannelName,
+            channelDescription: routineChannelDescription,
             importance: Importance.max,
             priority: Priority.high,
+            // Both handled without opening the app: a reminder you have to
+            // launch the app to answer is a reminder people stop answering.
             actions: <AndroidNotificationAction>[
               AndroidNotificationAction(
-                'snooze',
+                notificationDoneActionId,
+                strings.notificationDoneAction,
+              ),
+              AndroidNotificationAction(
+                notificationSnoozeActionId,
                 strings.notificationSnoozeAction(routine.snoozeMinutes),
-                showsUserInterface: true,
               ),
             ],
           ),
         ),
-        payload: _routinePayload(
+        payload: RoutineNotificationPayload(
           routineId: routine.id,
           snoozeMinutes: routine.snoozeMinutes,
           title: routine.title,
-        ),
+        ).encode(),
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
     }
@@ -221,6 +245,7 @@ class AppNotificationService {
     required String routineId,
     required String title,
     required DateTime scheduledFor,
+    int snoozeMinutes = 10,
     String? payload,
   }) async {
     if (_disabled) {
@@ -230,27 +255,52 @@ class AppNotificationService {
     final AppLocalizations strings = await _strings();
 
     await _zonedScheduleWithFallback(
-      id: _notificationId(routineId, _snoozeSlot),
+      id: routineNotificationId(routineId, routineSnoozeSlot),
       title: title,
       body: strings.notificationReminderBody(title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
-      notificationDetails: const NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
+          routineChannelId,
+          routineChannelName,
+          channelDescription: routineChannelDescription,
           importance: Importance.max,
           priority: Priority.high,
+          actions: <AndroidNotificationAction>[
+            AndroidNotificationAction(
+              notificationDoneActionId,
+              strings.notificationDoneAction,
+            ),
+            AndroidNotificationAction(
+              notificationSnoozeActionId,
+              strings.notificationSnoozeAction(snoozeMinutes),
+            ),
+          ],
         ),
       ),
       payload:
           payload ??
-          _routinePayload(
+          RoutineNotificationPayload(
             routineId: routineId,
-            snoozeMinutes: 10,
+            snoozeMinutes: snoozeMinutes,
             title: title,
-          ),
+          ).encode(),
     );
+  }
+
+  /// Dismisses a reminder that is currently on screen for [routineId].
+  ///
+  /// Answering a routine inside the app used to leave its notification sitting
+  /// in the shade, still asking.
+  Future<void> dismissShownRoutine(String routineId) async {
+    if (_disabled) {
+      return;
+    }
+
+    for (int weekday = 1; weekday <= 7; weekday += 1) {
+      await _plugin.cancel(id: routineNotificationId(routineId, weekday));
+    }
+    await _plugin.cancel(id: routineNotificationId(routineId, routineSnoozeSlot));
   }
 
   Future<void> cancelRoutine(String routineId) async {
@@ -259,18 +309,19 @@ class AppNotificationService {
     }
 
     for (int weekday = 1; weekday <= 7; weekday += 1) {
-      await _plugin.cancel(id: _notificationId(routineId, weekday));
+      await _plugin.cancel(id: routineNotificationId(routineId, weekday));
     }
-    await _plugin.cancel(id: _notificationId(routineId, _snoozeSlot));
+    await _plugin.cancel(id: routineNotificationId(routineId, routineSnoozeSlot));
   }
 
   Future<void> dispose() async {
     await _routineTapController.close();
+    await _routineActionController.close();
   }
 
   @visibleForTesting
   static int notificationIdFor(String routineId, int weekday) {
-    return _notificationId(routineId, weekday);
+    return routineNotificationId(routineId, weekday);
   }
 
   @visibleForTesting
@@ -305,22 +356,42 @@ class AppNotificationService {
   Future<void> _onDidReceiveNotificationResponse(
     NotificationResponse response,
   ) async {
-    final String? routineId = _routineIdFromPayload(response.payload);
-    if (routineId == null) {
+    final RoutineNotificationPayload? payload =
+        RoutineNotificationPayload.decode(response.payload);
+    if (payload == null) {
       return;
     }
 
-    if (response.actionId == 'snooze') {
-      final int snoozeMinutes = _snoozeMinutesFromPayload(response.payload);
-      await scheduleSnoozedRoutine(
-        routineId: routineId,
-        title: _titleFromPayload(response.payload) ?? routineId,
-        scheduledFor: DateTime.now().add(Duration(minutes: snoozeMinutes)),
-        payload: response.payload,
-      );
+    final String? actionId = response.actionId;
+    if (actionId != null) {
+      // The app is alive, so the foreground handler fires instead of the
+      // background isolate; it has to do the same work.
+      final AppDatabase? database = _database;
+      if (database != null) {
+        final NotificationActionResult result =
+            await applyRoutineNotificationAction(
+              database: database,
+              payload: payload,
+              actionId: actionId,
+            );
+        final DateTime? snoozedUntil = result.snoozedUntil;
+        if (snoozedUntil != null) {
+          await scheduleSnoozedRoutine(
+            routineId: payload.routineId,
+            title: payload.title,
+            scheduledFor: snoozedUntil,
+            snoozeMinutes: payload.snoozeMinutes,
+            payload: response.payload,
+          );
+        }
+      }
+
+      // An action is an answer, not a request to open the routine.
+      _routineActionController.add(payload.routineId);
+      return;
     }
 
-    _routineTapController.add(routineId);
+    _routineTapController.add(payload.routineId);
   }
 
   static List<int> _decodeRepeatDays(String encodedRepeatDays) {
@@ -331,53 +402,10 @@ class AppNotificationService {
     }
   }
 
-  static String _routinePayload({
-    required String routineId,
-    required int snoozeMinutes,
-    required String title,
-  }) {
-    // Pipe-delimited with the title last, so a title containing '|' still
-    // round-trips and payloads written by older builds (id|minutes) still
-    // parse.
-    return '$routineId|$snoozeMinutes|$title';
-  }
 
-  static String? _titleFromPayload(String? payload) {
-    if (payload == null || payload.isEmpty) {
-      return null;
-    }
-    final List<String> parts = payload.split('|');
-    if (parts.length < 3) {
-      return null;
-    }
-    return parts.sublist(2).join('|');
-  }
 
-  static String? _routineIdFromPayload(String? payload) {
-    if (payload == null || payload.isEmpty) {
-      return null;
-    }
-    return payload.split('|').first;
-  }
 
-  static int _snoozeMinutesFromPayload(String? payload) {
-    if (payload == null || payload.isEmpty) {
-      return 10;
-    }
-    final List<String> parts = payload.split('|');
-    if (parts.length < 2) {
-      return 10;
-    }
-    return int.tryParse(parts[1]) ?? 10;
-  }
 
-  static int _notificationId(String routineId, int weekday) {
-    int hash = weekday;
-    for (final int codeUnit in routineId.codeUnits) {
-      hash = ((hash * 31) + codeUnit) & 0x7fffffff;
-    }
-    return hash;
-  }
 
   static tz.TZDateTime _nextWeeklyDate({
     required int weekday,
@@ -416,10 +444,4 @@ class AppNotificationService {
   }
 }
 
-/// Weekday slots 1-7 belong to the recurring schedule; a snooze uses its own
-/// slot so re-arming it never cancels a weekly reminder.
-const int _snoozeSlot = 99;
 
-const String _channelId = 'routine_reminders';
-const String _channelName = 'Routine reminders';
-const String _channelDescription = 'Reminder notifications for daily routines';

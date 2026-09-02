@@ -32,10 +32,38 @@ class RoutineDetailPage extends StatelessWidget {
   }
 }
 
-class _RoutineDetailView extends StatelessWidget {
+class _RoutineDetailView extends StatefulWidget {
   const _RoutineDetailView({required this.routineId});
 
   final String routineId;
+
+  @override
+  State<_RoutineDetailView> createState() => _RoutineDetailViewState();
+}
+
+class _RoutineDetailViewState extends State<_RoutineDetailView> {
+  String get routineId => widget.routineId;
+
+  // Editing happens on a pushed route, so this page is still alive and holding
+  // the snapshot it loaded on entry. Without this reload it kept showing the
+  // old time after a save, which reads as "the edit did not stick" even though
+  // the alarms had already been rescheduled.
+  void _reload() {
+    if (!mounted) {
+      return;
+    }
+    context.read<RoutineBloc>().add(RoutineDetailRequested(routineId));
+  }
+
+  Future<void> _openEditor() async {
+    await context.push(
+      Uri(
+        path: OpenLifeRoute.newRoutine.path,
+        queryParameters: <String, String>{'id': routineId},
+      ).toString(),
+    );
+    _reload();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,12 +182,7 @@ class _RoutineDetailView extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xxl),
                   PrimaryButton(
                     label: l10n.editRoutineAction,
-                    onPressed: () => context.push(
-                      Uri(
-                        path: OpenLifeRoute.newRoutine.path,
-                        queryParameters: <String, String>{'id': routineId},
-                      ).toString(),
-                    ),
+                    onPressed: _openEditor,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   PrimaryButton(

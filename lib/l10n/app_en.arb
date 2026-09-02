@@ -384,5 +384,8 @@
   "notificationChannelName": "Routine reminders",
   "notificationChannelDescription": "Reminder notifications for daily routines",
   "copyAction": "Copy",
-  "copiedToClipboard": "Backup copied to the clipboard."
+  "copiedToClipboard": "Backup copied to the clipboard.",
+  "notificationDoneAction": "Done",
+  "routineActiveLabel": "Active",
+  "routineActiveDescription": "Send reminders for this routine."
 }

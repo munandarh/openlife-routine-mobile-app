@@ -74,7 +74,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       category: event.category,
       reminderTime: event.reminderTime,
       repeatDays: event.repeatDays,
-      isEnabled: true,
+      isEnabled: event.isEnabled,
       snoozeMinutes: event.snoozeMinutes,
       iconKey: event.iconKey,
       notes: event.notes,

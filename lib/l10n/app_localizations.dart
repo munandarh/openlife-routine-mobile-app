@@ -1681,6 +1681,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backup copied to the clipboard.'**
   String get copiedToClipboard;
+
+  /// No description provided for @notificationDoneAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get notificationDoneAction;
+
+  /// No description provided for @routineActiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get routineActiveLabel;
+
+  /// No description provided for @routineActiveDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reminders for this routine.'**
+  String get routineActiveDescription;
 }
 
 class _AppLocalizationsDelegate

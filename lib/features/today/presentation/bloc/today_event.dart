@@ -47,3 +47,12 @@ final class TodayRoutineSnoozed extends TodayEvent {
   @override
   List<Object?> get props => <Object?>[routineId];
 }
+
+/// Re-reads the routines themselves, not just today's logs.
+///
+/// The bloc snapshots the routine list when it starts, so a routine created,
+/// edited or deleted while Today stayed mounted — or a notification action
+/// answered outside the app — was invisible until the screen was rebuilt.
+final class TodayRefreshRequested extends TodayEvent {
+  const TodayRefreshRequested();
+}

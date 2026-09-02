@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +48,35 @@ class _TodayView extends StatefulWidget {
 
 class _TodayViewState extends State<_TodayView> {
   bool _showCelebration = false;
+  AppLifecycleListener? _lifecycleListener;
+  StreamSubscription<String>? _actionSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Today snapshots its routines, so anything that changes them behind the
+    // screen has to ask for a reload: coming back from another app, and a
+    // reminder answered from the notification shade.
+    _lifecycleListener = AppLifecycleListener(onResume: _refresh);
+    _actionSubscription = AppScope.read(
+      context,
+    ).notificationService.routineActionStream.listen((_) => _refresh());
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener?.dispose();
+    _actionSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (!mounted) {
+      return;
+    }
+    context.read<TodayBloc>().add(const TodayRefreshRequested());
+  }
 
   bool get _reducedMotion {
     final SettingsBloc? settings = context.read<SettingsBloc?>();
@@ -162,8 +193,12 @@ class _TodayViewState extends State<_TodayView> {
                           description: l10n.noRoutinesForDateDesc,
                           buttonLabel: l10n.createRoutine,
                           icon: Icons.calendar_today_outlined,
-                          onPressed: () =>
-                              context.push(OpenLifeRoute.newRoutine.path),
+                          onPressed: () async {
+                            await context.push(
+                              OpenLifeRoute.newRoutine.path,
+                            );
+                            _refresh();
+                          },
                         )
                       else
                         ...state.items.map(
@@ -195,7 +230,10 @@ class _TodayViewState extends State<_TodayView> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             tooltip: l10n.createRoutine,
-            onPressed: () => context.push(OpenLifeRoute.newRoutine.path),
+            onPressed: () async {
+              await context.push(OpenLifeRoute.newRoutine.path);
+              _refresh();
+            },
             child: const Icon(Icons.add),
           ),
         ),
@@ -402,12 +440,17 @@ class _TodayRoutineCard extends StatelessWidget {
       checkSemanticLabel: item.status == TodayRoutineItemStatus.done
           ? l10n.undoAction
           : l10n.statusDone,
-      onTap: () => context.push(
-        Uri(
-          path: OpenLifeRoute.routineDetail.path,
-          queryParameters: <String, String>{'id': item.routineId},
-        ).toString(),
-      ),
+      onTap: () async {
+        await context.push(
+          Uri(
+            path: OpenLifeRoute.routineDetail.path,
+            queryParameters: <String, String>{'id': item.routineId},
+          ).toString(),
+        );
+        if (context.mounted) {
+          context.read<TodayBloc>().add(const TodayRefreshRequested());
+        }
+      },
       onCheckTap: () {
         HapticFeedback.lightImpact();
         bloc.add(TodayRoutineCompletionToggled(item.routineId));

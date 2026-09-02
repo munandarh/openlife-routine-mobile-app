@@ -897,4 +897,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Backup copied to the clipboard.';
+
+  @override
+  String get notificationDoneAction => 'Done';
+
+  @override
+  String get routineActiveLabel => 'Active';
+
+  @override
+  String get routineActiveDescription => 'Send reminders for this routine.';
 }

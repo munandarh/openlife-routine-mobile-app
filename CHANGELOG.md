@@ -2,6 +2,35 @@
 
 All notable changes to OpenLife Routine will be documented in this file.
 
+## [Unreleased]
+
+Reminders and notifications, made to actually work end to end.
+
+### Added
+- **Notification actions that answer without opening the app** — Done and
+  Snooze now run in a background isolate, so tapping either from the shade
+  writes the log and dismisses the reminder while the app stays closed.
+  Snooze reschedules using the routine's own snooze duration.
+- **Per-routine Active switch** in the New/Edit Routine form, seeded from the
+  routine on edit. Turning it off cancels that routine's alarms and leaves
+  every other routine's alarms alone.
+
+### Fixed
+- **Reminders were dropped on every launch** — the startup sync called
+  `cancelAll()`, which wiped pending snoozes and dismissed reminders that were
+  already showing. It now only reschedules what changed.
+- **Today showed a stale snapshot** — a routine marked Done from a notification
+  did not appear as done, and routines added while Today was open were missing
+  entirely. Today now reloads on resume and whenever a notification action is
+  answered.
+- **Routine Detail kept showing the pre-edit values** after saving an edit,
+  which read as "the save did not work" even though the alarms had already been
+  rescheduled.
+
+### Testing
+- 375 tests (up from 359), including the notification action handler, the
+  Today refresh path, and a regression test for the stale detail page.
+
 ## [1.1.0] — 2026-09-01
 
 The release that makes the v1.0 feature list true. Several things v1.0 claimed

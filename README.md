@@ -5,7 +5,7 @@
 [![CI](https://github.com/munandarh/openlife-routine-mobile-app/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/munandarh/openlife-routine-mobile-app/actions/workflows/flutter_ci.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Flutter](https://img.shields.io/badge/flutter-stable-blue)](https://flutter.dev)
-[![Tests](https://img.shields.io/badge/tests-359%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-375%20passing-brightgreen)]()
 [![Platform](https://img.shields.io/badge/platform-android-green)]()
 
 **OpenLife Routine** is an open-source, privacy-first, offline-first daily routine
@@ -118,7 +118,7 @@ Requires the Flutter stable channel with Dart SDK ^3.11.
 ## 🧪 Testing
 
 ```bash
-flutter test              # 359 tests
+flutter test              # 375 tests
 flutter analyze           # must be clean
 
 flutter test test/features/today/          # one area
@@ -195,7 +195,7 @@ demonstrating:
 - Local notification scheduling with snooze and timezone handling
 - Complete bilingual UI, notifications included
 - Accessibility verified by tests, not by assertion
-- 359 unit, BLoC, widget, accessibility and localization tests
+- 375 unit, BLoC, widget, accessibility and localization tests
 - Architecture Decision Records and maintained documentation
 - CI on every push
 

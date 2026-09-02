@@ -894,4 +894,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Cadangan disalin ke papan klip.';
+
+  @override
+  String get notificationDoneAction => 'Selesai';
+
+  @override
+  String get routineActiveLabel => 'Aktif';
+
+  @override
+  String get routineActiveDescription => 'Kirim pengingat untuk rutinitas ini.';
 }

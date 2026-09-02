@@ -89,6 +89,10 @@ test suite did not catch them.
   longer writes 30 days of `missed` logs or zeroes last week's rate.
 - **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
   registered the whole `assets/vector/` directory.
+- **The week strip on Today had the same defect as the Repeat picker.** Six
+  40px days plus a 52px selected one need 292px, so the row overflowed a 320dp
+  screen by 20px and clipped Sunday out of reach. Both now flex to an equal
+  share of the row.
 - **The Repeat day picker read as completely dead.** Seven fixed 44px chips
   overflowed a 360dp screen by 20px, which collapsed every gap and clipped
   Sunday out of reach, and `Ink` drew no pill, so the only feedback on tap was a

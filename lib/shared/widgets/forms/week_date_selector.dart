@@ -30,59 +30,77 @@ class WeekDateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Each day takes an equal share of the row. Fixed widths (40, or 52 for the
+    // selected day) add up to 292 and overflowed a 320dp screen by 20px, which
+    // clipped Sunday off the edge where it could not be tapped.
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List<Widget>.generate(items.length, (int index) {
         final WeekDateItem item = items[index];
         final bool isSelected = index == selectedIndex;
 
-        return GestureDetector(
-          onTap: onSelected == null ? null : () => onSelected!(index),
-          behavior: HitTestBehavior.opaque,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOutCubic,
-            width: isSelected ? 52 : 40,
-            height: isSelected ? 60 : 40,
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.primary : Colors.transparent,
-              borderRadius: isSelected
-                  ? BorderRadius.circular(AppRadius.extraLarge)
-                  : BorderRadius.circular(AppRadius.pill),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOutCubic,
-                  style: AppTextStyles.label.copyWith(
-                    color: isSelected ? Colors.white : AppColors.textSecondary,
-                  ),
-                  child: Text(item.weekday),
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+            child: GestureDetector(
+              onTap: onSelected == null ? null : () => onSelected!(index),
+              behavior: HitTestBehavior.opaque,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                // A floor rather than a fixed height, so the column still fits
+                // when the OS text scale grows the labels.
+                constraints: BoxConstraints(
+                  minHeight: isSelected ? 60 : 44,
                 ),
-                const SizedBox(height: AppSpacing.xxs),
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOutCubic,
-                  style: AppTextStyles.label.copyWith(
-                    color: isSelected ? Colors.white : AppColors.textPrimary,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                  ),
-                  child: Text(item.dayNumber),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppColors.primary : Colors.transparent,
+                  borderRadius: isSelected
+                      ? BorderRadius.circular(AppRadius.extraLarge)
+                      : BorderRadius.circular(AppRadius.pill),
                 ),
-                if (item.hasIndicator) ...<Widget>[
-                  const SizedBox(height: AppSpacing.xxs),
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOutCubic,
+                      style: AppTextStyles.label.copyWith(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.textSecondary,
+                      ),
+                      child: Text(item.weekday),
                     ),
-                  ),
-                ],
-              ],
+                    const SizedBox(height: AppSpacing.xxs),
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOutCubic,
+                      style: AppTextStyles.label.copyWith(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.textPrimary,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w600,
+                      ),
+                      child: Text(item.dayNumber),
+                    ),
+                    if (item.hasIndicator) ...<Widget>[
+                      const SizedBox(height: AppSpacing.xxs),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
         );

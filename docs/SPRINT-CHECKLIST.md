@@ -23,7 +23,7 @@
 |---|---|
 | App version | 1.1.0+2 |
 | `flutter analyze` | 0 issues |
-| `flutter test` | **282 passing** |
+| `flutter test` | **348 passing** |
 | Database schema | v4 |
 | Localized strings | 275 keys × EN/ID |
 | Illustrations wired | 10 PNG / 10 MVP |
@@ -211,8 +211,9 @@
 
 - [x] Tap targets ≥ 44×44, asserted by test
 - [x] Text scaling to 2.0× on every screen, asserted by test
-- [x] The New Routine form is layout-tested at 320/360/411dp — the Repeat row
-      used to overflow and clip Sunday out of reach
+- [x] **Every screen** is layout-swept at 320/360/411dp in both languages
+      (`test/accessibility/screen_layout_test.dart`) — this class of bug hit
+      both the Repeat picker and the Today week strip
 - [x] Semantic labels on icon-only controls
 - [x] Card actions are individually focusable
 - [x] Status conveyed by words, not colour alone

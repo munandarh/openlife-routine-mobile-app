@@ -314,6 +314,20 @@ class AppNotificationService {
     await _plugin.cancel(id: routineNotificationId(routineId, routineSnoozeSlot));
   }
 
+  /// Cancels every reminder this app has scheduled.
+  ///
+  /// Only for "Reset all data": the routines are gone, so their alarms have to
+  /// go with them or the user keeps getting reminders for routines that no
+  /// longer exist. The launch-time sync deliberately does NOT do this — see
+  /// [syncRoutineSchedules].
+  Future<void> cancelAllRoutines() async {
+    if (_disabled) {
+      return;
+    }
+
+    await _plugin.cancelAll();
+  }
+
   Future<void> dispose() async {
     await _routineTapController.close();
     await _routineActionController.close();

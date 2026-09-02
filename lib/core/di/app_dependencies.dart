@@ -124,6 +124,9 @@ class AppDependencies {
   }
 
   ExportImportService createExportImportService() {
-    return ExportImportService(appDatabase: appDatabase);
+    return ExportImportService(
+      appDatabase: appDatabase,
+      notificationService: notificationService,
+    );
   }
 }

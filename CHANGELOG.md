@@ -26,10 +26,16 @@ Reminders and notifications, made to actually work end to end.
 - **Routine Detail kept showing the pre-edit values** after saving an edit,
   which read as "the save did not work" even though the alarms had already been
   rescheduled.
+- **"Reset all data" left the reminders scheduled** — the routines were deleted
+  but their alarms kept firing, and tapping one opened a detail page for a
+  routine that no longer existed.
+- **An imported backup never reminded anyone** — importing restored the rows
+  but scheduled nothing, so the reminders only came back after a cold start.
 
 ### Testing
-- 375 tests (up from 359), including the notification action handler, the
-  Today refresh path, and a regression test for the stale detail page.
+- 378 tests (up from 359), including the notification action handler, the
+  Today refresh path, and regression tests for the stale detail page and for
+  reset/import leaving the OS alarm table out of sync with the database.
 
 ## [1.1.0] — 2026-09-01
 

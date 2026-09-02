@@ -1,13 +1,21 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart' as drift;
+import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 
 class ExportImportService {
-  ExportImportService({required AppDatabase appDatabase})
-    : _appDatabase = appDatabase;
+  ExportImportService({
+    required AppDatabase appDatabase,
+    AppNotificationService? notificationService,
+  }) : _appDatabase = appDatabase,
+       _notificationService = notificationService;
 
   final AppDatabase _appDatabase;
+
+  /// Reminders live in the OS, not in the database, so both destructive and
+  /// restorative data operations have to reach out and fix them too.
+  final AppNotificationService? _notificationService;
 
   Future<String> exportToJson() async {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -113,6 +121,11 @@ class ExportImportService {
       }
     }
 
+    // An imported backup is worthless if it never reminds you of anything, so
+    // schedule the routines it brought in rather than waiting for the next
+    // cold start to sync them.
+    await _notificationService?.syncRoutineSchedules(_appDatabase);
+
     return count;
   }
 
@@ -120,6 +133,11 @@ class ExportImportService {
     await _appDatabase.delete(_appDatabase.routineLogs).go();
     await _appDatabase.delete(_appDatabase.routineSchedules).go();
     await _appDatabase.delete(_appDatabase.routines).go();
+
+    // Deleting the rows does not unschedule anything: without this the user
+    // keeps being reminded of routines that no longer exist, and tapping one
+    // opens a detail page for a missing routine.
+    await _notificationService?.cancelAllRoutines();
   }
 
   Map<String, dynamic> _routineToJson(RoutineRowData r) {

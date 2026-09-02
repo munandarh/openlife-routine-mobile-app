@@ -114,14 +114,18 @@ class ScreenHarness {
   }
 
   /// Wraps [screen] in the scope and providers a real route would give it.
-  Widget wrap(Widget screen, {Locale locale = const Locale('en')}) {
+  Widget wrap(
+    Widget screen, {
+    Locale locale = const Locale('en'),
+    Brightness brightness = Brightness.light,
+  }) {
     return AppScope(
       dependencies: dependencies,
       child: BlocProvider<SettingsBloc>(
         create: (_) =>
             SettingsBloc(repository: settingsRepository)
               ..add(const SettingsStarted()),
-        child: localizedApp(screen, locale: locale),
+        child: localizedApp(screen, locale: locale, brightness: brightness),
       ),
     );
   }

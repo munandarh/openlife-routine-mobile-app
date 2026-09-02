@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/localization/app_locales.dart';
+import 'package:openlife_routine/core/theme/app_theme.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 
 /// Wraps [child] in a `MaterialApp` that carries the generated
@@ -13,9 +14,15 @@ MaterialApp localizedApp(
   Locale locale = const Locale('en'),
   NavigatorObserver? navigatorObserver,
   double textScale = 1.0,
+  Brightness? brightness,
 }) {
   return MaterialApp(
     locale: locale,
+    // Only applied when a test asks for it, so existing tests keep the plain
+    // default theme they were written against.
+    theme: brightness == null
+        ? null
+        : (brightness == Brightness.dark ? AppTheme.dark() : AppTheme.light()),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocales.supportedLocales,
     navigatorObservers: <NavigatorObserver>[?navigatorObserver],

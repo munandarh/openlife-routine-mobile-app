@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -63,7 +64,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.palette.background,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -100,7 +101,7 @@ class _SplashPageState extends State<SplashPage> {
                         borderRadius: BorderRadius.circular(
                           AppRadius.extraLarge,
                         ),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: context.palette.border),
                         boxShadow: const <BoxShadow>[
                           BoxShadow(
                             color: Color(0x14000000),
@@ -119,7 +120,7 @@ class _SplashPageState extends State<SplashPage> {
                     Text(
                       context.l10n.appTitle,
                       style: AppTextStyles.pageTitle.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -127,7 +128,7 @@ class _SplashPageState extends State<SplashPage> {
                     Text(
                       context.l10n.appTagline,
                       style: AppTextStyles.body.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -140,7 +141,7 @@ class _SplashPageState extends State<SplashPage> {
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(AppRadius.pill),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: context.palette.border),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -157,11 +158,11 @@ class _SplashPageState extends State<SplashPage> {
                           const SizedBox(width: AppSpacing.sm),
                           Text(
                             context.l10n.preparingYourDay,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: AppTextStyles.fontFamily,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary,
+                              color: context.palette.textSecondary,
                             ),
                           ),
                         ],

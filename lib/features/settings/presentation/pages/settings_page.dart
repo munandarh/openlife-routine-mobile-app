@@ -5,6 +5,7 @@ import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/settings/data/services/export_import_service.dart';
@@ -28,13 +29,13 @@ class SettingsPage extends StatelessWidget {
           slivers: <Widget>[
             SliverAppBar(
               leadingWidth: 68,
-              leading: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+              leading: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
                 child: Center(
                   child: CircleAvatar(
                     radius: 22,
-                    backgroundColor: AppColors.surfaceSoft,
-                    child: Icon(
+                    backgroundColor: context.palette.surfaceSoft,
+                    child: const Icon(
                       Icons.settings_outlined,
                       color: AppColors.primary,
                     ),
@@ -52,7 +53,7 @@ class SettingsPage extends StatelessWidget {
                 SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
-              backgroundColor: AppColors.background,
+              backgroundColor: context.palette.background,
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
@@ -480,14 +481,14 @@ class _SettingsSection extends StatelessWidget {
           title,
           style: Theme.of(
             context,
-          ).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
+          ).textTheme.titleMedium?.copyWith(color: context.palette.textSecondary),
         ),
         const SizedBox(height: AppSpacing.md),
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.palette.border),
           ),
           child: Column(
             children: items.map((_SettingsItemData item) {
@@ -514,7 +515,7 @@ class _SettingsSection extends StatelessWidget {
                       Text(
                         item.trailing!,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: item.trailingColor ?? AppColors.textSecondary,
+                          color: item.trailingColor ?? context.palette.textSecondary,
                         ),
                       ),
                     if (item.onTap != null) ...<Widget>[

@@ -4,6 +4,7 @@ import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -58,7 +59,7 @@ class _NotificationPermissionPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.palette.background,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.pageMargin),
@@ -95,7 +96,7 @@ class _NotificationPermissionPageState
                         borderRadius: BorderRadius.circular(
                           AppRadius.extraLarge,
                         ),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: context.palette.border),
                       ),
                       child: const Icon(
                         Icons.notifications_active_outlined,
@@ -107,7 +108,7 @@ class _NotificationPermissionPageState
                     Text(
                       context.l10n.getGentleReminders,
                       style: AppTextStyles.pageTitle.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -115,7 +116,7 @@ class _NotificationPermissionPageState
                     Text(
                       context.l10n.getGentleRemindersDesc,
                       style: AppTextStyles.body.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -174,7 +175,7 @@ class _BrandPill extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -185,7 +186,7 @@ class _BrandPill extends StatelessWidget {
             child: Text(
               label,
               style: AppTextStyles.label.copyWith(
-                color: AppColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
             ),
           ),
@@ -212,7 +213,7 @@ class _FeatureChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         children: <Widget>[
@@ -222,7 +223,7 @@ class _FeatureChip extends StatelessWidget {
             child: Text(
               label,
               style: AppTextStyles.bodyEmphasis.copyWith(
-                color: AppColors.textPrimary,
+                color: context.palette.textPrimary,
               ),
             ),
           ),

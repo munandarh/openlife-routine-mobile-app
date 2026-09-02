@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -69,7 +70,7 @@ class WeekDateSelector extends StatelessWidget {
                       style: AppTextStyles.label.copyWith(
                         color: isSelected
                             ? Colors.white
-                            : AppColors.textSecondary,
+                            : context.palette.textSecondary,
                       ),
                       child: Text(item.weekday),
                     ),
@@ -80,7 +81,7 @@ class WeekDateSelector extends StatelessWidget {
                       style: AppTextStyles.label.copyWith(
                         color: isSelected
                             ? Colors.white
-                            : AppColors.textPrimary,
+                            : context.palette.textPrimary,
                         fontWeight: isSelected
                             ? FontWeight.w700
                             : FontWeight.w600,

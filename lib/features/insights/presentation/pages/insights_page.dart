@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
@@ -56,13 +57,13 @@ class _InsightsView extends StatelessWidget {
           slivers: <Widget>[
             SliverAppBar(
               leadingWidth: 68,
-              leading: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+              leading: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
                 child: Center(
                   child: CircleAvatar(
                     radius: 22,
-                    backgroundColor: AppColors.surfaceSoft,
-                    child: Icon(
+                    backgroundColor: context.palette.surfaceSoft,
+                    child: const Icon(
                       Icons.insights_outlined,
                       color: AppColors.primary,
                     ),
@@ -80,7 +81,7 @@ class _InsightsView extends StatelessWidget {
                 SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
-              backgroundColor: AppColors.background,
+              backgroundColor: context.palette.background,
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -131,7 +132,7 @@ class _InsightsView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.palette.border),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +250,7 @@ class _MetricCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +270,7 @@ class _MetricCard extends StatelessWidget {
             label,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+            ).textTheme.bodyLarge?.copyWith(color: context.palette.textSecondary),
           ),
         ],
       ),
@@ -299,7 +300,7 @@ class _RoutineMetricTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         children: <Widget>[
@@ -317,7 +318,7 @@ class _RoutineMetricTile extends StatelessWidget {
                 Text(
                   label,
                   style: textTheme.labelMedium?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -328,7 +329,7 @@ class _RoutineMetricTile extends StatelessWidget {
           Text(
             countLabel,
             style: textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
+              color: context.palette.textSecondary,
             ),
           ),
         ],
@@ -381,7 +382,7 @@ class _InsightBanner extends StatelessWidget {
                 Text(
                   message,
                   style: textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
               ],

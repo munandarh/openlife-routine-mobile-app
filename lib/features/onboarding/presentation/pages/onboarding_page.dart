@@ -7,6 +7,7 @@ import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -144,7 +145,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
         final OnboardingBloc bloc = context.read<OnboardingBloc>();
 
         return Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: context.palette.background,
           body: SafeArea(
             child: Column(
               children: <Widget>[
@@ -311,9 +312,9 @@ class _CircleIconButton extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: AppColors.surface,
-        shape: const CircleBorder(
-          side: BorderSide(color: AppColors.border),
+        color: context.palette.surface,
+        shape: CircleBorder(
+          side: BorderSide(color: context.palette.border),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -322,7 +323,7 @@ class _CircleIconButton extends StatelessWidget {
           child: SizedBox(
             width: 40,
             height: 40,
-            child: Icon(icon, size: 16, color: AppColors.textPrimary),
+            child: Icon(icon, size: 16, color: context.palette.textPrimary),
           ),
         ),
       ),
@@ -344,15 +345,15 @@ class _StepCounter extends StatelessWidget {
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Text(
         context.l10n.onboardingStepCounter(current, total),
         style: Theme.of(
           context,
-        ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
+        ).textTheme.labelLarge?.copyWith(color: context.palette.textSecondary),
       ),
     );
   }
@@ -398,7 +399,7 @@ class _OnboardingSlide extends StatelessWidget {
               Text(
                 description,
                 style: textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xl),
@@ -428,9 +429,9 @@ class _HeroCard extends StatelessWidget {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
         boxShadow: AppShadows.soft,
       ),
       child: OpenLifeRiveView.illustrationFill(
@@ -465,7 +466,7 @@ class _BottomBar extends StatelessWidget {
       children: <Widget>[
         TextButton(
           onPressed: isBusy ? null : onSecondaryPressed,
-          style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
+          style: TextButton.styleFrom(foregroundColor: context.palette.textSecondary),
           child: Text(isLastPage ? l10n.backButton : l10n.skipButton),
         ),
         const Spacer(),
@@ -521,7 +522,7 @@ class _NextButton extends StatelessWidget {
                       value: value,
                       strokeWidth: 3,
                       strokeCap: StrokeCap.round,
-                      backgroundColor: AppColors.border,
+                      backgroundColor: context.palette.border,
                       valueColor: const AlwaysStoppedAnimation<Color>(
                         AppColors.primary,
                       ),
@@ -592,7 +593,7 @@ class _LanguageSelector extends StatelessWidget {
               l10n.chooseStartingLanguage,
               style: Theme.of(
                 context,
-              ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
+              ).textTheme.labelLarge?.copyWith(color: context.palette.textSecondary),
             ),
             const SizedBox(height: AppSpacing.md),
             Row(
@@ -643,7 +644,7 @@ class _StarterTemplatePicker extends StatelessWidget {
               l10n.pickStarter,
               style: Theme.of(
                 context,
-              ).textTheme.labelLarge?.copyWith(color: AppColors.textSecondary),
+              ).textTheme.labelLarge?.copyWith(color: context.palette.textSecondary),
             ),
             const SizedBox(height: AppSpacing.md),
             Wrap(
@@ -669,7 +670,7 @@ class _StarterTemplatePicker extends StatelessWidget {
               l10n.orStartEmpty,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+              ).textTheme.bodyMedium?.copyWith(color: context.palette.textSecondary),
             ),
           ],
         );
@@ -706,10 +707,10 @@ class _SelectableChip extends StatelessWidget {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: selected ? AppColors.primarySoft : AppColors.surface,
+            color: selected ? AppColors.primarySoft : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.pill),
             border: Border.all(
-              color: selected ? AppColors.primary : AppColors.border,
+              color: selected ? AppColors.primary : context.palette.border,
             ),
           ),
           child: Row(
@@ -731,7 +732,7 @@ class _SelectableChip extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: selected
                       ? AppColors.primary
-                      : AppColors.textSecondary,
+                      : context.palette.textSecondary,
                 ),
               ),
             ],
@@ -754,7 +755,7 @@ class _InfoPanel extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.surfaceSoft,
+        color: context.palette.surfaceSoft,
         borderRadius: BorderRadius.circular(AppRadius.large),
       ),
       child: Column(
@@ -771,7 +772,7 @@ class _InfoPanel extends StatelessWidget {
             message,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+            ).textTheme.bodyMedium?.copyWith(color: context.palette.textSecondary),
           ),
         ],
       ),

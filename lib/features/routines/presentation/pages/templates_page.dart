@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
@@ -127,7 +128,7 @@ class _TemplatesView extends StatelessWidget {
                     SizedBox(width: AppSpacing.pageMargin),
                   ],
                   pinned: true,
-                  backgroundColor: AppColors.background,
+                  backgroundColor: context.palette.background,
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
@@ -149,7 +150,7 @@ class _TemplatesView extends StatelessWidget {
                       Text(
                         l10n.addStructured,
                         style: textTheme.bodyLarge?.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.palette.textSecondary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xl),
@@ -241,7 +242,7 @@ class _TemplateCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +272,7 @@ class _TemplateCard extends StatelessWidget {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceSoft,
+                    color: context.palette.surfaceSoft,
                     borderRadius: BorderRadius.circular(AppRadius.pill),
                   ),
                   child: Text(
@@ -288,7 +289,7 @@ class _TemplateCard extends StatelessWidget {
             description,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+            ).textTheme.bodyLarge?.copyWith(color: context.palette.textSecondary),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(meta, style: Theme.of(context).textTheme.labelLarge),

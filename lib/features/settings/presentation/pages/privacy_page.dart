@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
@@ -54,7 +54,7 @@ class PrivacyPage extends StatelessWidget {
                 Text(
                   l10n.privacyDisclaimer,
                   style: textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -62,7 +62,7 @@ class PrivacyPage extends StatelessWidget {
                 Text(
                   l10n.privacyDisclaimerBody,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),

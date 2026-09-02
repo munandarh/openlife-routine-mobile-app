@@ -23,7 +23,7 @@
 |---|---|
 | App version | 1.1.0+2 |
 | `flutter analyze` | 0 issues |
-| `flutter test` | **348 passing** |
+| `flutter test` | **356 passing** |
 | Database schema | v4 |
 | Localized strings | 275 keys × EN/ID |
 | Illustrations wired | 10 PNG / 10 MVP |
@@ -161,7 +161,8 @@
 ### Theming & language (PRD §10.2, §10.3)
 
 - [x] Light theme
-- [x] Dark theme
+- [x] Dark theme — colours resolve through an `AppPalette` theme extension, and
+      a test fails if any screen paints light-theme ink on the dark background
 - [x] **Full English + Indonesian across every screen**
 
 ---

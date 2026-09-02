@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -60,7 +61,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.palette.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.pageMargin),
@@ -85,14 +86,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           Text(
                             context.l10n.chooseYourLanguage,
                             style: AppTextStyles.pageTitle.copyWith(
-                              color: AppColors.textPrimary,
+                              color: context.palette.textPrimary,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
                             context.l10n.chooseLanguageDesc,
                             style: AppTextStyles.body.copyWith(
-                              color: AppColors.textSecondary,
+                              color: context.palette.textSecondary,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xl),
@@ -199,10 +200,10 @@ class _LanguageCard extends StatelessWidget {
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primarySoft : AppColors.surface,
+        color: isSelected ? AppColors.primarySoft : context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
         border: Border.all(
-          color: isSelected ? AppColors.primary : AppColors.border,
+          color: isSelected ? AppColors.primary : context.palette.border,
           width: isSelected ? 1.5 : 1,
         ),
         boxShadow: isSelected ? AppShadows.soft : null,
@@ -225,7 +226,7 @@ class _LanguageCard extends StatelessWidget {
                   height: 44,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.surface : AppColors.surfaceSoft,
+                    color: isSelected ? context.palette.surface : context.palette.surfaceSoft,
                     borderRadius: BorderRadius.circular(AppRadius.small),
                   ),
                   child: Text(
@@ -234,7 +235,7 @@ class _LanguageCard extends StatelessWidget {
                       fontSize: 14,
                       color: isSelected
                           ? AppColors.primary
-                          : AppColors.textSecondary,
+                          : context.palette.textSecondary,
                     ),
                   ),
                 ),
@@ -246,7 +247,7 @@ class _LanguageCard extends StatelessWidget {
                       Text(
                         title,
                         style: AppTextStyles.cardTitle.copyWith(
-                          color: AppColors.textPrimary,
+                          color: context.palette.textPrimary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
@@ -254,7 +255,7 @@ class _LanguageCard extends StatelessWidget {
                         subtitle,
                         style: AppTextStyles.body.copyWith(
                           fontSize: 13,
-                          color: AppColors.textSecondary,
+                          color: context.palette.textSecondary,
                         ),
                       ),
                     ],
@@ -290,7 +291,7 @@ class _SelectionTick extends StatelessWidget {
             color: isSelected ? AppColors.primary : Colors.transparent,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.border,
+              color: isSelected ? AppColors.primary : context.palette.border,
               width: 1.5,
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 
@@ -32,7 +33,7 @@ class AppPlaceholderPage extends StatelessWidget {
           Text(
             description,
             style: textTheme.bodyLarge?.copyWith(
-              color: AppColors.textSecondary,
+              color: context.palette.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
@@ -43,7 +44,7 @@ class AppPlaceholderPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.palette.border),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +61,7 @@ class AppPlaceholderPage extends StatelessWidget {
                   Text(
                     'This placeholder keeps the foundation honest while Sprint 1 builds the real design system and screen composition.',
                     style: textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ),
                   const Spacer(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -66,7 +67,7 @@ class RoutineCard extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(AppRadius.large),
           border: Border.all(
-            color: isDueNow ? AppColors.warning : AppColors.border,
+            color: isDueNow ? AppColors.warning : context.palette.border,
             width: isDueNow ? 2 : 1,
           ),
         ),
@@ -101,14 +102,14 @@ class RoutineCard extends StatelessWidget {
                     children: <Widget>[
                       _Chip(
                         label: timeLabel,
-                        background: AppColors.surfaceSoft,
-                        foreground: AppColors.textSecondary,
+                        background: context.palette.surfaceSoft,
+                        foreground: context.palette.textSecondary,
                       ),
                       if (statusLabel != null)
                         _Chip(
                           label: statusLabel!,
-                          background: _statusBackground,
-                          foreground: _statusForeground,
+                          background: _statusBackground(context),
+                          foreground: _statusForeground(context),
                         ),
                       for (final RoutineCardAction action in actions)
                         _ActionChip(key: action.key, action: action),
@@ -129,19 +130,19 @@ class RoutineCard extends StatelessWidget {
     );
   }
 
-  Color get _statusBackground {
+  Color _statusBackground(BuildContext context) {
     return switch (statusTone) {
       RoutineCardTone.positive => AppColors.primarySoft,
       RoutineCardTone.attention => AppColors.accentSoft,
-      RoutineCardTone.muted => AppColors.surfaceSoft,
+      RoutineCardTone.muted => context.palette.surfaceSoft,
     };
   }
 
-  Color get _statusForeground {
+  Color _statusForeground(BuildContext context) {
     return switch (statusTone) {
       RoutineCardTone.positive => AppColors.primary,
       RoutineCardTone.attention => AppColors.warning,
-      RoutineCardTone.muted => AppColors.textSecondary,
+      RoutineCardTone.muted => context.palette.textSecondary,
     };
   }
 }
@@ -241,7 +242,7 @@ class _CheckCircle extends StatelessWidget {
             color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.pill),
             border: Border.all(
-              color: isDone ? Colors.transparent : AppColors.border,
+              color: isDone ? Colors.transparent : context.palette.border,
               width: 2,
             ),
           ),
@@ -255,7 +256,7 @@ class _CheckCircle extends StatelessWidget {
             child: Icon(
               isDone ? Icons.check_rounded : Icons.circle_outlined,
               key: ValueKey<bool>(isDone),
-              color: isDone ? AppColors.success : AppColors.border,
+              color: isDone ? AppColors.success : context.palette.border,
             ),
           ),
         ),
@@ -288,8 +289,8 @@ class _AnimatedStrikethroughText extends StatelessWidget {
           style: AppTextStyles.cardTitle.copyWith(
             decoration: value > 0.5 ? TextDecoration.lineThrough : null,
             color: Color.lerp(
-              AppColors.textPrimary,
-              AppColors.textSecondary,
+              context.palette.textPrimary,
+              context.palette.textSecondary,
               value,
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
@@ -198,7 +199,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(AppRadius.large),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: context.palette.border),
                   ),
                   // Each day flexes to a seventh of the row. Fixed-width
                   // chips overflowed a 360dp screen by 20px, which collapsed
@@ -409,7 +410,7 @@ class _CategoryTile extends StatelessWidget {
                 : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
-              color: selected ? AppColors.primary : AppColors.border,
+              color: selected ? AppColors.primary : context.palette.border,
             ),
           ),
           child: Column(
@@ -429,7 +430,7 @@ class _CategoryTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: selected
                         ? AppColors.primary
-                        : AppColors.textPrimary,
+                        : context.palette.textPrimary,
                   ),
                 ),
               ),
@@ -511,14 +512,14 @@ class _IconOption extends StatelessWidget {
                 : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
-              color: selected ? AppColors.primary : AppColors.border,
+              color: selected ? AppColors.primary : context.palette.border,
               width: selected ? 1.5 : 1,
             ),
           ),
           child: Icon(
             icon,
             size: 22,
-            color: selected ? AppColors.primary : AppColors.textSecondary,
+            color: selected ? AppColors.primary : context.palette.textSecondary,
           ),
         ),
       ),
@@ -549,7 +550,7 @@ class _RepeatChip extends StatelessWidget {
         // A real Material rather than `Ink`: it paints its own fill and shape,
         // and clips the ripple to the pill without depending on an ancestor's
         // ink layer.
-        color: selected ? AppColors.primarySoft : AppColors.surfaceSoft,
+        color: selected ? AppColors.primarySoft : context.palette.surfaceSoft,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.pill),
           side: BorderSide(
@@ -569,7 +570,7 @@ class _RepeatChip extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: selected
                         ? AppColors.primary
-                        : AppColors.textSecondary,
+                        : context.palette.textSecondary,
                     fontWeight: selected ? FontWeight.w700 : null,
                   ),
                 ),

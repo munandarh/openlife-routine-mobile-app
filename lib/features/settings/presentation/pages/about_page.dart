@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/app_info.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
@@ -42,7 +43,7 @@ class AboutPage extends StatelessWidget {
                       Text(
                         l10n.aboutVersion(AppInfo.version),
                         style: textTheme.bodyLarge?.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.palette.textSecondary,
                         ),
                       ),
                     ],

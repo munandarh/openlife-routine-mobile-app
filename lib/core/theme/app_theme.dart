@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 
@@ -23,7 +24,7 @@ final class AppTheme {
           onSecondary: Colors.white,
         );
 
-    return _theme(colorScheme);
+    return _theme(colorScheme, const AppPalette.light());
   }
 
   static ThemeData dark() {
@@ -42,19 +43,19 @@ final class AppTheme {
           onSecondary: Colors.white,
         );
 
-    return _theme(colorScheme).copyWith(
-      scaffoldBackgroundColor: AppColors.backgroundDark,
-      canvasColor: AppColors.backgroundDark,
-    );
+    return _theme(colorScheme, const AppPalette.dark());
   }
 
-  static ThemeData _theme(ColorScheme colorScheme) {
+  static ThemeData _theme(ColorScheme colorScheme, AppPalette palette) {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      extensions: <ThemeExtension<dynamic>>[palette],
       fontFamily: AppTextStyles.fontFamily,
-      scaffoldBackgroundColor: AppColors.background,
-      canvasColor: AppColors.background,
+      // Driven by the palette rather than a light-only constant: the dark
+      // theme used to patch these back afterwards and miss everything else.
+      scaffoldBackgroundColor: palette.background,
+      canvasColor: palette.background,
       textTheme: const TextTheme(
         displayLarge: AppTextStyles.display,
         headlineMedium: AppTextStyles.pageTitle,
@@ -65,11 +66,11 @@ final class AppTheme {
         labelLarge: AppTextStyles.button,
         labelMedium: AppTextStyles.label,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: false,
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: palette.textPrimary,
       ),
       cardTheme: CardThemeData(
         elevation: 0,

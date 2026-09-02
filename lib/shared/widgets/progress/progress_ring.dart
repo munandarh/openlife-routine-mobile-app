@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 
 class ProgressRing extends StatelessWidget {
@@ -37,7 +38,7 @@ class ProgressRing extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: animatedProgress,
                   strokeWidth: 12,
-                  backgroundColor: AppColors.surfaceVariant,
+                  backgroundColor: context.palette.surfaceVariant,
                   color: isComplete ? AppColors.success : AppColors.primary,
                 ),
               ),
@@ -60,7 +61,7 @@ class ProgressRing extends StatelessWidget {
                               style: AppTextStyles.cardTitle.copyWith(
                                 color: isComplete
                                     ? AppColors.success
-                                    : AppColors.textPrimary,
+                                    : context.palette.textPrimary,
                               ),
                             ),
                           ],

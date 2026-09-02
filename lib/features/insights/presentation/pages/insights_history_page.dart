@@ -4,6 +4,7 @@ import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
@@ -56,7 +57,7 @@ class _InsightsHistoryView extends StatelessWidget {
                   l10n.historyEmpty,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
               ),
@@ -93,20 +94,32 @@ class _HistoryRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: Text(_dayLabel(context, l10n), style: textTheme.titleMedium),
+                child: Text(
+                  _dayLabel(context, l10n),
+                  style: textTheme.titleMedium,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              Text(
-                l10n.historyDoneCount(day.done, day.scheduled),
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
+              const SizedBox(width: AppSpacing.sm),
+              // Flexible, not a bare Text: "0 dari 3 selesai" is wider than its
+              // English counterpart and overflowed a 320dp row.
+              Flexible(
+                child: Text(
+                  l10n.historyDoneCount(day.done, day.scheduled),
+                  textAlign: TextAlign.end,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: context.palette.textSecondary,
+                  ),
                 ),
               ),
             ],
@@ -117,7 +130,7 @@ class _HistoryRow extends StatelessWidget {
             child: LinearProgressIndicator(
               value: day.completionRate,
               minHeight: 8,
-              backgroundColor: AppColors.surfaceSoft,
+              backgroundColor: context.palette.surfaceSoft,
               valueColor: AlwaysStoppedAnimation<Color>(
                 day.completionRate >= 1.0
                     ? AppColors.success
@@ -133,7 +146,7 @@ class _HistoryRow extends StatelessWidget {
                 if (day.skipped > 0)
                   _CountChip(
                     label: '${l10n.statusSkipped} ${day.skipped}',
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 if (day.missed > 0)
                   _CountChip(
@@ -182,7 +195,7 @@ class _CountChip extends StatelessWidget {
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surfaceSoft,
+        color: context.palette.surfaceSoft,
         borderRadius: BorderRadius.circular(AppRadius.small),
       ),
       child: Text(

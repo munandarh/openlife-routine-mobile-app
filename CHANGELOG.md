@@ -89,6 +89,18 @@ test suite did not catch them.
   longer writes 30 days of `missed` logs or zeroes last week's rate.
 - **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
   registered the whole `assets/vector/` directory.
+- **Dark mode was unusable**, despite shipping as a v1.0 feature. Widgets
+  referenced `AppColors.textPrimary`/`textSecondary`/`background`/`surface`/
+  `border` directly — light-theme constants — in about 140 places, so the dark
+  theme painted near-black text on a near-black background: the greeting, the
+  whole week strip, routine titles and the navigation labels were all invisible,
+  and the app bar stayed cream. `AppTheme.dark()` had only patched the scaffold
+  colour afterwards. Surface and text colours now come from an `AppPalette`
+  theme extension, and the daily-progress hero has a dark green variant instead
+  of a harsh pastel panel.
+- **The 7-day history row overflowed in Indonesian** at 320dp: the completion
+  count sat in the row at its natural width and "0 dari 3 selesai" is wider than
+  its English counterpart.
 - **The week strip on Today had the same defect as the Repeat picker.** Six
   40px days plus a 52px selected one need 292px, so the row overflowed a 320dp
   screen by 20px and clipped Sunday out of reach. Both now flex to an equal

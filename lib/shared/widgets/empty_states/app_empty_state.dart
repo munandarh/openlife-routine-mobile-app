@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
@@ -74,7 +75,7 @@ class _AppEmptyStateState extends State<AppEmptyState>
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.palette.border),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -96,7 +97,7 @@ class _AppEmptyStateState extends State<AppEmptyState>
               Text(
                 widget.description,
                 style: textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),

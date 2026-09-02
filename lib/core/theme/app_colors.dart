@@ -19,6 +19,14 @@ final class AppColors {
   static const Color warning = Color(0xFFC39B42);
   static const Color danger = Color(0xFFE57373);
 
+  /// Daily-progress hero panel. Light in the light theme, a deep desaturated
+  /// green in the dark one — a big pastel panel is harsh on a dark screen, and
+  /// theme-driven text on it would be unreadable.
+  static const Color heroStart = Color(0xFFDDE8C8);
+  static const Color heroEnd = Color(0xFFE9F2D7);
+  static const Color heroStartDark = Color(0xFF26301C);
+  static const Color heroEndDark = Color(0xFF1E2717);
+
   static const Color backgroundDark = Color(0xFF151A1E);
   static const Color surfaceDark = Color(0xFF20272D);
   static const Color surfaceSoftDark = Color(0xFF2A323A);

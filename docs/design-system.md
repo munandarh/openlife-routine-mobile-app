@@ -50,6 +50,10 @@ Five rules the UI is held to:
 
 ### Dark
 
+Read colours through `context.palette` (an `AppPalette` theme extension), never
+from `AppColors` directly — the constants below are light-theme values, and
+referencing them in a widget is what made dark mode unreadable.
+
 | Token | Value |
 |---|---|
 | `backgroundDark` | `#151A1E` |

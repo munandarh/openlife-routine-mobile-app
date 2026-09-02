@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/today/presentation/widgets/greeting_helper.dart';
 
@@ -29,7 +30,7 @@ class TodayGreeting extends StatelessWidget {
           Text(
             greeting,
             style: AppTextStyles.sectionTitle.copyWith(
-              color: const Color(0xFF202124),
+              color: context.palette.textPrimary,
             ),
           ),
           if (subtitle != null && subtitle!.isNotEmpty) ...<Widget>[
@@ -37,7 +38,7 @@ class TodayGreeting extends StatelessWidget {
             Text(
               subtitle!,
               style: AppTextStyles.body.copyWith(
-                color: const Color(0xFF77716B),
+                color: context.palette.textSecondary,
               ),
             ),
           ],

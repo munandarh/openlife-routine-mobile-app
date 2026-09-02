@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 
 class IconCircleButton extends StatelessWidget {
@@ -25,13 +25,13 @@ class IconCircleButton extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.surfaceSoft,
+          color: backgroundColor ?? context.palette.surfaceSoft,
           borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
-          color: foregroundColor ?? AppColors.textSecondary,
+          color: foregroundColor ?? context.palette.textSecondary,
           size: 22,
         ),
       ),

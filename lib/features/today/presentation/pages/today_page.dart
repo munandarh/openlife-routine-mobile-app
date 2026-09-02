@@ -7,6 +7,7 @@ import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
@@ -111,7 +112,7 @@ class _TodayViewState extends State<_TodayView> {
                     SizedBox(width: AppSpacing.pageMargin),
                   ],
                   pinned: true,
-                  backgroundColor: AppColors.background,
+                  backgroundColor: context.palette.background,
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -252,8 +253,8 @@ class _ProgressCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: <Color>[AppColors.primarySoft, Color(0xFFE9F2D7)],
+        gradient: LinearGradient(
+          colors: <Color>[context.palette.heroStart, context.palette.heroEnd],
         ),
         borderRadius: BorderRadius.circular(AppRadius.extraLarge),
       ),
@@ -273,7 +274,7 @@ class _ProgressCard extends StatelessWidget {
                           state.totalCount,
                         ),
                   style: textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -327,17 +328,17 @@ class _NextRoutineCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         children: <Widget>[
           CircleAvatar(
             radius: 22,
             backgroundColor: next == null
-                ? AppColors.surfaceSoft
+                ? context.palette.surfaceSoft
                 : RoutineCategoryUi.background(next.category),
             foregroundColor: next == null
-                ? AppColors.textSecondary
+                ? context.palette.textSecondary
                 : RoutineCategoryUi.foreground(next.category),
             child: Icon(
               next == null
@@ -357,7 +358,7 @@ class _NextRoutineCard extends StatelessWidget {
                 Text(
                   l10n.nextUp,
                   style: textTheme.labelMedium?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -542,19 +543,19 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
                   const SizedBox(height: AppSpacing.lg),
                   Text(
                     l10n.allDone,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     l10n.allDoneMessage,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
-                      color: AppColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),

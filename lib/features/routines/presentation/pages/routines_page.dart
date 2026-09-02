@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
@@ -73,7 +74,7 @@ class _RoutinesView extends StatelessWidget {
                 SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
-              backgroundColor: AppColors.background,
+              backgroundColor: context.palette.background,
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
@@ -89,7 +90,7 @@ class _RoutinesView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.palette.border),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +105,7 @@ class _RoutinesView extends StatelessWidget {
                   Text(
                     l10n.addStructured,
                     style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),

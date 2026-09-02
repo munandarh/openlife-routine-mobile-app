@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -19,7 +20,7 @@ class OpenLifeBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
         boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x148EAA5E),
@@ -65,7 +66,7 @@ class OpenLifeBottomNav extends StatelessWidget {
                           route.icon,
                           color: isSelected
                               ? AppColors.primary
-                              : AppColors.textSecondary,
+                              : context.palette.textSecondary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
@@ -74,7 +75,7 @@ class OpenLifeBottomNav extends StatelessWidget {
                         style: AppTextStyles.label.copyWith(
                           color: isSelected
                               ? AppColors.primary
-                              : AppColors.textSecondary,
+                              : context.palette.textSecondary,
                         ),
                       ),
                     ],

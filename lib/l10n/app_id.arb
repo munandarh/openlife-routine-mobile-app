@@ -391,5 +391,33 @@
   "copiedToClipboard": "Cadangan disalin ke papan klip.",
   "notificationDoneAction": "Selesai",
   "routineActiveLabel": "Aktif",
-  "routineActiveDescription": "Kirim pengingat untuk rutinitas ini."
+  "routineActiveDescription": "Kirim pengingat untuk rutinitas ini.",
+  "notificationsTitle": "Notifikasi",
+  "upcomingReminders": "Pengingat berikutnya",
+  "upcomingRemindersDesc": "Pengingat terdekat yang akan dikirim rutinitasmu.",
+  "noUpcomingReminders": "Belum ada pengingat terjadwal",
+  "noUpcomingRemindersDesc": "Tambahkan rutinitas, atau aktifkan lagi, dan pengingatnya akan muncul di sini.",
+  "manageAlerts": "Atur pengingat",
+  "profileTitle": "Profil",
+  "profileLocalOnly": "Tanpa akun",
+  "profileLocalOnlyDesc": "OpenLife Routine tidak punya login. Semua yang kamu lihat di sini hanya tersimpan di perangkat ini.",
+  "yourActivity": "Aktivitasmu",
+  "activeRoutinesStat": "Rutinitas aktif",
+  "currentStreakStat": "Rentetan saat ini",
+  "reminderTodayAt": "Hari ini, {time}",
+  "@reminderTodayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTomorrowAt": "Besok, {time}",
+  "@reminderTomorrowAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  }
 }

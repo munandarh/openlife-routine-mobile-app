@@ -5,6 +5,31 @@ All notable changes to OpenLife Routine will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Notifications screen.** The bell in the app bar had no destination. It now
+  opens the reminders that are actually queued, soonest first, built from the
+  same arithmetic the scheduler uses so the screen cannot promise a reminder
+  the OS was never told about.
+- **Profile screen.** The avatar had no destination either. There is no account
+  to show, so rather than inventing one it says so plainly and shows what the
+  device knows: completions this week and the current streak, both read from
+  InsightsBloc rather than recalculated.
+
+### Fixed
+- **Onboarding asked for the language twice** — once on its own screen and
+  again on slide 1, which reads as the first answer not having been saved. The
+  dedicated screen stays; the duplicate is gone.
+- **Creating the first routine left Today empty.** Today's empty state pushed
+  the editor itself instead of using the handler that reloads on the way back,
+  so after saving, Today insisted nothing was scheduled while the routine
+  existed and its reminder was already queued. Every entry into the editor now
+  goes through one path.
+- **The Notifications screen crashed when the notification stack was
+  disabled** — it reads the same timezone-aware clock as the scheduler, and
+  `tz.local` is only set during notification startup.
+
+## [1.3.0] — 2026-09-02
+
+### Added
 - **iOS reminders.** The notification stack was Android-only in every path
   that mattered, and none of it failed loudly:
   - the `openlife_routine/timezone` channel existed only in `MainActivity.kt`,

@@ -391,5 +391,33 @@
   "copiedToClipboard": "Backup copied to the clipboard.",
   "notificationDoneAction": "Done",
   "routineActiveLabel": "Active",
-  "routineActiveDescription": "Send reminders for this routine."
+  "routineActiveDescription": "Send reminders for this routine.",
+  "notificationsTitle": "Notifications",
+  "upcomingReminders": "Upcoming reminders",
+  "upcomingRemindersDesc": "The next reminders your routines will send.",
+  "noUpcomingReminders": "No reminders scheduled",
+  "noUpcomingRemindersDesc": "Add a routine, or turn one back on, and its reminders will appear here.",
+  "manageAlerts": "Manage reminder alerts",
+  "profileTitle": "Profile",
+  "profileLocalOnly": "No account needed",
+  "profileLocalOnlyDesc": "OpenLife Routine has no sign-in. Everything you see here is stored on this device only.",
+  "yourActivity": "Your activity",
+  "activeRoutinesStat": "Active routines",
+  "currentStreakStat": "Current streak",
+  "reminderTodayAt": "Today, {time}",
+  "@reminderTodayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTomorrowAt": "Tomorrow, {time}",
+  "@reminderTomorrowAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  }
 }

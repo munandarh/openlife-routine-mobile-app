@@ -71,6 +71,16 @@ class _TodayViewState extends State<_TodayView> {
     super.dispose();
   }
 
+  /// Opens the routine editor and reloads on the way back.
+  ///
+  /// Every entry point into the editor has to do this: the one that did not
+  /// (the empty state) left Today insisting nothing was scheduled while the
+  /// routine existed and its reminder was already queued.
+  Future<void> _openNewRoutine() async {
+    await context.push(OpenLifeRoute.newRoutine.path);
+    _refresh();
+  }
+
   void _refresh() {
     if (!mounted) {
       return;
@@ -113,7 +123,7 @@ class _TodayViewState extends State<_TodayView> {
             }
 
             if (!state.hasRoutines) {
-              return const TodayEmptyPage();
+              return TodayEmptyPage(onCreateRoutine: _openNewRoutine);
             }
 
             final List<WeekDateItem> weekItems = _buildWeekItems(
@@ -126,10 +136,14 @@ class _TodayViewState extends State<_TodayView> {
               slivers: <Widget>[
                 SliverAppBar(
                   leadingWidth: 68,
-                  leading: const Padding(
-                    padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+                  leading: Padding(
+                    padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
                     child: Center(
-                      child: IconCircleButton(icon: Icons.person_outline),
+                      child: IconCircleButton(
+                        icon: Icons.person_outline,
+                        onPressed: () =>
+                            context.push(OpenLifeRoute.profile.path),
+                      ),
                     ),
                   ),
                   title: Text(
@@ -138,9 +152,13 @@ class _TodayViewState extends State<_TodayView> {
                       color: AppColors.primary,
                     ),
                   ),
-                  actions: const <Widget>[
-                    IconCircleButton(icon: Icons.notifications_none_rounded),
-                    SizedBox(width: AppSpacing.pageMargin),
+                  actions: <Widget>[
+                    IconCircleButton(
+                      icon: Icons.notifications_none_rounded,
+                      onPressed: () =>
+                          context.push(OpenLifeRoute.notifications.path),
+                    ),
+                    const SizedBox(width: AppSpacing.pageMargin),
                   ],
                   pinned: true,
                   backgroundColor: context.palette.background,
@@ -194,10 +212,7 @@ class _TodayViewState extends State<_TodayView> {
                           buttonLabel: l10n.createRoutine,
                           icon: Icons.calendar_today_outlined,
                           onPressed: () async {
-                            await context.push(
-                              OpenLifeRoute.newRoutine.path,
-                            );
-                            _refresh();
+                            await _openNewRoutine();
                           },
                         )
                       else
@@ -231,8 +246,7 @@ class _TodayViewState extends State<_TodayView> {
             foregroundColor: Colors.white,
             tooltip: l10n.createRoutine,
             onPressed: () async {
-              await context.push(OpenLifeRoute.newRoutine.path);
-              _refresh();
+              await _openNewRoutine();
             },
             child: const Icon(Icons.add),
           ),

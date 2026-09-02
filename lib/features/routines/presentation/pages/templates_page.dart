@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
@@ -121,11 +122,13 @@ class _TemplatesView extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                   ),
-                  actions: const <Widget>[
+                  actions: <Widget>[
                     IconCircleButton(
                       icon: Icons.notifications_none_rounded,
+                      onPressed: () =>
+                          context.push(OpenLifeRoute.notifications.path),
                     ),
-                    SizedBox(width: AppSpacing.pageMargin),
+                    const SizedBox(width: AppSpacing.pageMargin),
                   ],
                   pinned: true,
                   backgroundColor: context.palette.background,

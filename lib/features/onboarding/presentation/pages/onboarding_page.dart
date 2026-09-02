@@ -12,9 +12,6 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/onboarding/presentation/bloc/onboarding_bloc.dart';
-import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
-import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
-import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
 import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
@@ -177,7 +174,10 @@ class _OnboardingViewState extends State<_OnboardingView> {
                           illustration: AssetVectors.onboardingBuildBetterDays,
                           fallbackIcon: Icons.fact_check_outlined,
                         ),
-                        footer: const _LanguageSelector(),
+                        // No language picker here: the dedicated
+                        // Language Selection page already asked, before this
+                        // screen, and asking twice reads as the first answer
+                        // not having been saved.
                       ),
                       _OnboardingSlide(
                         title: l10n.onboardingSlide2Title,
@@ -364,13 +364,15 @@ class _OnboardingSlide extends StatelessWidget {
     required this.title,
     required this.description,
     required this.hero,
-    required this.footer,
+    this.footer,
   });
 
   final String title;
   final String description;
   final Widget hero;
-  final Widget footer;
+  /// Optional: the first slide carries no footer now that the language
+  /// question has its own page.
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -403,7 +405,7 @@ class _OnboardingSlide extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xl),
-              footer,
+              ?footer,
             ],
           ),
         );
@@ -565,55 +567,6 @@ class _NextButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Language chips on slide 1.
-///
-/// Reads and writes `SettingsBloc`, the single owner of the app language, so
-/// switching here retranslates the slide immediately.
-class _LanguageSelector extends StatelessWidget {
-  const _LanguageSelector();
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLocalizations l10n = context.l10n;
-
-    return BlocBuilder<SettingsBloc, SettingsState>(
-      builder: (BuildContext context, SettingsState settings) {
-        void select(String code) {
-          context.read<SettingsBloc>().add(SettingsLanguageChanged(code));
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              l10n.chooseStartingLanguage,
-              style: Theme.of(
-                context,
-              ).textTheme.labelLarge?.copyWith(color: context.palette.textSecondary),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: <Widget>[
-                _SelectableChip(
-                  label: l10n.englishLang,
-                  selected: settings.languageCode == 'en',
-                  onTap: () => select('en'),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                _SelectableChip(
-                  label: l10n.bahasaShort,
-                  selected: settings.languageCode == 'id',
-                  onTap: () => select('id'),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
     );
   }
 }

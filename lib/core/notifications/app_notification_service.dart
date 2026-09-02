@@ -152,7 +152,7 @@ class AppNotificationService {
     final List<RoutineBundleRow> bundles = await appDatabase
         .getRoutineBundles();
     final List<domain.Routine> routines = bundles
-        .map(_routineFromBundle)
+        .map(routineFromBundle)
         .toList();
 
     // Rebuild each routine's own weekly slots rather than `cancelAll()`, which
@@ -182,6 +182,30 @@ class AppNotificationService {
   /// are the next ones due rather than whichever ones iOS happened to accept.
   /// Trimming here — in the whole-set sync that runs at every launch — is what
   /// makes the surviving set deterministic.
+  /// The next reminders due, soonest first.
+  ///
+  /// Shares its arithmetic with the scheduler, so the Notifications screen
+  /// cannot drift from what the OS was actually told.
+  static List<RoutineReminderSlot> upcomingReminders(
+    List<domain.Routine> routines, {
+    int limit = 20,
+  }) {
+    // The scheduler initialises the timezone database on startup, but this is
+    // read by a screen that can be opened when the notification stack is
+    // disabled — where `tz.local` is never set and every read throws.
+    _ensureTimeZones();
+
+    final List<RoutineReminderSlot> slots = plannedSlots(
+      routines,
+      isIOS: false,
+    )..sort(
+        (RoutineReminderSlot a, RoutineReminderSlot b) =>
+            a.firesAt.compareTo(b.firesAt),
+      );
+
+    return slots.length <= limit ? slots : slots.sublist(0, limit);
+  }
+
   @visibleForTesting
   static List<RoutineReminderSlot> plannedSlots(
     List<domain.Routine> routines, {
@@ -219,7 +243,12 @@ class AppNotificationService {
     return slots.length <= budget ? slots : slots.sublist(0, budget);
   }
 
-  static domain.Routine _routineFromBundle(RoutineBundleRow bundle) {
+  /// Maps a stored routine and its schedule into the domain entity.
+  ///
+  /// Public because the Notifications screen reads the same rows to show what
+  /// is queued, and a second copy of this mapping would be a second place for
+  /// repeat days to be decoded differently.
+  static domain.Routine routineFromBundle(RoutineBundleRow bundle) {
     return domain.Routine(
       id: bundle.routine.id,
       title: bundle.routine.title,
@@ -421,6 +450,21 @@ class AppNotificationService {
       reminderTime: reminderTime,
       now: tz.TZDateTime.from(now, tz.local),
     );
+  }
+
+  /// Makes [tz.local] safe to read.
+  ///
+  /// Idempotent: the database is only loaded when it is empty, and the local
+  /// location only defaults to UTC when nothing has set a real one.
+  static void _ensureTimeZones() {
+    if (!tz.timeZoneDatabase.isInitialized) {
+      tz.initializeTimeZones();
+    }
+    try {
+      tz.local;
+    } on Error {
+      tz.setLocalLocation(tz.getLocation('UTC'));
+    }
   }
 
   Future<void> _setLocalTimeZone() async {

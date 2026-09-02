@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_history_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_page.dart';
+import 'package:openlife_routine/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/language_selection_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/notification_permission_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:openlife_routine/features/profile/presentation/pages/profile_page.dart';
 import 'package:openlife_routine/features/routine_detail/presentation/pages/routine_detail_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/new_routine_page.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/routines_empty_page.dart';
@@ -113,6 +115,20 @@ final class AppRouter {
              },
            ),
            GoRoute(
+             path: OpenLifeRoute.notifications.path,
+             name: OpenLifeRoute.notifications.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const NotificationsPage();
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.profile.path,
+             name: OpenLifeRoute.profile.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const ProfilePage();
+             },
+           ),
+           GoRoute(
              path: OpenLifeRoute.newRoutine.path,
              name: OpenLifeRoute.newRoutine.name,
              builder: (BuildContext context, GoRouterState state) {
@@ -214,6 +230,12 @@ enum OpenLifeRoute {
     Icons.history_outlined,
   ),
   settings('/settings', 'Settings', Icons.settings_outlined),
+  notifications(
+    '/notifications',
+    'Notifications',
+    Icons.notifications_none_rounded,
+  ),
+  profile('/profile', 'Profile', Icons.person_outline),
   newRoutine('/routines/new', 'New Routine', Icons.add_circle_outline),
   routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz),
   privacy('/settings/privacy', 'Privacy', Icons.shield_outlined),
@@ -246,6 +268,8 @@ enum OpenLifeRoute {
     OpenLifeRoute.onboarding => 'onboarding',
     OpenLifeRoute.notificationPermission => 'notificationPermission',
     OpenLifeRoute.languageSelection => 'languageSelection',
+    OpenLifeRoute.notifications => 'notifications',
+    OpenLifeRoute.profile => 'profile',
     OpenLifeRoute.today => 'today',
     OpenLifeRoute.routines => 'routines',
     OpenLifeRoute.templates => 'templates',

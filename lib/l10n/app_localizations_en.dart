@@ -909,4 +909,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routineActiveDescription => 'Send reminders for this routine.';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get upcomingReminders => 'Upcoming reminders';
+
+  @override
+  String get upcomingRemindersDesc =>
+      'The next reminders your routines will send.';
+
+  @override
+  String get noUpcomingReminders => 'No reminders scheduled';
+
+  @override
+  String get noUpcomingRemindersDesc =>
+      'Add a routine, or turn one back on, and its reminders will appear here.';
+
+  @override
+  String get manageAlerts => 'Manage reminder alerts';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileLocalOnly => 'No account needed';
+
+  @override
+  String get profileLocalOnlyDesc =>
+      'OpenLife Routine has no sign-in. Everything you see here is stored on this device only.';
+
+  @override
+  String get yourActivity => 'Your activity';
+
+  @override
+  String get activeRoutinesStat => 'Active routines';
+
+  @override
+  String get currentStreakStat => 'Current streak';
+
+  @override
+  String reminderTodayAt(String time) {
+    return 'Today, $time';
+  }
+
+  @override
+  String reminderTomorrowAt(String time) {
+    return 'Tomorrow, $time';
+  }
 }

@@ -55,10 +55,13 @@ class _RoutinesView extends StatelessWidget {
           slivers: <Widget>[
             SliverAppBar(
               leadingWidth: 68,
-              leading: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.pageMargin),
+              leading: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
                 child: Center(
-                  child: IconCircleButton(icon: Icons.person_outline),
+                  child: IconCircleButton(
+                    icon: Icons.person_outline,
+                    onPressed: () => context.push(OpenLifeRoute.profile.path),
+                  ),
                 ),
               ),
               title: Text(
@@ -67,11 +70,13 @@ class _RoutinesView extends StatelessWidget {
                   color: AppColors.primary,
                 ),
               ),
-              actions: const <Widget>[
+              actions: <Widget>[
                 IconCircleButton(
                   icon: Icons.notifications_none_rounded,
+                  onPressed: () =>
+                      context.push(OpenLifeRoute.notifications.path),
                 ),
-                SizedBox(width: AppSpacing.pageMargin),
+                const SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
               backgroundColor: context.palette.background,

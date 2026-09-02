@@ -114,7 +114,19 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Build better days'), findsOneWidget);
-    expect(find.text('English'), findsOneWidget);
+  });
+
+  testWidgets('slide 1 does not ask for the language a second time', (
+    WidgetTester tester,
+  ) async {
+    await pumpOnboarding(tester);
+
+    // The dedicated Language Selection page has already asked, one screen
+    // earlier. Asking again here read as the first answer not being saved.
+    expect(find.text('Build better days'), findsOneWidget);
+    expect(find.text('Choose your starting language'), findsNothing);
+    expect(find.text('English'), findsNothing);
+    expect(find.text('Bahasa'), findsNothing);
   });
 
   testWidgets('can navigate through all four onboarding slides', (
@@ -232,15 +244,22 @@ void main() {
       expect(find.text('Get gentle reminders'), findsOneWidget);
     });
 
-    testWidgets('the slide-1 chips retranslate the slide immediately', (
+    testWidgets('the language chosen on its own page carries into onboarding', (
       WidgetTester tester,
     ) async {
-      await pumpOnboarding(tester);
-      expect(find.text('Build better days'), findsOneWidget);
+      await pumpApp(tester);
 
-      await tester.tap(find.text('Bahasa'));
+      await tester.tap(find.text('Bahasa Indonesia'));
+      await tester.pumpAndSettle();
+      // Still the English label: the choice is committed by this tap, not by
+      // selecting the row.
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Nanti saja'));
       await tester.pumpAndSettle();
 
+      // Slide 1 no longer offers its own picker, so this is the only answer
+      // that could have got here.
       expect(find.text('Bangun hari yang lebih baik'), findsOneWidget);
     });
   });

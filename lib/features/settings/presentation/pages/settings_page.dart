@@ -57,9 +57,13 @@ class SettingsPage extends StatelessWidget {
                   color: AppColors.primary,
                 ),
               ),
-              actions: const <Widget>[
-                IconCircleButton(icon: Icons.notifications_none_rounded),
-                SizedBox(width: AppSpacing.pageMargin),
+              actions: <Widget>[
+                IconCircleButton(
+                  icon: Icons.notifications_none_rounded,
+                  onPressed: () =>
+                      context.push(OpenLifeRoute.notifications.path),
+                ),
+                const SizedBox(width: AppSpacing.pageMargin),
               ],
               pinned: true,
               backgroundColor: context.palette.background,

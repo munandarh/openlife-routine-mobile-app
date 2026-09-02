@@ -906,4 +906,53 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get routineActiveDescription => 'Kirim pengingat untuk rutinitas ini.';
+
+  @override
+  String get notificationsTitle => 'Notifikasi';
+
+  @override
+  String get upcomingReminders => 'Pengingat berikutnya';
+
+  @override
+  String get upcomingRemindersDesc =>
+      'Pengingat terdekat yang akan dikirim rutinitasmu.';
+
+  @override
+  String get noUpcomingReminders => 'Belum ada pengingat terjadwal';
+
+  @override
+  String get noUpcomingRemindersDesc =>
+      'Tambahkan rutinitas, atau aktifkan lagi, dan pengingatnya akan muncul di sini.';
+
+  @override
+  String get manageAlerts => 'Atur pengingat';
+
+  @override
+  String get profileTitle => 'Profil';
+
+  @override
+  String get profileLocalOnly => 'Tanpa akun';
+
+  @override
+  String get profileLocalOnlyDesc =>
+      'OpenLife Routine tidak punya login. Semua yang kamu lihat di sini hanya tersimpan di perangkat ini.';
+
+  @override
+  String get yourActivity => 'Aktivitasmu';
+
+  @override
+  String get activeRoutinesStat => 'Rutinitas aktif';
+
+  @override
+  String get currentStreakStat => 'Rentetan saat ini';
+
+  @override
+  String reminderTodayAt(String time) {
+    return 'Hari ini, $time';
+  }
+
+  @override
+  String reminderTomorrowAt(String time) {
+    return 'Besok, $time';
+  }
 }

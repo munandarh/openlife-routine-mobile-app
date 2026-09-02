@@ -1705,6 +1705,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send reminders for this routine.'**
   String get routineActiveDescription;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @upcomingReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming reminders'**
+  String get upcomingReminders;
+
+  /// No description provided for @upcomingRemindersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The next reminders your routines will send.'**
+  String get upcomingRemindersDesc;
+
+  /// No description provided for @noUpcomingReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders scheduled'**
+  String get noUpcomingReminders;
+
+  /// No description provided for @noUpcomingRemindersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a routine, or turn one back on, and its reminders will appear here.'**
+  String get noUpcomingRemindersDesc;
+
+  /// No description provided for @manageAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage reminder alerts'**
+  String get manageAlerts;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'No account needed'**
+  String get profileLocalOnly;
+
+  /// No description provided for @profileLocalOnlyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife Routine has no sign-in. Everything you see here is stored on this device only.'**
+  String get profileLocalOnlyDesc;
+
+  /// No description provided for @yourActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Your activity'**
+  String get yourActivity;
+
+  /// No description provided for @activeRoutinesStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Active routines'**
+  String get activeRoutinesStat;
+
+  /// No description provided for @currentStreakStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get currentStreakStat;
+
+  /// No description provided for @reminderTodayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {time}'**
+  String reminderTodayAt(String time);
+
+  /// No description provided for @reminderTomorrowAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow, {time}'**
+  String reminderTomorrowAt(String time);
 }
 
 class _AppLocalizationsDelegate

@@ -382,5 +382,7 @@
     }
   },
   "notificationChannelName": "Routine reminders",
-  "notificationChannelDescription": "Reminder notifications for daily routines"
+  "notificationChannelDescription": "Reminder notifications for daily routines",
+  "copyAction": "Copy",
+  "copiedToClipboard": "Backup copied to the clipboard."
 }

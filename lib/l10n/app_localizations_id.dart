@@ -888,4 +888,10 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get notificationChannelDescription =>
       'Notifikasi pengingat untuk rutinitas harian';
+
+  @override
+  String get copyAction => 'Salin';
+
+  @override
+  String get copiedToClipboard => 'Cadangan disalin ke papan klip.';
 }

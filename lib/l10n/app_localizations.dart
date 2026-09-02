@@ -1669,6 +1669,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder notifications for daily routines'**
   String get notificationChannelDescription;
+
+  /// No description provided for @copyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copyAction;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup copied to the clipboard.'**
+  String get copiedToClipboard;
 }
 
 class _AppLocalizationsDelegate

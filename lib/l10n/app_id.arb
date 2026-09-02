@@ -382,5 +382,7 @@
     }
   },
   "notificationChannelName": "Pengingat rutinitas",
-  "notificationChannelDescription": "Notifikasi pengingat untuk rutinitas harian"
+  "notificationChannelDescription": "Notifikasi pengingat untuk rutinitas harian",
+  "copyAction": "Salin",
+  "copiedToClipboard": "Cadangan disalin ke papan klip."
 }

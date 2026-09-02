@@ -891,4 +891,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationChannelDescription =>
       'Reminder notifications for daily routines';
+
+  @override
+  String get copyAction => 'Copy';
+
+  @override
+  String get copiedToClipboard => 'Backup copied to the clipboard.';
 }

@@ -89,6 +89,14 @@ test suite did not catch them.
   longer writes 30 days of `missed` logs or zeroes last week's rate.
 - **3.7 MB of unused v2.0 artwork shipped in the APK** — `pubspec.yaml`
   registered the whole `assets/vector/` directory.
+- **Export produced a backup you could not take.** The JSON was rendered as
+  read-only text with no way off the screen, which does not meet "user can
+  save/share backup file" (PRD §12.7). Added a Copy action, which also hands the
+  backup to the system share sheet. Saving straight to a file still needs a
+  plugin and is not done.
+- **Dialog actions stacked and stretched.** The app's `filledButtonTheme` sizes
+  the primary call to action to full width, and dialog buttons inherited it, so
+  the export, import and reset dialogs wrapped their action rows.
 - **Dark mode was unusable**, despite shipping as a v1.0 feature. Widgets
   referenced `AppColors.textPrimary`/`textSecondary`/`background`/`surface`/
   `border` directly — light-theme constants — in about 140 places, so the dark

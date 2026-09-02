@@ -23,7 +23,7 @@
 |---|---|
 | App version | 1.1.0+2 |
 | `flutter analyze` | 0 issues |
-| `flutter test` | **356 passing** |
+| `flutter test` | **359 passing** |
 | Database schema | v4 |
 | Localized strings | 275 keys × EN/ID |
 | Illustrations wired | 10 PNG / 10 MVP |
@@ -154,7 +154,8 @@
 
 ### Import / export (PRD §14.2)
 
-- [x] Export JSON
+- [x] Export JSON, with a Copy action so the backup can actually leave the app
+- [ ] Save the backup straight to a file — needs a share/file plugin
 - [x] Import JSON
 - [x] Reset
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
@@ -14,6 +15,14 @@ import 'package:openlife_routine/features/settings/presentation/bloc/settings_ev
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
+
+/// The app's `filledButtonTheme` stretches buttons to full width for the
+/// primary call to action, which makes a dialog's action row wrap and stack.
+/// Dialog buttons opt out and size to their label.
+final ButtonStyle _dialogButtonStyle = FilledButton.styleFrom(
+  minimumSize: const Size(72, 40),
+  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+);
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -318,6 +327,27 @@ class SettingsPage extends StatelessWidget {
               onPressed: () => Navigator.pop(dialogContext),
               child: Text(l10n.closeAction),
             ),
+            // Without this the backup can only be read on screen and
+            // hand-selected, which is not a backup anyone would actually take.
+            FilledButton(
+              style: _dialogButtonStyle,
+              onPressed: () async {
+                final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
+                  context,
+                );
+                await Clipboard.setData(ClipboardData(text: json));
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext);
+                }
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.copiedToClipboard),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              child: Text(l10n.copyAction),
+            ),
           ],
         );
       },
@@ -353,6 +383,7 @@ class SettingsPage extends StatelessWidget {
               child: Text(l10n.cancelAction),
             ),
             FilledButton(
+              style: _dialogButtonStyle,
               onPressed: () async {
                 final String json = controller.text.trim();
                 if (json.isEmpty) {
@@ -409,7 +440,11 @@ class SettingsPage extends StatelessWidget {
               child: Text(l10n.cancelAction),
             ),
             FilledButton(
-              style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
+              style: _dialogButtonStyle.copyWith(
+                backgroundColor: const WidgetStatePropertyAll<Color>(
+                  AppColors.danger,
+                ),
+              ),
               onPressed: () async {
                 final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
                   context,

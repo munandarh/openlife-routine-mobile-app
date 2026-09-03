@@ -58,6 +58,20 @@ final class AppColors {
   static const Color heroStartDark = Color(0xFF262D22);
   static const Color heroEndDark = Color(0xFF1E241B);
 
+  // The pale "soft" fills are the light theme's quiet accents. Left alone in
+  // the dark theme they became bright slabs carrying light text — the Insights
+  // banner's body copy was pale grey on near-white. Each one gets a deep
+  // counterpart plus the ink that stays legible on it.
+  static const Color primarySoftDark = Color(0xFF2F3A2B);
+  static const Color primaryInkLight = primary;
+  static const Color primaryInkDark = Color(0xFFAFC4A4);
+  static const Color accentSoftDark = Color(0xFF3A2A20);
+  static const Color accentInkLight = accentDeep;
+  static const Color accentInkDark = Color(0xFFE2A585);
+  static const Color dangerSoftDark = Color(0xFF3B2420);
+  static const Color dangerInkLight = danger;
+  static const Color dangerInkDark = Color(0xFFE59684);
+
   static const Color backgroundDark = Color(0xFF171A16);
   static const Color surfaceDark = Color(0xFF22261F);
   static const Color surfaceSoftDark = Color(0xFF2C312A);

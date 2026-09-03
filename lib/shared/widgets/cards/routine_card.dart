@@ -132,15 +132,15 @@ class RoutineCard extends StatelessWidget {
 
   Color _statusBackground(BuildContext context) {
     return switch (statusTone) {
-      RoutineCardTone.positive => AppColors.primarySoft,
-      RoutineCardTone.attention => AppColors.accentSoft,
+      RoutineCardTone.positive => context.palette.primarySoft,
+      RoutineCardTone.attention => context.palette.accentSoft,
       RoutineCardTone.muted => context.palette.surfaceSoft,
     };
   }
 
   Color _statusForeground(BuildContext context) {
     return switch (statusTone) {
-      RoutineCardTone.positive => AppColors.primary,
+      RoutineCardTone.positive => context.palette.primaryInk,
       RoutineCardTone.attention => AppColors.warning,
       RoutineCardTone.muted => context.palette.textSecondary,
     };
@@ -203,12 +203,14 @@ class _ActionChip extends StatelessWidget {
             vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: AppColors.primarySoft,
+            color: context.palette.primarySoft,
             borderRadius: BorderRadius.circular(AppRadius.small),
           ),
           child: Text(
             action.label,
-            style: AppTextStyles.label.copyWith(color: AppColors.primary),
+            style: AppTextStyles.label.copyWith(
+              color: context.palette.primaryInk,
+            ),
           ),
         ),
       ),
@@ -239,7 +241,7 @@ class _CheckCircle extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: isDone ? AppColors.primarySoft : Colors.transparent,
+            color: isDone ? context.palette.primarySoft : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.pill),
             border: Border.all(
               color: isDone ? Colors.transparent : context.palette.border,

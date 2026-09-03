@@ -83,9 +83,9 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                 ListTile(
                   title: Text(l10n.minutesLabel(minutes)),
                   trailing: minutes == _snoozeMinutes
-                      ? const Icon(
+                      ? Icon(
                           Icons.check_rounded,
-                          color: AppColors.primary,
+                          color: context.palette.primaryInk,
                         )
                       : null,
                   onTap: () => Navigator.pop(sheetContext, minutes),
@@ -257,7 +257,19 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                _FieldLabel(l10n.repeatLabel),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _FieldLabel(l10n.repeatLabel)),
+                    // Seven taps was the cost of the most common routine of
+                    // all: one that happens every day.
+                    _EveryDayButton(
+                      isEveryDay: _repeatDays.length == 7,
+                      onTap: () => setState(
+                        () => _repeatDays = <int>{1, 2, 3, 4, 5, 6, 7},
+                      ),
+                    ),
+                  ],
+                ),
                 // No wrapping card: the chips are white, so a white container
                 // behind them swallowed every unselected day.
                 Padding(
@@ -325,7 +337,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                       _isEnabled
                           ? Icons.notifications_active_outlined
                           : Icons.notifications_off_outlined,
-                      color: AppColors.primary,
+                      color: context.palette.primaryInk,
                     ),
                     title: Text(l10n.routineActiveLabel),
                     subtitle: Text(l10n.routineActiveDescription),
@@ -431,8 +443,14 @@ class _CategoryGrid extends StatelessWidget {
         return _CategoryTile(
           label: RoutineCategoryUi.label(l10n, category),
           icon: RoutineCategoryUi.defaultIcon(category),
-          background: RoutineCategoryUi.background(category),
-          foreground: RoutineCategoryUi.foreground(category),
+          background: RoutineCategoryUi.background(
+            category,
+            brightness: Theme.of(context).brightness,
+          ),
+          foreground: RoutineCategoryUi.foreground(
+            category,
+            brightness: Theme.of(context).brightness,
+          ),
           selected: category == selectedCategory,
           onTap: () => onSelected(category),
         );
@@ -474,7 +492,7 @@ class _CategoryTile extends StatelessWidget {
             color: background,
             borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(
-              color: selected ? AppColors.primary : Colors.transparent,
+              color: selected ? context.palette.primaryInk : Colors.transparent,
               width: 2.5,
             ),
           ),
@@ -567,17 +585,57 @@ class _IconOption extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: selected ? AppColors.primarySoft : context.palette.surface,
+            color: selected
+                ? context.palette.primarySoft
+                : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
-              color: selected ? AppColors.primary : context.palette.border,
+              color: selected
+                  ? context.palette.primaryInk
+                  : context.palette.border,
               width: selected ? 1.5 : 1,
             ),
           ),
           child: Icon(
             icon,
             size: 22,
-            color: selected ? AppColors.primary : context.palette.textSecondary,
+            color: selected
+                ? context.palette.primaryInk
+                : context.palette.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Selects all seven days at once. Deliberately not a toggle: turning it off
+/// would leave no days selected, which the form rejects on save.
+class _EveryDayButton extends StatelessWidget {
+  const _EveryDayButton({required this.isEveryDay, required this.onTap});
+
+  final bool isEveryDay;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: isEveryDay ? context.palette.primarySoft : Colors.transparent,
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: isEveryDay ? null : onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.xs + 1,
+          ),
+          child: Text(
+            context.l10n.everyDay.toUpperCase(),
+            style: AppTextStyles.label.copyWith(
+              color: context.palette.primaryInk,
+              letterSpacing: 0.6,
+            ),
           ),
         ),
       ),

@@ -97,8 +97,7 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
                       children: <Widget>[
                         _Summary(report: report),
                         const SizedBox(height: AppSpacing.lg),
-                        for (final ReminderCheck check
-                            in ReminderCheck.values)
+                        for (final ReminderCheck check in ReminderCheck.values)
                           if (report[check] != null) ...<Widget>[
                             _CheckCard(
                               check: check,
@@ -137,7 +136,7 @@ class _Summary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: healthy ? AppColors.primary : AppColors.dangerSoft,
+        color: healthy ? AppColors.primary : context.palette.dangerSoft,
         borderRadius: BorderRadius.circular(AppRadius.large),
         boxShadow: healthy ? AppShadows.primary : AppShadows.card,
       ),
@@ -148,7 +147,7 @@ class _Summary extends StatelessWidget {
                 ? Icons.check_circle_outline_rounded
                 : Icons.error_outline_rounded,
             size: 26,
-            color: healthy ? Colors.white : AppColors.danger,
+            color: healthy ? Colors.white : context.palette.dangerInk,
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -157,7 +156,7 @@ class _Summary extends StatelessWidget {
                   ? l10n.reminderHealthAllGood
                   : l10n.reminderHealthProblems(report.failing.length),
               style: AppTextStyles.cardTitle.copyWith(
-                color: healthy ? Colors.white : AppColors.danger,
+                color: healthy ? Colors.white : context.palette.dangerInk,
               ),
             ),
           ),
@@ -216,13 +215,17 @@ class _CheckCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: isOk ? AppColors.primarySoft : AppColors.dangerSoft,
+                  color: isOk
+                      ? context.palette.primarySoft
+                      : context.palette.dangerSoft,
                   borderRadius: BorderRadius.circular(AppRadius.small),
                 ),
                 child: Icon(
                   isOk ? Icons.check_rounded : Icons.priority_high_rounded,
                   size: 17,
-                  color: isOk ? AppColors.primary : AppColors.danger,
+                  color: isOk
+                      ? context.palette.primaryInk
+                      : context.palette.dangerInk,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -249,9 +252,7 @@ class _CheckCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       l10n.fixIt,
-                      style: AppTextStyles.button.copyWith(
-                        color: Colors.white,
-                      ),
+                      style: AppTextStyles.button.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
@@ -282,7 +283,7 @@ class _VendorCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.accentSoft,
+        color: context.palette.accentSoft,
         borderRadius: BorderRadius.circular(AppRadius.large),
       ),
       child: Column(
@@ -291,13 +292,15 @@ class _VendorCard extends StatelessWidget {
           Text(
             l10n.vendorWarningTitle(display),
             style: AppTextStyles.cardTitle.copyWith(
-              color: AppColors.accentDeep,
+              color: context.palette.accentInk,
             ),
           ),
           const SizedBox(height: AppSpacing.xs + 2),
           Text(
             l10n.vendorWarningBody,
-            style: AppTextStyles.body.copyWith(color: AppColors.accentDeep),
+            style: AppTextStyles.body.copyWith(
+              color: context.palette.accentInk,
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
           Material(
@@ -312,7 +315,7 @@ class _VendorCard extends StatelessWidget {
                   child: Text(
                     l10n.openAppSettings,
                     style: AppTextStyles.button.copyWith(
-                      color: AppColors.accentDeep,
+                      color: context.palette.accentInk,
                     ),
                   ),
                 ),

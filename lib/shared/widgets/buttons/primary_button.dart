@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -54,7 +55,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           ),
           decoration: BoxDecoration(
             color: widget.isSecondary
-                ? AppColors.primarySoft
+                ? context.palette.primarySoft
                 : AppColors.primary,
             borderRadius: BorderRadius.circular(AppRadius.pill),
           ),
@@ -74,7 +75,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2.5,
                             color: widget.isSecondary
-                                ? AppColors.primary
+                                ? context.palette.primaryInk
                                 : Colors.white,
                           ),
                         )
@@ -87,7 +88,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                                 widget.icon,
                                 size: 20,
                                 color: widget.isSecondary
-                                    ? AppColors.primary
+                                    ? context.palette.primaryInk
                                     : Colors.white,
                               ),
                               const SizedBox(width: AppSpacing.sm),
@@ -100,7 +101,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.button.copyWith(
                                   color: widget.isSecondary
-                                      ? AppColors.primary
+                                      ? context.palette.primaryInk
                                       : Colors.white,
                                 ),
                               ),

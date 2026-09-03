@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
@@ -51,8 +50,8 @@ class AppPlaceholderPage extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: AppColors.primarySoft,
-                    foregroundColor: AppColors.primary,
+                    backgroundColor: context.palette.primarySoft,
+                    foregroundColor: context.palette.primaryInk,
                     child: Icon(icon),
                   ),
                   const SizedBox(height: AppSpacing.xl),

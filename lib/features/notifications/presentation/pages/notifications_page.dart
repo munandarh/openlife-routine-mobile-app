@@ -8,7 +8,6 @@ import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart'
     show RoutineBundleRow;
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -232,7 +231,10 @@ class _ReminderTile extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: RoutineCategoryUi.background(slot.routine.category),
+              color: RoutineCategoryUi.background(
+                slot.routine.category,
+                brightness: Theme.of(context).brightness,
+              ),
               borderRadius: BorderRadius.circular(AppRadius.medium),
             ),
             child: Icon(
@@ -241,7 +243,10 @@ class _ReminderTile extends StatelessWidget {
                 iconKey: slot.routine.iconKey,
               ),
               size: 18,
-              color: RoutineCategoryUi.foreground(slot.routine.category),
+              color: RoutineCategoryUi.foreground(
+                slot.routine.category,
+                brightness: Theme.of(context).brightness,
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -336,7 +341,7 @@ class _WhitePillAction extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(icon, size: 17, color: AppColors.primary),
+              Icon(icon, size: 17, color: context.palette.primaryInk),
               const SizedBox(width: AppSpacing.sm),
               Flexible(
                 child: Text(
@@ -345,7 +350,7 @@ class _WhitePillAction extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.button.copyWith(
                     fontSize: 14,
-                    color: AppColors.primary,
+                    color: context.palette.primaryInk,
                   ),
                 ),
               ),

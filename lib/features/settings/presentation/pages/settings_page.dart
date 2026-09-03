@@ -592,10 +592,10 @@ class _SettingsRow extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: AppColors.primarySoft,
+              color: context.palette.primarySoft,
               borderRadius: BorderRadius.circular(AppRadius.small),
             ),
-            child: Icon(item.icon, size: 17, color: AppColors.primary),
+            child: Icon(item.icon, size: 17, color: context.palette.primaryInk),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -617,8 +617,6 @@ class _SettingsRow extends StatelessWidget {
             Switch.adaptive(
               value: item.toggleValue ?? false,
               onChanged: item.onToggle,
-              activeThumbColor: Colors.white,
-              activeTrackColor: AppColors.primary,
             )
           else ...<Widget>[
             if (item.trailing != null)

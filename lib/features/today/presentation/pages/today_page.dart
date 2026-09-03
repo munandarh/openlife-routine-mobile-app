@@ -126,7 +126,7 @@ class _TodayViewState extends State<_TodayView> {
               // screen where Profile and Notifications cannot be reached.
               return Column(
                 children: <Widget>[
-                  OpenLifeAppBar.tab(onAddRoutine: _openNewRoutine),
+                  const OpenLifeAppBar.tab(),
                   Expanded(
                     child: TodayEmptyPage(onCreateRoutine: _openNewRoutine),
                   ),
@@ -142,9 +142,7 @@ class _TodayViewState extends State<_TodayView> {
 
             return CustomScrollView(
               slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: OpenLifeAppBar.tab(onAddRoutine: _openNewRoutine),
-                ),
+                SliverToBoxAdapter(child: const OpenLifeAppBar.tab()),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
@@ -458,8 +456,15 @@ class _TodayRoutineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final Color tint = RoutineCategoryUi.background(item.category);
-    final Color ink = RoutineCategoryUi.foreground(item.category);
+    final Brightness brightness = Theme.of(context).brightness;
+    final Color tint = RoutineCategoryUi.background(
+      item.category,
+      brightness: brightness,
+    );
+    final Color ink = RoutineCategoryUi.foreground(
+      item.category,
+      brightness: brightness,
+    );
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md + 1),
@@ -522,7 +527,7 @@ class _TodayRoutineCard extends StatelessWidget {
                 Expanded(
                   child: _QuietAction(
                     label: l10n.snoozeAction,
-                    tone: AppColors.primary,
+                    tone: context.palette.primaryInk,
                     onTap: () => context.read<TodayBloc>().add(
                       TodayRoutineSnoozed(item.routineId),
                     ),
@@ -588,7 +593,7 @@ class _TodayRoutineCard extends StatelessWidget {
                 height: 22,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
-                  color: AppColors.accentSoft,
+                  color: context.palette.accentSoft,
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
                 child: Center(
@@ -598,7 +603,7 @@ class _TodayRoutineCard extends StatelessWidget {
                     style: AppTextStyles.label.copyWith(
                       fontSize: 10.5,
                       letterSpacing: 0.5,
-                      color: AppColors.accentDeep,
+                      color: context.palette.accentInk,
                     ),
                   ),
                 ),
@@ -612,7 +617,7 @@ class _TodayRoutineCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodyEmphasis.copyWith(
               color: _isDone
-                  ? AppColors.primary
+                  ? context.palette.primaryInk
                   : context.palette.textSecondary,
             ),
           ),

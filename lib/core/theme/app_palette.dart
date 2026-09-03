@@ -23,6 +23,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.textSecondary,
     required this.textMuted,
     required this.iconMuted,
+    required this.primarySoft,
+    required this.primaryInk,
+    required this.accentSoft,
+    required this.accentInk,
+    required this.dangerSoft,
+    required this.dangerInk,
     required this.heroStart,
     required this.heroEnd,
   });
@@ -37,6 +43,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary = AppColors.textSecondary,
       textMuted = AppColors.textMuted,
       iconMuted = AppColors.iconMuted,
+      primarySoft = AppColors.primarySoft,
+      primaryInk = AppColors.primaryInkLight,
+      accentSoft = AppColors.accentSoft,
+      accentInk = AppColors.accentInkLight,
+      dangerSoft = AppColors.dangerSoft,
+      dangerInk = AppColors.dangerInkLight,
       heroStart = AppColors.heroStart,
       heroEnd = AppColors.heroEnd;
 
@@ -50,6 +62,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary = AppColors.textSecondaryDark,
       textMuted = AppColors.textMutedDark,
       iconMuted = AppColors.iconMutedDark,
+      primarySoft = AppColors.primarySoftDark,
+      primaryInk = AppColors.primaryInkDark,
+      accentSoft = AppColors.accentSoftDark,
+      accentInk = AppColors.accentInkDark,
+      dangerSoft = AppColors.dangerSoftDark,
+      dangerInk = AppColors.dangerInkDark,
       heroStart = AppColors.heroStartDark,
       heroEnd = AppColors.heroEndDark;
 
@@ -67,6 +85,19 @@ class AppPalette extends ThemeExtension<AppPalette> {
   /// Icons only — held to the 3:1 floor, not 4.5:1.
   final Color iconMuted;
 
+  /// The quiet accent fills, each with the ink that carries the same meaning.
+  ///
+  /// Both go deep in the dark theme: a pale slab on a dark screen glares, and
+  /// the brand greens and clays were mixed for white — on a near-black surface
+  /// `AppColors.primary` is a murky 2:1. The ink is for text and icons on the
+  /// matching soft fill *and* on the page surface.
+  final Color primarySoft;
+  final Color primaryInk;
+  final Color accentSoft;
+  final Color accentInk;
+  final Color dangerSoft;
+  final Color dangerInk;
+
   /// Gradient stops for the daily-progress hero panel.
   final Color heroStart;
   final Color heroEnd;
@@ -82,6 +113,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? textSecondary,
     Color? textMuted,
     Color? iconMuted,
+    Color? primarySoft,
+    Color? primaryInk,
+    Color? accentSoft,
+    Color? accentInk,
+    Color? dangerSoft,
+    Color? dangerInk,
     Color? heroStart,
     Color? heroEnd,
   }) {
@@ -95,6 +132,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary: textSecondary ?? this.textSecondary,
       textMuted: textMuted ?? this.textMuted,
       iconMuted: iconMuted ?? this.iconMuted,
+      primarySoft: primarySoft ?? this.primarySoft,
+      primaryInk: primaryInk ?? this.primaryInk,
+      accentSoft: accentSoft ?? this.accentSoft,
+      accentInk: accentInk ?? this.accentInk,
+      dangerSoft: dangerSoft ?? this.dangerSoft,
+      dangerInk: dangerInk ?? this.dangerInk,
       heroStart: heroStart ?? this.heroStart,
       heroEnd: heroEnd ?? this.heroEnd,
     );
@@ -115,6 +158,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       iconMuted: Color.lerp(iconMuted, other.iconMuted, t)!,
+      primarySoft: Color.lerp(primarySoft, other.primarySoft, t)!,
+      primaryInk: Color.lerp(primaryInk, other.primaryInk, t)!,
+      accentSoft: Color.lerp(accentSoft, other.accentSoft, t)!,
+      accentInk: Color.lerp(accentInk, other.accentInk, t)!,
+      dangerSoft: Color.lerp(dangerSoft, other.dangerSoft, t)!,
+      dangerInk: Color.lerp(dangerInk, other.dangerInk, t)!,
       heroStart: Color.lerp(heroStart, other.heroStart, t)!,
       heroEnd: Color.lerp(heroEnd, other.heroEnd, t)!,
     );

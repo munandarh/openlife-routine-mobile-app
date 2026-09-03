@@ -18,7 +18,10 @@ enum ReminderCheck {
 
 @immutable
 class ReminderHealthReport {
-  const ReminderHealthReport({required this.results, required this.manufacturer});
+  const ReminderHealthReport({
+    required this.results,
+    required this.manufacturer,
+  });
 
   /// A check is absent from the map when the platform cannot answer it. That
   /// is deliberately different from `false`: "we don't know" must never be
@@ -70,8 +73,7 @@ class ReminderHealth {
     required AppNotificationService notificationService,
     MethodChannel? powerChannel,
   }) : _notificationService = notificationService,
-       _power =
-           powerChannel ?? const MethodChannel('openlife_routine/power');
+       _power = powerChannel ?? const MethodChannel('openlife_routine/power');
 
   final AppNotificationService _notificationService;
   final MethodChannel _power;

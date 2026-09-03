@@ -1457,7 +1457,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutBuiltWithBody.
   ///
   /// In en, this message translates to:
-  /// **'This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, local notifications, and Rive animations.'**
+  /// **'This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, and local notifications.'**
   String get aboutBuiltWithBody;
 
   /// No description provided for @aboutPortfolio.

@@ -141,12 +141,14 @@ class _BrandRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
+        Icon(Icons.spa_outlined, color: context.palette.primaryInk, size: 20),
         const SizedBox(width: AppSpacing.sm),
         Flexible(
           child: Text(
             context.l10n.appTitle,
-            style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
+            style: AppTextStyles.cardTitle.copyWith(
+              color: context.palette.primaryInk,
+            ),
           ),
         ),
       ],
@@ -166,13 +168,13 @@ class _GlobeBadge extends StatelessWidget {
       width: 56,
       height: 56,
       decoration: BoxDecoration(
-        color: AppColors.primarySoft,
+        color: context.palette.primarySoft,
         borderRadius: BorderRadius.circular(AppRadius.medium),
       ),
-      child: const Icon(
+      child: Icon(
         Icons.language_outlined,
         size: 28,
-        color: AppColors.primary,
+        color: context.palette.primaryInk,
       ),
     );
   }
@@ -200,10 +202,14 @@ class _LanguageCard extends StatelessWidget {
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primarySoft : context.palette.surface,
+        color: isSelected
+            ? context.palette.primarySoft
+            : context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
         border: Border.all(
-          color: isSelected ? AppColors.primary : context.palette.border,
+          color: isSelected
+              ? context.palette.primaryInk
+              : context.palette.border,
           width: isSelected ? 1.5 : 1,
         ),
         boxShadow: isSelected ? AppShadows.card : null,
@@ -236,7 +242,7 @@ class _LanguageCard extends StatelessWidget {
                     style: AppTextStyles.label.copyWith(
                       fontSize: 14,
                       color: isSelected
-                          ? AppColors.primary
+                          ? context.palette.primaryInk
                           : context.palette.textSecondary,
                     ),
                   ),
@@ -293,7 +299,9 @@ class _SelectionTick extends StatelessWidget {
             color: isSelected ? AppColors.primary : Colors.transparent,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? AppColors.primary : context.palette.border,
+              color: isSelected
+                  ? context.palette.primaryInk
+                  : context.palette.border,
               width: 1.5,
             ),
           ),

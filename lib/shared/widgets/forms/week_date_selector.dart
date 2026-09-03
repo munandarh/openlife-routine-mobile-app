@@ -102,8 +102,8 @@ class WeekDateSelector extends StatelessWidget {
                       Container(
                         width: 4,
                         height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: context.palette.primaryInk,
                           shape: BoxShape.circle,
                         ),
                       ),

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -93,14 +92,14 @@ class _NotificationPermissionPageState
                       width: 140,
                       height: 140,
                       decoration: BoxDecoration(
-                        color: AppColors.primarySoft,
+                        color: context.palette.primarySoft,
                         borderRadius: BorderRadius.circular(AppRadius.large),
                         boxShadow: AppShadows.card,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.notifications_active_outlined,
                         size: 64,
-                        color: AppColors.primary,
+                        color: context.palette.primaryInk,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -179,7 +178,7 @@ class _BrandPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, size: 18, color: AppColors.primary),
+          Icon(icon, size: 18, color: context.palette.primaryInk),
           const SizedBox(width: AppSpacing.sm),
           Flexible(
             child: Text(
@@ -216,7 +215,7 @@ class _FeatureChip extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Icon(icon, size: 18, color: AppColors.primary),
+          Icon(icon, size: 18, color: context.palette.primaryInk),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(

@@ -6,7 +6,6 @@ import 'package:openlife_routine/app/router/navigation_extensions.dart';
 import 'package:openlife_routine/core/app_info.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -76,10 +75,10 @@ class _ProfileView extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: AppShadows.lifted,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.person_outline,
                             size: 40,
-                            color: AppColors.primary,
+                            color: context.palette.primaryInk,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
@@ -114,8 +113,8 @@ class _ProfileView extends StatelessWidget {
                                 icon: Icons.checklist_rounded,
                                 value: '${state.totalCompleted}',
                                 label: l10n.completedThisWeek,
-                                iconColor: AppColors.primary,
-                                iconBackground: AppColors.primarySoft,
+                                iconColor: context.palette.primaryInk,
+                                iconBackground: context.palette.primarySoft,
                               ),
                             ),
                             const SizedBox(width: AppSpacing.md),
@@ -124,8 +123,8 @@ class _ProfileView extends StatelessWidget {
                                 icon: Icons.local_fire_department_outlined,
                                 value: '${state.streak}',
                                 label: l10n.currentStreakStat,
-                                iconColor: AppColors.accent,
-                                iconBackground: AppColors.accentSoft,
+                                iconColor: context.palette.accentInk,
+                                iconBackground: context.palette.accentSoft,
                               ),
                             ),
                           ],

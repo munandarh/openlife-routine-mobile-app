@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -90,13 +89,13 @@ class _SelectedTab extends StatelessWidget {
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md + 2),
       decoration: BoxDecoration(
-        color: AppColors.primarySoft,
+        color: context.palette.primarySoft,
         borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(route.icon, size: 19, color: AppColors.primary),
+          Icon(route.icon, size: 19, color: context.palette.primaryInk),
           const SizedBox(width: AppSpacing.sm - 1),
           Flexible(
             child: Text(
@@ -105,7 +104,7 @@ class _SelectedTab extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.button.copyWith(
                 fontSize: 13,
-                color: AppColors.primary,
+                color: context.palette.primaryInk,
               ),
             ),
           ),

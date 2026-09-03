@@ -11,6 +11,7 @@ import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
+import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
 import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
 import 'package:openlife_routine/features/templates/presentation/bloc/template_bloc.dart';
@@ -62,7 +63,23 @@ class _TemplatesView extends StatelessWidget {
     };
   }
 
-  Color _iconBgForKey(String iconKey) {
+  Color _iconBgForKey(String iconKey, Brightness brightness) {
+    return RoutineCategoryUi.pair(
+      _iconTintForKey(iconKey),
+      _iconInkForKey(iconKey),
+      brightness,
+    ).$1;
+  }
+
+  Color _iconColorForKey(String iconKey, Brightness brightness) {
+    return RoutineCategoryUi.pair(
+      _iconTintForKey(iconKey),
+      _iconInkForKey(iconKey),
+      brightness,
+    ).$2;
+  }
+
+  Color _iconTintForKey(String iconKey) {
     return switch (iconKey) {
       'wb_sunny' => AppColors.mealTint,
       'water_drop' => AppColors.waterTint,
@@ -73,7 +90,7 @@ class _TemplatesView extends StatelessWidget {
     };
   }
 
-  Color _iconColorForKey(String iconKey) {
+  Color _iconInkForKey(String iconKey) {
     return switch (iconKey) {
       'wb_sunny' => AppColors.mealInk,
       'water_drop' => AppColors.waterInk,
@@ -142,8 +159,14 @@ class _TemplatesView extends StatelessWidget {
                             ),
                             badge: TemplateL10n.badge(l10n, template),
                             icon: _iconForKey(template.iconKey),
-                            iconBackground: _iconBgForKey(template.iconKey),
-                            iconColor: _iconColorForKey(template.iconKey),
+                            iconBackground: _iconBgForKey(
+                              template.iconKey,
+                              Theme.of(context).brightness,
+                            ),
+                            iconColor: _iconColorForKey(
+                              template.iconKey,
+                              Theme.of(context).brightness,
+                            ),
                             illustrationPath: _illustrationForKey(
                               template.iconKey,
                             ),

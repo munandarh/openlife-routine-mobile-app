@@ -265,7 +265,10 @@ class _RoutineListRow extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: RoutineCategoryUi.background(routine.category),
+                  color: RoutineCategoryUi.background(
+                    routine.category,
+                    brightness: Theme.of(context).brightness,
+                  ),
                   borderRadius: BorderRadius.circular(AppRadius.medium),
                 ),
                 child: Icon(
@@ -274,7 +277,10 @@ class _RoutineListRow extends StatelessWidget {
                     iconKey: routine.iconKey,
                   ),
                   size: 19,
-                  color: RoutineCategoryUi.foreground(routine.category),
+                  color: RoutineCategoryUi.foreground(
+                    routine.category,
+                    brightness: Theme.of(context).brightness,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -304,12 +310,7 @@ class _RoutineListRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Switch.adaptive(
-                value: routine.isEnabled,
-                onChanged: onToggle,
-                activeThumbColor: Colors.white,
-                activeTrackColor: AppColors.primary,
-              ),
+              Switch.adaptive(value: routine.isEnabled, onChanged: onToggle),
             ],
           ),
         ),

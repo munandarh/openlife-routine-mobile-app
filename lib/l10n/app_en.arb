@@ -333,7 +333,7 @@
   "aboutOpenSource": "Open source",
   "aboutOpenSourceBody": "OpenLife Routine is free and open-source software. The full source code is available on GitHub under the Apache 2.0 license.",
   "aboutBuiltWith": "Built with Flutter",
-  "aboutBuiltWithBody": "This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, local notifications, and Rive animations.",
+  "aboutBuiltWithBody": "This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, and local notifications.",
   "aboutPortfolio": "Portfolio project",
   "aboutPortfolioBody": "OpenLife Routine was built as a production-quality open-source portfolio project to demonstrate Flutter engineering, architecture, and product design skills.",
   "aboutLicense": "License",

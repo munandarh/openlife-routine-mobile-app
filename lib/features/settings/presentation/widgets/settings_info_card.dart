@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -32,8 +31,8 @@ class SettingsInfoCard extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             radius: 24,
-            backgroundColor: AppColors.primarySoft,
-            foregroundColor: AppColors.primary,
+            backgroundColor: context.palette.primarySoft,
+            foregroundColor: context.palette.primaryInk,
             child: Icon(icon, size: 24),
           ),
           const SizedBox(width: AppSpacing.lg),

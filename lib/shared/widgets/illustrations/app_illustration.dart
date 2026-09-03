@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
+import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 
 /// A bundled PNG illustration, with an icon to fall back on.
@@ -71,10 +71,10 @@ class _Fallback extends StatelessWidget {
         width: size * 0.45,
         height: size * 0.45,
         decoration: BoxDecoration(
-          color: AppColors.primarySoft,
+          color: context.palette.primarySoft,
           borderRadius: BorderRadius.circular(AppRadius.extraLarge),
         ),
-        child: Icon(icon, size: size * 0.22, color: AppColors.primary),
+        child: Icon(icon, size: size * 0.22, color: context.palette.primaryInk),
       ),
     );
   }

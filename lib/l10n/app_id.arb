@@ -333,7 +333,7 @@
   "aboutOpenSource": "Open source",
   "aboutOpenSourceBody": "OpenLife Routine adalah perangkat lunak gratis dan open-source. Seluruh kode sumbernya tersedia di GitHub dengan lisensi Apache 2.0.",
   "aboutBuiltWith": "Dibangun dengan Flutter",
-  "aboutBuiltWithBody": "Aplikasi ini dibangun dengan Flutter dan Dart, memakai Clean Architecture, manajemen state BLoC, Drift SQLite, notifikasi lokal, dan animasi Rive.",
+  "aboutBuiltWithBody": "Aplikasi ini dibangun dengan Flutter dan Dart, memakai Clean Architecture, manajemen state BLoC, Drift SQLite, dan notifikasi lokal.",
   "aboutPortfolio": "Proyek portofolio",
   "aboutPortfolioBody": "OpenLife Routine dibangun sebagai proyek portofolio open-source berkualitas produksi untuk menunjukkan kemampuan rekayasa Flutter, arsitektur, dan desain produk.",
   "aboutLicense": "Lisensi",

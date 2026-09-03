@@ -31,7 +31,47 @@ final class RoutineCategoryUi {
     };
   }
 
-  static Color background(RoutineCategory category) {
+  /// The fill behind a routine's icon, and behind a due card on Today.
+  ///
+  /// The tints are pale by design, which made a due card a cream slab on a
+  /// dark screen — with the theme's near-white title on top of it. In the dark
+  /// theme the pair swaps roles: the fill is the ink laid thinly over the dark
+  /// surface, and the pale tint becomes the ink. Deriving both from the same
+  /// pair keeps the twelve category colours in step with no second palette to
+  /// maintain.
+  static Color background(
+    RoutineCategory category, {
+    Brightness brightness = Brightness.light,
+  }) {
+    return pair(_tint(category), _ink(category), brightness).$1;
+  }
+
+  /// Resolves a tint/ink pair for the active theme.
+  ///
+  /// Exposed because the template list keys its colours off icon names rather
+  /// than categories, and the two must not drift apart again.
+  static (Color background, Color foreground) pair(
+    Color tint,
+    Color ink,
+    Brightness brightness,
+  ) {
+    if (brightness == Brightness.dark) {
+      return (
+        Color.alphaBlend(ink.withValues(alpha: 0.22), AppColors.surfaceDark),
+        tint,
+      );
+    }
+    return (tint, ink);
+  }
+
+  static Color foreground(
+    RoutineCategory category, {
+    Brightness brightness = Brightness.light,
+  }) {
+    return pair(_tint(category), _ink(category), brightness).$2;
+  }
+
+  static Color _tint(RoutineCategory category) {
     return switch (category) {
       RoutineCategory.meal => AppColors.mealTint,
       RoutineCategory.water => AppColors.waterTint,
@@ -44,7 +84,7 @@ final class RoutineCategoryUi {
     };
   }
 
-  static Color foreground(RoutineCategory category) {
+  static Color _ink(RoutineCategory category) {
     return switch (category) {
       RoutineCategory.meal => AppColors.mealInk,
       RoutineCategory.water => AppColors.waterInk,

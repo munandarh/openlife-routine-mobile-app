@@ -66,17 +66,25 @@ void main() {
   });
 
   group('vendor guidance', () {
-    test('is shown for the makers that keep a hidden autostart switch', () async {
-      for (final String brand in <String>['xiaomi', 'oppo', 'vivo', 'realme']) {
-        mockPower(ignoringBattery: true, manufacturer: brand);
-        final ReminderHealthReport report = await healthFor().check();
-        expect(
-          report.needsVendorGuidance,
-          isTrue,
-          reason: '$brand suspends background apps beyond the battery flag',
-        );
-      }
-    });
+    test(
+      'is shown for the makers that keep a hidden autostart switch',
+      () async {
+        for (final String brand in <String>[
+          'xiaomi',
+          'oppo',
+          'vivo',
+          'realme',
+        ]) {
+          mockPower(ignoringBattery: true, manufacturer: brand);
+          final ReminderHealthReport report = await healthFor().check();
+          expect(
+            report.needsVendorGuidance,
+            isTrue,
+            reason: '$brand suspends background apps beyond the battery flag',
+          );
+        }
+      },
+    );
 
     test('is not shown where the battery flag tells the whole story', () async {
       for (final String brand in <String>['google', 'samsung', 'nothing']) {

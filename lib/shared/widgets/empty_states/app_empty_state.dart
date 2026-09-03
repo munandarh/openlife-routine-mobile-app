@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
@@ -153,10 +152,14 @@ class _PulsingIconState extends State<_PulsingIcon>
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: AppColors.primarySoft,
+              color: context.palette.primarySoft,
               borderRadius: BorderRadius.circular(AppRadius.extraLarge),
             ),
-            child: Icon(widget.icon, size: 27, color: AppColors.primary),
+            child: Icon(
+              widget.icon,
+              size: 27,
+              color: context.palette.primaryInk,
+            ),
           ),
         );
       },

@@ -95,7 +95,7 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                       AppSpacing.pageMargin,
                       AppSpacing.lg,
                       AppSpacing.pageMargin,
-                      AppSpacing.xxxl,
+                      AppSpacing.lg,
                     ),
                     children: <Widget>[
                       if (routine == null &&
@@ -117,6 +117,7 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                                 decoration: BoxDecoration(
                                   color: RoutineCategoryUi.background(
                                     routine.category,
+                                    brightness: Theme.of(context).brightness,
                                   ),
                                   borderRadius: BorderRadius.circular(
                                     AppRadius.extraLarge,
@@ -130,6 +131,7 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                                   size: 27,
                                   color: RoutineCategoryUi.foreground(
                                     routine.category,
+                                    brightness: Theme.of(context).brightness,
                                   ),
                                 ),
                               ),
@@ -255,29 +257,68 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                             ),
                           ),
                         ],
-                        const SizedBox(height: AppSpacing.xxl),
-                        PrimaryButton(
-                          label: l10n.editRoutineAction,
-                          onPressed: _openEditor,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        _DangerButton(
-                          label: l10n.deleteRoutine,
-                          onPressed: () {
-                            context.read<RoutineBloc>().add(
-                              RoutineDeleteRequested(routineId),
-                            );
-                          },
-                        ),
                       ],
                     ],
                   ),
                 ),
+                // Pinned rather than scrolled to: editing and deleting are what
+                // this screen is for, and on a long routine they used to sit
+                // below the fold.
+                if (routine != null)
+                  _DetailActions(
+                    onEdit: _openEditor,
+                    onDelete: () {
+                      context.read<RoutineBloc>().add(
+                        RoutineDeleteRequested(routineId),
+                      );
+                    },
+                  ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+/// Edit and delete, side by side and always on screen.
+class _DetailActions extends StatelessWidget {
+  const _DetailActions({required this.onEdit, required this.onDelete});
+
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.pageMargin,
+        AppSpacing.md,
+        AppSpacing.pageMargin,
+        AppSpacing.lg,
+      ),
+      child: Row(
+        children: <Widget>[
+          // An even split: at a third of the row "Delete routine" ellipsised
+          // to "Delete rou…", and a destructive action must say what it does.
+          Expanded(
+            child: _DangerButton(
+              label: l10n.deleteRoutine,
+              onPressed: onDelete,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: PrimaryButton(
+              label: l10n.editRoutineAction,
+              onPressed: onEdit,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -340,10 +381,10 @@ class _DetailRow extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: AppColors.primarySoft,
+              color: context.palette.primarySoft,
               borderRadius: BorderRadius.circular(AppRadius.small),
             ),
-            child: Icon(icon, size: 17, color: AppColors.primary),
+            child: Icon(icon, size: 17, color: context.palette.primaryInk),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -356,12 +397,7 @@ class _DetailRow extends StatelessWidget {
             ),
           ),
           if (toggle != null)
-            Switch.adaptive(
-              value: toggle!,
-              onChanged: onToggle,
-              activeThumbColor: Colors.white,
-              activeTrackColor: AppColors.primary,
-            )
+            Switch.adaptive(value: toggle!, onChanged: onToggle)
           else if (value != null)
             Text(
               value!,
@@ -385,20 +421,20 @@ class _DangerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.dangerSoft,
+      color: context.palette.dangerSoft,
       borderRadius: BorderRadius.circular(AppRadius.pill),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.pill),
         onTap: onPressed,
         child: SizedBox(
-          height: 52,
+          height: 56,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Icon(
+              Icon(
                 Icons.delete_outline_rounded,
                 size: 17,
-                color: AppColors.danger,
+                color: context.palette.dangerInk,
               ),
               const SizedBox(width: AppSpacing.sm),
               Flexible(
@@ -408,7 +444,7 @@ class _DangerButton extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.button.copyWith(
                     fontSize: 15,
-                    color: AppColors.danger,
+                    color: context.palette.dangerInk,
                   ),
                 ),
               ),

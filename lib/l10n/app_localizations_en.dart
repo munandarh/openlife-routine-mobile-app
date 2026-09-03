@@ -773,7 +773,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutBuiltWithBody =>
-      'This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, local notifications, and Rive animations.';
+      'This app is built with Flutter and Dart, using Clean Architecture, BLoC state management, Drift SQLite, and local notifications.';
 
   @override
   String get aboutPortfolio => 'Portfolio project';

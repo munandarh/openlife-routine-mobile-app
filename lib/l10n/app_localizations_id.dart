@@ -770,7 +770,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get aboutBuiltWithBody =>
-      'Aplikasi ini dibangun dengan Flutter dan Dart, memakai Clean Architecture, manajemen state BLoC, Drift SQLite, notifikasi lokal, dan animasi Rive.';
+      'Aplikasi ini dibangun dengan Flutter dan Dart, memakai Clean Architecture, manajemen state BLoC, Drift SQLite, dan notifikasi lokal.';
 
   @override
   String get aboutPortfolio => 'Proyek portofolio';

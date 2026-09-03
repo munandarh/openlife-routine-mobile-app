@@ -282,11 +282,13 @@ class _TopBar extends StatelessWidget {
             tooltip: context.l10n.backButton,
           )
         else ...<Widget>[
-          const Icon(Icons.spa_outlined, color: AppColors.primary, size: 20),
+          Icon(Icons.spa_outlined, color: context.palette.primaryInk, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Text(
             context.l10n.appTitle,
-            style: textTheme.titleMedium?.copyWith(color: AppColors.primary),
+            style: textTheme.titleMedium?.copyWith(
+              color: context.palette.primaryInk,
+            ),
           ),
         ],
         const Spacer(),
@@ -660,10 +662,14 @@ class _SelectableChip extends StatelessWidget {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: selected ? AppColors.primarySoft : context.palette.surface,
+            color: selected
+                ? context.palette.primarySoft
+                : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.pill),
             border: Border.all(
-              color: selected ? AppColors.primary : context.palette.border,
+              color: selected
+                  ? context.palette.primaryInk
+                  : context.palette.border,
             ),
           ),
           child: Row(
@@ -674,7 +680,7 @@ class _SelectableChip extends StatelessWidget {
                   width: 7,
                   height: 7,
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: context.palette.primaryInk,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -716,9 +722,9 @@ class _InfoPanel extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: AppColors.primary),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: context.palette.primaryInk,
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(

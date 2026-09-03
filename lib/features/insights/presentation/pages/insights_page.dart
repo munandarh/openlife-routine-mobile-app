@@ -96,7 +96,7 @@ class _InsightsView extends StatelessWidget {
                             suffix: '/${state.totalRoutines}',
                             label: l10n.completedThisWeek,
                             icon: Icons.check_rounded,
-                            iconColor: AppColors.primary,
+                            iconColor: context.palette.primaryInk,
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md - 2),
@@ -134,7 +134,7 @@ class _InsightsView extends StatelessWidget {
                             Text(
                               '${(state.weeklyCompletionRate * 100).round()}%',
                               style: AppTextStyles.cardTitle.copyWith(
-                                color: AppColors.primary,
+                                color: context.palette.primaryInk,
                               ),
                             ),
                           ],
@@ -185,10 +185,10 @@ class _InsightsView extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            const Icon(
+                            Icon(
                               Icons.history_outlined,
                               size: 17,
-                              color: AppColors.primary,
+                              color: context.palette.primaryInk,
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Flexible(
@@ -197,7 +197,7 @@ class _InsightsView extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTextStyles.button.copyWith(
-                                  color: AppColors.primary,
+                                  color: context.palette.primaryInk,
                                 ),
                               ),
                             ),
@@ -365,8 +365,8 @@ class _RoutineMetricTile extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             radius: 20,
-            backgroundColor: AppColors.primarySoft,
-            foregroundColor: AppColors.primary,
+            backgroundColor: context.palette.primarySoft,
+            foregroundColor: context.palette.primaryInk,
             child: Icon(icon, size: 20),
           ),
           const SizedBox(width: AppSpacing.lg),
@@ -415,7 +415,7 @@ class _InsightBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: AppColors.primarySoft,
+        color: context.palette.primarySoft,
         borderRadius: BorderRadius.circular(AppRadius.extraLarge),
       ),
       child: Row(
@@ -427,7 +427,7 @@ class _InsightBanner extends StatelessWidget {
               color: context.palette.surface,
               borderRadius: BorderRadius.circular(AppRadius.medium),
             ),
-            child: Icon(icon, size: 20, color: AppColors.primary),
+            child: Icon(icon, size: 20, color: context.palette.primaryInk),
           ),
           const SizedBox(width: AppSpacing.md + 1),
           Expanded(
@@ -437,7 +437,7 @@ class _InsightBanner extends StatelessWidget {
                 Text(
                   title,
                   style: textTheme.titleMedium?.copyWith(
-                    color: AppColors.primary,
+                    color: context.palette.primaryInk,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),

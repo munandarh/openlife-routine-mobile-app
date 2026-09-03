@@ -37,7 +37,8 @@ void main() {
     bool isEnabled = true,
     DateTime? createdAt,
   }) async {
-    final DateTime created = createdAt ?? now.subtract(const Duration(days: 60));
+    final DateTime created =
+        createdAt ?? now.subtract(const Duration(days: 60));
     await appDatabase
         .into(appDatabase.routines)
         .insert(
@@ -129,44 +130,50 @@ void main() {
       expect(log!.status, 'skipped');
     });
 
-    test('a snooze left hanging over the end of the day becomes missed', () async {
-      await seedRoutine();
-      final DateTime yesterday = now.subtract(const Duration(days: 1));
-      await appDatabase.upsertRoutineLog(
-        routineId: 'r1',
-        dateKey: keyFor(yesterday),
-        status: 'snoozed',
-        snoozedUntil: yesterday,
-      );
+    test(
+      'a snooze left hanging over the end of the day becomes missed',
+      () async {
+        await seedRoutine();
+        final DateTime yesterday = now.subtract(const Duration(days: 1));
+        await appDatabase.upsertRoutineLog(
+          routineId: 'r1',
+          dateKey: keyFor(yesterday),
+          status: 'snoozed',
+          snoozedUntil: yesterday,
+        );
 
-      await serviceWith().sweepMissedDays(
-        since: now.subtract(const Duration(days: 2)),
-      );
+        await serviceWith().sweepMissedDays(
+          since: now.subtract(const Duration(days: 2)),
+        );
 
-      final RoutineLogRowData? log = await appDatabase
-          .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
-      expect(log!.status, 'missed');
-      expect(log.snoozedUntil, isNull);
-    });
-
-    test('catches up on every day since the last sweep, not just yesterday', () async {
-      await seedRoutine();
-
-      // App last swept 5 days ago, so days -4 .. -1 must all be closed out.
-      final int written = await serviceWith().sweepMissedDays(
-        since: now.subtract(const Duration(days: 5)),
-      );
-
-      expect(written, 4);
-      for (int i = 1; i <= 4; i += 1) {
         final RoutineLogRowData? log = await appDatabase
-            .getRoutineLogByRoutineAndDate(
-              'r1',
-              keyFor(now.subtract(Duration(days: i))),
-            );
-        expect(log?.status, 'missed', reason: 'day -$i should be missed');
-      }
-    });
+            .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
+        expect(log!.status, 'missed');
+        expect(log.snoozedUntil, isNull);
+      },
+    );
+
+    test(
+      'catches up on every day since the last sweep, not just yesterday',
+      () async {
+        await seedRoutine();
+
+        // App last swept 5 days ago, so days -4 .. -1 must all be closed out.
+        final int written = await serviceWith().sweepMissedDays(
+          since: now.subtract(const Duration(days: 5)),
+        );
+
+        expect(written, 4);
+        for (int i = 1; i <= 4; i += 1) {
+          final RoutineLogRowData? log = await appDatabase
+              .getRoutineLogByRoutineAndDate(
+                'r1',
+                keyFor(now.subtract(Duration(days: i))),
+              );
+          expect(log?.status, 'missed', reason: 'day -$i should be missed');
+        }
+      },
+    );
 
     test('skips weekdays the routine does not repeat on', () async {
       // Repeats on Tuesdays only; the sweep window below contains exactly one.

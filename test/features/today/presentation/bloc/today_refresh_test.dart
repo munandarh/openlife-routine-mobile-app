@@ -108,10 +108,7 @@ void main() {
       (TodayState s) => s.completedCount == 1,
     );
 
-    expect(
-      refreshed.items.single.status,
-      TodayRoutineItemStatus.done,
-    );
+    expect(refreshed.items.single.status, TodayRoutineItemStatus.done);
     await bloc.close();
   });
 

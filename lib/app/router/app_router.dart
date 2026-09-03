@@ -16,6 +16,7 @@ import 'package:openlife_routine/features/routines/presentation/pages/templates_
 import 'package:openlife_routine/features/routines/presentation/pages/templates_page.dart';
 import 'package:openlife_routine/features/settings/presentation/pages/about_page.dart';
 import 'package:openlife_routine/features/settings/presentation/pages/privacy_page.dart';
+import 'package:openlife_routine/features/settings/presentation/pages/reminder_health_page.dart';
 import 'package:openlife_routine/features/settings/presentation/pages/settings_page.dart';
 import 'package:openlife_routine/features/splash/presentation/pages/splash_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
@@ -122,6 +123,13 @@ final class AppRouter {
              },
            ),
            GoRoute(
+             path: OpenLifeRoute.reminderHealth.path,
+             name: OpenLifeRoute.reminderHealth.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return const ReminderHealthPage();
+             },
+           ),
+           GoRoute(
              path: OpenLifeRoute.profile.path,
              name: OpenLifeRoute.profile.name,
              builder: (BuildContext context, GoRouterState state) {
@@ -224,11 +232,7 @@ enum OpenLifeRoute {
     Icons.dashboard_customize_outlined,
   ),
   insights('/insights', 'Insights', Icons.insights_outlined),
-  insightsHistory(
-    '/insights/history',
-    '7-Day History',
-    Icons.history_outlined,
-  ),
+  insightsHistory('/insights/history', '7-Day History', Icons.history_outlined),
   settings('/settings', 'Settings', Icons.settings_outlined),
   notifications(
     '/notifications',
@@ -236,6 +240,11 @@ enum OpenLifeRoute {
     Icons.notifications_none_rounded,
   ),
   profile('/profile', 'Profile', Icons.person_outline),
+  reminderHealth(
+    '/settings/reminder-health',
+    'Reminder Health',
+    Icons.health_and_safety_outlined,
+  ),
   newRoutine('/routines/new', 'New Routine', Icons.add_circle_outline),
   routineDetail('/routines/detail', 'Routine Detail', Icons.more_horiz),
   privacy('/settings/privacy', 'Privacy', Icons.shield_outlined),
@@ -270,6 +279,7 @@ enum OpenLifeRoute {
     OpenLifeRoute.languageSelection => 'languageSelection',
     OpenLifeRoute.notifications => 'notifications',
     OpenLifeRoute.profile => 'profile',
+    OpenLifeRoute.reminderHealth => 'reminderHealth',
     OpenLifeRoute.today => 'today',
     OpenLifeRoute.routines => 'routines',
     OpenLifeRoute.templates => 'templates',

@@ -17,7 +17,7 @@ import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 /// What the bell in the app bar opens: the reminders that are actually
 /// queued, so "did my reminder get set?" has an answer inside the app.
@@ -57,52 +57,63 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<List<Routine>>(
-          future: _routines,
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Routine>> snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+        child: Column(
+          children: <Widget>[
+            // Outside the list's padding: the header owns its own inset, and
+            // nesting it inside pushed it 48px in and a row down.
+            OpenLifeAppBar.page(
+              title: l10n.notificationsTitle,
+              onBack: () => context.popOrGo(OpenLifeRoute.today.path),
+            ),
+            Expanded(
+              child: FutureBuilder<List<Routine>>(
+                future: _routines,
+                builder:
+                    (
+                      BuildContext context,
+                      AsyncSnapshot<List<Routine>> snapshot,
+                    ) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                final List<RoutineReminderSlot> upcoming =
-                    AppNotificationService.upcomingReminders(
-                      snapshot.data ?? const <Routine>[],
-                    );
+                      final List<RoutineReminderSlot> upcoming =
+                          AppNotificationService.upcomingReminders(
+                            snapshot.data ?? const <Routine>[],
+                          );
 
-                return ListView(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.pageMargin,
-                    AppSpacing.md + 2,
-                    AppSpacing.pageMargin,
-                    AppSpacing.xxxl,
-                  ),
-                  children: <Widget>[
-                    ScreenHeader(
-                      title: l10n.notificationsTitle,
-                      onBack: () => context.popOrGo(OpenLifeRoute.today.path),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      l10n.upcomingRemindersDesc,
-                      style: AppTextStyles.body.copyWith(
-                        color: context.palette.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    if (upcoming.isEmpty)
-                      _EmptyState(l10n: l10n)
-                    else
-                      ..._grouped(context, l10n, upcoming),
-                    const SizedBox(height: AppSpacing.lg),
-                    _WhitePillAction(
-                      icon: Icons.notifications_active_outlined,
-                      label: l10n.manageAlerts,
-                      onPressed: () => context.go(OpenLifeRoute.settings.path),
-                    ),
-                  ],
-                );
-              },
+                      return ListView(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.pageMargin,
+                          AppSpacing.lg,
+                          AppSpacing.pageMargin,
+                          AppSpacing.xxxl,
+                        ),
+                        children: <Widget>[
+                          Text(
+                            l10n.upcomingRemindersDesc,
+                            style: AppTextStyles.body.copyWith(
+                              color: context.palette.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          if (upcoming.isEmpty)
+                            _EmptyState(l10n: l10n)
+                          else
+                            ..._grouped(context, l10n, upcoming),
+                          const SizedBox(height: AppSpacing.lg),
+                          _WhitePillAction(
+                            icon: Icons.notifications_active_outlined,
+                            label: l10n.manageAlerts,
+                            onPressed: () =>
+                                context.go(OpenLifeRoute.settings.path),
+                          ),
+                        ],
+                      );
+                    },
+              ),
+            ),
+          ],
         ),
       ),
     );

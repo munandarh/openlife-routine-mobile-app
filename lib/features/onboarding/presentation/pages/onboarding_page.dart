@@ -20,7 +20,7 @@ import 'package:openlife_routine/features/templates/presentation/bloc/template_s
 import 'package:openlife_routine/features/templates/presentation/utils/template_l10n.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 /// Key for the circular primary action (Continue / Get Started).
 const Key onboardingPrimaryActionKey = Key('onboardingPrimaryAction');
@@ -434,8 +434,8 @@ class _HeroCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.large),
         boxShadow: AppShadows.card,
       ),
-      child: OpenLifeRiveView.illustrationFill(
-        illustrationPath: illustration.path,
+      child: AppIllustration.fill(
+        assetPath: illustration.path,
         fallbackIcon: fallbackIcon,
       ),
     );

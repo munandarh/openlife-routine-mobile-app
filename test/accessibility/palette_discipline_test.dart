@@ -52,6 +52,10 @@ void main() {
       }
     }
 
-    expect(offenders, isEmpty, reason: 'inline shadows in:\n${offenders.join('\n')}');
+    expect(
+      offenders,
+      isEmpty,
+      reason: 'inline shadows in:\n${offenders.join('\n')}',
+    );
   });
 }

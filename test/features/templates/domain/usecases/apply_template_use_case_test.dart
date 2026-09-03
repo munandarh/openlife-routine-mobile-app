@@ -1,7 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
-import 'package:openlife_routine/core/storage/app_database.dart' show AppDatabase;
+import 'package:openlife_routine/core/storage/app_database.dart'
+    show AppDatabase;
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';

@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 void main() {
   group('Today empty hero illustration', () {
     testWidgets('today empty page renders bell illustration', (
-    WidgetTester tester,
+      WidgetTester tester,
     ) async {
       // The today empty page wraps an AppEmptyState. Verify the
       // bell asset is rendered instead of the icon-only fallback.
@@ -58,6 +58,6 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
     // The AppEmptyState uses the illustration instead of the icon.
-    expect(find.byType(OpenLifeRiveView), findsOneWidget);
+    expect(find.byType(AppIllustration), findsOneWidget);
   });
 }

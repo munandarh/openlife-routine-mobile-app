@@ -1891,6 +1891,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blocked'**
   String get alertsBlocked;
+
+  /// No description provided for @reminderHealthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder health'**
+  String get reminderHealthTitle;
+
+  /// No description provided for @reminderHealthAllGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reminders will arrive on time.'**
+  String get reminderHealthAllGood;
+
+  /// No description provided for @reminderHealthProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing is stopping your reminders} other{{count} things are stopping your reminders}}'**
+  String reminderHealthProblems(int count);
+
+  /// No description provided for @checkNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get checkNotifications;
+
+  /// No description provided for @checkNotificationsOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife can show reminders.'**
+  String get checkNotificationsOk;
+
+  /// No description provided for @checkNotificationsBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders cannot be shown at all.'**
+  String get checkNotificationsBad;
+
+  /// No description provided for @checkExactAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact timing'**
+  String get checkExactAlarms;
+
+  /// No description provided for @checkExactAlarmsOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders fire at the minute you set.'**
+  String get checkExactAlarmsOk;
+
+  /// No description provided for @checkExactAlarmsBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders may arrive up to an hour late.'**
+  String get checkExactAlarmsBad;
+
+  /// No description provided for @checkBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Background activity'**
+  String get checkBattery;
+
+  /// No description provided for @checkBatteryOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenLife is exempt from battery optimisation.'**
+  String get checkBatteryOk;
+
+  /// No description provided for @checkBatteryBad.
+  ///
+  /// In en, this message translates to:
+  /// **'The system may stop reminders to save battery.'**
+  String get checkBatteryBad;
+
+  /// No description provided for @fixIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix this'**
+  String get fixIt;
+
+  /// No description provided for @vendorWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One more setting, on {brand} phones'**
+  String vendorWarningTitle(String brand);
+
+  /// No description provided for @vendorWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Phones from this maker also keep a separate autostart or background permission that no app can read. If reminders still go missing, allow autostart for OpenLife in the system settings.'**
+  String get vendorWarningBody;
+
+  /// No description provided for @openAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open app settings'**
+  String get openAppSettings;
+
+  /// No description provided for @reminderHealthSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder health'**
+  String get reminderHealthSetting;
 }
 
 class _AppLocalizationsDelegate

@@ -92,9 +92,7 @@ class ScreenHarness {
             id: drift.Value('${id}_schedule'),
             routineId: drift.Value(id),
             reminderTime: drift.Value(reminderTime),
-            repeatDays: drift.Value(
-              '[${repeatDays.join(',')}]',
-            ),
+            repeatDays: drift.Value('[${repeatDays.join(',')}]'),
             snoozeMinutes: const drift.Value(10),
             updatedAt: drift.Value(created),
           ),

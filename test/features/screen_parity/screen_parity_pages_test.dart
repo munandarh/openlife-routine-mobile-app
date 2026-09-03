@@ -130,10 +130,7 @@ void main() {
     ) async {
       usePhone(tester);
       await tester.pumpWidget(
-        localizedApp(
-          const LanguageSelectionPage(),
-          locale: const Locale('id'),
-        ),
+        localizedApp(const LanguageSelectionPage(), locale: const Locale('id')),
       );
 
       expect(find.text('Pilih bahasamu'), findsOneWidget);
@@ -145,10 +142,7 @@ void main() {
     ) async {
       usePhone(tester);
       await tester.pumpWidget(
-        localizedApp(
-          const TodayEmptyPage(),
-          locale: const Locale('id'),
-        ),
+        localizedApp(const TodayEmptyPage(), locale: const Locale('id')),
       );
 
       expect(find.text('Belum ada jadwal hari ini'), findsOneWidget);

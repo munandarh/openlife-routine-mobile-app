@@ -31,9 +31,9 @@ MaterialApp localizedApp(
         return widget!;
       }
       return MediaQuery(
-        data: MediaQuery.of(context).copyWith(
-          textScaler: TextScaler.linear(textScale),
-        ),
+        data: MediaQuery.of(
+          context,
+        ).copyWith(textScaler: TextScaler.linear(textScale)),
         child: widget!,
       );
     },
@@ -43,8 +43,6 @@ MaterialApp localizedApp(
 
 /// Resolves the generated strings for [locale] outside of a widget tree, so
 /// tests can assert against the same source of truth the UI renders from.
-Future<AppLocalizations> l10nFor([
-  Locale locale = const Locale('en'),
-]) {
+Future<AppLocalizations> l10nFor([Locale locale = const Locale('en')]) {
   return AppLocalizations.delegate.load(locale);
 }

@@ -114,8 +114,9 @@ Future<void> handleNotificationActionInBackground(
     return;
   }
 
-  final RoutineNotificationPayload? payload =
-      RoutineNotificationPayload.decode(response.payload);
+  final RoutineNotificationPayload? payload = RoutineNotificationPayload.decode(
+    response.payload,
+  );
   if (payload == null) {
     return;
   }

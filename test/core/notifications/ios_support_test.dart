@@ -45,8 +45,10 @@ void main() {
 
       expect(
         details.android!.actions!
-            .firstWhere((AndroidNotificationAction a) =>
-                a.id == notificationSnoozeActionId)
+            .firstWhere(
+              (AndroidNotificationAction a) =>
+                  a.id == notificationSnoozeActionId,
+            )
             .title,
         contains('15'),
       );

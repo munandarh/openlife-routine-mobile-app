@@ -107,12 +107,9 @@ class _FakeOnboardingRepository implements OnboardingRepository {
   @override
   Future<void> completeOnboarding() async {}
 
-
   @override
   Future<bool> hasCompletedOnboarding() async => false;
-
 
   @override
   Future<void> skipOnboarding() async {}
 }
-

@@ -85,8 +85,8 @@ void main() {
     final MethodCall copy = platformCalls.firstWhere(
       (MethodCall call) => call.method == 'Clipboard.setData',
     );
-    final String text = (copy.arguments as Map<Object?, Object?>)['text']!
-        as String;
+    final String text =
+        (copy.arguments as Map<Object?, Object?>)['text']! as String;
 
     // The backup is the real export, including the fields that used to be
     // dropped.

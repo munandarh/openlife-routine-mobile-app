@@ -4,6 +4,37 @@ All notable changes to OpenLife Routine will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Reminder health** (Settings → Notifications). Answers the one question the
+  app lives or dies by: will the reminder actually arrive? It reports whether
+  notifications are permitted, whether exact alarms are still allowed, and
+  whether the app is exempt from battery optimisation — each with a button that
+  opens the right OS screen, and a re-check on return.
+
+  Every one of those fails silently on a real phone: a suspended app shows no
+  error, a batched alarm looks like the app forgot, and a revoked permission
+  looks like nothing at all. On Xiaomi, Oppo, Vivo and Realme the screen also
+  names the separate autostart permission no API can read.
+
+  A check the platform cannot answer is left out rather than shown as passing.
+
+### Changed
+- **One app bar.** Two widgets and five hand-rolled copies had drifted: tab
+  screens inset their buttons 20px and pushed screens 24, and five screens
+  nested the header inside a list that already had 24px of padding, so those
+  sat 48px in and a row lower. There is now one widget with one inset, and
+  tests that pin where the first button starts and how tall the row is.
+
+### Removed
+- **Rive.** It shipped a 7.7 MB native library per ABI and rendered nothing:
+  no `.riv` file was ever bundled, so every call site already fell through to
+  the PNG path. Illustrations were also bundled at 1254px and rendered at
+  120-180.
+
+  Together: **43.2 MB → 21.6 MB** installed on an arm64 phone.
+
+## [1.5.0] — 2026-09-03
+
 ### Changed
 - **Sage & Clay across the app.** New palette (warm stone page, white cards,
   muted sage for anything actionable, terracotta only for attention), Nunito

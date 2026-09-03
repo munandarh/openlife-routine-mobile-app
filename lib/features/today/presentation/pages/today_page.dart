@@ -22,9 +22,9 @@ import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
 import 'package:openlife_routine/shared/widgets/forms/week_date_selector.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 import 'package:openlife_routine/shared/widgets/progress/progress_ring.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class TodayPage extends StatelessWidget {
   const TodayPage({super.key});
@@ -126,7 +126,7 @@ class _TodayViewState extends State<_TodayView> {
               // screen where Profile and Notifications cannot be reached.
               return Column(
                 children: <Widget>[
-                  OpenLifeAppBar(onAddRoutine: _openNewRoutine),
+                  OpenLifeAppBar.tab(onAddRoutine: _openNewRoutine),
                   Expanded(
                     child: TodayEmptyPage(onCreateRoutine: _openNewRoutine),
                   ),
@@ -143,7 +143,7 @@ class _TodayViewState extends State<_TodayView> {
             return CustomScrollView(
               slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: OpenLifeAppBar(onAddRoutine: _openNewRoutine),
+                  child: OpenLifeAppBar.tab(onAddRoutine: _openNewRoutine),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -774,8 +774,8 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  OpenLifeRiveView.illustration(
-                    illustrationPath: AssetVectors.todayDailyCelebration.path,
+                  AppIllustration(
+                    assetPath: AssetVectors.todayDailyCelebration.path,
                     fallbackIcon: Icons.celebration_outlined,
                     size: 120,
                   ),

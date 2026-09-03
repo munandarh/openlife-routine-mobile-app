@@ -187,10 +187,7 @@ void main() {
         (TodayState s) => s.selectedDate == yesterday,
       );
 
-      expect(
-        state.findItem('r-early')!.status,
-        TodayRoutineItemStatus.missed,
-      );
+      expect(state.findItem('r-early')!.status, TodayRoutineItemStatus.missed);
       await bloc.close();
     });
 

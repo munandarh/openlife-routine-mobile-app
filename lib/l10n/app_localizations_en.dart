@@ -1042,4 +1042,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alertsBlocked => 'Blocked';
+
+  @override
+  String get reminderHealthTitle => 'Reminder health';
+
+  @override
+  String get reminderHealthAllGood => 'Your reminders will arrive on time.';
+
+  @override
+  String reminderHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things are stopping your reminders',
+      one: '1 thing is stopping your reminders',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkNotifications => 'Notifications';
+
+  @override
+  String get checkNotificationsOk => 'OpenLife can show reminders.';
+
+  @override
+  String get checkNotificationsBad => 'Reminders cannot be shown at all.';
+
+  @override
+  String get checkExactAlarms => 'Exact timing';
+
+  @override
+  String get checkExactAlarmsOk => 'Reminders fire at the minute you set.';
+
+  @override
+  String get checkExactAlarmsBad => 'Reminders may arrive up to an hour late.';
+
+  @override
+  String get checkBattery => 'Background activity';
+
+  @override
+  String get checkBatteryOk => 'OpenLife is exempt from battery optimisation.';
+
+  @override
+  String get checkBatteryBad =>
+      'The system may stop reminders to save battery.';
+
+  @override
+  String get fixIt => 'Fix this';
+
+  @override
+  String vendorWarningTitle(String brand) {
+    return 'One more setting, on $brand phones';
+  }
+
+  @override
+  String get vendorWarningBody =>
+      'Phones from this maker also keep a separate autostart or background permission that no app can read. If reminders still go missing, allow autostart for OpenLife in the system settings.';
+
+  @override
+  String get openAppSettings => 'Open app settings';
+
+  @override
+  String get reminderHealthSetting => 'Reminder health';
 }

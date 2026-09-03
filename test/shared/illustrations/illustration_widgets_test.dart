@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 void main() {
   group('Notification bell illustration', () {
-    testWidgets('OpenLifeRiveView.illustration renders bell asset', (
-    WidgetTester tester,
+    testWidgets('AppIllustration.illustration renders bell asset', (
+      WidgetTester tester,
     ) async {
       final AssetVectorEntry entry = AssetVectors.todayNotificationBell;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView.illustration(
-              illustrationPath: entry.path,
+            body: AppIllustration(
+              assetPath: entry.path,
               fallbackIcon: Icons.notifications_active_outlined,
               size: 80,
             ),
@@ -29,16 +29,16 @@ void main() {
   });
 
   group('Insights workspace illustration', () {
-    testWidgets('OpenLifeRiveView.illustration renders insights asset', (
-    WidgetTester tester,
+    testWidgets('AppIllustration.illustration renders insights asset', (
+      WidgetTester tester,
     ) async {
       final AssetVectorEntry entry = AssetVectors.todayInsightsWorkspace;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView.illustration(
-              illustrationPath: entry.path,
+            body: AppIllustration(
+              assetPath: entry.path,
               fallbackIcon: Icons.insights_outlined,
               size: 200,
             ),
@@ -51,7 +51,7 @@ void main() {
       expect(find.byType(Image), findsOneWidget);
       // The Image is sized correctly.
       final Finder imageFinder = find.descendant(
-        of: find.byType(OpenLifeRiveView),
+        of: find.byType(AppIllustration),
         matching: find.byType(Image),
       );
       final Image image = tester.widget<Image>(imageFinder);

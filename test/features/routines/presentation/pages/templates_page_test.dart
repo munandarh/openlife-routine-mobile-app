@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 void main() {
   group('Template hero illustration mapping', () {
@@ -18,35 +18,38 @@ void main() {
         // Each template iconKey should have a matching asset path
         // available. We don't need to find the asset directly — we
         // verify the mapping function is defined for each.
-        expect(templateIconKeys.contains(key), true,
-            reason: 'Template key $key should be in known mapping');
+        expect(
+          templateIconKeys.contains(key),
+          true,
+          reason: 'Template key $key should be in known mapping',
+        );
       }
     });
 
-    testWidgets('OpenLifeRiveView.illustration renders Image when asset is bundled', (
-    WidgetTester tester,
-    ) async {
-      // Smoke test that the illustration factory renders a real Image
-      // for an asset that's bundled in the project.
-      final AssetVectorEntry entry =
-          AssetVectors.byName('todaySleepRoutine');
+    testWidgets(
+      'AppIllustration.illustration renders Image when asset is bundled',
+      (WidgetTester tester) async {
+        // Smoke test that the illustration factory renders a real Image
+        // for an asset that's bundled in the project.
+        final AssetVectorEntry entry = AssetVectors.byName('todaySleepRoutine');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: OpenLifeRiveView.illustration(
-              illustrationPath: entry.path,
-              fallbackIcon: Icons.bedtime_outlined,
-              size: 120,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: AppIllustration(
+                assetPath: entry.path,
+                fallbackIcon: Icons.bedtime_outlined,
+                size: 120,
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.pump();
-      // Image widget is rendered (whether the asset decoded or not).
-      expect(find.byType(Image), findsOneWidget);
-    });
+        await tester.pump();
+        // Image widget is rendered (whether the asset decoded or not).
+        expect(find.byType(Image), findsOneWidget);
+      },
+    );
 
     test('every template asset path is non-empty', () {
       // Verify the asset paths we'll use for template cards.

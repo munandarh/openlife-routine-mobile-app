@@ -40,8 +40,10 @@ Future<void> closeOutPastDays({
   // picks up today. Recording "today" would skip it forever.
   final DateTime today = now();
   await settingsRepository.setLastMissedSweepDate(
-    DateTime(today.year, today.month, today.day).subtract(
-      const Duration(days: 1),
-    ),
+    DateTime(
+      today.year,
+      today.month,
+      today.day,
+    ).subtract(const Duration(days: 1)),
   );
 }

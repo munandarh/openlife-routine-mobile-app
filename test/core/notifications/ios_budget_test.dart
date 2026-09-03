@@ -41,10 +41,7 @@ void main() {
       isIOS: true,
     );
 
-    expect(
-      slots.length,
-      lessThan(AppNotificationService.iosPendingLimit),
-    );
+    expect(slots.length, lessThan(AppNotificationService.iosPendingLimit));
   });
 
   test('the cap leaves room for a snooze to be scheduled later', () {
@@ -69,10 +66,14 @@ void main() {
   });
 
   test('the reminders iOS keeps are the ones due soonest', () {
-    final List<RoutineReminderSlot> kept =
-        AppNotificationService.plannedSlots(routines(20), isIOS: true);
-    final List<RoutineReminderSlot> all =
-        AppNotificationService.plannedSlots(routines(20), isIOS: false);
+    final List<RoutineReminderSlot> kept = AppNotificationService.plannedSlots(
+      routines(20),
+      isIOS: true,
+    );
+    final List<RoutineReminderSlot> all = AppNotificationService.plannedSlots(
+      routines(20),
+      isIOS: false,
+    );
 
     final List<tz.TZDateTime> keptTimes = kept
         .map((RoutineReminderSlot s) => s.firesAt)
@@ -106,8 +107,10 @@ void main() {
   test('every slot fires in the future', () {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    for (final RoutineReminderSlot slot
-        in AppNotificationService.plannedSlots(routines(5), isIOS: true)) {
+    for (final RoutineReminderSlot slot in AppNotificationService.plannedSlots(
+      routines(5),
+      isIOS: true,
+    )) {
       expect(slot.firesAt.isAfter(now), isTrue);
     }
   });

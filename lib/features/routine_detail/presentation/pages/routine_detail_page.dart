@@ -17,7 +17,7 @@ import 'package:openlife_routine/features/routines/presentation/bloc/routine_blo
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
-import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 class RoutineDetailPage extends StatelessWidget {
   const RoutineDetailPage({required this.routineId, super.key});
@@ -83,186 +83,196 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
 
         return Scaffold(
           body: SafeArea(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.pageMargin,
-                AppSpacing.pageMargin,
-                AppSpacing.pageMargin,
-                AppSpacing.xxxl,
-              ),
+            child: Column(
               children: <Widget>[
-                ScreenHeader(
+                OpenLifeAppBar.page(
                   title: l10n.routineDetailTitle,
                   onBack: () => context.popOrGo(OpenLifeRoute.today.path),
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                if (routine == null &&
-                    state.status == RoutineStatus.loading) ...<Widget>[
-                  const Center(child: CircularProgressIndicator()),
-                ] else if (routine == null) ...<Widget>[
-                  Text(
-                    state.errorMessage ?? l10n.routineNotFound,
-                    style: textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ] else ...<Widget>[
-                  _SurfaceCard(
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: RoutineCategoryUi.background(
-                              routine.category,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              AppRadius.extraLarge,
-                            ),
-                          ),
-                          child: Icon(
-                            RoutineCategoryUi.icon(
-                              routine.category,
-                              iconKey: routine.iconKey,
-                            ),
-                            size: 27,
-                            color: RoutineCategoryUi.foreground(
-                              routine.category,
-                            ),
-                          ),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.pageMargin,
+                      AppSpacing.lg,
+                      AppSpacing.pageMargin,
+                      AppSpacing.xxxl,
+                    ),
+                    children: <Widget>[
+                      if (routine == null &&
+                          state.status == RoutineStatus.loading) ...<Widget>[
+                        const Center(child: CircularProgressIndicator()),
+                      ] else if (routine == null) ...<Widget>[
+                        Text(
+                          state.errorMessage ?? l10n.routineNotFound,
+                          style: textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(width: AppSpacing.md + 2),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                      ] else ...<Widget>[
+                        _SurfaceCard(
+                          child: Row(
                             children: <Widget>[
-                              Text(
-                                routine.title,
-                                style: AppTextStyles.pageTitle.copyWith(
-                                  fontSize: 21,
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: RoutineCategoryUi.background(
+                                    routine.category,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.extraLarge,
+                                  ),
+                                ),
+                                child: Icon(
+                                  RoutineCategoryUi.icon(
+                                    routine.category,
+                                    iconKey: routine.iconKey,
+                                  ),
+                                  size: 27,
+                                  color: RoutineCategoryUi.foreground(
+                                    routine.category,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 3),
-                              Text(
-                                RoutineCategoryUi.routineLabel(
-                                  l10n,
-                                  routine.category,
-                                ),
-                                style: AppTextStyles.bodyEmphasis.copyWith(
-                                  color: context.palette.textSecondary,
+                              const SizedBox(width: AppSpacing.md + 2),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      routine.title,
+                                      style: AppTextStyles.pageTitle.copyWith(
+                                        fontSize: 21,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      RoutineCategoryUi.routineLabel(
+                                        l10n,
+                                        routine.category,
+                                      ),
+                                      style: AppTextStyles.bodyEmphasis
+                                          .copyWith(
+                                            color:
+                                                context.palette.textSecondary,
+                                          ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  _SurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                l10n.scheduleLabel,
+                        const SizedBox(height: AppSpacing.md),
+                        _SurfaceCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      l10n.scheduleLabel,
+                                      style: AppTextStyles.cardTitle,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.schedule_outlined,
+                                    size: 16,
+                                    color: context.palette.textSecondary,
+                                  ),
+                                  const SizedBox(width: AppSpacing.xs + 3),
+                                  Text(
+                                    L10nFormatters.timeOfDayLabel(
+                                      context,
+                                      routine.reminderTime,
+                                    ),
+                                    style: AppTextStyles.cardTitle,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpacing.md + 1),
+                              _RepeatDayChips(selected: routine.repeatDays),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        _SurfaceCard(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.lg,
+                            AppSpacing.lg,
+                            AppSpacing.lg,
+                            AppSpacing.xs,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                l10n.reminderBehavior,
                                 style: AppTextStyles.cardTitle,
                               ),
-                            ),
-                            Icon(
-                              Icons.schedule_outlined,
-                              size: 16,
-                              color: context.palette.textSecondary,
-                            ),
-                            const SizedBox(width: AppSpacing.xs + 3),
-                            Text(
-                              L10nFormatters.timeOfDayLabel(
-                                context,
-                                routine.reminderTime,
+                              const SizedBox(height: AppSpacing.sm),
+                              _DetailRow(
+                                icon: Icons.snooze_outlined,
+                                label: l10n.snoozeDuration,
+                                value: l10n.minutesShort(routine.snoozeMinutes),
                               ),
-                              style: AppTextStyles.cardTitle,
-                            ),
-                          ],
+                              _DetailRow(
+                                icon: Icons.notifications_active_outlined,
+                                label: l10n.routineAlerts,
+                                isLast: true,
+                                toggle: routine.isEnabled,
+                                onToggle: (bool value) =>
+                                    context.read<RoutineBloc>().add(
+                                      RoutineEnabledToggled(
+                                        routineId: routineId,
+                                        isEnabled: value,
+                                      ),
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: AppSpacing.md + 1),
-                        _RepeatDayChips(selected: routine.repeatDays),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  _SurfaceCard(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      AppSpacing.lg,
-                      AppSpacing.lg,
-                      AppSpacing.xs,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          l10n.reminderBehavior,
-                          style: AppTextStyles.cardTitle,
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        _DetailRow(
-                          icon: Icons.snooze_outlined,
-                          label: l10n.snoozeDuration,
-                          value: l10n.minutesShort(routine.snoozeMinutes),
-                        ),
-                        _DetailRow(
-                          icon: Icons.notifications_active_outlined,
-                          label: l10n.routineAlerts,
-                          isLast: true,
-                          toggle: routine.isEnabled,
-                          onToggle: (bool value) =>
-                              context.read<RoutineBloc>().add(
-                                RoutineEnabledToggled(
-                                  routineId: routineId,
-                                  isEnabled: value,
+                        if (routine.notes != null &&
+                            routine.notes!.trim().isNotEmpty) ...<Widget>[
+                          const SizedBox(height: AppSpacing.md),
+                          _SurfaceCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  l10n.notesLabel,
+                                  style: AppTextStyles.cardTitle,
                                 ),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (routine.notes != null &&
-                      routine.notes!.trim().isNotEmpty) ...<Widget>[
-                    const SizedBox(height: AppSpacing.md),
-                    _SurfaceCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(l10n.notesLabel, style: AppTextStyles.cardTitle),
-                          const SizedBox(height: AppSpacing.xs + 2),
-                          Text(
-                            routine.notes!.trim(),
-                            style: AppTextStyles.body.copyWith(
-                              color: context.palette.textSecondary,
+                                const SizedBox(height: AppSpacing.xs + 2),
+                                Text(
+                                  routine.notes!.trim(),
+                                  style: AppTextStyles.body.copyWith(
+                                    color: context.palette.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.xxl),
-                  PrimaryButton(
-                    label: l10n.editRoutineAction,
-                    onPressed: _openEditor,
+                        const SizedBox(height: AppSpacing.xxl),
+                        PrimaryButton(
+                          label: l10n.editRoutineAction,
+                          onPressed: _openEditor,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        _DangerButton(
+                          label: l10n.deleteRoutine,
+                          onPressed: () {
+                            context.read<RoutineBloc>().add(
+                              RoutineDeleteRequested(routineId),
+                            );
+                          },
+                        ),
+                      ],
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  _DangerButton(
-                    label: l10n.deleteRoutine,
-                    onPressed: () {
-                      context.read<RoutineBloc>().add(
-                        RoutineDeleteRequested(routineId),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ],
             ),
           ),

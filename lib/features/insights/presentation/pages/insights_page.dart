@@ -53,7 +53,7 @@ class _InsightsView extends StatelessWidget {
 
         return CustomScrollView(
           slivers: <Widget>[
-            SliverToBoxAdapter(child: OpenLifeAppBar()),
+            SliverToBoxAdapter(child: OpenLifeAppBar.tab()),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(

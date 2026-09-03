@@ -59,8 +59,11 @@ class MissedStateService {
     // A leftover `pending` or `snoozed` row from a day that is over is exactly
     // what "missed" means, so those get overwritten rather than skipped.
     final Set<String> resolved = <String>{
-      for (final RoutineLogRowData log in await _appDatabase
-          .getRoutineLogsBetween(dateKey(cursor), dateKey(lastDay)))
+      for (final RoutineLogRowData log
+          in await _appDatabase.getRoutineLogsBetween(
+            dateKey(cursor),
+            dateKey(lastDay),
+          ))
         if (_resolvedStatuses.contains(log.status))
           '${log.routineId}@${log.date}',
     };

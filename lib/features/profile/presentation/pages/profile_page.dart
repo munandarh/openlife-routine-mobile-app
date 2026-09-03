@@ -17,7 +17,7 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_ev
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 /// What the avatar in the app bar opens.
 ///
@@ -50,104 +50,109 @@ class _ProfileView extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageMargin,
-            AppSpacing.md + 2,
-            AppSpacing.pageMargin,
-            AppSpacing.xxxl,
-          ),
+        child: Column(
           children: <Widget>[
-            ScreenHeader(
+            OpenLifeAppBar.page(
               title: l10n.profileTitle,
               onBack: () => context.popOrGo(OpenLifeRoute.today.path),
             ),
-            const SizedBox(height: AppSpacing.xl),
-            Center(
-              child: Column(
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.pageMargin,
+                  AppSpacing.xl,
+                  AppSpacing.pageMargin,
+                  AppSpacing.xxxl,
+                ),
                 children: <Widget>[
-                  Container(
-                    width: 92,
-                    height: 92,
-                    decoration: BoxDecoration(
-                      color: context.palette.surface,
-                      shape: BoxShape.circle,
-                      boxShadow: AppShadows.lifted,
+                  Center(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          width: 92,
+                          height: 92,
+                          decoration: BoxDecoration(
+                            color: context.palette.surface,
+                            shape: BoxShape.circle,
+                            boxShadow: AppShadows.lifted,
+                          ),
+                          child: const Icon(
+                            Icons.person_outline,
+                            size: 40,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          l10n.appTitle,
+                          style: AppTextStyles.pageTitle.copyWith(fontSize: 20),
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          AppInfo.version,
+                          style: AppTextStyles.bodyEmphasis.copyWith(
+                            fontSize: 13,
+                            color: context.palette.textMuted,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: const Icon(
-                      Icons.person_outline,
-                      size: 40,
-                      color: AppColors.primary,
-                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Text(l10n.yourActivity, style: AppTextStyles.sectionTitle),
+                  const SizedBox(height: AppSpacing.md),
+                  BlocBuilder<InsightsBloc, InsightsState>(
+                    builder: (BuildContext context, InsightsState state) {
+                      // stretch alone is unbounded inside a ListView; IntrinsicHeight
+                      // is what gives the two cards a shared height to stretch to.
+                      return IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Expanded(
+                              child: _StatCard(
+                                icon: Icons.checklist_rounded,
+                                value: '${state.totalCompleted}',
+                                label: l10n.completedThisWeek,
+                                iconColor: AppColors.primary,
+                                iconBackground: AppColors.primarySoft,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: _StatCard(
+                                icon: Icons.local_fire_department_outlined,
+                                value: '${state.streak}',
+                                label: l10n.currentStreakStat,
+                                iconColor: AppColors.accent,
+                                iconBackground: AppColors.accentSoft,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  SettingsInfoCard(
+                    icon: Icons.no_accounts_outlined,
+                    title: l10n.profileLocalOnly,
+                    body: l10n.profileLocalOnlyDesc,
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(OpenLifeRoute.insights.path),
+                    icon: const Icon(Icons.insights_outlined),
+                    label: Text(l10n.insightsTab),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  Text(
-                    l10n.appTitle,
-                    style: AppTextStyles.pageTitle.copyWith(fontSize: 20),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    AppInfo.version,
-                    style: AppTextStyles.bodyEmphasis.copyWith(
-                      fontSize: 13,
-                      color: context.palette.textMuted,
-                    ),
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(OpenLifeRoute.settings.path),
+                    icon: const Icon(Icons.settings_outlined),
+                    label: Text(l10n.settingsTab),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(l10n.yourActivity, style: AppTextStyles.sectionTitle),
-            const SizedBox(height: AppSpacing.md),
-            BlocBuilder<InsightsBloc, InsightsState>(
-              builder: (BuildContext context, InsightsState state) {
-                // stretch alone is unbounded inside a ListView; IntrinsicHeight
-                // is what gives the two cards a shared height to stretch to.
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Expanded(
-                        child: _StatCard(
-                          icon: Icons.checklist_rounded,
-                          value: '${state.totalCompleted}',
-                          label: l10n.completedThisWeek,
-                          iconColor: AppColors.primary,
-                          iconBackground: AppColors.primarySoft,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.md),
-                      Expanded(
-                        child: _StatCard(
-                          icon: Icons.local_fire_department_outlined,
-                          value: '${state.streak}',
-                          label: l10n.currentStreakStat,
-                          iconColor: AppColors.accent,
-                          iconBackground: AppColors.accentSoft,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            SettingsInfoCard(
-              icon: Icons.no_accounts_outlined,
-              title: l10n.profileLocalOnly,
-              body: l10n.profileLocalOnlyDesc,
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            OutlinedButton.icon(
-              onPressed: () => context.go(OpenLifeRoute.insights.path),
-              icon: const Icon(Icons.insights_outlined),
-              label: Text(l10n.insightsTab),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            OutlinedButton.icon(
-              onPressed: () => context.go(OpenLifeRoute.settings.path),
-              icon: const Icon(Icons.settings_outlined),
-              label: Text(l10n.settingsTab),
             ),
           ],
         ),

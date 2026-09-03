@@ -27,7 +27,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        localizedApp(const Scaffold(body: TodayGreeting(hour: 9, subtitle: ''))),
+        localizedApp(
+          const Scaffold(body: TodayGreeting(hour: 9, subtitle: '')),
+        ),
       );
 
       expect(find.byType(Text), findsOneWidget);
@@ -38,9 +40,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         localizedApp(
-          const Scaffold(
-            body: TodayGreeting(hour: 9, subtitle: 'Keep it up!'),
-          ),
+          const Scaffold(body: TodayGreeting(hour: 9, subtitle: 'Keep it up!')),
         ),
       );
 

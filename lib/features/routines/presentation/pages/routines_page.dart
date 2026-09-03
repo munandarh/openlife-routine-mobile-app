@@ -53,7 +53,7 @@ class _RoutinesView extends StatelessWidget {
         return CustomScrollView(
           slivers: <Widget>[
             SliverToBoxAdapter(
-              child: OpenLifeAppBar(
+              child: OpenLifeAppBar.tab(
                 onAddRoutine: () => context.push(OpenLifeRoute.newRoutine.path),
               ),
             ),

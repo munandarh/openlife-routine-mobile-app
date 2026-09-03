@@ -1035,4 +1035,69 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get alertsBlocked => 'Diblokir';
+
+  @override
+  String get reminderHealthTitle => 'Kesehatan pengingat';
+
+  @override
+  String get reminderHealthAllGood => 'Pengingatmu akan datang tepat waktu.';
+
+  @override
+  String reminderHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hal menghalangi pengingatmu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkNotifications => 'Notifikasi';
+
+  @override
+  String get checkNotificationsOk => 'OpenLife bisa menampilkan pengingat.';
+
+  @override
+  String get checkNotificationsBad =>
+      'Pengingat tidak bisa ditampilkan sama sekali.';
+
+  @override
+  String get checkExactAlarms => 'Ketepatan waktu';
+
+  @override
+  String get checkExactAlarmsOk =>
+      'Pengingat berbunyi di menit yang kamu atur.';
+
+  @override
+  String get checkExactAlarmsBad => 'Pengingat bisa terlambat sampai satu jam.';
+
+  @override
+  String get checkBattery => 'Aktivitas latar belakang';
+
+  @override
+  String get checkBatteryOk =>
+      'OpenLife dikecualikan dari penghematan baterai.';
+
+  @override
+  String get checkBatteryBad =>
+      'Sistem bisa menghentikan pengingat demi menghemat baterai.';
+
+  @override
+  String get fixIt => 'Perbaiki';
+
+  @override
+  String vendorWarningTitle(String brand) {
+    return 'Satu setelan lagi, di HP $brand';
+  }
+
+  @override
+  String get vendorWarningBody =>
+      'HP dari pabrikan ini punya izin autostart atau jalan di latar belakang tersendiri yang tidak bisa dibaca aplikasi mana pun. Kalau pengingat masih hilang, izinkan autostart untuk OpenLife di pengaturan sistem.';
+
+  @override
+  String get openAppSettings => 'Buka pengaturan aplikasi';
+
+  @override
+  String get reminderHealthSetting => 'Kesehatan pengingat';
 }

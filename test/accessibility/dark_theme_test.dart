@@ -137,8 +137,7 @@ void main() {
         for (final Element element in find.byType(Text).evaluate()) {
           final Text text = element.widget as Text;
           final Color? colour =
-              text.style?.color ??
-              DefaultTextStyle.of(element).style.color;
+              text.style?.color ?? DefaultTextStyle.of(element).style.color;
           if (colour != null && lightOnlyInk.contains(colour)) {
             offenders.add('"${text.data}" -> $colour');
           }

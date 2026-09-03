@@ -20,8 +20,8 @@ import 'package:openlife_routine/features/templates/presentation/utils/template_
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
-import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 class TemplatesPage extends StatelessWidget {
   const TemplatesPage({super.key});
@@ -105,17 +105,9 @@ class _TemplatesView extends StatelessWidget {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.pageMargin,
-                      AppSpacing.md + 2,
-                      AppSpacing.pageMargin,
-                      0,
-                    ),
-                    child: ScreenHeader(
-                      title: l10n.templatesTitle,
-                      onBack: () => context.pop(),
-                    ),
+                  child: OpenLifeAppBar.page(
+                    title: l10n.templatesTitle,
+                    onBack: () => context.pop(),
                   ),
                 ),
                 SliverPadding(
@@ -237,8 +229,8 @@ class _TemplateCard extends StatelessWidget {
               illustrationPath != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                      child: OpenLifeRiveView.illustration(
-                        illustrationPath: illustrationPath!,
+                      child: AppIllustration(
+                        assetPath: illustrationPath!,
                         fallbackIcon: icon,
                         size: 56,
                       ),

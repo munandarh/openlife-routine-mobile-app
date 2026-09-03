@@ -46,9 +46,7 @@ void main() {
         updatedAt: DateTime(2026, 1, 1),
       );
 
-      final Routine updated = original.copyWith(
-        notes: 'Hydration is key',
-      );
+      final Routine updated = original.copyWith(notes: 'Hydration is key');
 
       expect(updated.notes, 'Hydration is key');
       expect(updated.title, 'Drink Water');

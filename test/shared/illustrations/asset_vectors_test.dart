@@ -5,10 +5,16 @@ void main() {
   group('AssetVectors', () {
     test('all asset paths start with assets/vector/ and end with .png', () {
       for (final AssetVectorEntry entry in AssetVectors.entries) {
-        expect(entry.path, startsWith('assets/vector/'),
-            reason: '${entry.name} must be in assets/vector/');
-        expect(entry.path, endsWith('.png'),
-            reason: '${entry.name} must be a PNG');
+        expect(
+          entry.path,
+          startsWith('assets/vector/'),
+          reason: '${entry.name} must be in assets/vector/',
+        );
+        expect(
+          entry.path,
+          endsWith('.png'),
+          reason: '${entry.name} must be a PNG',
+        );
       }
     });
 
@@ -19,8 +25,9 @@ void main() {
     });
 
     test('contains all expected illustration names', () {
-      final List<String> names =
-          AssetVectors.entries.map((e) => e.name).toList();
+      final List<String> names = AssetVectors.entries
+          .map((e) => e.name)
+          .toList();
 
       expect(names, contains('onboardingBuildBetterDays'));
       expect(names, contains('onboardingSmartRoutines'));
@@ -39,8 +46,9 @@ void main() {
     });
 
     test('byName returns the matching entry', () {
-      final AssetVectorEntry entry =
-          AssetVectors.byName('todayNotificationBell');
+      final AssetVectorEntry entry = AssetVectors.byName(
+        'todayNotificationBell',
+      );
       expect(entry.path, 'assets/vector/today_notification_bell.png');
     });
 

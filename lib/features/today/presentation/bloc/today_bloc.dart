@@ -222,17 +222,20 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
           );
 
     final int completedCount = items
-        .where((TodayRoutineItem item) => item.status == TodayRoutineItemStatus.done)
+        .where(
+          (TodayRoutineItem item) => item.status == TodayRoutineItemStatus.done,
+        )
         .length;
 
     // The header pill shows the same number Insights does, from the same
     // rule — a second implementation here would quietly drift from it.
     final Map<String, List<RoutineLogRowData>> logsByDate =
         <String, List<RoutineLogRowData>>{};
-    for (final RoutineLogRowData log in await _appDatabase.getRoutineLogsBetween(
-      RoutineStreak.dateKey(today.subtract(const Duration(days: 30))),
-      RoutineStreak.dateKey(today),
-    )) {
+    for (final RoutineLogRowData log
+        in await _appDatabase.getRoutineLogsBetween(
+          RoutineStreak.dateKey(today.subtract(const Duration(days: 30))),
+          RoutineStreak.dateKey(today),
+        )) {
       logsByDate.putIfAbsent(log.date, () => <RoutineLogRowData>[]).add(log);
     }
 

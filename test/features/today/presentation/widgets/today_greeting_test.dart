@@ -81,10 +81,7 @@ void main() {
       await tester.pumpWidget(
         localizedApp(
           const Scaffold(
-            body: TodayGreeting(
-              hour: 9,
-              subtitle: 'You are doing well today',
-            ),
+            body: TodayGreeting(hour: 9, subtitle: 'You are doing well today'),
           ),
         ),
       );

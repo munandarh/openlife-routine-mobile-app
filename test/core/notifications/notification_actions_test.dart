@@ -79,42 +79,48 @@ void main() {
       expect(log.status, 'done');
     });
 
-    test('snooze records the wake-up time from the routine own duration', () async {
-      final NotificationActionResult result =
-          await applyRoutineNotificationAction(
-            database: database,
-            payload: payload,
-            actionId: notificationSnoozeActionId,
-            now: now,
-          );
+    test(
+      'snooze records the wake-up time from the routine own duration',
+      () async {
+        final NotificationActionResult result =
+            await applyRoutineNotificationAction(
+              database: database,
+              payload: payload,
+              actionId: notificationSnoozeActionId,
+              now: now,
+            );
 
-      // 15 minutes, not the 10-minute default.
-      expect(result.snoozedUntil, now.add(const Duration(minutes: 15)));
-      final RoutineLogRowData log = (await database
-          .getRoutineLogByRoutineAndDate('r1', todayKey()))!;
-      expect(log.status, 'snoozed');
-      expect(log.snoozedUntil, now.add(const Duration(minutes: 15)));
-    });
+        // 15 minutes, not the 10-minute default.
+        expect(result.snoozedUntil, now.add(const Duration(minutes: 15)));
+        final RoutineLogRowData log = (await database
+            .getRoutineLogByRoutineAndDate('r1', todayKey()))!;
+        expect(log.status, 'snoozed');
+        expect(log.snoozedUntil, now.add(const Duration(minutes: 15)));
+      },
+    );
 
-    test('done after a snooze replaces the snooze and clears its wake-up', () async {
-      await applyRoutineNotificationAction(
-        database: database,
-        payload: payload,
-        actionId: notificationSnoozeActionId,
-        now: now,
-      );
-      await applyRoutineNotificationAction(
-        database: database,
-        payload: payload,
-        actionId: notificationDoneActionId,
-        now: now,
-      );
+    test(
+      'done after a snooze replaces the snooze and clears its wake-up',
+      () async {
+        await applyRoutineNotificationAction(
+          database: database,
+          payload: payload,
+          actionId: notificationSnoozeActionId,
+          now: now,
+        );
+        await applyRoutineNotificationAction(
+          database: database,
+          payload: payload,
+          actionId: notificationDoneActionId,
+          now: now,
+        );
 
-      final RoutineLogRowData log = (await database
-          .getRoutineLogByRoutineAndDate('r1', todayKey()))!;
-      expect(log.status, 'done');
-      expect(log.snoozedUntil, isNull);
-    });
+        final RoutineLogRowData log = (await database
+            .getRoutineLogByRoutineAndDate('r1', todayKey()))!;
+        expect(log.status, 'done');
+        expect(log.snoozedUntil, isNull);
+      },
+    );
 
     test('an unknown action writes nothing', () async {
       await applyRoutineNotificationAction(

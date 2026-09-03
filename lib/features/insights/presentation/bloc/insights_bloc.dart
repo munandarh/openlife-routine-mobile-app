@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/insights/domain/routine_streak.dart';
@@ -6,10 +5,12 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_ev
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 
 class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
-  InsightsBloc({required AppDatabase appDatabase, DateTime Function()? nowProvider})
-    : _appDatabase = appDatabase,
-      _nowProvider = nowProvider ?? DateTime.now,
-      super(const InsightsState()) {
+  InsightsBloc({
+    required AppDatabase appDatabase,
+    DateTime Function()? nowProvider,
+  }) : _appDatabase = appDatabase,
+       _nowProvider = nowProvider ?? DateTime.now,
+       super(const InsightsState()) {
     on<InsightsStarted>(_onStarted);
   }
 
@@ -30,10 +31,10 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       final DateTime monday = today.subtract(Duration(days: now.weekday - 1));
       final DateTime historyStart = today.subtract(const Duration(days: 6));
 
-      final List<RoutineBundleRow> bundles = (await _appDatabase
-              .getRoutineBundles())
-          .where((RoutineBundleRow b) => b.routine.isEnabled)
-          .toList();
+      final List<RoutineBundleRow> bundles =
+          (await _appDatabase.getRoutineBundles())
+              .where((RoutineBundleRow b) => b.routine.isEnabled)
+              .toList();
 
       // One range query covering both the current week and the 7-day history.
       final DateTime rangeStart = monday.isBefore(historyStart)
@@ -41,7 +42,10 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
           : historyStart;
       final DateTime rangeEnd = monday.add(const Duration(days: 6));
       final List<RoutineLogRowData> logs = await _appDatabase
-          .getRoutineLogsBetween(RoutineStreak.dateKey(rangeStart), RoutineStreak.dateKey(rangeEnd));
+          .getRoutineLogsBetween(
+            RoutineStreak.dateKey(rangeStart),
+            RoutineStreak.dateKey(rangeEnd),
+          );
 
       final Map<String, List<RoutineLogRowData>> logsByDate =
           <String, List<RoutineLogRowData>>{};
@@ -57,7 +61,10 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       for (int i = 0; i < 7; i += 1) {
         final DateTime day = monday.add(Duration(days: i));
         final int scheduled = RoutineStreak.scheduledOn(bundles, day);
-        final int done = RoutineStreak.countStatus(logsByDate[RoutineStreak.dateKey(day)], 'done');
+        final int done = RoutineStreak.countStatus(
+          logsByDate[RoutineStreak.dateKey(day)],
+          'done',
+        );
 
         weekScheduled += scheduled;
         weekCompleted += done;
@@ -68,7 +75,8 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       final List<InsightsDaySummary> history = <InsightsDaySummary>[];
       for (int i = 0; i < 7; i += 1) {
         final DateTime day = historyStart.add(Duration(days: i));
-        final List<RoutineLogRowData>? dayLogs = logsByDate[RoutineStreak.dateKey(day)];
+        final List<RoutineLogRowData>? dayLogs =
+            logsByDate[RoutineStreak.dateKey(day)];
         history.add(
           InsightsDaySummary(
             date: day,
@@ -137,7 +145,6 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
   /// A routine only counts from the day it was created; otherwise a routine
   /// added today drags last week's completion rate to zero.
 
-
   static RoutineMetric? _topMetric(
     Map<String, int> counts,
     Map<String, String> titles,
@@ -155,6 +162,4 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       count: top.value,
     );
   }
-
-
 }

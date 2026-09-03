@@ -146,6 +146,23 @@ class AppNotificationService {
         .then((NotificationsEnabledOptions? options) => options?.isEnabled);
   }
 
+  /// Whether the OS still permits alarms at an exact minute.
+  ///
+  /// From Android 14 this is not granted by default and the user can revoke
+  /// it later, at which point reminders quietly start arriving in a window
+  /// instead of on time — which reads as the app being unreliable.
+  Future<bool?> canScheduleExactAlarms() async {
+    if (_disabled) {
+      return null;
+    }
+
+    return _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.canScheduleExactNotifications();
+  }
+
   Future<void> requestPermissions() async {
     if (_disabled) {
       return;
@@ -221,10 +238,8 @@ class AppNotificationService {
     // disabled — where `tz.local` is never set and every read throws.
     _ensureTimeZones();
 
-    final List<RoutineReminderSlot> slots = plannedSlots(
-      routines,
-      isIOS: false,
-    )..sort(
+    final List<RoutineReminderSlot> slots = plannedSlots(routines, isIOS: false)
+      ..sort(
         (RoutineReminderSlot a, RoutineReminderSlot b) =>
             a.firesAt.compareTo(b.firesAt),
       );
@@ -301,11 +316,7 @@ class AppNotificationService {
     final AppLocalizations strings = await _strings();
 
     for (final int weekday in routine.repeatDays) {
-      await _scheduleSlot(
-        routine: routine,
-        weekday: weekday,
-        strings: strings,
-      );
+      await _scheduleSlot(routine: routine, weekday: weekday, strings: strings);
     }
   }
 
@@ -427,7 +438,9 @@ class AppNotificationService {
     for (int weekday = 1; weekday <= 7; weekday += 1) {
       await _plugin.cancel(id: routineNotificationId(routineId, weekday));
     }
-    await _plugin.cancel(id: routineNotificationId(routineId, routineSnoozeSlot));
+    await _plugin.cancel(
+      id: routineNotificationId(routineId, routineSnoozeSlot),
+    );
   }
 
   Future<void> cancelRoutine(String routineId) async {
@@ -438,7 +451,9 @@ class AppNotificationService {
     for (int weekday = 1; weekday <= 7; weekday += 1) {
       await _plugin.cancel(id: routineNotificationId(routineId, weekday));
     }
-    await _plugin.cancel(id: routineNotificationId(routineId, routineSnoozeSlot));
+    await _plugin.cancel(
+      id: routineNotificationId(routineId, routineSnoozeSlot),
+    );
   }
 
   /// Cancels every reminder this app has scheduled.
@@ -557,11 +572,6 @@ class AppNotificationService {
       return const <int>[];
     }
   }
-
-
-
-
-
 
   static tz.TZDateTime _nextWeeklyDate({
     required int weekday,

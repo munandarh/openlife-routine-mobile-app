@@ -123,10 +123,7 @@ void main() {
       await tester.pumpWidget(
         buildCard(
           actions: <RoutineCardAction>[
-            RoutineCardAction(
-              label: 'Skip',
-              onPressed: () => pressed = 'Skip',
-            ),
+            RoutineCardAction(label: 'Skip', onPressed: () => pressed = 'Skip'),
             RoutineCardAction(
               label: 'Snooze',
               onPressed: () => pressed = 'Snooze',
@@ -149,10 +146,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        buildCard(
-          statusLabel: 'Missed',
-          statusTone: RoutineCardTone.attention,
-        ),
+        buildCard(statusLabel: 'Missed', statusTone: RoutineCardTone.attention),
       );
       final Color attention = tester
           .widget<Text>(find.text('Missed'))
@@ -160,10 +154,7 @@ void main() {
           .color!;
 
       await tester.pumpWidget(
-        buildCard(
-          statusLabel: 'Missed',
-          statusTone: RoutineCardTone.muted,
-        ),
+        buildCard(statusLabel: 'Missed', statusTone: RoutineCardTone.muted),
       );
       final Color muted = tester
           .widget<Text>(find.text('Missed'))

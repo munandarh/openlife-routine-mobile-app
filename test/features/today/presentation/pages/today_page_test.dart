@@ -96,7 +96,7 @@ void main() {
     expect(find.text('done'), findsOneWidget);
     expect(find.text('Daily routine'), findsOneWidget);
     expect(find.text('Breakfast'), findsOneWidget);
-  handle.dispose();
+    handle.dispose();
   });
 
   testWidgets('marking routine done updates progress', (
@@ -121,7 +121,7 @@ void main() {
 
     // Should now show done icon.
     expect(find.byIcon(Icons.check_rounded), findsOneWidget);
-  handle.dispose();
+    handle.dispose();
   });
 
   testWidgets('daily complete celebration appears when all done', (
@@ -150,7 +150,7 @@ void main() {
     // The PNG illustration (from AssetVectors) should be rendered
     // instead of the icon fallback.
     expect(find.byIcon(Icons.celebration_outlined), findsNothing);
-  handle.dispose();
+    handle.dispose();
   });
 
   testWidgets('celebration shows the PNG illustration', (
@@ -178,7 +178,7 @@ void main() {
     // Image widget is rendered with the daily celebration asset.
     final Finder imageFinder = find.byType(Image);
     expect(imageFinder, findsWidgets);
-  handle.dispose();
+    handle.dispose();
   });
 
   testWidgets('celebration can be dismissed', (WidgetTester tester) async {
@@ -212,12 +212,9 @@ class _FakeOnboardingRepository implements OnboardingRepository {
   @override
   Future<void> completeOnboarding() async {}
 
-
   @override
   Future<bool> hasCompletedOnboarding() async => false;
-
 
   @override
   Future<void> skipOnboarding() async {}
 }
-

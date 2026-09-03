@@ -464,5 +464,36 @@
     }
   },
   "alertsAllowed": "Diizinkan",
-  "alertsBlocked": "Diblokir"
+  "alertsBlocked": "Diblokir",
+  "reminderHealthTitle": "Kesehatan pengingat",
+  "reminderHealthAllGood": "Pengingatmu akan datang tepat waktu.",
+  "reminderHealthProblems": "{count, plural, other{{count} hal menghalangi pengingatmu}}",
+  "@reminderHealthProblems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkNotifications": "Notifikasi",
+  "checkNotificationsOk": "OpenLife bisa menampilkan pengingat.",
+  "checkNotificationsBad": "Pengingat tidak bisa ditampilkan sama sekali.",
+  "checkExactAlarms": "Ketepatan waktu",
+  "checkExactAlarmsOk": "Pengingat berbunyi di menit yang kamu atur.",
+  "checkExactAlarmsBad": "Pengingat bisa terlambat sampai satu jam.",
+  "checkBattery": "Aktivitas latar belakang",
+  "checkBatteryOk": "OpenLife dikecualikan dari penghematan baterai.",
+  "checkBatteryBad": "Sistem bisa menghentikan pengingat demi menghemat baterai.",
+  "fixIt": "Perbaiki",
+  "vendorWarningTitle": "Satu setelan lagi, di HP {brand}",
+  "@vendorWarningTitle": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorWarningBody": "HP dari pabrikan ini punya izin autostart atau jalan di latar belakang tersendiri yang tidak bisa dibaca aplikasi mana pun. Kalau pengingat masih hilang, izinkan autostart untuk OpenLife di pengaturan sistem.",
+  "openAppSettings": "Buka pengaturan aplikasi",
+  "reminderHealthSetting": "Kesehatan pengingat"
 }

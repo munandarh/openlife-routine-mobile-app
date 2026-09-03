@@ -56,12 +56,15 @@ void main() {
     await appDatabase.close();
   });
 
-  test('reset cancels the reminders it just deleted the routines for', () async {
-    await service.resetAllData();
+  test(
+    'reset cancels the reminders it just deleted the routines for',
+    () async {
+      await service.resetAllData();
 
-    expect(notifications.cancelAllCount, 1);
-    expect(await appDatabase.select(appDatabase.routines).get(), isEmpty);
-  });
+      expect(notifications.cancelAllCount, 1);
+      expect(await appDatabase.select(appDatabase.routines).get(), isEmpty);
+    },
+  );
 
   test('import schedules reminders for the routines it restored', () async {
     final String backup = await service.exportToJson();

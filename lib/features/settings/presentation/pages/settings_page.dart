@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
         return CustomScrollView(
           slivers: <Widget>[
-            SliverToBoxAdapter(child: OpenLifeAppBar()),
+            SliverToBoxAdapter(child: OpenLifeAppBar.tab()),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(
@@ -114,6 +114,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   _SettingsSection(
                     title: l10n.notificationsSection,
                     items: <_SettingsItemData>[
+                      _SettingsItemData(
+                        icon: Icons.health_and_safety_outlined,
+                        title: l10n.reminderHealthSetting,
+                        onTap: () =>
+                            context.push(OpenLifeRoute.reminderHealth.path),
+                      ),
                       _SettingsItemData(
                         icon: Icons.notifications_active_outlined,
                         title: l10n.routineAlerts,

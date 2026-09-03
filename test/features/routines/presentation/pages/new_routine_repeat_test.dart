@@ -5,7 +5,8 @@ import 'package:openlife_routine/core/di/app_dependencies.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
-import 'package:openlife_routine/core/storage/app_database.dart' show AppDatabase;
+import 'package:openlife_routine/core/storage/app_database.dart'
+    show AppDatabase;
 import 'package:openlife_routine/core/storage/local_database_config.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';

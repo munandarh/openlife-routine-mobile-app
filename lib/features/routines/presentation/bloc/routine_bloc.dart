@@ -116,7 +116,9 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     await _updateRoutineUseCase(updated);
     await _notificationService.scheduleRoutine(updated);
 
-    emit(state.copyWith(status: RoutineStatus.success, clearErrorMessage: true));
+    emit(
+      state.copyWith(status: RoutineStatus.success, clearErrorMessage: true),
+    );
   }
 
   Future<void> _onDeleteRequested(

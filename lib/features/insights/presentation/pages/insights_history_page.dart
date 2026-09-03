@@ -12,7 +12,7 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_bl
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 /// 7-day completion history (PRD §8.6 / §9 navigation tree).
 class InsightsHistoryPage extends StatelessWidget {
@@ -65,28 +65,7 @@ class _InsightsHistoryView extends StatelessWidget {
             );
           }
 
-          return SafeArea(
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.pageMargin,
-                AppSpacing.md + 2,
-                AppSpacing.pageMargin,
-                AppSpacing.xxxl,
-              ),
-              itemCount: days.length + 1,
-              separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(height: index == 0 ? AppSpacing.lg : AppSpacing.md),
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return ScreenHeader(
-                    title: l10n.sevenDayHistory,
-                    onBack: () => Navigator.of(context).pop(),
-                  );
-                }
-                return _HistoryRow(day: days[index - 1]);
-              },
-            ),
-          );
+          return _HistoryList(days: days, title: l10n.sevenDayHistory);
         },
       ),
     );
@@ -215,6 +194,39 @@ class _CountChip extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
+      ),
+    );
+  }
+}
+
+class _HistoryList extends StatelessWidget {
+  const _HistoryList({required this.days, required this.title});
+
+  final List<InsightsDaySummary> days;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          OpenLifeAppBar.page(title: title),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageMargin,
+                AppSpacing.lg,
+                AppSpacing.pageMargin,
+                AppSpacing.xxxl,
+              ),
+              itemCount: days.length,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(height: AppSpacing.md),
+              itemBuilder: (BuildContext context, int index) =>
+                  _HistoryRow(day: days[index]),
+            ),
+          ),
+        ],
       ),
     );
   }

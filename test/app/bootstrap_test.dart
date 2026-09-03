@@ -93,10 +93,7 @@ void main() {
 
       // Recording "today" would make the sweep skip today forever once
       // tomorrow arrives.
-      expect(
-        await settings.getLastMissedSweepDate(),
-        DateTime(2026, 6, 30),
-      );
+      expect(await settings.getLastMissedSweepDate(), DateTime(2026, 6, 30));
     });
 
     test('leaves today untouched', () async {

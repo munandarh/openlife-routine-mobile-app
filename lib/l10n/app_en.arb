@@ -464,5 +464,36 @@
     }
   },
   "alertsAllowed": "Allowed",
-  "alertsBlocked": "Blocked"
+  "alertsBlocked": "Blocked",
+  "reminderHealthTitle": "Reminder health",
+  "reminderHealthAllGood": "Your reminders will arrive on time.",
+  "reminderHealthProblems": "{count, plural, =1{1 thing is stopping your reminders} other{{count} things are stopping your reminders}}",
+  "@reminderHealthProblems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkNotifications": "Notifications",
+  "checkNotificationsOk": "OpenLife can show reminders.",
+  "checkNotificationsBad": "Reminders cannot be shown at all.",
+  "checkExactAlarms": "Exact timing",
+  "checkExactAlarmsOk": "Reminders fire at the minute you set.",
+  "checkExactAlarmsBad": "Reminders may arrive up to an hour late.",
+  "checkBattery": "Background activity",
+  "checkBatteryOk": "OpenLife is exempt from battery optimisation.",
+  "checkBatteryBad": "The system may stop reminders to save battery.",
+  "fixIt": "Fix this",
+  "vendorWarningTitle": "One more setting, on {brand} phones",
+  "@vendorWarningTitle": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorWarningBody": "Phones from this maker also keep a separate autostart or background permission that no app can read. If reminders still go missing, allow autostart for OpenLife in the system settings.",
+  "openAppSettings": "Open app settings",
+  "reminderHealthSetting": "Reminder health"
 }

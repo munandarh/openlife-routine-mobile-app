@@ -39,10 +39,14 @@ void main() {
         selectedTemplateId: 'morning',
       );
 
-      expect(state.copyWith(selectedTemplateId: 'sleep').selectedTemplateId,
-          'sleep');
-      expect(state.copyWith(clearSelectedTemplate: true).selectedTemplateId,
-          isNull);
+      expect(
+        state.copyWith(selectedTemplateId: 'sleep').selectedTemplateId,
+        'sleep',
+      );
+      expect(
+        state.copyWith(clearSelectedTemplate: true).selectedTemplateId,
+        isNull,
+      );
     });
   });
 

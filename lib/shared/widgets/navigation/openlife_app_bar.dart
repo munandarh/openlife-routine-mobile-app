@@ -8,49 +8,105 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 
-/// The tab-screen header: profile avatar, an optional add action, and the bell.
+/// The one header in the app, in its two shapes.
 ///
-/// One widget rather than a copy per screen — five hand-rolled headers is how
-/// the icons ended up with no `onPressed` at all for as long as they did.
+/// There used to be two widgets and five hand-rolled copies, and they had
+/// drifted: tab screens inset their buttons 20px while pushed screens used 24,
+/// and five call sites put the header inside a list that already had 24px of
+/// padding, so those screens sat 48px in and a row lower than the rest.
 ///
-/// [onAddRoutine] is null on screens where creating a routine is not what the
-/// screen is for (Insights, Settings), which is the whole reason this is a
-/// parameter and not a constant.
+/// The header owns its own inset for exactly that reason — **give it no
+/// padding of your own**. Put it outside a scroll view's padding, not inside.
 class OpenLifeAppBar extends StatelessWidget {
-  const OpenLifeAppBar({this.onAddRoutine, super.key});
+  /// Tab screens: profile avatar, an optional add action, and the bell.
+  ///
+  /// [onAddRoutine] is null where creating a routine is not what the screen is
+  /// for (Insights, Settings).
+  const OpenLifeAppBar.tab({this.onAddRoutine, super.key})
+    : title = null,
+      onBack = null;
 
-  static const double _buttonSize = 44;
+  /// Pushed screens: a back button and the screen's title.
+  const OpenLifeAppBar.page({
+    required String this.title,
+    this.onBack,
+    super.key,
+  }) : onAddRoutine = null;
+
+  /// Every button is this tall and wide, so the row's height never depends on
+  /// which shape is in use.
+  static const double buttonSize = 44;
+
+  /// The single horizontal inset. Both shapes use it; nothing else may.
+  static const double horizontalInset = AppSpacing.pageMargin;
+
+  static const double _topInset = AppSpacing.md + 2;
 
   final VoidCallback? onAddRoutine;
+  final String? title;
+  final VoidCallback? onBack;
+
+  bool get _isPage => title != null;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.pageMargin - 4,
-        AppSpacing.md + 2,
-        AppSpacing.pageMargin - 4,
+        horizontalInset,
+        _topInset,
+        horizontalInset,
         0,
       ),
-      child: Row(
-        children: <Widget>[
-          _CircleAction(
-            icon: Icons.person_outline,
-            tooltip: context.l10n.profileTitle,
-            onPressed: () => context.push(OpenLifeRoute.profile.path),
-          ),
-          const Spacer(),
-          if (onAddRoutine != null) ...<Widget>[
-            _AddRoutinePill(onPressed: onAddRoutine!),
-            const SizedBox(width: AppSpacing.sm + 2),
-          ],
-          _CircleAction(
-            icon: Icons.notifications_none_rounded,
-            tooltip: context.l10n.notificationsTitle,
-            onPressed: () => context.push(OpenLifeRoute.notifications.path),
-          ),
-        ],
+      child: SizedBox(
+        height: buttonSize,
+        child: _isPage ? _pageRow(context) : _tabRow(context),
       ),
+    );
+  }
+
+  Widget _pageRow(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        _CircleAction(
+          icon: Icons.arrow_back_ios_new_rounded,
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: onBack ?? () => Navigator.of(context).pop(),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Text(
+            title!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.sectionTitle.copyWith(fontSize: 19),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _tabRow(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        _CircleAction(
+          icon: Icons.person_outline,
+          tooltip: context.l10n.profileTitle,
+          onPressed: () => context.push(OpenLifeRoute.profile.path),
+        ),
+        const Spacer(),
+        if (onAddRoutine != null) ...<Widget>[
+          // Flexible, not fixed: at 320dp the Indonesian label makes the pill
+          // wider than the row, and the two circular buttons must not be the
+          // ones that give way.
+          Flexible(child: _AddRoutinePill(onPressed: onAddRoutine!)),
+          const SizedBox(width: AppSpacing.sm + 2),
+        ],
+        _CircleAction(
+          icon: Icons.notifications_none_rounded,
+          tooltip: context.l10n.notificationsTitle,
+          onPressed: () => context.push(OpenLifeRoute.notifications.path),
+        ),
+      ],
     );
   }
 }
@@ -73,13 +129,12 @@ class _CircleAction extends StatelessWidget {
       child: Material(
         color: context.palette.surface,
         shape: const CircleBorder(),
-        elevation: 0,
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onPressed,
           child: SizedBox(
-            width: OpenLifeAppBar._buttonSize,
-            height: OpenLifeAppBar._buttonSize,
+            width: OpenLifeAppBar.buttonSize,
+            height: OpenLifeAppBar.buttonSize,
             child: Icon(icon, size: 20, color: context.palette.textSecondary),
           ),
         ),
@@ -109,7 +164,7 @@ class _AddRoutinePill extends StatelessWidget {
             0,
           ),
           child: SizedBox(
-            height: OpenLifeAppBar._buttonSize,
+            height: OpenLifeAppBar.buttonSize,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

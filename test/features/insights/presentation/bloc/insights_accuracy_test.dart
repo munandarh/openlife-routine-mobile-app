@@ -44,7 +44,8 @@ void main() {
   }) {
     // Default well before the reporting window so existing expectations are
     // about repeat days, not about creation date.
-    final DateTime created = createdAt ?? now.subtract(const Duration(days: 60));
+    final DateTime created =
+        createdAt ?? now.subtract(const Duration(days: 60));
     return repository.createRoutine(
       Routine(
         id: id,
@@ -80,7 +81,11 @@ void main() {
 
     test('excludes disabled routines entirely', () async {
       await seed(id: 'on', repeatDays: <int>[1, 2, 3, 4, 5, 6, 7]);
-      await seed(id: 'off', repeatDays: <int>[1, 2, 3, 4, 5, 6, 7], isEnabled: false);
+      await seed(
+        id: 'off',
+        repeatDays: <int>[1, 2, 3, 4, 5, 6, 7],
+        isEnabled: false,
+      );
 
       final InsightsState state = await load();
 
@@ -258,17 +263,20 @@ void main() {
       expect(day.completionRate, closeTo(1 / 3, 0.0001));
     });
 
-    test('a day the routine does not repeat on has nothing scheduled', () async {
-      // Sundays only.
-      await seed(id: 'r1', repeatDays: <int>[DateTime.sunday]);
+    test(
+      'a day the routine does not repeat on has nothing scheduled',
+      () async {
+        // Sundays only.
+        await seed(id: 'r1', repeatDays: <int>[DateTime.sunday]);
 
-      final InsightsState state = await load();
-      final List<InsightsDaySummary> scheduledDays = state.history
-          .where((InsightsDaySummary d) => d.scheduled > 0)
-          .toList();
+        final InsightsState state = await load();
+        final List<InsightsDaySummary> scheduledDays = state.history
+            .where((InsightsDaySummary d) => d.scheduled > 0)
+            .toList();
 
-      expect(scheduledDays, hasLength(1));
-      expect(scheduledDays.single.date.weekday, DateTime.sunday);
-    });
+        expect(scheduledDays, hasLength(1));
+        expect(scheduledDays.single.date.weekday, DateTime.sunday);
+      },
+    );
   });
 }

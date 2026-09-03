@@ -6,7 +6,7 @@ import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 class AppEmptyState extends StatefulWidget {
   const AppEmptyState({
@@ -65,7 +65,6 @@ class _AppEmptyStateState extends State<AppEmptyState>
 
   @override
   Widget build(BuildContext context) {
-
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
@@ -82,8 +81,8 @@ class _AppEmptyStateState extends State<AppEmptyState>
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               widget.illustrationPath != null
-                  ? OpenLifeRiveView.illustration(
-                      illustrationPath: widget.illustrationPath!,
+                  ? AppIllustration(
+                      assetPath: widget.illustrationPath!,
                       fallbackIcon: widget.icon,
                       size: 140,
                     )

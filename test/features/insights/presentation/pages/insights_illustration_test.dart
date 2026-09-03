@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/illustrations/app_illustration.dart';
 
 void main() {
   group('Insights hero illustration', () {
     testWidgets('insights page hero asset is registered and loadable', (
-    WidgetTester tester,
+      WidgetTester tester,
     ) async {
       // The insights page should expose a hero illustration backed by
       // today_insights_workspace.png. We verify the registry and the
@@ -18,8 +18,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: OpenLifeRiveView.illustration(
-              illustrationPath: entry.path,
+            body: AppIllustration(
+              assetPath: entry.path,
               fallbackIcon: Icons.insights_outlined,
               size: 220,
             ),

@@ -20,9 +20,7 @@ Future<void> loadAppFonts() async {
   ]) {
     final File file = File('assets/fonts/Nunito-$weight.ttf');
     loader.addFont(
-      file.readAsBytes().then(
-        (Uint8List bytes) => ByteData.view(bytes.buffer),
-      ),
+      file.readAsBytes().then((Uint8List bytes) => ByteData.view(bytes.buffer)),
     );
   }
   await loader.load();

@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 /// Answers the one question this app lives or dies by: will the reminder
@@ -63,6 +64,18 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
     }
   }
 
+  Future<void> _sendTestReminder() async {
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final String sent = context.l10n.testReminderSent;
+
+    await AppScope.read(context).notificationService.showTestReminder();
+
+    if (!mounted) {
+      return;
+    }
+    messenger.showSnackBar(SnackBar(content: Text(sent)));
+  }
+
   Future<void> _fix(ReminderCheck check) async {
     switch (check) {
       case ReminderCheck.notifications:
@@ -113,6 +126,18 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
                             onOpenSettings: _health.openAppSettings,
                           ),
                         ],
+                        const SizedBox(height: AppSpacing.lg),
+                        // Every check above can pass while nothing arrives:
+                        // a vendor suspends the app, a channel is muted, a
+                        // Do-Not-Disturb rule swallows the post. This is the
+                        // one answer that does not depend on the OS telling
+                        // the truth about itself.
+                        PrimaryButton(
+                          label: l10n.sendTestReminder,
+                          isSecondary: true,
+                          icon: Icons.notifications_active_outlined,
+                          onPressed: _sendTestReminder,
+                        ),
                       ],
                     ),
             ),

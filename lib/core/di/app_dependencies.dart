@@ -73,6 +73,16 @@ class AppDependencies {
     // Lets a notification action handled while the app is alive write the same
     // log the background isolate would.
     notificationService.attachDatabase(appDatabase);
+    // An install that finished onboarding before the permission was ever asked
+    // for — or that was upgraded from a build that did not ask — has no path
+    // back to the prompt, and every reminder it schedules is dropped in
+    // silence. Asking here costs a dialog once and fixes exactly that.
+    if (hasCompletedOnboarding) {
+      final bool? allowed = await notificationService.areNotificationsEnabled();
+      if (allowed == false) {
+        await notificationService.requestPermissions();
+      }
+    }
     await notificationService.syncRoutineSchedules(appDatabase);
 
     return AppDependencies(

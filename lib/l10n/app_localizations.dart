@@ -1574,6 +1574,30 @@ abstract class AppLocalizations {
   /// **'Two reminders cannot be at the same time.'**
   String get duplicateTimesError;
 
+  /// No description provided for @testReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test reminder'**
+  String get testReminderTitle;
+
+  /// No description provided for @testReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If you can see this, reminders can reach you.'**
+  String get testReminderBody;
+
+  /// No description provided for @sendTestReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test reminder'**
+  String get sendTestReminder;
+
+  /// No description provided for @testReminderSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent. If nothing appeared, notifications are blocked.'**
+  String get testReminderSent;
+
   /// No description provided for @templateVitaminTitle.
   ///
   /// In en, this message translates to:

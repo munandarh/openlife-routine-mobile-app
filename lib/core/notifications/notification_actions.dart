@@ -194,15 +194,50 @@ Future<void> handleNotificationActionInBackground(
 
 /// Notification channel, duplicated here because the background isolate builds
 /// its own notification without the service object.
-const String routineChannelId = 'routine_reminders';
+///
+/// The id carries a version suffix on purpose. Android freezes a channel's
+/// importance at the moment it is created: once `routine_reminders` existed at
+/// anything below high, no amount of code could raise it again — only the user
+/// could, buried in system settings — and every reminder after that arrived
+/// silently, with no banner and no sound. Publishing a new id is the only way
+/// an app can guarantee its own importance. Bump it again if these settings
+/// ever need to change.
+const String routineChannelId = 'routine_reminders_high_v2';
 const String routineChannelName = 'Routine reminders';
 const String routineChannelDescription =
     'Reminder notifications for daily routines';
+
+/// Channels this app created in earlier builds, deleted at startup so the
+/// user's notification settings do not accumulate a dead entry per version.
+const List<String> legacyRoutineChannelIds = <String>['routine_reminders'];
+
+/// The channel as it must exist before the first reminder is posted.
+///
+/// Created explicitly at startup rather than left to the plugin, which only
+/// creates it when a notification is first shown — by which time a reminder
+/// has already been missed if anything about the channel was wrong.
+const AndroidNotificationChannel routineNotificationChannel =
+    AndroidNotificationChannel(
+      routineChannelId,
+      routineChannelName,
+      description: routineChannelDescription,
+      // A reminder that arrives without a banner is a reminder that does not
+      // arrive: this app exists to interrupt.
+      importance: Importance.max,
+      playSound: true,
+      enableVibration: true,
+      enableLights: true,
+      showBadge: true,
+    );
 
 /// iOS attaches actions to a category registered once at startup, not to the
 /// individual notification the way Android does. Every routine reminder is
 /// posted under this id so the Done and Snooze buttons appear on iOS too.
 const String routineCategoryId = 'routine_reminder';
+
+/// The manual "does anything arrive at all?" notification. Far outside every
+/// routine's id range so it can never collide with a real reminder.
+const int testReminderNotificationId = 424242;
 
 /// Slot for a one-off snooze. Weekday slots 1-7 belong to the recurring
 /// schedule, so re-arming a snooze never cancels a weekly reminder.
@@ -246,8 +281,22 @@ NotificationDetails routineNotificationDetails({
       routineChannelId,
       routineChannelName,
       channelDescription: routineChannelDescription,
+      // Importance governs the channel, priority the individual post, and
+      // both have to be at the top for a heads-up banner. Losing either one
+      // downgrades the reminder to a silent line in the shade.
       importance: Importance.max,
       priority: Priority.high,
+      // Tells the OS this is a time-critical reminder rather than chatter,
+      // which keeps it out of the notification-cooldown bucketing vendors
+      // apply to ordinary posts.
+      category: AndroidNotificationCategory.reminder,
+      // Readable on a lock screen, which is where a morning dose is answered.
+      visibility: NotificationVisibility.public,
+      playSound: true,
+      enableVibration: true,
+      enableLights: true,
+      ticker: 'reminder',
+      autoCancel: true,
       // Both handled without opening the app: a reminder you have to launch
       // the app to answer is a reminder people stop answering.
       actions: <AndroidNotificationAction>[

@@ -114,11 +114,66 @@ class AppNotificationService {
       return null;
     }
 
+    await _ensureChannel();
+
     final NotificationAppLaunchDetails? launchDetails = await _plugin
         .getNotificationAppLaunchDetails();
     return RoutineNotificationPayload.decode(
       launchDetails?.notificationResponse?.payload,
     )?.routineId;
+  }
+
+  /// Publishes the reminder channel before anything needs it.
+  ///
+  /// Left to the plugin the channel is created only when the first
+  /// notification is posted, which is far too late to discover that its
+  /// importance is wrong. Old channels are dropped in the same pass so the
+  /// user's notification settings do not fill up with one dead entry per
+  /// version of this app.
+  Future<void> _ensureChannel() async {
+    final AndroidFlutterLocalNotificationsPlugin? android = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    if (android == null) {
+      return;
+    }
+
+    try {
+      for (final String id in legacyRoutineChannelIds) {
+        await android.deleteNotificationChannel(channelId: id);
+      }
+      await android.createNotificationChannel(routineNotificationChannel);
+    } on PlatformException catch (error) {
+      // A missing channel is recoverable — the plugin creates one on first
+      // post — so this must not take the app down with it.
+      debugPrint('Channel setup failed (${error.code}): ${error.message}');
+    }
+  }
+
+  /// Posts a reminder immediately, exactly as a scheduled one would look.
+  ///
+  /// The one honest answer to "why do I get nothing?" on a device this code
+  /// cannot inspect: if this arrives, the channel and the permission are fine
+  /// and the problem is alarm delivery; if it does not, it is the permission
+  /// or the channel, and the checks above say which.
+  Future<void> showTestReminder() async {
+    if (_disabled) {
+      return;
+    }
+
+    await _ensureChannel();
+    final AppLocalizations strings = await _strings();
+
+    await _plugin.show(
+      id: testReminderNotificationId,
+      title: strings.testReminderTitle,
+      body: strings.testReminderBody,
+      notificationDetails: routineNotificationDetails(
+        strings: strings,
+        snoozeMinutes: 10,
+      ),
+    );
   }
 
   /// Whether the OS will currently deliver our reminders.

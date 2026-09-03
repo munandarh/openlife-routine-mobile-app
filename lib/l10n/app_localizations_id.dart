@@ -848,6 +848,20 @@ class AppLocalizationsId extends AppLocalizations {
       'Dua pengingat tidak boleh di jam yang sama.';
 
   @override
+  String get testReminderTitle => 'Tes pengingat';
+
+  @override
+  String get testReminderBody =>
+      'Kalau ini terlihat, pengingat bisa sampai ke Anda.';
+
+  @override
+  String get sendTestReminder => 'Kirim tes pengingat';
+
+  @override
+  String get testReminderSent =>
+      'Terkirim. Kalau tidak muncul, notifikasi diblokir.';
+
+  @override
   String get templateVitaminTitle => 'Rutinitas Vitamin';
 
   @override

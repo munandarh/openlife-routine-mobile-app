@@ -850,6 +850,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicateTimesError => 'Two reminders cannot be at the same time.';
 
   @override
+  String get testReminderTitle => 'Test reminder';
+
+  @override
+  String get testReminderBody =>
+      'If you can see this, reminders can reach you.';
+
+  @override
+  String get sendTestReminder => 'Send a test reminder';
+
+  @override
+  String get testReminderSent =>
+      'Sent. If nothing appeared, notifications are blocked.';
+
+  @override
   String get templateVitaminTitle => 'Vitamin Routine';
 
   @override

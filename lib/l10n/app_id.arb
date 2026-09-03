@@ -360,10 +360,22 @@
   "templateRoutineMedicineWithMeals": "Bersama makan",
   "templateRoutineMedicineBeforeBed": "Sebelum tidur",
   "timesPerDayCount": "{count, plural, =1{Sekali sehari} other{{count} kali sehari}}",
-  "@timesPerDayCount": {"placeholders": {"count": {"type": "int"}}},
+  "@timesPerDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "timesPerDayLabel": "Berapa kali sehari",
   "reminderTimeNumber": "Jam ke-{number}",
-  "@reminderTimeNumber": {"placeholders": {"number": {"type": "int"}}},
+  "@reminderTimeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "duplicateTimesError": "Dua pengingat tidak boleh di jam yang sama.",
   "testReminderTitle": "Tes pengingat",
   "testReminderBody": "Kalau ini terlihat, pengingat bisa sampai ke Anda.",
@@ -499,14 +511,7 @@
   "checkBatteryOk": "OpenLife dikecualikan dari penghematan baterai.",
   "checkBatteryBad": "Sistem bisa menghentikan pengingat demi menghemat baterai.",
   "fixIt": "Perbaiki",
-  "vendorWarningTitle": "Satu setelan lagi, di HP {brand}",
-  "@vendorWarningTitle": {
-    "placeholders": {
-      "brand": {
-        "type": "String"
-      }
-    }
-  },
+  "vendorWarningTitle": "Satu setelan lagi di HP ini",
   "vendorWarningBody": "HP ini menghentikan aplikasi latar belakang jauh lebih agresif dari Android standar, dan setelan yang mengaturnya tidak bisa dibaca atau diminta aplikasi mana pun. Tiga hal yang perlu diubah:",
   "vendorStepAutostart": "Izinkan autostart, agar pengingat tetap jalan setelah aplikasi ditutup",
   "vendorStepBattery": "Setel penggunaan baterai ke tanpa batasan",

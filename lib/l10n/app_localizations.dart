@@ -2045,13 +2045,13 @@ abstract class AppLocalizations {
   /// No description provided for @vendorWarningTitle.
   ///
   /// In en, this message translates to:
-  /// **'One more setting, on {brand} phones'**
-  String vendorWarningTitle(String brand);
+  /// **'One more setting on this phone'**
+  String get vendorWarningTitle;
 
   /// No description provided for @vendorWarningBody.
   ///
   /// In en, this message translates to:
-  /// **'These phones stop background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:'**
+  /// **'This phone stops background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:'**
   String get vendorWarningBody;
 
   /// No description provided for @vendorStepAutostart.

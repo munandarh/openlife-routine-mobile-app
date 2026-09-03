@@ -47,18 +47,31 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('a Xiaomi phone gets the steps that actually apply', (
+  testWidgets('a restricted phone gets the steps that actually apply', (
     WidgetTester tester,
   ) async {
     mockPower('Xiaomi');
     await openHealth(tester);
 
-    expect(find.textContaining('Xiaomi'), findsOneWidget);
+    expect(find.text('One more setting on this phone'), findsOneWidget);
     expect(find.textContaining('autostart'), findsWidgets);
     expect(find.text('Open autostart settings'), findsOneWidget);
     // The card grew three steps and a second button; on a narrow phone an
     // overflow here would clip the very instructions it exists to give.
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the card never names the phone back at its owner', (
+    WidgetTester tester,
+  ) async {
+    for (final String maker in <String>['Xiaomi', 'Redmi', 'OPPO', 'vivo']) {
+      mockPower(maker);
+      await openHealth(tester);
+
+      // The manufacturer decides whether the card appears; it is not copy.
+      expect(find.textContaining(maker), findsNothing);
+      expect(find.text('One more setting on this phone'), findsOneWidget);
+    }
   });
 
   testWidgets('the vendor card fits the narrowest phone we support', (

@@ -129,7 +129,6 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
                         if (report.needsVendorGuidance) ...<Widget>[
                           const SizedBox(height: AppSpacing.xs),
                           _VendorCard(
-                            brand: report.manufacturer,
                             onOpenAutostart: _health.openAutostartSettings,
                             onOpenSettings: _health.openAppSettings,
                           ),
@@ -300,14 +299,15 @@ class _CheckCard extends StatelessWidget {
 
 /// Shown only on the vendors that keep an autostart permission no API can
 /// read, so the app cannot tick it off — it can only tell the user it exists.
+///
+/// The manufacturer decides whether this card appears but is never named in
+/// it: the phone in the user's hand does not need to be told what it is, and
+/// the steps below are the same wherever the card shows up.
 class _VendorCard extends StatelessWidget {
   const _VendorCard({
-    required this.brand,
     required this.onOpenAutostart,
     required this.onOpenSettings,
   });
-
-  final String brand;
 
   /// Opens the vendor's own autostart list. Worth a button of its own because
   /// that toggle does not exist anywhere in the app's normal settings page,
@@ -319,9 +319,6 @@ class _VendorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final String display = brand.isEmpty
-        ? brand
-        : brand[0].toUpperCase() + brand.substring(1);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -333,7 +330,7 @@ class _VendorCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            l10n.vendorWarningTitle(display),
+            l10n.vendorWarningTitle,
             style: AppTextStyles.cardTitle.copyWith(
               color: context.palette.accentInk,
             ),

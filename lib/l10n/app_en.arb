@@ -360,10 +360,22 @@
   "templateRoutineMedicineWithMeals": "With meals",
   "templateRoutineMedicineBeforeBed": "Before bed",
   "timesPerDayCount": "{count, plural, =1{Once a day} other{{count} times a day}}",
-  "@timesPerDayCount": {"placeholders": {"count": {"type": "int"}}},
+  "@timesPerDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "timesPerDayLabel": "Times a day",
   "reminderTimeNumber": "Time {number}",
-  "@reminderTimeNumber": {"placeholders": {"number": {"type": "int"}}},
+  "@reminderTimeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "duplicateTimesError": "Two reminders cannot be at the same time.",
   "testReminderTitle": "Test reminder",
   "testReminderBody": "If you can see this, reminders can reach you.",
@@ -499,15 +511,8 @@
   "checkBatteryOk": "OpenLife is exempt from battery optimisation.",
   "checkBatteryBad": "The system may stop reminders to save battery.",
   "fixIt": "Fix this",
-  "vendorWarningTitle": "One more setting, on {brand} phones",
-  "@vendorWarningTitle": {
-    "placeholders": {
-      "brand": {
-        "type": "String"
-      }
-    }
-  },
-  "vendorWarningBody": "These phones stop background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:",
+  "vendorWarningTitle": "One more setting on this phone",
+  "vendorWarningBody": "This phone stops background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:",
   "vendorStepAutostart": "Allow autostart, so reminders survive closing the app",
   "vendorStepBattery": "Set battery usage to no restrictions",
   "vendorStepLock": "Lock the app in Recents, so clearing apps does not stop it",

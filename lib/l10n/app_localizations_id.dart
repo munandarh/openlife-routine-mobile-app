@@ -1137,9 +1137,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get fixIt => 'Perbaiki';
 
   @override
-  String vendorWarningTitle(String brand) {
-    return 'Satu setelan lagi, di HP $brand';
-  }
+  String get vendorWarningTitle => 'Satu setelan lagi di HP ini';
 
   @override
   String get vendorWarningBody =>

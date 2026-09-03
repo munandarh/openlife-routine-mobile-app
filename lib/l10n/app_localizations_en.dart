@@ -1141,13 +1141,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fixIt => 'Fix this';
 
   @override
-  String vendorWarningTitle(String brand) {
-    return 'One more setting, on $brand phones';
-  }
+  String get vendorWarningTitle => 'One more setting on this phone';
 
   @override
   String get vendorWarningBody =>
-      'These phones stop background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:';
+      'This phone stops background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:';
 
   @override
   String get vendorStepAutostart =>

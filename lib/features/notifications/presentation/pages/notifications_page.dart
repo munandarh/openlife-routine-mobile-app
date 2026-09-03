@@ -104,12 +104,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     if (upcoming.isEmpty)
                       _EmptyState(l10n: l10n)
                     else
-                      ...upcoming.map(
-                        (RoutineReminderSlot slot) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                          child: _ReminderTile(slot: slot),
-                        ),
-                      ),
+                      ..._grouped(context, l10n, upcoming),
                     const SizedBox(height: AppSpacing.lg),
                     _WhitePillAction(
                       icon: Icons.notifications_active_outlined,
@@ -123,6 +118,66 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
     );
   }
+}
+
+/// Splits the queue into Today / Tomorrow / Later, each under its own label.
+///
+/// A flat list forced every row to repeat the day; the grouping lets a row say
+/// only what is particular to it.
+List<Widget> _grouped(
+  BuildContext context,
+  AppLocalizations l10n,
+  List<RoutineReminderSlot> slots,
+) {
+  final DateTime now = DateTime.now();
+  final DateTime today = DateTime(now.year, now.month, now.day);
+
+  int bucketOf(RoutineReminderSlot slot) {
+    final int days = DateTime(
+      slot.firesAt.year,
+      slot.firesAt.month,
+      slot.firesAt.day,
+    ).difference(today).inDays;
+    return days <= 0 ? 0 : (days == 1 ? 1 : 2);
+  }
+
+  final List<Widget> children = <Widget>[];
+  int? lastBucket;
+
+  for (final RoutineReminderSlot slot in slots) {
+    final int bucket = bucketOf(slot);
+    if (bucket != lastBucket) {
+      children.add(
+        Padding(
+          padding: EdgeInsets.only(
+            left: AppSpacing.xs,
+            top: lastBucket == null ? 0 : AppSpacing.sm,
+            bottom: AppSpacing.sm - 2,
+          ),
+          child: Text(
+            switch (bucket) {
+              0 => l10n.todayTab,
+              1 => l10n.tomorrowLabel,
+              _ => l10n.laterLabel,
+            }.toUpperCase(),
+            style: AppTextStyles.label.copyWith(
+              letterSpacing: 1.1,
+              color: context.palette.textMuted,
+            ),
+          ),
+        ),
+      );
+      lastBucket = bucket;
+    }
+    children.add(
+      Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.sm + 2),
+        child: _ReminderTile(slot: slot),
+      ),
+    );
+  }
+
+  return children;
 }
 
 class _ReminderTile extends StatelessWidget {
@@ -145,11 +200,16 @@ class _ReminderTile extends StatelessWidget {
       fires.day,
     ).difference(DateTime(now.year, now.month, now.day)).inDays;
 
-    return switch (daysAway) {
-      0 => l10n.reminderTodayAt(time),
-      1 => l10n.reminderTomorrowAt(time),
-      _ => '${L10nFormatters.repeatDays(l10n, <int>[slot.weekday])}, $time',
-    };
+    // Under a TODAY heading the word "today" says nothing; what is useful is
+    // how soon. Beyond today the weekday carries it.
+    if (daysAway == 0) {
+      final int minutes = slot.firesAt.difference(now).inMinutes;
+      if (minutes >= 0 && minutes <= 60) {
+        return '${l10n.inMinutes(minutes)} · $time';
+      }
+      return time;
+    }
+    return '${L10nFormatters.repeatDays(l10n, <int>[slot.weekday])} · $time';
   }
 
   @override

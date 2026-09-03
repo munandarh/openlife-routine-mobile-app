@@ -77,7 +77,6 @@ class SettingsPage extends StatelessWidget {
                       _SettingsItemData(
                         icon: Icons.motion_photos_off_outlined,
                         title: l10n.reducedMotionSetting,
-                        subtitle: l10n.reducedMotionDescription,
                         toggleValue: state.reducedMotion,
                         onToggle: (bool value) {
                           context.read<SettingsBloc>().add(
@@ -131,7 +130,6 @@ class SettingsPage extends StatelessWidget {
                       _SettingsItemData(
                         icon: Icons.delete_outline_rounded,
                         title: l10n.resetSetting,
-                        trailing: l10n.resetDestructive,
                         trailingColor: AppColors.danger,
                         onTap: () => _showResetDialog(context),
                       ),
@@ -139,7 +137,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.lg - 2),
                   _SettingsSection(
-                    title: l10n.privacySection,
+                    title: l10n.aboutSection,
                     items: <_SettingsItemData>[
                       _SettingsItemData(
                         icon: Icons.shield_outlined,
@@ -148,7 +146,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       _SettingsItemData(
                         icon: Icons.code_outlined,
-                        title: l10n.aboutOpenSourceSetting,
+                        title: l10n.openSourceSetting,
                         onTap: () => context.push(OpenLifeRoute.about.path),
                       ),
                     ],
@@ -573,13 +571,6 @@ class _SettingsRow extends StatelessWidget {
                     color: titleColor,
                   ),
                 ),
-                if (item.subtitle != null)
-                  Text(
-                    item.subtitle!,
-                    style: AppTextStyles.bodyEmphasis.copyWith(
-                      color: context.palette.textSecondary,
-                    ),
-                  ),
               ],
             ),
           ),
@@ -625,7 +616,6 @@ class _SettingsItemData {
   const _SettingsItemData({
     required this.icon,
     required this.title,
-    this.subtitle,
     this.trailing,
     this.trailingColor,
     this.onTap,
@@ -635,7 +625,6 @@ class _SettingsItemData {
 
   final IconData icon;
   final String title;
-  final String? subtitle;
   final String? trailing;
   final Color? trailingColor;
   final VoidCallback? onTap;

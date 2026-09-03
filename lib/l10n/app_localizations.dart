@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @browseTemplates.
   ///
   /// In en, this message translates to:
-  /// **'Browse Templates'**
+  /// **'Browse templates'**
   String get browseTemplates;
 
   /// No description provided for @yourRoutines.
@@ -1778,18 +1778,6 @@ abstract class AppLocalizations {
   /// **'Current streak'**
   String get currentStreakStat;
 
-  /// No description provided for @reminderTodayAt.
-  ///
-  /// In en, this message translates to:
-  /// **'Today, {time}'**
-  String reminderTodayAt(String time);
-
-  /// No description provided for @reminderTomorrowAt.
-  ///
-  /// In en, this message translates to:
-  /// **'Tomorrow, {time}'**
-  String reminderTomorrowAt(String time);
-
   /// No description provided for @streakDays.
   ///
   /// In en, this message translates to:
@@ -1837,6 +1825,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark {title} as not done'**
   String markNotDoneAction(String title);
+
+  /// No description provided for @startFromTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start from a template'**
+  String get startFromTemplate;
+
+  /// No description provided for @startFromTemplateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm, ready-made habits you can adjust after adding.'**
+  String get startFromTemplateDesc;
+
+  /// No description provided for @daysSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysSuffix;
+
+  /// No description provided for @completionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion'**
+  String get completionLabel;
+
+  /// No description provided for @aboutSection.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutSection;
+
+  /// No description provided for @openSourceSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Open source'**
+  String get openSourceSetting;
+
+  /// No description provided for @tomorrowLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrowLabel;
+
+  /// No description provided for @laterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get laterLabel;
+
+  /// No description provided for @inMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{In 1 minute} other{In {count} minutes}}'**
+  String inMinutes(int count);
 }
 
 class _AppLocalizationsDelegate

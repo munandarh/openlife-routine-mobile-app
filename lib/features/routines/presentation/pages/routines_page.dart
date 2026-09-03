@@ -70,7 +70,7 @@ class _RoutinesView extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.pageMargin,
-                AppSpacing.xl,
+                AppSpacing.md + 2,
                 AppSpacing.pageMargin,
                 120,
               ),
@@ -79,7 +79,7 @@ class _RoutinesView extends StatelessWidget {
                   _DiscoverCard(
                     onBrowse: () => context.push(OpenLifeRoute.templates.path),
                   ),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.lg + 4),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
@@ -119,7 +119,7 @@ class _RoutinesView extends StatelessWidget {
                     ...state.routines.map((Routine routine) {
                       return Padding(
                         padding: const EdgeInsets.only(
-                          bottom: AppSpacing.cardGap,
+                          bottom: AppSpacing.sm + 2,
                         ),
                         child: _RoutineListRow(
                           routine: routine,
@@ -180,12 +180,12 @@ class _DiscoverCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            l10n.discoverRoutines,
+            l10n.startFromTemplate,
             style: AppTextStyles.sectionTitle.copyWith(color: Colors.white),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            l10n.addStructured,
+            l10n.startFromTemplateDesc,
             style: AppTextStyles.body.copyWith(color: AppColors.primarySoft),
           ),
           const SizedBox(height: AppSpacing.md + 1),

@@ -292,7 +292,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add structured, calm habits to your day with a single tap.';
 
   @override
-  String get browseTemplates => 'Browse Templates';
+  String get browseTemplates => 'Browse templates';
 
   @override
   String get yourRoutines => 'Your routines';
@@ -950,16 +950,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentStreakStat => 'Current streak';
 
   @override
-  String reminderTodayAt(String time) {
-    return 'Today, $time';
-  }
-
-  @override
-  String reminderTomorrowAt(String time) {
-    return 'Tomorrow, $time';
-  }
-
-  @override
   String streakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1009,5 +999,41 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String markNotDoneAction(String title) {
     return 'Mark $title as not done';
+  }
+
+  @override
+  String get startFromTemplate => 'Start from a template';
+
+  @override
+  String get startFromTemplateDesc =>
+      'Calm, ready-made habits you can adjust after adding.';
+
+  @override
+  String get daysSuffix => 'days';
+
+  @override
+  String get completionLabel => 'Completion';
+
+  @override
+  String get aboutSection => 'About';
+
+  @override
+  String get openSourceSetting => 'Open source';
+
+  @override
+  String get tomorrowLabel => 'Tomorrow';
+
+  @override
+  String get laterLabel => 'Later';
+
+  @override
+  String inMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'In $count minutes',
+      one: 'In 1 minute',
+    );
+    return '$_temp0';
   }
 }

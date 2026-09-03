@@ -113,7 +113,7 @@
   "browseRoutines": "Lihat rutinitas",
   "discoverRoutines": "Jelajahi Rutinitas",
   "addStructured": "Tambahkan kebiasaan yang tertata dan tenang ke harimu dengan sekali ketuk.",
-  "browseTemplates": "Lihat Template",
+  "browseTemplates": "Lihat template",
   "yourRoutines": "Rutinitasmu",
   "templatesTitle": "Template",
   "addTemplate": "Tambah Template",
@@ -404,22 +404,6 @@
   "yourActivity": "Aktivitasmu",
   "activeRoutinesStat": "Rutinitas aktif",
   "currentStreakStat": "Rentetan saat ini",
-  "reminderTodayAt": "Hari ini, {time}",
-  "@reminderTodayAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "reminderTomorrowAt": "Besok, {time}",
-  "@reminderTomorrowAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
   "streakDays": "{count, plural, other{Rentetan {count} hari}}",
   "@streakDays": {
     "placeholders": {
@@ -460,6 +444,22 @@
     "placeholders": {
       "title": {
         "type": "String"
+      }
+    }
+  },
+  "startFromTemplate": "Mulai dari template",
+  "startFromTemplateDesc": "Kebiasaan tenang siap pakai yang bisa kamu sesuaikan setelah ditambahkan.",
+  "daysSuffix": "hari",
+  "completionLabel": "Penyelesaian",
+  "aboutSection": "Tentang",
+  "openSourceSetting": "Sumber terbuka",
+  "tomorrowLabel": "Besok",
+  "laterLabel": "Nanti",
+  "inMinutes": "{count, plural, other{{count} menit lagi}}",
+  "@inMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
     }
   }

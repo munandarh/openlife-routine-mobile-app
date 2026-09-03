@@ -16,7 +16,6 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_st
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/features/insights/presentation/widgets/weekly_bar_chart.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 class InsightsPage extends StatelessWidget {
@@ -38,7 +37,6 @@ class _InsightsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final AppLocalizations l10n = context.l10n;
 
     return BlocBuilder<InsightsBloc, InsightsState>(
@@ -93,22 +91,21 @@ class _InsightsView extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: _MetricCard(
-                            value:
-                                '${(state.weeklyCompletionRate * 100).round()}%',
+                            value: '${state.totalCompleted}',
+                            suffix: '/${state.totalRoutines}',
                             label: l10n.completedThisWeek,
                             icon: Icons.check_rounded,
                             iconColor: AppColors.primary,
-                            iconBackground: AppColors.primarySoft,
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md - 2),
                         Expanded(
                           child: _MetricCard(
-                            value: l10n.daysLabel(state.streak),
+                            value: '${state.streak}',
+                            suffix: l10n.daysSuffix,
                             label: l10n.bestStreak,
                             icon: Icons.local_fire_department_outlined,
                             iconColor: AppColors.accent,
-                            iconBackground: AppColors.accentSoft,
                           ),
                         ),
                       ],
@@ -135,7 +132,7 @@ class _InsightsView extends StatelessWidget {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                l10n.thisWeeksFlow,
+                                l10n.completionLabel,
                                 style: AppTextStyles.cardTitle,
                               ),
                             ),
@@ -156,16 +153,7 @@ class _InsightsView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  PrimaryButton(
-                    label: l10n.viewHistory,
-                    isSecondary: true,
-                    icon: Icons.history_outlined,
-                    onPressed: () =>
-                        context.push(OpenLifeRoute.insightsHistory.path),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  Text(l10n.focusAreas, style: textTheme.titleLarge),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.md),
                   if (state.mostCompletedRoutine != null) ...<Widget>[
                     _RoutineMetricTile(
                       icon: Icons.emoji_events_outlined,
@@ -188,6 +176,42 @@ class _InsightsView extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.cardGap),
                   ],
+                  // A white pill, not the soft-green secondary: on this screen
+                  // green is reserved for the figures that mean progress.
+                  Material(
+                    color: context.palette.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                      onTap: () =>
+                          context.push(OpenLifeRoute.insightsHistory.path),
+                      child: SizedBox(
+                        height: 46,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Icon(
+                              Icons.history_outlined,
+                              size: 17,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Flexible(
+                              child: Text(
+                                l10n.viewHistory,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.button.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
                   _InsightBanner(
                     icon: _bannerIcon(state),
                     title: _bannerTitle(l10n, state),
@@ -245,14 +269,17 @@ class _MetricCard extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.iconColor,
-    required this.iconBackground,
+    this.suffix,
   });
 
   final String value;
   final String label;
+
+  /// Small trailing unit ("days", "/11") kept out of the headline number so
+  /// the figure stays the thing you read first.
+  final String? suffix;
   final IconData icon;
   final Color iconColor;
-  final Color iconBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -272,29 +299,47 @@ class _MetricCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              color: iconBackground,
-              borderRadius: BorderRadius.circular(AppRadius.small),
-            ),
-            child: Icon(icon, size: 17, color: iconColor),
+          Row(
+            children: <Widget>[
+              Icon(icon, size: 16, color: iconColor),
+              const SizedBox(width: AppSpacing.sm - 1),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyEmphasis.copyWith(
+                    fontSize: 11.5,
+                    color: context.palette.textSecondary,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: AppSpacing.md - 1),
+          const SizedBox(height: AppSpacing.sm - 1),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: AppTextStyles.pageTitle.copyWith(fontSize: 26),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: AppTextStyles.bodyEmphasis.copyWith(
-              color: context.palette.textSecondary,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  value,
+                  style: AppTextStyles.pageTitle.copyWith(fontSize: 26),
+                ),
+                if (suffix != null) ...<Widget>[
+                  const SizedBox(width: 3),
+                  Text(
+                    suffix!,
+                    style: AppTextStyles.bodyEmphasis.copyWith(
+                      fontSize: 13,
+                      color: context.palette.textMuted,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

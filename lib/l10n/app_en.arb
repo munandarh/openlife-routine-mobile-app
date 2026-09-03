@@ -113,7 +113,7 @@
   "browseRoutines": "Browse routines",
   "discoverRoutines": "Discover Routines",
   "addStructured": "Add structured, calm habits to your day with a single tap.",
-  "browseTemplates": "Browse Templates",
+  "browseTemplates": "Browse templates",
   "yourRoutines": "Your routines",
   "templatesTitle": "Templates",
   "addTemplate": "Add Template",
@@ -404,22 +404,6 @@
   "yourActivity": "Your activity",
   "activeRoutinesStat": "Active routines",
   "currentStreakStat": "Current streak",
-  "reminderTodayAt": "Today, {time}",
-  "@reminderTodayAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "reminderTomorrowAt": "Tomorrow, {time}",
-  "@reminderTomorrowAt": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
   "streakDays": "{count, plural, =1{1-day streak} other{{count}-day streak}}",
   "@streakDays": {
     "placeholders": {
@@ -460,6 +444,22 @@
     "placeholders": {
       "title": {
         "type": "String"
+      }
+    }
+  },
+  "startFromTemplate": "Start from a template",
+  "startFromTemplateDesc": "Calm, ready-made habits you can adjust after adding.",
+  "daysSuffix": "days",
+  "completionLabel": "Completion",
+  "aboutSection": "About",
+  "openSourceSetting": "Open source",
+  "tomorrowLabel": "Tomorrow",
+  "laterLabel": "Later",
+  "inMinutes": "{count, plural, =1{In 1 minute} other{In {count} minutes}}",
+  "@inMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
     }
   }

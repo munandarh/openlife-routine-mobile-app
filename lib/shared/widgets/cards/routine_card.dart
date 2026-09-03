@@ -239,7 +239,7 @@ class _CheckCircle extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: isDone ? const Color(0xFFE0F5E4) : Colors.transparent,
+            color: isDone ? AppColors.primarySoft : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.pill),
             border: Border.all(
               color: isDone ? Colors.transparent : context.palette.border,

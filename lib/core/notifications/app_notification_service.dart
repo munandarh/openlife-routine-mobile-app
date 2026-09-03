@@ -120,6 +120,32 @@ class AppNotificationService {
     )?.routineId;
   }
 
+  /// Whether the OS will currently deliver our reminders.
+  ///
+  /// Null when the platform cannot answer (the stack is disabled, or the
+  /// implementation is not resolvable) — the caller shows nothing rather than
+  /// guessing, because claiming reminders are allowed when they are not is the
+  /// worst answer this screen can give.
+  Future<bool?> areNotificationsEnabled() async {
+    if (_disabled) {
+      return null;
+    }
+
+    final AndroidFlutterLocalNotificationsPlugin? android = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    if (android != null) {
+      return android.areNotificationsEnabled();
+    }
+    return _plugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.checkPermissions()
+        .then((NotificationsEnabledOptions? options) => options?.isEnabled);
+  }
+
   Future<void> requestPermissions() async {
     if (_disabled) {
       return;

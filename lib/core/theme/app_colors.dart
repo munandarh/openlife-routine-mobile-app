@@ -45,6 +45,10 @@ final class AppColors {
   static const Color sleepInk = Color(0xFF4C4470);
   static const Color moveTint = Color(0xFFE3EADF);
   static const Color moveInk = Color(0xFF45603A);
+  static const Color medsTint = Color(0xFFF6DEDE);
+  static const Color medsInk = Color(0xFF8E4040);
+  static const Color calmTint = Color(0xFFEFE9E0);
+  static const Color calmInk = Color(0xFF6B5B45);
 
   /// Daily-progress hero panel. Light in the light theme, a deep desaturated
   /// green in the dark one — a big pastel panel is harsh on a dark screen, and

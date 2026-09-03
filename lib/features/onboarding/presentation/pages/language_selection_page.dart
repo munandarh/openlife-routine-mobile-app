@@ -206,7 +206,7 @@ class _LanguageCard extends StatelessWidget {
           color: isSelected ? AppColors.primary : context.palette.border,
           width: isSelected ? 1.5 : 1,
         ),
-        boxShadow: isSelected ? AppShadows.soft : null,
+        boxShadow: isSelected ? AppShadows.card : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -226,7 +226,9 @@ class _LanguageCard extends StatelessWidget {
                   height: 44,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? context.palette.surface : context.palette.surfaceSoft,
+                    color: isSelected
+                        ? context.palette.surface
+                        : context.palette.surfaceSoft,
                     borderRadius: BorderRadius.circular(AppRadius.small),
                   ),
                   child: Text(

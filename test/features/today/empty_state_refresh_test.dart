@@ -11,6 +11,7 @@ import 'package:openlife_routine/features/onboarding/domain/repositories/onboard
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_empty_page.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 import '../../support/fake_settings_repository.dart';
 
@@ -66,6 +67,42 @@ void main() {
       find.byType(TodayEmptyPage),
     );
     expect(empty.onCreateRoutine, isNotNull);
+  });
+
+  testWidgets('the empty state still offers Profile and Notifications', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      OpenLifeApp(
+        dependencies: AppDependencies(
+          databaseConfig: const LocalDatabaseConfig.recommended(),
+          notificationConfig: const NotificationStackConfig.recommended(),
+          onboardingRepository: _FakeOnboardingRepository(),
+          hasCompletedOnboarding: true,
+          appDatabase: appDatabase,
+          routineRepository: DriftRoutineRepository(
+            RoutineLocalDataSource(appDatabase),
+          ),
+          notificationService: AppNotificationService.noop(),
+          initialNotificationRoutineId: null,
+          settingsRepository: FakeSettingsRepository(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // The empty state used to replace the whole screen, app bar included, so
+    // a new user could not reach either destination at all.
+    expect(find.byType(OpenLifeAppBar), findsOneWidget);
+    expect(find.byIcon(Icons.person_outline), findsOneWidget);
+    expect(find.byIcon(Icons.notifications_none_rounded), findsOneWidget);
   });
 }
 

@@ -313,9 +313,7 @@ class _CircleIconButton extends StatelessWidget {
       message: tooltip,
       child: Material(
         color: context.palette.surface,
-        shape: CircleBorder(
-          side: BorderSide(color: context.palette.border),
-        ),
+        shape: CircleBorder(side: BorderSide(color: context.palette.border)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           customBorder: const CircleBorder(),
@@ -347,7 +345,7 @@ class _StepCounter extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        border: Border.all(color: context.palette.border),
+        boxShadow: AppShadows.card,
       ),
       child: Text(
         context.l10n.onboardingStepCounter(current, total),
@@ -370,6 +368,7 @@ class _OnboardingSlide extends StatelessWidget {
   final String title;
   final String description;
   final Widget hero;
+
   /// Optional: the first slide carries no footer now that the language
   /// question has its own page.
   final Widget? footer;
@@ -433,8 +432,7 @@ class _HeroCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
-        boxShadow: AppShadows.soft,
+        boxShadow: AppShadows.card,
       ),
       child: OpenLifeRiveView.illustrationFill(
         illustrationPath: illustration.path,
@@ -468,7 +466,9 @@ class _BottomBar extends StatelessWidget {
       children: <Widget>[
         TextButton(
           onPressed: isBusy ? null : onSecondaryPressed,
-          style: TextButton.styleFrom(foregroundColor: context.palette.textSecondary),
+          style: TextButton.styleFrom(
+            foregroundColor: context.palette.textSecondary,
+          ),
           child: Text(isLastPage ? l10n.backButton : l10n.skipButton),
         ),
         const Spacer(),
@@ -535,10 +535,10 @@ class _NextButton extends StatelessWidget {
               Container(
                 width: 56,
                 height: 56,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  boxShadow: AppShadows.floating,
+                  boxShadow: AppShadows.lifted,
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -595,9 +595,9 @@ class _StarterTemplatePicker extends StatelessWidget {
           children: <Widget>[
             Text(
               l10n.pickStarter,
-              style: Theme.of(
-                context,
-              ).textTheme.labelLarge?.copyWith(color: context.palette.textSecondary),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: context.palette.textSecondary,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             Wrap(
@@ -621,9 +621,9 @@ class _StarterTemplatePicker extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             Text(
               l10n.orStartEmpty,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: context.palette.textSecondary),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: context.palette.textSecondary,
+              ),
             ),
           ],
         );
@@ -673,7 +673,7 @@ class _SelectableChip extends StatelessWidget {
                 Container(
                   width: 7,
                   height: 7,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
                   ),
@@ -723,9 +723,9 @@ class _InfoPanel extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             message,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: context.palette.textSecondary),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: context.palette.textSecondary,
+            ),
           ),
         ],
       ),

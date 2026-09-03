@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
@@ -71,13 +72,7 @@ class _ProfileView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: context.palette.surface,
                       shape: BoxShape.circle,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: AppColors.textPrimary.withValues(alpha: 0.08),
-                          blurRadius: 22,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
+                      boxShadow: AppShadows.lifted,
                     ),
                     child: const Icon(
                       Icons.person_outline,
@@ -183,13 +178,7 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.07),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

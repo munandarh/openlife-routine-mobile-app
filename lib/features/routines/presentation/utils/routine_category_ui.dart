@@ -33,26 +33,26 @@ final class RoutineCategoryUi {
 
   static Color background(RoutineCategory category) {
     return switch (category) {
-      RoutineCategory.meal => const Color(0xFFFFF1C8),
-      RoutineCategory.water => const Color(0xFFDDEBF5),
-      RoutineCategory.vitamin => const Color(0xFFFFF1C8),
-      RoutineCategory.medicine => const Color(0xFFFFE0DF),
-      RoutineCategory.sleep => const Color(0xFFDDEBF5),
-      RoutineCategory.exercise => const Color(0xFFDDEBF5),
-      RoutineCategory.breakTime => AppColors.surfaceSoft,
+      RoutineCategory.meal => AppColors.mealTint,
+      RoutineCategory.water => AppColors.waterTint,
+      RoutineCategory.vitamin => AppColors.mealTint,
+      RoutineCategory.medicine => AppColors.medsTint,
+      RoutineCategory.sleep => AppColors.sleepTint,
+      RoutineCategory.exercise => AppColors.moveTint,
+      RoutineCategory.breakTime => AppColors.calmTint,
       RoutineCategory.custom => AppColors.primarySoft,
     };
   }
 
   static Color foreground(RoutineCategory category) {
     return switch (category) {
-      RoutineCategory.meal => AppColors.warning,
-      RoutineCategory.water => AppColors.secondary,
-      RoutineCategory.vitamin => AppColors.warning,
-      RoutineCategory.medicine => AppColors.danger,
-      RoutineCategory.sleep => AppColors.secondary,
-      RoutineCategory.exercise => AppColors.secondary,
-      RoutineCategory.breakTime => AppColors.primary,
+      RoutineCategory.meal => AppColors.mealInk,
+      RoutineCategory.water => AppColors.waterInk,
+      RoutineCategory.vitamin => AppColors.mealInk,
+      RoutineCategory.medicine => AppColors.medsInk,
+      RoutineCategory.sleep => AppColors.sleepInk,
+      RoutineCategory.exercise => AppColors.moveInk,
+      RoutineCategory.breakTime => AppColors.calmInk,
       RoutineCategory.custom => AppColors.primary,
     };
   }

@@ -5,6 +5,7 @@ import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
@@ -31,13 +32,7 @@ class OpenLifeBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.12),
-            blurRadius: 30,
-            offset: const Offset(0, 12),
-          ),
-        ],
+        boxShadow: AppShadows.lifted,
       ),
       child: Row(
         children: OpenLifeRoute.bottomNavRoutes.map((OpenLifeRoute route) {

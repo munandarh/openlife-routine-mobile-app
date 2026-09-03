@@ -25,8 +25,32 @@ final ButtonStyle _dialogButtonStyle = FilledButton.styleFrom(
   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
 );
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  /// Null until the platform answers, and stays null if it cannot. The row
+  /// then shows no value rather than claiming reminders are allowed.
+  bool? _alertsAllowed;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshAlertStatus();
+  }
+
+  Future<void> _refreshAlertStatus() async {
+    final bool? allowed = await AppScope.read(
+      context,
+    ).notificationService.areNotificationsEnabled();
+    if (mounted) {
+      setState(() => _alertsAllowed = allowed);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +117,14 @@ class SettingsPage extends StatelessWidget {
                       _SettingsItemData(
                         icon: Icons.notifications_active_outlined,
                         title: l10n.routineAlerts,
+                        trailing: switch (_alertsAllowed) {
+                          true => l10n.alertsAllowed,
+                          false => l10n.alertsBlocked,
+                          null => null,
+                        },
+                        trailingColor: _alertsAllowed == false
+                            ? AppColors.danger
+                            : null,
                         onTap: () async {
                           final ScaffoldMessengerState messenger =
                               ScaffoldMessenger.of(context);
@@ -107,6 +139,7 @@ class SettingsPage extends StatelessWidget {
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
+                          await _refreshAlertStatus();
                         },
                       ),
                     ],

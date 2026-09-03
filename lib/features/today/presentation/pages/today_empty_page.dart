@@ -14,9 +14,9 @@ class TodayEmptyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.palette.background,
-      body: SafeArea(
+    return ColoredBox(
+      color: context.palette.background,
+      child: SafeArea(
         // Scrollable so the card stays reachable at large OS text scales
         // instead of overflowing a centred, unscrollable column.
         child: SingleChildScrollView(

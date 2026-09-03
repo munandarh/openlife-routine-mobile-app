@@ -7,6 +7,7 @@ import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
@@ -63,22 +64,22 @@ class _TemplatesView extends StatelessWidget {
 
   Color _iconBgForKey(String iconKey) {
     return switch (iconKey) {
-      'wb_sunny' => const Color(0xFFFFF1C8),
-      'water_drop' => const Color(0xFFDDEBF5),
-      'medication' => const Color(0xFFFFF1C8),
-      'bedtime' => const Color(0xFFDDEBF5),
-      'self_improvement' => const Color(0xFFF0EAE2),
+      'wb_sunny' => AppColors.mealTint,
+      'water_drop' => AppColors.waterTint,
+      'medication' => AppColors.medsTint,
+      'bedtime' => AppColors.sleepTint,
+      'self_improvement' => AppColors.calmTint,
       _ => AppColors.primarySoft,
     };
   }
 
   Color _iconColorForKey(String iconKey) {
     return switch (iconKey) {
-      'wb_sunny' => AppColors.warning,
-      'water_drop' => AppColors.secondary,
-      'medication' => AppColors.warning,
-      'bedtime' => AppColors.secondary,
-      'self_improvement' => AppColors.primary,
+      'wb_sunny' => AppColors.mealInk,
+      'water_drop' => AppColors.waterInk,
+      'medication' => AppColors.medsInk,
+      'bedtime' => AppColors.sleepInk,
+      'self_improvement' => AppColors.calmInk,
       _ => AppColors.primary,
     };
   }
@@ -226,13 +227,7 @@ class _TemplateCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.07),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

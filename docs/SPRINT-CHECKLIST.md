@@ -23,7 +23,7 @@
 |---|---|
 | App version | 1.1.0+2 |
 | `flutter analyze` | 0 issues |
-| `flutter test` | **408 passing** |
+| `flutter test` | **411 passing** |
 | Database schema | v4 |
 | Localized strings | 275 keys × EN/ID |
 | Illustrations wired | 10 PNG / 10 MVP |

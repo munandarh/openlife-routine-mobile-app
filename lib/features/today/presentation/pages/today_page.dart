@@ -10,6 +10,7 @@ import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
@@ -121,7 +122,16 @@ class _TodayViewState extends State<_TodayView> {
             }
 
             if (!state.hasRoutines) {
-              return TodayEmptyPage(onCreateRoutine: _openNewRoutine);
+              // The app bar stays: without it the empty state is the one
+              // screen where Profile and Notifications cannot be reached.
+              return Column(
+                children: <Widget>[
+                  OpenLifeAppBar(onAddRoutine: _openNewRoutine),
+                  Expanded(
+                    child: TodayEmptyPage(onCreateRoutine: _openNewRoutine),
+                  ),
+                ],
+              );
             }
 
             final List<WeekDateItem> weekItems = _buildWeekItems(
@@ -321,13 +331,7 @@ class _StreakPill extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -377,13 +381,7 @@ class _NextRoutineCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.26),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: AppShadows.primary,
       ),
       child: Row(
         children: <Widget>[
@@ -812,11 +810,11 @@ class _CelebrationOverlayState extends State<_CelebrationOverlay>
 
   List<Widget> _buildSparkles() {
     const List<Color> colors = <Color>[
-      AppColors.success,
-      AppColors.warning,
-      AppColors.secondary,
       AppColors.primary,
-      AppColors.danger,
+      AppColors.accent,
+      AppColors.mealInk,
+      AppColors.waterInk,
+      AppColors.sleepInk,
     ];
 
     return List<Widget>.generate(5, (int i) {

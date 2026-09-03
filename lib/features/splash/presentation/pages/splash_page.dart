@@ -5,6 +5,7 @@ import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 
@@ -70,7 +71,7 @@ class _SplashPageState extends State<SplashPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: <Color>[Color(0xFFF8F4EE), Color(0xFFF1EADF)],
+            colors: <Color>[AppColors.background, AppColors.surfaceSoft],
           ),
         ),
         child: SafeArea(
@@ -97,18 +98,9 @@ class _SplashPageState extends State<SplashPage> {
                       width: 112,
                       height: 112,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                          AppRadius.extraLarge,
-                        ),
-                        border: Border.all(color: context.palette.border),
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            color: Color(0x14000000),
-                            blurRadius: 30,
-                            offset: Offset(0, 16),
-                          ),
-                        ],
+                        color: context.palette.surface,
+                        borderRadius: BorderRadius.circular(AppRadius.large),
+                        boxShadow: AppShadows.lifted,
                       ),
                       child: const Icon(
                         Icons.spa_outlined,

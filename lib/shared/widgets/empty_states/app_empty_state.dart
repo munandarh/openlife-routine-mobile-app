@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
@@ -63,7 +65,6 @@ class _AppEmptyStateState extends State<AppEmptyState>
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -71,11 +72,11 @@ class _AppEmptyStateState extends State<AppEmptyState>
         position: _slideAnimation,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-            border: Border.all(color: context.palette.border),
+            color: context.palette.surface,
+            borderRadius: BorderRadius.circular(AppRadius.large),
+            boxShadow: AppShadows.card,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -90,18 +91,18 @@ class _AppEmptyStateState extends State<AppEmptyState>
               const SizedBox(height: AppSpacing.lg),
               Text(
                 widget.title,
-                style: textTheme.titleLarge,
+                style: AppTextStyles.sectionTitle,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.xs + 1),
               Text(
                 widget.description,
-                style: textTheme.bodyLarge?.copyWith(
+                style: AppTextStyles.body.copyWith(
                   color: context.palette.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
                 label: widget.buttonLabel,
                 onPressed: widget.onPressed,
@@ -149,11 +150,14 @@ class _PulsingIconState extends State<_PulsingIcon>
       builder: (BuildContext context, Widget? child) {
         return Transform.scale(
           scale: 1.0 + (_pulseController.value * 0.05),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: AppColors.primarySoft,
-            foregroundColor: AppColors.primary,
-            child: Icon(widget.icon, size: 28),
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+            ),
+            child: Icon(widget.icon, size: 27, color: AppColors.primary),
           ),
         );
       },

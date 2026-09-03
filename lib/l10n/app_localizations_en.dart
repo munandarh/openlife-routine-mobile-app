@@ -1036,4 +1036,10 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get alertsAllowed => 'Allowed';
+
+  @override
+  String get alertsBlocked => 'Blocked';
 }

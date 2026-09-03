@@ -9,6 +9,17 @@ import 'package:openlife_routine/features/today/presentation/pages/today_empty_p
 import '../../support/localized_app.dart';
 
 void main() {
+  /// The default 800x600 test window is not a phone: content that fits a real
+  /// screen scrolls off the bottom of it, and taps then miss.
+  void usePhone(WidgetTester tester) {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  }
+
   group('SplashPage', () {
     testWidgets('renders splash content and advances', (
       WidgetTester tester,
@@ -35,6 +46,7 @@ void main() {
 
   group('NotificationPermissionPage', () {
     testWidgets('invokes allow callback', (WidgetTester tester) async {
+      usePhone(tester);
       var allowed = false;
 
       await tester.pumpWidget(
@@ -116,6 +128,7 @@ void main() {
     testWidgets('language selection renders Indonesian copy', (
       WidgetTester tester,
     ) async {
+      usePhone(tester);
       await tester.pumpWidget(
         localizedApp(
           const LanguageSelectionPage(),
@@ -130,6 +143,7 @@ void main() {
     testWidgets('today empty state renders Indonesian copy', (
       WidgetTester tester,
     ) async {
+      usePhone(tester);
       await tester.pumpWidget(
         localizedApp(
           const TodayEmptyPage(),

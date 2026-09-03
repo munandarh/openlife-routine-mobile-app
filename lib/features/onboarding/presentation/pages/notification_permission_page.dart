@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
+import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
@@ -92,16 +93,14 @@ class _NotificationPermissionPageState
                       width: 140,
                       height: 140,
                       decoration: BoxDecoration(
-                        color: AppColors.accentSoft,
-                        borderRadius: BorderRadius.circular(
-                          AppRadius.extraLarge,
-                        ),
-                        border: Border.all(color: context.palette.border),
+                        color: AppColors.primarySoft,
+                        borderRadius: BorderRadius.circular(AppRadius.large),
+                        boxShadow: AppShadows.card,
                       ),
                       child: const Icon(
                         Icons.notifications_active_outlined,
                         size: 64,
-                        color: AppColors.secondary,
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -175,7 +174,7 @@ class _BrandPill extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.pill),
-        border: Border.all(color: context.palette.border),
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -213,11 +212,11 @@ class _FeatureChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         children: <Widget>[
-          Icon(icon, size: 18, color: AppColors.secondary),
+          Icon(icon, size: 18, color: AppColors.primary),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(

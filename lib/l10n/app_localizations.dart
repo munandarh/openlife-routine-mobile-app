@@ -1879,6 +1879,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{In 1 minute} other{In {count} minutes}}'**
   String inMinutes(int count);
+
+  /// No description provided for @alertsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get alertsAllowed;
+
+  /// No description provided for @alertsBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get alertsBlocked;
 }
 
 class _AppLocalizationsDelegate

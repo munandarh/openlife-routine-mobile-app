@@ -41,7 +41,7 @@ class WeekDateSelector extends StatelessWidget {
 
         return Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+            padding: const EdgeInsets.symmetric(horizontal: 2.5),
             child: GestureDetector(
               onTap: onSelected == null ? null : () => onSelected!(index),
               behavior: HitTestBehavior.opaque,
@@ -50,15 +50,24 @@ class WeekDateSelector extends StatelessWidget {
                 curve: Curves.easeOutCubic,
                 // A floor rather than a fixed height, so the column still fits
                 // when the OS text scale grows the labels.
-                constraints: BoxConstraints(
-                  minHeight: isSelected ? 60 : 44,
-                ),
+                constraints: const BoxConstraints(minHeight: 52),
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                // Every day is a chip, not just today: a bare column of text
+                // beside one filled pill reads as a broken row.
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : Colors.transparent,
-                  borderRadius: isSelected
-                      ? BorderRadius.circular(AppRadius.extraLarge)
-                      : BorderRadius.circular(AppRadius.pill),
+                  color: isSelected
+                      ? AppColors.primary
+                      : context.palette.surface,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
+                  boxShadow: isSelected
+                      ? <BoxShadow>[
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.28),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -69,8 +78,8 @@ class WeekDateSelector extends StatelessWidget {
                       curve: Curves.easeOutCubic,
                       style: AppTextStyles.label.copyWith(
                         color: isSelected
-                            ? Colors.white
-                            : context.palette.textSecondary,
+                            ? AppColors.primarySoft
+                            : context.palette.textMuted,
                       ),
                       child: Text(item.weekday),
                     ),
@@ -81,10 +90,10 @@ class WeekDateSelector extends StatelessWidget {
                       style: AppTextStyles.label.copyWith(
                         color: isSelected
                             ? Colors.white
-                            : context.palette.textPrimary,
+                            : context.palette.textSecondary,
                         fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w600,
+                            ? FontWeight.w800
+                            : FontWeight.w700,
                       ),
                       child: Text(item.dayNumber),
                     ),

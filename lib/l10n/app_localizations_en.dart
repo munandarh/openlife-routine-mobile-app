@@ -986,4 +986,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lastSevenDays => 'Last 7 days';
+
+  @override
+  String get statusUpcoming => 'Upcoming';
+
+  @override
+  String routinesLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count left',
+      one: '1 left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String markDoneAction(String title) {
+    return 'Mark $title as done';
+  }
+
+  @override
+  String markNotDoneAction(String title) {
+    return 'Mark $title as not done';
+  }
 }

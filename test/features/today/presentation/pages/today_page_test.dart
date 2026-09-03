@@ -79,6 +79,7 @@ void main() {
   testWidgets('today page shows daily progress with routines', (
     WidgetTester tester,
   ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -95,11 +96,13 @@ void main() {
     expect(find.text('done'), findsOneWidget);
     expect(find.text('Daily routine'), findsOneWidget);
     expect(find.text('Breakfast'), findsOneWidget);
+  handle.dispose();
   });
 
   testWidgets('marking routine done updates progress', (
     WidgetTester tester,
   ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -111,16 +114,20 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap the check circle.
-    await tester.tap(find.byIcon(Icons.circle_outlined));
+    // The open circle is drawn as a border, not an icon; its accessible
+    // name is the stable handle.
+    await tester.tap(find.bySemanticsLabel(RegExp('Mark .* as done')));
     await tester.pumpAndSettle();
 
     // Should now show done icon.
     expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+  handle.dispose();
   });
 
   testWidgets('daily complete celebration appears when all done', (
     WidgetTester tester,
   ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -132,7 +139,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Complete the only routine.
-    await tester.tap(find.byIcon(Icons.circle_outlined));
+    // The open circle is drawn as a border, not an icon; its accessible
+    // name is the stable handle.
+    await tester.tap(find.bySemanticsLabel(RegExp('Mark .* as done')));
     await tester.pumpAndSettle();
 
     // Celebration overlay should be visible.
@@ -141,11 +150,13 @@ void main() {
     // The PNG illustration (from AssetVectors) should be rendered
     // instead of the icon fallback.
     expect(find.byIcon(Icons.celebration_outlined), findsNothing);
+  handle.dispose();
   });
 
   testWidgets('celebration shows the PNG illustration', (
     WidgetTester tester,
   ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -157,7 +168,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Complete the only routine.
-    await tester.tap(find.byIcon(Icons.circle_outlined));
+    // The open circle is drawn as a border, not an icon; its accessible
+    // name is the stable handle.
+    await tester.tap(find.bySemanticsLabel(RegExp('Mark .* as done')));
     await tester.pumpAndSettle();
 
     // The celebration overlay is visible.
@@ -165,6 +178,7 @@ void main() {
     // Image widget is rendered with the daily celebration asset.
     final Finder imageFinder = find.byType(Image);
     expect(imageFinder, findsWidgets);
+  handle.dispose();
   });
 
   testWidgets('celebration can be dismissed', (WidgetTester tester) async {
@@ -179,7 +193,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Complete the only routine.
-    await tester.tap(find.byIcon(Icons.circle_outlined));
+    // The open circle is drawn as a border, not an icon; its accessible
+    // name is the stable handle.
+    await tester.tap(find.bySemanticsLabel(RegExp('Mark .* as done')));
     await tester.pumpAndSettle();
 
     // Dismiss celebration.

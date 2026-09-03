@@ -437,5 +437,30 @@
       }
     }
   },
-  "lastSevenDays": "7 hari terakhir"
+  "lastSevenDays": "7 hari terakhir",
+  "statusUpcoming": "Akan datang",
+  "routinesLeft": "{count, plural, other{{count} tersisa}}",
+  "@routinesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markDoneAction": "Tandai {title} selesai",
+  "@markDoneAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "markNotDoneAction": "Tandai {title} belum selesai",
+  "@markNotDoneAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

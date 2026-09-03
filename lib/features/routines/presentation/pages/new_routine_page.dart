@@ -9,6 +9,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
@@ -53,6 +54,53 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
   Set<int> _repeatDays = <int>{1, 2, 3};
   bool _seededFromExisting = false;
   int _snoozeMinutes = 10;
+
+  /// Snooze used to be a slider; a slider cannot share a row with the time
+  /// field and was fiddly for values that are only ever multiples of five.
+  Future<void> _pickSnooze() async {
+    final AppLocalizations l10n = context.l10n;
+    final int? picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: context.palette.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.large),
+        ),
+      ),
+      builder: (BuildContext sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  l10n.snoozeDuration,
+                  style: AppTextStyles.sectionTitle,
+                ),
+              ),
+              for (final int minutes in <int>[5, 10, 15, 20, 30, 45, 60])
+                ListTile(
+                  title: Text(l10n.minutesLabel(minutes)),
+                  trailing: minutes == _snoozeMinutes
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: AppColors.primary,
+                        )
+                      : null,
+                  onTap: () => Navigator.pop(sheetContext, minutes),
+                ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ),
+        );
+      },
+    );
+    if (picked != null && mounted) {
+      setState(() => _snoozeMinutes = picked);
+    }
+  }
+
   bool _isEnabled = true;
 
   /// Null means "use the category default icon".
@@ -120,34 +168,31 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    IconButton(
-                      onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
+                    _CircleClose(
                       tooltip: l10n.closeAction,
-                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () =>
+                          context.popOrGo(OpenLifeRoute.today.path),
                     ),
+                    const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
                         isEditing ? l10n.editRoutine : l10n.newRoutine,
-                        textAlign: TextAlign.center,
-                        style: textTheme.headlineMedium?.copyWith(
-                          color: AppColors.primary,
+                        style: AppTextStyles.sectionTitle.copyWith(
+                          fontSize: 19,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.routineName, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.lg),
+                _FieldLabel(l10n.routineName),
                 TextField(
                   controller: _nameController,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(hintText: l10n.routineNameHint),
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.categoryLabel, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.lg),
+                _FieldLabel(l10n.categoryLabel),
                 _CategoryGrid(
                   selectedCategory: _selectedCategory,
                   onSelected: (RoutineCategory category) {
@@ -156,9 +201,8 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     });
                   },
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.iconLabel, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.lg),
+                _FieldLabel(l10n.iconLabel),
                 _IconPicker(
                   category: _selectedCategory,
                   selectedIconKey: _iconKey,
@@ -168,41 +212,56 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                     });
                   },
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.timeLabel, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
-                InkWell(
-                  borderRadius: BorderRadius.circular(AppRadius.large),
-                  onTap: () async {
-                    final TimeOfDay? picked = await showTimePicker(
-                      context: context,
-                      initialTime: _selectedTime,
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        _selectedTime = picked;
-                      });
-                    }
-                  },
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      suffixIcon: Icon(Icons.schedule_outlined),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          _FieldLabel(l10n.timeLabel),
+                          _ValueField(
+                            value: L10nFormatters.timeLabel(
+                              context,
+                              _selectedTime,
+                            ),
+                            trailing: Icons.schedule_outlined,
+                            onTap: () async {
+                              final TimeOfDay? picked = await showTimePicker(
+                                context: context,
+                                initialTime: _selectedTime,
+                              );
+                              if (picked != null) {
+                                setState(() => _selectedTime = picked);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Text(
-                      L10nFormatters.timeLabel(context, _selectedTime),
+                    const SizedBox(width: AppSpacing.md - 2),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          _FieldLabel(l10n.snoozeDuration),
+                          _ValueField(
+                            value: l10n.minutesLabel(_snoozeMinutes),
+                            trailing: Icons.chevron_right_rounded,
+                            onTap: _pickSnooze,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.repeatLabel, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(AppRadius.large),
-                    border: Border.all(color: context.palette.border),
-                  ),
+                const SizedBox(height: AppSpacing.lg),
+                _FieldLabel(l10n.repeatLabel),
+                // No wrapping card: the chips are white, so a white container
+                // behind them swallowed every unselected day.
+                Padding(
+                  padding: EdgeInsets.zero,
                   // Each day flexes to a seventh of the row. Fixed-width
                   // chips overflowed a 360dp screen by 20px, which collapsed
                   // the gaps and clipped Sunday.
@@ -247,33 +306,6 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   decoration: InputDecoration(hintText: l10n.notesHint),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.snoozeDuration, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Slider(
-                        value: _snoozeMinutes.toDouble(),
-                        min: 5,
-                        max: 60,
-                        divisions: 11,
-                        label: l10n.minutesLabel(_snoozeMinutes),
-                        onChanged: (double value) {
-                          setState(() {
-                            _snoozeMinutes = value.round();
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 60,
-                      child: Text(
-                        l10n.minutesShort(_snoozeMinutes),
-                        style: textTheme.titleMedium,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: AppSpacing.xxl),
                 // PRD 8.3 lists Active as a routine field, and 13.1 requires
                 // enable/disable. Without it the only way to stop a reminder
@@ -391,8 +423,9 @@ class _CategoryGrid extends StatelessWidget {
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
-      crossAxisSpacing: AppSpacing.md,
-      mainAxisSpacing: AppSpacing.md,
+      crossAxisSpacing: AppSpacing.sm,
+      mainAxisSpacing: AppSpacing.sm,
+      childAspectRatio: 1.55,
       physics: const NeverScrollableScrollPhysics(),
       children: RoutineCategory.values.map((RoutineCategory category) {
         return _CategoryTile(
@@ -432,37 +465,32 @@ class _CategoryTile extends StatelessWidget {
       selected: selected,
       label: label,
       child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.large),
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         onTap: onTap,
         child: Ink(
+          // The tile wears its own category tint, so the picker speaks the
+          // same colour language as the routine cards it will produce.
           decoration: BoxDecoration(
-            color: selected
-                ? AppColors.primarySoft
-                : context.palette.surface,
-            borderRadius: BorderRadius.circular(AppRadius.large),
+            color: background,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(
               color: selected ? AppColors.primary : Colors.transparent,
-              width: 2,
+              width: 2.5,
             ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              CircleAvatar(
-                backgroundColor: background,
-                foregroundColor: foreground,
-                child: Icon(icon),
-              ),
-              const SizedBox(height: AppSpacing.sm),
+              Icon(icon, size: 20, color: foreground),
+              const SizedBox(height: AppSpacing.xs + 2),
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: selected
-                        ? AppColors.primary
-                        : context.palette.textPrimary,
+                  style: AppTextStyles.label.copyWith(
+                    fontSize: 11.5,
+                    color: foreground,
                   ),
                 ),
               ),
@@ -533,15 +561,13 @@ class _IconOption extends StatelessWidget {
       selected: selected,
       label: semanticLabel,
       child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.large),
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         onTap: onTap,
         child: Ink(
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: selected
-                ? AppColors.primarySoft
-                : context.palette.surface,
+            color: selected ? AppColors.primarySoft : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
               color: selected ? AppColors.primary : context.palette.border,
@@ -582,13 +608,9 @@ class _RepeatChip extends StatelessWidget {
         // A real Material rather than `Ink`: it paints its own fill and shape,
         // and clips the ripple to the pill without depending on an ancestor's
         // ink layer.
-        color: selected ? AppColors.primarySoft : context.palette.surfaceSoft,
+        color: selected ? AppColors.primary : context.palette.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.pill),
-          side: BorderSide(
-            color: selected ? AppColors.primary : Colors.transparent,
-            width: 1.5,
-          ),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -599,14 +621,110 @@ class _RepeatChip extends StatelessWidget {
               child: ExcludeSemantics(
                 child: Text(
                   label,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: selected
-                        ? AppColors.primary
-                        : context.palette.textSecondary,
-                    fontWeight: selected ? FontWeight.w700 : null,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: 13,
+                    color: selected ? Colors.white : context.palette.textMuted,
                   ),
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The small bold caption above each field, as in the mockups.
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: AppSpacing.xs,
+        bottom: AppSpacing.sm,
+      ),
+      child: Text(
+        text,
+        style: AppTextStyles.bodyEmphasis.copyWith(
+          color: context.palette.textSecondary,
+        ),
+      ),
+    );
+  }
+}
+
+class _CircleClose extends StatelessWidget {
+  const _CircleClose({required this.tooltip, required this.onPressed});
+
+  final String tooltip;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: context.palette.surface,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: SizedBox(
+            width: 44,
+            height: 44,
+            child: Icon(
+              Icons.close_rounded,
+              size: 19,
+              color: context.palette.textPrimary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A read-only field that opens a picker: the time and snooze controls.
+class _ValueField extends StatelessWidget {
+  const _ValueField({
+    required this.value,
+    required this.trailing,
+    required this.onTap,
+  });
+
+  final String value;
+  final IconData trailing;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.surface,
+      borderRadius: BorderRadius.circular(AppRadius.medium),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.medium),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: SizedBox(
+            height: 54,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.cardTitle.copyWith(fontSize: 15.5),
+                  ),
+                ),
+                Icon(trailing, size: 18, color: context.palette.iconMuted),
+              ],
             ),
           ),
         ),

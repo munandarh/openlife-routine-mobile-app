@@ -19,7 +19,6 @@ import 'package:openlife_routine/features/today/presentation/pages/today_empty_p
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
 import 'package:openlife_routine/shared/widgets/forms/week_date_selector.dart';
 import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
@@ -95,7 +94,6 @@ class _TodayViewState extends State<_TodayView> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final AppLocalizations l10n = context.l10n;
 
     return Stack(
@@ -176,8 +174,28 @@ class _TodayViewState extends State<_TodayView> {
                         },
                       ),
                       const SizedBox(height: AppSpacing.xl),
-                      Text(l10n.dailyRoutine, style: textTheme.titleLarge),
-                      const SizedBox(height: AppSpacing.lg),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              l10n.dailyRoutine,
+                              style: AppTextStyles.sectionTitle,
+                            ),
+                          ),
+                          if (state.totalCount > state.completedCount)
+                            Text(
+                              l10n.routinesLeft(
+                                state.totalCount - state.completedCount,
+                              ),
+                              style: AppTextStyles.label.copyWith(
+                                color: context.palette.textMuted,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
                       if (state.items.isEmpty)
                         AppEmptyState(
                           title: l10n.noRoutinesYet,
@@ -192,7 +210,7 @@ class _TodayViewState extends State<_TodayView> {
                         ...state.items.map(
                           (TodayRoutineItem item) => Padding(
                             padding: const EdgeInsets.only(
-                              bottom: AppSpacing.cardGap,
+                              bottom: AppSpacing.sm + 2,
                             ),
                             child: _TodayRoutineCard(item: item),
                           ),
@@ -340,6 +358,10 @@ class _StreakPill extends StatelessWidget {
 /// Shows the earliest routine still awaiting an answer; once everything is
 /// resolved it flips to a short all-clear line rather than disappearing, so the
 /// layout does not jump.
+/// The next reminder due, filled with the primary colour.
+///
+/// It is the one thing on the screen that says "this is what happens next", so
+/// it carries the weight rather than sitting in another white card.
 class _NextRoutineCard extends StatelessWidget {
   const _NextRoutineCard({required this.item});
 
@@ -348,26 +370,30 @@ class _NextRoutineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final TodayRoutineItem? next = item;
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.md + 3),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.26),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: next == null
-                ? context.palette.surfaceSoft
-                : RoutineCategoryUi.background(next.category),
-            foregroundColor: next == null
-                ? context.palette.textSecondary
-                : RoutineCategoryUi.foreground(next.category),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.17),
+              borderRadius: BorderRadius.circular(AppRadius.medium),
+            ),
             child: Icon(
               next == null
                   ? Icons.check_circle_outline
@@ -376,25 +402,36 @@ class _NextRoutineCard extends StatelessWidget {
                       iconKey: next.iconKey,
                     ),
               size: 20,
+              color: Colors.white,
             ),
           ),
-          const SizedBox(width: AppSpacing.lg),
+          const SizedBox(width: AppSpacing.md + 1),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  l10n.nextUp,
-                  style: textTheme.labelMedium?.copyWith(
-                    color: context.palette.textSecondary,
+                  l10n.nextUp.toUpperCase(),
+                  style: AppTextStyles.label.copyWith(
+                    fontSize: 11.5,
+                    letterSpacing: 0.9,
+                    color: AppColors.primarySoft,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: 3),
                 Text(
                   next == null
                       ? l10n.nothingLeftToday
-                      : '${L10nFormatters.timeOfDayLabel(context, next.reminderTime)} — ${next.title}',
-                  style: textTheme.titleMedium,
+                      : '${L10nFormatters.timeOfDayLabel(context, next.reminderTime)}'
+                            ' · '
+                            '${next.title}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
@@ -405,111 +442,282 @@ class _NextRoutineCard extends StatelessWidget {
   }
 }
 
-/// One row in the Today checklist, wired to the bloc's done/skip/snooze events.
+/// One routine on Today, in the three shapes the mockups define.
+///
+/// The routine that is due fills its card with the category tint and puts
+/// Snooze and Skip on full-width white pills underneath — it is the only card
+/// asking for something, so it is the only one that looks different. Done and
+/// upcoming routines stay quiet on white.
 class _TodayRoutineCard extends StatelessWidget {
   const _TodayRoutineCard({required this.item});
 
   final TodayRoutineItem item;
 
+  bool get _isDue =>
+      item.isDueNow && item.status == TodayRoutineItemStatus.pending;
+  bool get _isDone => item.status == TodayRoutineItemStatus.done;
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final TodayBloc bloc = context.read<TodayBloc>();
+    final Color tint = RoutineCategoryUi.background(item.category);
+    final Color ink = RoutineCategoryUi.foreground(item.category);
 
-    return RoutineCard(
-      title: item.title,
-      timeLabel: L10nFormatters.timeOfDayLabel(context, item.reminderTime),
-      statusLabel: _statusLabel(context, l10n),
-      statusTone: _statusTone(),
-      actions: _actions(bloc, l10n),
-      icon: RoutineCategoryUi.icon(item.category, iconKey: item.iconKey),
-      iconBackground: RoutineCategoryUi.background(item.category),
-      iconColor: RoutineCategoryUi.foreground(item.category),
-      isDone: item.status == TodayRoutineItemStatus.done,
-      isDueNow: item.isDueNow,
-      checkSemanticLabel: item.status == TodayRoutineItemStatus.done
-          ? l10n.undoAction
-          : l10n.statusDone,
-      onTap: () async {
-        await context.push(
-          Uri(
-            path: OpenLifeRoute.routineDetail.path,
-            queryParameters: <String, String>{'id': item.routineId},
-          ).toString(),
-        );
-        if (context.mounted) {
-          context.read<TodayBloc>().add(const TodayRefreshRequested());
-        }
-      },
-      onCheckTap: () {
-        HapticFeedback.lightImpact();
-        bloc.add(TodayRoutineCompletionToggled(item.routineId));
-      },
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md + 1),
+      decoration: BoxDecoration(
+        color: _isDue ? tint : context.palette.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        boxShadow: _isDue
+            ? null
+            : <BoxShadow>[
+                BoxShadow(
+                  color: AppColors.textPrimary.withValues(alpha: 0.07),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  // On a tinted card the chip goes white so the icon still
+                  // reads; elsewhere the chip carries the tint.
+                  color: _isDue ? context.palette.surface : tint,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
+                ),
+                child: Icon(
+                  RoutineCategoryUi.icon(item.category, iconKey: item.iconKey),
+                  size: 19,
+                  color: ink,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: _titleAndStatus(context, l10n, ink)),
+              const SizedBox(width: AppSpacing.sm),
+              _CompletionCircle(
+                isDone: _isDone,
+                outline: _isDue
+                    ? context.palette.surface
+                    : context.palette.border,
+                // The circle had no accessible name at all: a screen reader
+                // announced only "button" for the screen's primary action.
+                label: _isDone
+                    ? l10n.markNotDoneAction(item.title)
+                    : l10n.markDoneAction(item.title),
+                onTap: () => context.read<TodayBloc>().add(
+                  TodayRoutineCompletionToggled(item.routineId),
+                ),
+              ),
+            ],
+          ),
+          if (_isDue) ...<Widget>[
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: _QuietAction(
+                    label: l10n.snoozeAction,
+                    tone: AppColors.primary,
+                    onTap: () => context.read<TodayBloc>().add(
+                      TodayRoutineSnoozed(item.routineId),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: _QuietAction(
+                    label: l10n.skipAction,
+                    tone: context.palette.textSecondary,
+                    onTap: () => context.read<TodayBloc>().add(
+                      TodayRoutineSkipped(item.routineId),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 
-  String? _statusLabel(BuildContext context, AppLocalizations l10n) {
-    return switch (item.status) {
-      TodayRoutineItemStatus.done => l10n.statusDone,
-      TodayRoutineItemStatus.skipped => l10n.statusSkipped,
-      TodayRoutineItemStatus.missed => l10n.statusMissed,
-      TodayRoutineItemStatus.snoozed => item.snoozedUntil == null
-          ? l10n.statusSnoozed
-          : l10n.snoozedUntil(
-              L10nFormatters.timeLabel(
-                context,
-                TimeOfDay.fromDateTime(item.snoozedUntil!),
+  Widget _titleAndStatus(
+    BuildContext context,
+    AppLocalizations l10n,
+    Color ink,
+  ) {
+    final String time = L10nFormatters.timeOfDayLabel(
+      context,
+      item.reminderTime,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(
+          item.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.cardTitle.copyWith(
+            color: _isDone
+                ? context.palette.textMuted
+                : context.palette.textPrimary,
+            decoration: _isDone ? TextDecoration.lineThrough : null,
+          ),
+        ),
+        const SizedBox(height: 3),
+        if (_isDue)
+          // Wrap, not Row: at 320dp a long time plus the badge is wider than
+          // the card, and dropping the badge to a second line beats clipping.
+          Wrap(
+            spacing: AppSpacing.sm - 1,
+            runSpacing: AppSpacing.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              Text(
+                time,
+                style: AppTextStyles.bodyEmphasis.copyWith(color: ink),
               ),
+              Container(
+                height: 22,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.accentSoft,
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                ),
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(
+                    l10n.statusDueNow.toUpperCase(),
+                    style: AppTextStyles.label.copyWith(
+                      fontSize: 10.5,
+                      letterSpacing: 0.5,
+                      color: AppColors.accentDeep,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          Text(
+            _statusLine(l10n, time),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.bodyEmphasis.copyWith(
+              color: _isDone
+                  ? AppColors.primary
+                  : context.palette.textSecondary,
             ),
-      TodayRoutineItemStatus.pending when item.isDueNow => l10n.statusDueNow,
-      TodayRoutineItemStatus.pending => null,
-    };
+          ),
+      ],
+    );
   }
 
-  RoutineCardTone _statusTone() {
+  String _statusLine(AppLocalizations l10n, String time) {
     return switch (item.status) {
-      TodayRoutineItemStatus.done => RoutineCardTone.positive,
-      TodayRoutineItemStatus.missed => RoutineCardTone.attention,
-      TodayRoutineItemStatus.skipped => RoutineCardTone.muted,
-      TodayRoutineItemStatus.snoozed => RoutineCardTone.muted,
-      TodayRoutineItemStatus.pending => item.isDueNow
-          ? RoutineCardTone.attention
-          : RoutineCardTone.positive,
+      TodayRoutineItemStatus.done => '${l10n.statusDone} · $time',
+      TodayRoutineItemStatus.skipped => '${l10n.statusSkipped} · $time',
+      TodayRoutineItemStatus.missed => '${l10n.statusMissed} · $time',
+      TodayRoutineItemStatus.snoozed => l10n.snoozedUntil(
+        item.snoozedUntil == null ? time : _hhmm(item.snoozedUntil!),
+      ),
+      TodayRoutineItemStatus.pending => '${l10n.statusUpcoming} · $time',
     };
   }
 
-  List<RoutineCardAction> _actions(TodayBloc bloc, AppLocalizations l10n) {
-    // Skip and Snooze are only offered while the routine is still open;
-    // anything already resolved offers a single Undo instead.
-    if (item.isOpen) {
-      return <RoutineCardAction>[
-        RoutineCardAction(
-          label: l10n.skipAction,
-          onPressed: () => bloc.add(TodayRoutineSkipped(item.routineId)),
-        ),
-        RoutineCardAction(
-          label: l10n.snoozeAction,
-          onPressed: () => bloc.add(TodayRoutineSnoozed(item.routineId)),
-        ),
-      ];
-    }
+  static String _hhmm(DateTime value) {
+    final String h = value.hour.toString().padLeft(2, '0');
+    final String m = value.minute.toString().padLeft(2, '0');
+    return '$h:$m';
+  }
+}
 
-    if (item.status == TodayRoutineItemStatus.missed) {
-      return const <RoutineCardAction>[];
-    }
+/// The tap target for completing a routine: an outline when open, a filled
+/// sage disc with a check when done.
+class _CompletionCircle extends StatelessWidget {
+  const _CompletionCircle({
+    required this.isDone,
+    required this.outline,
+    required this.label,
+    required this.onTap,
+  });
 
-    return <RoutineCardAction>[
-      RoutineCardAction(
-        label: l10n.undoAction,
-        onPressed: () {
-          if (item.status == TodayRoutineItemStatus.skipped) {
-            bloc.add(TodayRoutineSkipped(item.routineId));
-            return;
-          }
-          bloc.add(TodayRoutineCompletionToggled(item.routineId));
-        },
+  final bool isDone;
+  final Color outline;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      checked: isDone,
+      label: label,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutBack,
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDone ? AppColors.primary : Colors.transparent,
+            border: isDone ? null : Border.all(color: outline, width: 2.5),
+          ),
+          child: isDone
+              ? const Icon(Icons.check_rounded, size: 22, color: Colors.white)
+              : null,
+        ),
       ),
-    ];
+    );
+  }
+}
+
+/// Snooze and Skip on the due card: white pills on the tint, weight carried by
+/// the completion circle rather than by these.
+class _QuietAction extends StatelessWidget {
+  const _QuietAction({
+    required this.label,
+    required this.tone,
+    required this.onTap,
+  });
+
+  final String label;
+  final Color tone;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.surface,
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: onTap,
+        child: SizedBox(
+          height: 44,
+          child: Center(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.button.copyWith(color: tone),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -205,6 +205,12 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _SurfaceCard(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.lg,
+                      AppSpacing.lg,
+                      AppSpacing.lg,
+                      AppSpacing.xs,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -212,19 +218,24 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                           l10n.reminderBehavior,
                           style: AppTextStyles.cardTitle,
                         ),
-                        const SizedBox(height: AppSpacing.sm + 2),
-                        _DetailLine(
-                          icon: Icons.snooze_outlined,
-                          label: l10n.snoozeForMinutes(routine.snoozeMinutes),
-                        ),
                         const SizedBox(height: AppSpacing.sm),
-                        _DetailLine(
-                          icon: routine.isEnabled
-                              ? Icons.notifications_active_outlined
-                              : Icons.notifications_off_outlined,
-                          label: routine.isEnabled
-                              ? l10n.routineIsActive
-                              : l10n.routineIsDisabled,
+                        _DetailRow(
+                          icon: Icons.snooze_outlined,
+                          label: l10n.snoozeDuration,
+                          value: l10n.minutesShort(routine.snoozeMinutes),
+                        ),
+                        _DetailRow(
+                          icon: Icons.notifications_active_outlined,
+                          label: l10n.routineAlerts,
+                          isLast: true,
+                          toggle: routine.isEnabled,
+                          onToggle: (bool value) =>
+                              context.read<RoutineBloc>().add(
+                                RoutineEnabledToggled(
+                                  routineId: routineId,
+                                  isEnabled: value,
+                                ),
+                              ),
                         ),
                       ],
                     ),
@@ -254,9 +265,8 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                     onPressed: _openEditor,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  PrimaryButton(
+                  _DangerButton(
                     label: l10n.deleteRoutine,
-                    isSecondary: true,
                     onPressed: () {
                       context.read<RoutineBloc>().add(
                         RoutineDeleteRequested(routineId),
@@ -275,15 +285,16 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
 
 /// The one card shape this screen uses: white, 24px, one soft shadow.
 class _SurfaceCard extends StatelessWidget {
-  const _SurfaceCard({required this.child});
+  const _SurfaceCard({required this.child, this.padding});
 
   final Widget child;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
@@ -327,28 +338,118 @@ class _CircleBack extends StatelessWidget {
   }
 }
 
-class _DetailLine extends StatelessWidget {
-  const _DetailLine({required this.icon, required this.label});
+/// A settings-style row inside a detail card: tinted icon, label, and either a
+/// value or a switch.
+class _DetailRow extends StatelessWidget {
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    this.value,
+    this.toggle,
+    this.onToggle,
+    this.isLast = false,
+  });
 
   final IconData icon;
   final String label;
+  final String? value;
+  final bool? toggle;
+  final ValueChanged<bool>? onToggle;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(icon, size: 17, color: context.palette.iconMuted),
-        const SizedBox(width: AppSpacing.sm + 2),
-        Expanded(
-          child: Text(
-            label,
-            style: AppTextStyles.bodyEmphasis.copyWith(
-              fontSize: 14,
-              color: context.palette.textSecondary,
+    return Container(
+      decoration: isLast
+          ? null
+          : BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: context.palette.background),
+              ),
+            ),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.small),
+            ),
+            child: Icon(icon, size: 17, color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.button.copyWith(
+                fontSize: 15,
+                color: context.palette.textPrimary,
+              ),
             ),
           ),
+          if (toggle != null)
+            Switch.adaptive(
+              value: toggle!,
+              onChanged: onToggle,
+              activeThumbColor: Colors.white,
+              activeTrackColor: AppColors.primary,
+            )
+          else if (value != null)
+            Text(
+              value!,
+              style: AppTextStyles.bodyEmphasis.copyWith(
+                fontSize: 13,
+                color: context.palette.textSecondary,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DangerButton extends StatelessWidget {
+  const _DangerButton({required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.dangerSoft,
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: onPressed,
+        child: SizedBox(
+          height: 52,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Icon(
+                Icons.delete_outline_rounded,
+                size: 17,
+                color: AppColors.danger,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: 15,
+                    color: AppColors.danger,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

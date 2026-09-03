@@ -437,5 +437,30 @@
       }
     }
   },
-  "lastSevenDays": "Last 7 days"
+  "lastSevenDays": "Last 7 days",
+  "statusUpcoming": "Upcoming",
+  "routinesLeft": "{count, plural, =1{1 left} other{{count} left}}",
+  "@routinesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markDoneAction": "Mark {title} as done",
+  "@markDoneAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "markNotDoneAction": "Mark {title} as not done",
+  "@markNotDoneAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

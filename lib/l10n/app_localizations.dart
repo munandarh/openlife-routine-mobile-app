@@ -1813,6 +1813,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last 7 days'**
   String get lastSevenDays;
+
+  /// No description provided for @statusUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get statusUpcoming;
+
+  /// No description provided for @routinesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 left} other{{count} left}}'**
+  String routinesLeft(int count);
+
+  /// No description provided for @markDoneAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {title} as done'**
+  String markDoneAction(String title);
+
+  /// No description provided for @markNotDoneAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {title} as not done'**
+  String markNotDoneAction(String title);
 }
 
 class _AppLocalizationsDelegate

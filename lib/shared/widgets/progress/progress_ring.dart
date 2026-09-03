@@ -38,9 +38,11 @@ class ProgressRing extends StatelessWidget {
             alignment: Alignment.center,
             children: <Widget>[
               // The mockup's dial sits on white, not on the page tint.
+              // Sized to the ring's inner edge (size - 2 x stroke); any wider
+              // and the white disc paints over the arc it is meant to sit in.
               Container(
-                width: size - 12,
-                height: size - 12,
+                width: size - 24,
+                height: size - 24,
                 decoration: BoxDecoration(
                   color: context.palette.surface,
                   shape: BoxShape.circle,

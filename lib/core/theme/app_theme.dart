@@ -91,24 +91,30 @@ final class AppTheme {
           textStyle: AppTextStyles.button,
         ),
       ),
+      // Fields are white cards with no outline; the fill carries them, the
+      // way the mockups draw them. Focus is the only state that draws a line.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surface,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 18,
+          horizontal: 16,
+          vertical: 15,
+        ),
+        hintStyle: AppTextStyles.body.copyWith(
+          fontSize: 15.5,
+          color: palette.textMuted,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
-          borderSide: BorderSide(color: colorScheme.outline),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
-          borderSide: BorderSide(color: colorScheme.outline),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
       ),
     );

@@ -14,32 +14,57 @@ const String notificationDoneActionId = 'done';
 const String notificationSnoozeActionId = 'snooze';
 
 /// What a notification carries so an action can be handled without the app
-/// running: the routine, its snooze length, and its title.
+/// running: the routine, which of its reminder times fired, its snooze length,
+/// and its title.
 ///
 /// Pipe-delimited with the title last, so a title containing '|' still
-/// round-trips and payloads written by older builds (`id|minutes`) still parse.
+/// round-trips. The `v2` marker distinguishes this from the payloads older
+/// builds wrote (`id|minutes|title`), which are still sitting on any reminder
+/// scheduled before the upgrade and must keep working.
 @immutable
 class RoutineNotificationPayload {
   const RoutineNotificationPayload({
     required this.routineId,
     required this.snoozeMinutes,
     required this.title,
+    this.reminderTime = '',
   });
+
+  static const String _marker = 'v2';
 
   final String routineId;
   final int snoozeMinutes;
   final String title;
 
-  String encode() => '$routineId|$snoozeMinutes|$title';
+  /// Which reminder of the day this is, as `HH:mm`.
+  ///
+  /// Empty on a payload written before routines could have several, which the
+  /// handler reads as the routine's first time.
+  final String reminderTime;
+
+  String encode() => '$routineId|$snoozeMinutes|$_marker|$reminderTime|$title';
 
   static RoutineNotificationPayload? decode(String? raw) {
     if (raw == null || raw.isEmpty) {
       return null;
     }
     final List<String> parts = raw.split('|');
+    final int snoozeMinutes = parts.length > 1
+        ? int.tryParse(parts[1]) ?? 10
+        : 10;
+
+    if (parts.length >= 5 && parts[2] == _marker) {
+      return RoutineNotificationPayload(
+        routineId: parts.first,
+        snoozeMinutes: snoozeMinutes,
+        reminderTime: parts[3],
+        title: parts.sublist(4).join('|'),
+      );
+    }
+
     return RoutineNotificationPayload(
       routineId: parts.first,
-      snoozeMinutes: parts.length > 1 ? int.tryParse(parts[1]) ?? 10 : 10,
+      snoozeMinutes: snoozeMinutes,
       title: parts.length > 2 ? parts.sublist(2).join('|') : parts.first,
     );
   }
@@ -67,12 +92,14 @@ Future<NotificationActionResult> applyRoutineNotificationAction({
 }) async {
   final DateTime moment = now ?? DateTime.now();
   final String dateKey = routineLogDateKey(moment);
+  final String reminderTime = await _resolveReminderTime(database, payload);
 
   switch (actionId) {
     case notificationDoneActionId:
       await database.upsertRoutineLog(
         routineId: payload.routineId,
         dateKey: dateKey,
+        reminderTime: reminderTime,
         status: 'done',
       );
       return const NotificationActionResult(snoozedUntil: null);
@@ -84,6 +111,7 @@ Future<NotificationActionResult> applyRoutineNotificationAction({
       await database.upsertRoutineLog(
         routineId: payload.routineId,
         dateKey: dateKey,
+        reminderTime: reminderTime,
         status: 'snoozed',
         snoozedUntil: until,
       );
@@ -91,6 +119,26 @@ Future<NotificationActionResult> applyRoutineNotificationAction({
   }
 
   return const NotificationActionResult(snoozedUntil: null);
+}
+
+/// Which reminder the payload answers.
+///
+/// A payload written before routines could hold several times carries none, so
+/// it answers the routine's first — the only one such a routine had when the
+/// notification was scheduled.
+Future<String> _resolveReminderTime(
+  AppDatabase database,
+  RoutineNotificationPayload payload,
+) async {
+  if (payload.reminderTime.isNotEmpty) {
+    return payload.reminderTime;
+  }
+
+  final RoutineBundleRow? bundle = await database.getRoutineBundleById(
+    payload.routineId,
+  );
+  final String stored = bundle?.schedule.reminderTime ?? '';
+  return stored.split(',').first.trim();
 }
 
 /// `yyyy-MM-dd` key used by the logs table.
@@ -159,6 +207,28 @@ const String routineCategoryId = 'routine_reminder';
 /// Slot for a one-off snooze. Weekday slots 1-7 belong to the recurring
 /// schedule, so re-arming a snooze never cancels a weekly reminder.
 const int routineSnoozeSlot = 99;
+
+/// The most reminder times one routine may hold.
+///
+/// The cap exists so the notification id space stays collision-free: a
+/// reminder's slot is `timeIndex * 8 + weekday`, which needs the index bounded
+/// to keep every routine's ids inside a predictable range, and so cancelling a
+/// routine can sweep every slot it could ever have used.
+const int maxReminderTimes = 8;
+
+/// The slot for one reminder time on one weekday.
+///
+/// Weekdays are 1-7 and the eighth value in each block is left unused, so
+/// index 0 owns 1-7, index 1 owns 9-15, and no two ever meet.
+int routineReminderSlot({required int timeIndex, required int weekday}) =>
+    timeIndex * 8 + weekday;
+
+/// The snooze slot for one reminder time.
+///
+/// Snoozing the morning dose must not cancel a snooze on the evening one, so
+/// each time gets its own. Kept well clear of the reminder blocks and of the
+/// legacy [routineSnoozeSlot].
+int routineSnoozeSlotFor(int timeIndex) => 900 + timeIndex;
 
 /// The one place a routine reminder's presentation is described.
 ///

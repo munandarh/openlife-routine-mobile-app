@@ -104,6 +104,11 @@ class ExportImportService {
                 id: drift.Value(map['id'] as String),
                 routineId: drift.Value(map['routineId'] as String),
                 date: drift.Value(map['date'] as String),
+                // Absent in a backup taken before a routine could hold more
+                // than one time; those logs answered the routine's only one.
+                reminderTime: drift.Value(
+                  (map['reminderTime'] as String?) ?? '',
+                ),
                 status: drift.Value(map['status'] as String),
                 snoozedUntil: drift.Value(
                   map['snoozedUntil'] == null
@@ -169,6 +174,7 @@ class ExportImportService {
       'id': l.id,
       'routineId': l.routineId,
       'date': l.date,
+      'reminderTime': l.reminderTime,
       'status': l.status,
       'snoozedUntil': l.snoozedUntil?.toIso8601String(),
       'createdAt': l.createdAt.toIso8601String(),

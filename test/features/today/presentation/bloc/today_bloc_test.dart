@@ -24,7 +24,7 @@ void main() {
           id: 'routine-1',
           title: 'Morning Water',
           category: domain.RoutineCategory.water,
-          reminderTime: '08:00',
+          reminderTimes: <String>['08:00'],
           repeatDays: const <int>[3],
           isEnabled: true,
           createdAt: DateTime(2026, 7, 1, 8),
@@ -36,7 +36,7 @@ void main() {
           id: 'routine-2',
           title: 'Sleep Early',
           category: domain.RoutineCategory.sleep,
-          reminderTime: '21:00',
+          reminderTimes: <String>['21:00'],
           repeatDays: const <int>[4],
           isEnabled: true,
           createdAt: DateTime(2026, 7, 1, 8),
@@ -58,7 +58,7 @@ void main() {
       act: (TodayBloc bloc) async {
         bloc.add(const TodayStarted());
         await Future<void>.delayed(Duration.zero);
-        bloc.add(const TodayRoutineCompletionToggled('routine-1'));
+        bloc.add(const TodayRoutineCompletionToggled('routine-1', '08:00'));
         await Future<void>.delayed(Duration.zero);
         bloc.add(TodayDateSelected(DateTime(2026, 7, 2)));
       },

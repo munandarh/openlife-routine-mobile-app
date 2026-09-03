@@ -210,9 +210,10 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     // The template's routines are created before Today is shown, so they are
-    // already on the checklist.
+    // already on the checklist. B Complex is a twice-daily supplement, and
+    // each of its two doses is its own thing to answer.
     expect(find.text('Vitamin D3'), findsOneWidget);
-    expect(find.text('B Complex'), findsOneWidget);
+    expect(find.text('B Complex'), findsNWidgets(2));
   });
 
   group('language selection', () {

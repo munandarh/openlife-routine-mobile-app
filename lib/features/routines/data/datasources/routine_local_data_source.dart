@@ -33,7 +33,7 @@ class RoutineLocalDataSource {
             RoutineSchedulesCompanion.insert(
               id: '${routine.id}_schedule',
               routineId: routine.id,
-              reminderTime: routine.reminderTime,
+              reminderTime: encodeReminderTimes(routine.reminderTimes),
               repeatDays: jsonEncode(routine.repeatDays),
               snoozeMinutes: Value(routine.snoozeMinutes),
               updatedAt: routine.updatedAt,
@@ -82,7 +82,7 @@ class RoutineLocalDataSource {
           ))
           .write(
             RoutineSchedulesCompanion(
-              reminderTime: Value(routine.reminderTime),
+              reminderTime: Value(encodeReminderTimes(routine.reminderTimes)),
               repeatDays: Value(jsonEncode(routine.repeatDays)),
               snoozeMinutes: Value(routine.snoozeMinutes),
               updatedAt: Value(routine.updatedAt),
@@ -96,7 +96,7 @@ class RoutineLocalDataSource {
       (List<RoutineBundleRow> bundles) =>
           bundles.map(_mapBundle).toList()
             ..sort((domain.Routine a, domain.Routine b) {
-              return a.reminderTime.compareTo(b.reminderTime);
+              return a.firstReminderTime.compareTo(b.firstReminderTime);
             }),
     );
   }
@@ -106,7 +106,7 @@ class RoutineLocalDataSource {
       id: bundle.routine.id,
       title: bundle.routine.title,
       category: domain.RoutineCategory.values.byName(bundle.routine.category),
-      reminderTime: bundle.schedule.reminderTime,
+      reminderTimes: decodeReminderTimes(bundle.schedule.reminderTime),
       repeatDays: (jsonDecode(bundle.schedule.repeatDays) as List<dynamic>)
           .cast<int>(),
       isEnabled: bundle.routine.isEnabled,
@@ -117,4 +117,20 @@ class RoutineLocalDataSource {
       updatedAt: bundle.routine.updatedAt,
     );
   }
+}
+
+/// The schedule row keeps its times in one column, comma-separated, the same
+/// way it already keeps the repeat days. Storing them as separate rows would
+/// have meant a schema migration for every reader of the bundle.
+String encodeReminderTimes(List<String> times) => times.join(',');
+
+List<String> decodeReminderTimes(String raw) {
+  final List<String> times = raw
+      .split(',')
+      .map((String value) => value.trim())
+      .where((String value) => value.isNotEmpty)
+      .toList();
+  // A row written before multiple times existed holds exactly one value, and
+  // a corrupt or empty one still has to produce a usable routine.
+  return times.isEmpty ? <String>['08:00'] : times;
 }

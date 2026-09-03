@@ -73,7 +73,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
       id: now.microsecondsSinceEpoch.toString(),
       title: trimmedTitle,
       category: event.category,
-      reminderTime: event.reminderTime,
+      reminderTimes: event.reminderTimes,
       repeatDays: event.repeatDays,
       isEnabled: event.isEnabled,
       snoozeMinutes: event.snoozeMinutes,
@@ -191,7 +191,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     final Routine updatedRoutine = existingRoutine.copyWith(
       title: event.title.trim(),
       category: event.category,
-      reminderTime: event.reminderTime,
+      reminderTimes: event.reminderTimes,
       repeatDays: event.repeatDays,
       isEnabled: event.isEnabled,
       snoozeMinutes: event.snoozeMinutes,

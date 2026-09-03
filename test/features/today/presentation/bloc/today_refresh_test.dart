@@ -26,7 +26,7 @@ void main() {
         id: id,
         title: title,
         category: domain.RoutineCategory.water,
-        reminderTime: '09:00',
+        reminderTimes: <String>['09:00'],
         repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
         isEnabled: true,
         createdAt: now,
@@ -100,6 +100,7 @@ void main() {
     await appDatabase.upsertRoutineLog(
       routineId: 'r1',
       dateKey: '2026-09-02',
+      reminderTime: '09:00',
       status: 'done',
     );
 

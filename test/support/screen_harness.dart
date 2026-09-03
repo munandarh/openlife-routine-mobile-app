@@ -62,7 +62,7 @@ class ScreenHarness {
     required String id,
     required String title,
     String category = 'water',
-    String reminderTime = '08:00',
+    List<String> reminderTimes = const <String>['08:00'],
     List<int> repeatDays = const <int>[1, 2, 3, 4, 5, 6, 7],
     String? notes,
     String? iconKey,
@@ -91,7 +91,7 @@ class ScreenHarness {
           RoutineSchedulesCompanion(
             id: drift.Value('${id}_schedule'),
             routineId: drift.Value(id),
-            reminderTime: drift.Value(reminderTime),
+            reminderTime: drift.Value(reminderTimes.join(',')),
             repeatDays: drift.Value('[${repeatDays.join(',')}]'),
             snoozeMinutes: const drift.Value(10),
             updatedAt: drift.Value(created),
@@ -106,6 +106,7 @@ class ScreenHarness {
       await appDatabase.upsertRoutineLog(
         routineId: id,
         dateKey: key,
+        reminderTime: reminderTimes.first,
         status: todayStatus,
       );
     }

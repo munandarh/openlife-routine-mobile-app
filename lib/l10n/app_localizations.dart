@@ -1526,6 +1526,54 @@ abstract class AppLocalizations {
   /// **'Keep your water intake consistent throughout the day.'**
   String get templateHydrationDesc;
 
+  /// No description provided for @templateMedicineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication Schedule'**
+  String get templateMedicineTitle;
+
+  /// No description provided for @templateMedicineDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Doses at the hours a prescription actually calls for.'**
+  String get templateMedicineDesc;
+
+  /// No description provided for @templateRoutineMedicineWithMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'With meals'**
+  String get templateRoutineMedicineWithMeals;
+
+  /// No description provided for @templateRoutineMedicineBeforeBed.
+  ///
+  /// In en, this message translates to:
+  /// **'Before bed'**
+  String get templateRoutineMedicineBeforeBed;
+
+  /// No description provided for @timesPerDayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Once a day} other{{count} times a day}}'**
+  String timesPerDayCount(int count);
+
+  /// No description provided for @timesPerDayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Times a day'**
+  String get timesPerDayLabel;
+
+  /// No description provided for @reminderTimeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Time {number}'**
+  String reminderTimeNumber(int number);
+
+  /// No description provided for @duplicateTimesError.
+  ///
+  /// In en, this message translates to:
+  /// **'Two reminders cannot be at the same time.'**
+  String get duplicateTimesError;
+
   /// No description provided for @templateVitaminTitle.
   ///
   /// In en, this message translates to:

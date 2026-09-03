@@ -189,7 +189,7 @@ class _ReminderTile extends StatelessWidget {
   String _whenLabel(BuildContext context, AppLocalizations l10n) {
     final String time = L10nFormatters.timeOfDayLabel(
       context,
-      slot.routine.reminderTime,
+      slot.reminderTime,
     );
     final DateTime now = DateTime.now();
     final DateTime fires = slot.firesAt;

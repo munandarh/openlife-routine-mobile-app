@@ -178,21 +178,39 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                                       style: AppTextStyles.cardTitle,
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.schedule_outlined,
-                                    size: 16,
-                                    color: context.palette.textSecondary,
-                                  ),
-                                  const SizedBox(width: AppSpacing.xs + 3),
-                                  Text(
-                                    L10nFormatters.timeOfDayLabel(
-                                      context,
-                                      routine.reminderTime,
+                                  if (!routine.hasMultipleTimes) ...<Widget>[
+                                    Icon(
+                                      Icons.schedule_outlined,
+                                      size: 16,
+                                      color: context.palette.textSecondary,
                                     ),
-                                    style: AppTextStyles.cardTitle,
-                                  ),
+                                    const SizedBox(width: AppSpacing.xs + 3),
+                                    Text(
+                                      L10nFormatters.timeOfDayLabel(
+                                        context,
+                                        routine.firstReminderTime,
+                                      ),
+                                      style: AppTextStyles.cardTitle,
+                                    ),
+                                  ] else
+                                    Text(
+                                      l10n.timesPerDayCount(
+                                        routine.reminderTimes.length,
+                                      ),
+                                      style: AppTextStyles.bodyEmphasis
+                                          .copyWith(
+                                            color:
+                                                context.palette.textSecondary,
+                                          ),
+                                    ),
                                 ],
                               ),
+                              // Every dose listed: on a three-times-a-day
+                              // prescription the hours are the whole point.
+                              if (routine.hasMultipleTimes) ...<Widget>[
+                                const SizedBox(height: AppSpacing.md),
+                                _ReminderTimeList(times: routine.reminderTimes),
+                              ],
                               const SizedBox(height: AppSpacing.md + 1),
                               _RepeatDayChips(selected: routine.repeatDays),
                             ],
@@ -278,6 +296,51 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
           ),
         );
       },
+    );
+  }
+}
+
+/// The hours a multi-dose routine fires at, one chip each.
+class _ReminderTimeList extends StatelessWidget {
+  const _ReminderTimeList({required this.times});
+
+  final List<String> times;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
+      children: <Widget>[
+        for (final String time in times)
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.xs + 2,
+            ),
+            decoration: BoxDecoration(
+              color: context.palette.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(
+                  Icons.schedule_outlined,
+                  size: 14,
+                  color: context.palette.primaryInk,
+                ),
+                const SizedBox(width: AppSpacing.xs + 1),
+                Text(
+                  L10nFormatters.timeOfDayLabel(context, time),
+                  style: AppTextStyles.bodyEmphasis.copyWith(
+                    color: context.palette.primaryInk,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

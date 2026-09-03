@@ -51,7 +51,7 @@ void main() {
         id: id,
         title: 'Routine $id',
         category: RoutineCategory.water,
-        reminderTime: '08:00',
+        reminderTimes: <String>['08:00'],
         repeatDays: repeatDays,
         isEnabled: isEnabled,
         createdAt: created,
@@ -112,11 +112,13 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'weekday',
         dateKey: keyFor(monday),
+        reminderTime: '08:00',
         status: 'done',
       );
       await appDatabase.upsertRoutineLog(
         routineId: 'weekday',
         dateKey: keyFor(monday.add(const Duration(days: 1))),
+        reminderTime: '08:00',
         status: 'done',
       );
 
@@ -133,6 +135,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(monday),
+        reminderTime: '08:00',
         status: 'skipped',
       );
 
@@ -146,11 +149,13 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(monday),
+        reminderTime: '08:00',
         status: 'missed',
       );
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(monday.add(const Duration(days: 1))),
+        reminderTime: '08:00',
         status: 'missed',
       );
 
@@ -165,6 +170,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(monday),
+        reminderTime: '08:00',
         status: 'done',
       );
 
@@ -182,6 +188,7 @@ void main() {
         await appDatabase.upsertRoutineLog(
           routineId: 'r1',
           dateKey: keyFor(now.subtract(Duration(days: i))),
+          reminderTime: '08:00',
           status: 'done',
         );
       }
@@ -196,11 +203,13 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(now.subtract(const Duration(days: 1))),
+        reminderTime: '08:00',
         status: 'done',
       );
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(now.subtract(const Duration(days: 2))),
+        reminderTime: '08:00',
         status: 'missed',
       );
 
@@ -238,16 +247,19 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(yesterday),
+        reminderTime: '08:00',
         status: 'done',
       );
       await appDatabase.upsertRoutineLog(
         routineId: 'r2',
         dateKey: keyFor(yesterday),
+        reminderTime: '08:00',
         status: 'skipped',
       );
       await appDatabase.upsertRoutineLog(
         routineId: 'r3',
         dateKey: keyFor(yesterday),
+        reminderTime: '08:00',
         status: 'missed',
       );
 

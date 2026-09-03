@@ -42,7 +42,7 @@ class ApplyTemplateUseCase {
         id: '${now.microsecondsSinceEpoch}-${template.id}-$created',
         title: titleResolver?.call(item) ?? item.title,
         category: category,
-        reminderTime: item.reminderTime,
+        reminderTimes: item.reminderTimes,
         repeatDays: item.repeatDays,
         isEnabled: true,
         snoozeMinutes: item.snoozeMinutes,

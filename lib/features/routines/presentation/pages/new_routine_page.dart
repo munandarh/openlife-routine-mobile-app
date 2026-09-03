@@ -50,10 +50,81 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
   late final TextEditingController _nameController;
   late final TextEditingController _notesController;
   RoutineCategory _selectedCategory = RoutineCategory.water;
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 8, minute: 0);
+
+  /// Every time this routine reminds at. Categories that do not support more
+  /// than one keep exactly one entry, so the save path has no special case.
+  List<TimeOfDay> _times = <TimeOfDay>[const TimeOfDay(hour: 8, minute: 0)];
+
+  /// True while the times are still the evenly-spread set this screen
+  /// generated. Once a time is edited by hand, changing the count stops
+  /// regenerating and starts appending, so the edit is never thrown away.
+  bool _timesAutoSpread = true;
   Set<int> _repeatDays = <int>{1, 2, 3};
   bool _seededFromExisting = false;
   int _snoozeMinutes = 10;
+
+  Future<void> _pickTimeAt(int index) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _times[index],
+    );
+    if (picked == null || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _times = List<TimeOfDay>.from(_times)..[index] = picked;
+      // Moving the first time while the set is still generated re-spreads the
+      // rest around it; touching any other time is an edit to keep.
+      if (_timesAutoSpread && index == 0) {
+        _times = _spreadFrom(picked, _times.length);
+      } else {
+        _timesAutoSpread = false;
+      }
+    });
+  }
+
+  void _setTimesPerDay(int count) {
+    setState(() {
+      if (_timesAutoSpread) {
+        _times = _spreadFrom(_times.first, count);
+        return;
+      }
+      if (count < _times.length) {
+        _times = _times.sublist(0, count);
+        return;
+      }
+      // Hand-picked times are kept as they are; each new one lands four hours
+      // after the last, which is a sane starting point to adjust from.
+      final List<TimeOfDay> next = List<TimeOfDay>.from(_times);
+      while (next.length < count) {
+        next.add(_addHours(next.last, 4));
+      }
+      _times = next;
+    });
+  }
+
+  /// [count] times spread evenly across the twelve hours from [start].
+  ///
+  /// Twelve rather than twenty-four because the second dose of a twice-daily
+  /// prescription belongs twelve hours later, and nobody wants a default that
+  /// wakes them at 02:00.
+  static List<TimeOfDay> _spreadFrom(TimeOfDay start, int count) {
+    if (count <= 1) {
+      return <TimeOfDay>[start];
+    }
+    final int startMinutes = start.hour * 60 + start.minute;
+    final int step = (12 * 60) ~/ (count - 1);
+    return List<TimeOfDay>.generate(count, (int index) {
+      final int minutes = (startMinutes + index * step) % (24 * 60);
+      return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+    });
+  }
+
+  static TimeOfDay _addHours(TimeOfDay time, int hours) {
+    final int minutes = (time.hour * 60 + time.minute + hours * 60) % (24 * 60);
+    return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+  }
 
   /// Snooze used to be a slider; a slider cannot share a row with the time
   /// field and was fiddly for values that are only ever multiples of five.
@@ -136,7 +207,8 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
           _nameController.text = routine.title;
           _notesController.text = routine.notes ?? '';
           _selectedCategory = routine.category;
-          _selectedTime = L10nFormatters.parseTime(routine.reminderTime);
+          _times = routine.reminderTimes.map(L10nFormatters.parseTime).toList();
+          _timesAutoSpread = false;
           _repeatDays = routine.repeatDays.toSet();
           _snoozeMinutes = routine.snoozeMinutes;
           _iconKey = routine.iconKey;
@@ -213,34 +285,45 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   },
                 ),
                 const SizedBox(height: AppSpacing.lg),
+                // A dose is the thing people take several times a day, so only
+                // those categories carry the count; everything else keeps the
+                // single time field it always had.
+                if (_selectedCategory.supportsMultipleTimes) ...<Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: _FieldLabel(l10n.timesPerDayLabel)),
+                      _TimesPerDaySelector(
+                        count: _times.length,
+                        onChanged: _setTimesPerDay,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _ReminderTimeFields(times: _times, onPick: _pickTimeAt),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          _FieldLabel(l10n.timeLabel),
-                          _ValueField(
-                            value: L10nFormatters.timeLabel(
-                              context,
-                              _selectedTime,
+                    if (!_selectedCategory.supportsMultipleTimes) ...<Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _FieldLabel(l10n.timeLabel),
+                            _ValueField(
+                              value: L10nFormatters.timeLabel(
+                                context,
+                                _times.first,
+                              ),
+                              trailing: Icons.schedule_outlined,
+                              onTap: () => _pickTimeAt(0),
                             ),
-                            trailing: Icons.schedule_outlined,
-                            onTap: () async {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: _selectedTime,
-                              );
-                              if (picked != null) {
-                                setState(() => _selectedTime = picked);
-                              }
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.md - 2),
+                      const SizedBox(width: AppSpacing.md - 2),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,6 +456,16 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
       return;
     }
 
+    final List<String> serialisedTimes = _times
+        .map(L10nFormatters.serializeTime)
+        .toList();
+    // Two reminders at the same minute would collapse into one on save, and
+    // silently dropping a dose the user asked for is the worst outcome here.
+    if (serialisedTimes.toSet().length != serialisedTimes.length) {
+      _showValidationError(context, l10n.duplicateTimesError);
+      return;
+    }
+
     final List<int> repeatDays = _repeatDays.toList()..sort();
     final String? notes = _notesController.text.trim().isEmpty
         ? null
@@ -384,7 +477,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
           id: widget.routineId!,
           title: _nameController.text,
           category: _selectedCategory,
-          reminderTime: L10nFormatters.serializeTime(_selectedTime),
+          reminderTimes: serialisedTimes,
           repeatDays: repeatDays,
           isEnabled: _isEnabled,
           snoozeMinutes: _snoozeMinutes,
@@ -399,7 +492,7 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
       RoutineCreateRequested(
         title: _nameController.text,
         category: _selectedCategory,
-        reminderTime: L10nFormatters.serializeTime(_selectedTime),
+        reminderTimes: serialisedTimes,
         repeatDays: repeatDays,
         isEnabled: _isEnabled,
         snoozeMinutes: _snoozeMinutes,
@@ -605,6 +698,129 @@ class _IconOption extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// How many times a day this routine reminds.
+///
+/// Four is the practical ceiling for a prescription; anything beyond it comes
+/// in through an imported backup, which the model still supports.
+class _TimesPerDaySelector extends StatelessWidget {
+  const _TimesPerDaySelector({required this.count, required this.onChanged});
+
+  static const int maxOffered = 4;
+
+  final int count;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        for (int value = 1; value <= maxOffered; value += 1) ...<Widget>[
+          if (value > 1) const SizedBox(width: AppSpacing.xs + 2),
+          _CountChip(
+            value: value,
+            selected: value == count,
+            onTap: () => onChanged(value),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _CountChip extends StatelessWidget {
+  const _CountChip({
+    required this.value,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final int value;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: Material(
+        color: selected ? AppColors.primary : context.palette.surface,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          onTap: onTap,
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Center(
+              child: Text(
+                '$value',
+                style: AppTextStyles.button.copyWith(
+                  color: selected
+                      ? Colors.white
+                      : context.palette.textSecondary,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One field per reminder time, two to a row.
+class _ReminderTimeFields extends StatelessWidget {
+  const _ReminderTimeFields({required this.times, required this.onPick});
+
+  final List<TimeOfDay> times;
+  final ValueChanged<int> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
+    return Column(
+      children: <Widget>[
+        for (int row = 0; row * 2 < times.length; row += 1) ...<Widget>[
+          if (row > 0) const SizedBox(height: AppSpacing.sm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              for (int column = 0; column < 2; column += 1) ...<Widget>[
+                if (column > 0) const SizedBox(width: AppSpacing.md - 2),
+                Expanded(
+                  child: row * 2 + column < times.length
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _FieldLabel(
+                              l10n.reminderTimeNumber(row * 2 + column + 1),
+                            ),
+                            _ValueField(
+                              value: L10nFormatters.timeLabel(
+                                context,
+                                times[row * 2 + column],
+                              ),
+                              trailing: Icons.schedule_outlined,
+                              onTap: () => onPick(row * 2 + column),
+                            ),
+                          ],
+                        )
+                      // Keeps a lone field on the last row half-width instead
+                      // of stretching it across the whole screen.
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ],
     );
   }
 }

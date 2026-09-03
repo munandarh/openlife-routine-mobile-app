@@ -26,12 +26,12 @@ void main() {
     await harness.seedRoutine(
       id: 'r1',
       title: 'Drink water',
-      reminderTime: '08:00',
+      reminderTimes: <String>['08:00'],
     );
     await harness.seedRoutine(
       id: 'r2',
       title: 'Evening stretch',
-      reminderTime: '21:00',
+      reminderTimes: <String>['21:00'],
     );
 
     await tester.pumpWidget(harness.wrap(const NotificationsPage()));

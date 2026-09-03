@@ -812,6 +812,42 @@ class AppLocalizationsId extends AppLocalizations {
       'Jaga asupan air tetap konsisten sepanjang hari.';
 
   @override
+  String get templateMedicineTitle => 'Jadwal Obat';
+
+  @override
+  String get templateMedicineDesc =>
+      'Dosis pada jam yang memang diminta resep.';
+
+  @override
+  String get templateRoutineMedicineWithMeals => 'Bersama makan';
+
+  @override
+  String get templateRoutineMedicineBeforeBed => 'Sebelum tidur';
+
+  @override
+  String timesPerDayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kali sehari',
+      one: 'Sekali sehari',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timesPerDayLabel => 'Berapa kali sehari';
+
+  @override
+  String reminderTimeNumber(int number) {
+    return 'Jam ke-$number';
+  }
+
+  @override
+  String get duplicateTimesError =>
+      'Dua pengingat tidak boleh di jam yang sama.';
+
+  @override
   String get templateVitaminTitle => 'Rutinitas Vitamin';
 
   @override

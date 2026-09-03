@@ -815,6 +815,41 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keep your water intake consistent throughout the day.';
 
   @override
+  String get templateMedicineTitle => 'Medication Schedule';
+
+  @override
+  String get templateMedicineDesc =>
+      'Doses at the hours a prescription actually calls for.';
+
+  @override
+  String get templateRoutineMedicineWithMeals => 'With meals';
+
+  @override
+  String get templateRoutineMedicineBeforeBed => 'Before bed';
+
+  @override
+  String timesPerDayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times a day',
+      one: 'Once a day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timesPerDayLabel => 'Times a day';
+
+  @override
+  String reminderTimeNumber(int number) {
+    return 'Time $number';
+  }
+
+  @override
+  String get duplicateTimesError => 'Two reminders cannot be at the same time.';
+
+  @override
   String get templateVitaminTitle => 'Vitamin Routine';
 
   @override

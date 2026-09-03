@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
+import 'package:openlife_routine/core/notifications/notification_actions.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/insights/domain/routine_streak.dart';
+import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 
 part 'today_event.dart';
@@ -72,18 +74,26 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     TodayRoutineCompletionToggled event,
     Emitter<TodayState> emit,
   ) async {
-    final TodayRoutineItem? item = state.findItem(event.routineId);
+    final TodayRoutineItem? item = state.findItem(
+      event.routineId,
+      event.reminderTime,
+    );
     if (item == null) {
       return;
     }
 
     final String dateKey = _dateKey(state.selectedDate);
     if (item.status == TodayRoutineItemStatus.done) {
-      await _appDatabase.deleteRoutineLog(event.routineId, dateKey);
+      await _appDatabase.deleteRoutineLog(
+        event.routineId,
+        dateKey,
+        reminderTime: event.reminderTime,
+      );
     } else {
       await _appDatabase.upsertRoutineLog(
         routineId: event.routineId,
         dateKey: dateKey,
+        reminderTime: event.reminderTime,
         status: 'done',
       );
       // Answering here should also clear the reminder still sitting in the
@@ -98,18 +108,26 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     TodayRoutineSkipped event,
     Emitter<TodayState> emit,
   ) async {
-    final TodayRoutineItem? item = state.findItem(event.routineId);
+    final TodayRoutineItem? item = state.findItem(
+      event.routineId,
+      event.reminderTime,
+    );
     if (item == null) {
       return;
     }
 
     final String dateKey = _dateKey(state.selectedDate);
     if (item.status == TodayRoutineItemStatus.skipped) {
-      await _appDatabase.deleteRoutineLog(event.routineId, dateKey);
+      await _appDatabase.deleteRoutineLog(
+        event.routineId,
+        dateKey,
+        reminderTime: event.reminderTime,
+      );
     } else {
       await _appDatabase.upsertRoutineLog(
         routineId: event.routineId,
         dateKey: dateKey,
+        reminderTime: event.reminderTime,
         status: 'skipped',
       );
       await _notificationService?.dismissShownRoutine(event.routineId);
@@ -126,7 +144,10 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     TodayRoutineSnoozed event,
     Emitter<TodayState> emit,
   ) async {
-    final TodayRoutineItem? item = state.findItem(event.routineId);
+    final TodayRoutineItem? item = state.findItem(
+      event.routineId,
+      event.reminderTime,
+    );
     if (item == null || !item.isOpen) {
       return;
     }
@@ -143,6 +164,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     await _appDatabase.upsertRoutineLog(
       routineId: event.routineId,
       dateKey: _dateKey(state.selectedDate),
+      reminderTime: event.reminderTime,
       status: 'snoozed',
       snoozedUntil: snoozedUntil,
     );
@@ -151,6 +173,10 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
       routineId: event.routineId,
       title: bundle.routine.title,
       scheduledFor: snoozedUntil,
+      reminderTime: event.reminderTime,
+      timeIndex: decodeReminderTimes(
+        bundle.schedule.reminderTime,
+      ).indexOf(event.reminderTime).clamp(0, maxReminderTimes - 1),
     );
 
     await _emitSelectedDateState(emit, selectedDate: state.selectedDate);
@@ -170,56 +196,64 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     required DateTime selectedDate,
   }) async {
     final String dateKey = _dateKey(selectedDate);
-    final Map<String, RoutineLogRowData> logsByRoutineId =
+    // Keyed by routine *and* time: a routine with a morning and an evening
+    // dose keeps a log for each, and one answered must not answer the other.
+    final Map<String, RoutineLogRowData> logsBySlot =
         <String, RoutineLogRowData>{
           for (final RoutineLogRowData log
               in await _appDatabase.getRoutineLogsByDate(dateKey))
-            log.routineId: log,
+            '${log.routineId}@${log.reminderTime}': log,
         };
     final DateTime today = _normalizeDate(_nowProvider());
     final String currentTimeLabel = _timeKey(_nowProvider());
     final bool isPastDay = selectedDate.isBefore(today);
 
-    final List<TodayRoutineItem> items =
-        _routineBundles
-            .where(
-              (RoutineBundleRow bundle) =>
-                  bundle.routine.isEnabled &&
-                  _repeatDays(
-                    bundle.schedule.repeatDays,
-                  ).contains(selectedDate.weekday),
-            )
-            .map((RoutineBundleRow bundle) {
-              final RoutineLogRowData? log = logsByRoutineId[bundle.routine.id];
-              final TodayRoutineItemStatus status = _statusFor(
-                log,
-                isPastDay: isPastDay,
-              );
-              final String reminderTime = bundle.schedule.reminderTime;
+    final List<TodayRoutineItem> items = <TodayRoutineItem>[];
 
-              return TodayRoutineItem(
-                routineId: bundle.routine.id,
-                title: bundle.routine.title,
-                category: RoutineCategory.values.byName(
-                  bundle.routine.category,
-                ),
-                reminderTime: reminderTime,
-                status: status,
-                iconKey: bundle.routine.iconKey,
-                snoozedUntil: status == TodayRoutineItemStatus.snoozed
-                    ? log?.snoozedUntil
-                    : null,
-                isDueNow:
-                    selectedDate == today &&
-                    status == TodayRoutineItemStatus.pending &&
-                    reminderTime.compareTo(currentTimeLabel) <= 0,
-              );
-            })
-            .toList()
-          ..sort(
-            (TodayRoutineItem left, TodayRoutineItem right) =>
-                left.reminderTime.compareTo(right.reminderTime),
-          );
+    for (final RoutineBundleRow bundle in _routineBundles) {
+      if (!bundle.routine.isEnabled ||
+          !_repeatDays(
+            bundle.schedule.repeatDays,
+          ).contains(selectedDate.weekday)) {
+        continue;
+      }
+
+      // One card per reminder time. A three-times-a-day medicine is three
+      // things to answer today, not one.
+      for (final String reminderTime in decodeReminderTimes(
+        bundle.schedule.reminderTime,
+      )) {
+        final RoutineLogRowData? log =
+            logsBySlot['${bundle.routine.id}@$reminderTime'];
+        final TodayRoutineItemStatus status = _statusFor(
+          log,
+          isPastDay: isPastDay,
+        );
+
+        items.add(
+          TodayRoutineItem(
+            routineId: bundle.routine.id,
+            title: bundle.routine.title,
+            category: RoutineCategory.values.byName(bundle.routine.category),
+            reminderTime: reminderTime,
+            status: status,
+            iconKey: bundle.routine.iconKey,
+            snoozedUntil: status == TodayRoutineItemStatus.snoozed
+                ? log?.snoozedUntil
+                : null,
+            isDueNow:
+                selectedDate == today &&
+                status == TodayRoutineItemStatus.pending &&
+                reminderTime.compareTo(currentTimeLabel) <= 0,
+          ),
+        );
+      }
+    }
+
+    items.sort(
+      (TodayRoutineItem left, TodayRoutineItem right) =>
+          left.reminderTime.compareTo(right.reminderTime),
+    );
 
     final int completedCount = items
         .where(

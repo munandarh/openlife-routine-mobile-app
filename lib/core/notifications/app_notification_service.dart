@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:openlife_routine/core/notifications/notification_actions.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart'
     as domain;
 import 'package:openlife_routine/l10n/app_localizations.dart';
@@ -210,11 +211,7 @@ class AppNotificationService {
       routines,
       isIOS: _isIOS,
     )) {
-      await _scheduleSlot(
-        routine: slot.routine,
-        weekday: slot.weekday,
-        strings: strings,
-      );
+      await _scheduleSlot(slot: slot, strings: strings);
     }
   }
 
@@ -258,17 +255,24 @@ class AppNotificationService {
       if (!routine.isEnabled) {
         continue;
       }
-      for (final int weekday in routine.repeatDays) {
-        slots.add(
-          RoutineReminderSlot(
-            routine: routine,
-            weekday: weekday,
-            firesAt: _nextWeeklyDate(
+      // A routine with a morning and an evening dose owns two slots on each
+      // of its days, not one.
+      for (int index = 0; index < routine.reminderTimes.length; index += 1) {
+        final String reminderTime = routine.reminderTimes[index];
+        for (final int weekday in routine.repeatDays) {
+          slots.add(
+            RoutineReminderSlot(
+              routine: routine,
               weekday: weekday,
-              reminderTime: routine.reminderTime,
+              timeIndex: index,
+              reminderTime: reminderTime,
+              firesAt: _nextWeeklyDate(
+                weekday: weekday,
+                reminderTime: reminderTime,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 
@@ -294,7 +298,7 @@ class AppNotificationService {
       id: bundle.routine.id,
       title: bundle.routine.title,
       category: domain.RoutineCategory.values.byName(bundle.routine.category),
-      reminderTime: bundle.schedule.reminderTime,
+      reminderTimes: decodeReminderTimes(bundle.schedule.reminderTime),
       repeatDays: _decodeRepeatDays(bundle.schedule.repeatDays),
       isEnabled: bundle.routine.isEnabled,
       snoozeMinutes: bundle.schedule.snoozeMinutes,
@@ -315,25 +319,28 @@ class AppNotificationService {
 
     final AppLocalizations strings = await _strings();
 
-    for (final int weekday in routine.repeatDays) {
-      await _scheduleSlot(routine: routine, weekday: weekday, strings: strings);
+    for (final RoutineReminderSlot slot in plannedSlots(<domain.Routine>[
+      routine,
+    ], isIOS: _isIOS)) {
+      await _scheduleSlot(slot: slot, strings: strings);
     }
   }
 
-  /// One weekly reminder for one routine on one weekday.
+  /// One weekly reminder for one of a routine's times on one weekday.
   Future<void> _scheduleSlot({
-    required domain.Routine routine,
-    required int weekday,
+    required RoutineReminderSlot slot,
     required AppLocalizations strings,
   }) async {
+    final domain.Routine routine = slot.routine;
+
     await _zonedScheduleWithFallback(
-      id: routineNotificationId(routine.id, weekday),
+      id: routineNotificationId(
+        routine.id,
+        routineReminderSlot(timeIndex: slot.timeIndex, weekday: slot.weekday),
+      ),
       title: routine.title,
       body: strings.notificationReminderBody(routine.title),
-      scheduledDate: _nextWeeklyDate(
-        weekday: weekday,
-        reminderTime: routine.reminderTime,
-      ),
+      scheduledDate: slot.firesAt,
       notificationDetails: routineNotificationDetails(
         strings: strings,
         snoozeMinutes: routine.snoozeMinutes,
@@ -341,6 +348,7 @@ class AppNotificationService {
       payload: RoutineNotificationPayload(
         routineId: routine.id,
         snoozeMinutes: routine.snoozeMinutes,
+        reminderTime: slot.reminderTime,
         title: routine.title,
       ).encode(),
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
@@ -400,6 +408,8 @@ class AppNotificationService {
     required DateTime scheduledFor,
     int snoozeMinutes = 10,
     String? payload,
+    String reminderTime = '',
+    int timeIndex = 0,
   }) async {
     if (_disabled) {
       return;
@@ -408,7 +418,9 @@ class AppNotificationService {
     final AppLocalizations strings = await _strings();
 
     await _zonedScheduleWithFallback(
-      id: routineNotificationId(routineId, routineSnoozeSlot),
+      // Its own slot per time: snoozing the morning dose must not cancel a
+      // snooze already running on the evening one.
+      id: routineNotificationId(routineId, routineSnoozeSlotFor(timeIndex)),
       title: title,
       body: strings.notificationReminderBody(title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
@@ -421,6 +433,7 @@ class AppNotificationService {
           RoutineNotificationPayload(
             routineId: routineId,
             snoozeMinutes: snoozeMinutes,
+            reminderTime: reminderTime,
             title: title,
           ).encode(),
     );
@@ -430,27 +443,36 @@ class AppNotificationService {
   ///
   /// Answering a routine inside the app used to leave its notification sitting
   /// in the shade, still asking.
-  Future<void> dismissShownRoutine(String routineId) async {
+  Future<void> dismissShownRoutine(String routineId) => _clearSlots(routineId);
+
+  Future<void> cancelRoutine(String routineId) => _clearSlots(routineId);
+
+  /// Cancels every slot [routineId] could hold.
+  ///
+  /// Sweeps all [maxReminderTimes] blocks rather than just the times the
+  /// routine has now: dropping a routine from three doses to one has to take
+  /// the other two alarms with it, and by the time this runs the routine no
+  /// longer knows about them.
+  Future<void> _clearSlots(String routineId) async {
     if (_disabled) {
       return;
     }
 
-    for (int weekday = 1; weekday <= 7; weekday += 1) {
-      await _plugin.cancel(id: routineNotificationId(routineId, weekday));
+    for (int index = 0; index < maxReminderTimes; index += 1) {
+      for (int weekday = 1; weekday <= 7; weekday += 1) {
+        await _plugin.cancel(
+          id: routineNotificationId(
+            routineId,
+            routineReminderSlot(timeIndex: index, weekday: weekday),
+          ),
+        );
+      }
+      await _plugin.cancel(
+        id: routineNotificationId(routineId, routineSnoozeSlotFor(index)),
+      );
     }
-    await _plugin.cancel(
-      id: routineNotificationId(routineId, routineSnoozeSlot),
-    );
-  }
 
-  Future<void> cancelRoutine(String routineId) async {
-    if (_disabled) {
-      return;
-    }
-
-    for (int weekday = 1; weekday <= 7; weekday += 1) {
-      await _plugin.cancel(id: routineNotificationId(routineId, weekday));
-    }
+    // Snoozes armed before reminder times were per-slot.
     await _plugin.cancel(
       id: routineNotificationId(routineId, routineSnoozeSlot),
     );
@@ -610,16 +632,27 @@ class AppNotificationService {
   }
 }
 
-/// One routine's reminder on one weekday, with the moment it next fires.
+/// One of a routine's reminder times on one weekday, with the moment it next
+/// fires.
 @immutable
 class RoutineReminderSlot {
   const RoutineReminderSlot({
     required this.routine,
     required this.weekday,
+    required this.timeIndex,
+    required this.reminderTime,
     required this.firesAt,
   });
 
   final domain.Routine routine;
   final int weekday;
+
+  /// Position in [Routine.reminderTimes] — the notification id depends on it,
+  /// which is why that list is kept sorted and de-duplicated.
+  final int timeIndex;
+
+  /// The `HH:mm` this slot fires at.
+  final String reminderTime;
+
   final tz.TZDateTime firesAt;
 }

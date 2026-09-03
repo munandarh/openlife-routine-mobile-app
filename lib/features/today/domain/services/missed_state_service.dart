@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 
 /// Closes out past days by turning routines that were scheduled but never
 /// resolved into `missed` logs.
@@ -65,7 +66,7 @@ class MissedStateService {
             dateKey(lastDay),
           ))
         if (_resolvedStatuses.contains(log.status))
-          '${log.routineId}@${log.date}',
+          '${log.routineId}@${log.date}@${log.reminderTime}',
     };
 
     int written = 0;
@@ -89,16 +90,23 @@ class MissedStateService {
         if (day.isBefore(_dateOnly(bundle.routine.createdAt))) {
           continue;
         }
-        if (resolved.contains('${bundle.routine.id}@$key')) {
-          continue;
-        }
+        // Each reminder time closes out on its own: taking the morning dose
+        // and forgetting the evening one is one missed, not none.
+        for (final String reminderTime in decodeReminderTimes(
+          bundle.schedule.reminderTime,
+        )) {
+          if (resolved.contains('${bundle.routine.id}@$key@$reminderTime')) {
+            continue;
+          }
 
-        await _appDatabase.upsertRoutineLog(
-          routineId: bundle.routine.id,
-          dateKey: key,
-          status: 'missed',
-        );
-        written += 1;
+          await _appDatabase.upsertRoutineLog(
+            routineId: bundle.routine.id,
+            dateKey: key,
+            reminderTime: reminderTime,
+            status: 'missed',
+          );
+          written += 1;
+        }
       }
     }
 

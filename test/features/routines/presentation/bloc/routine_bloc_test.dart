@@ -28,7 +28,7 @@ void main() {
           const RoutineCreateRequested(
             title: '   ',
             category: RoutineCategory.water,
-            reminderTime: '08:00',
+            reminderTimes: <String>['08:00'],
             repeatDays: <int>[1, 3, 5],
           ),
         );
@@ -57,7 +57,7 @@ void main() {
           const RoutineCreateRequested(
             title: 'Morning Water',
             category: RoutineCategory.water,
-            reminderTime: '08:00',
+            reminderTimes: <String>['08:00'],
             repeatDays: <int>[1, 2, 3],
           ),
         );

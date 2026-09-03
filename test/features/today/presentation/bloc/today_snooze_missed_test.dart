@@ -36,7 +36,7 @@ void main() {
         id: 'r-early',
         title: 'Morning Water',
         category: domain.RoutineCategory.water,
-        reminderTime: '07:00',
+        reminderTimes: <String>['07:00'],
         repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
         isEnabled: true,
         snoozeMinutes: 15,
@@ -49,7 +49,7 @@ void main() {
         id: 'r-late',
         title: 'Evening Stretch',
         category: domain.RoutineCategory.breakTime,
-        reminderTime: '20:00',
+        reminderTimes: <String>['20:00'],
         repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
         isEnabled: true,
         createdAt: now,
@@ -83,7 +83,7 @@ void main() {
       final TodayBloc bloc = buildBloc();
       await loadedState(bloc);
 
-      bloc.add(const TodayRoutineCompletionToggled('r-early'));
+      bloc.add(const TodayRoutineCompletionToggled('r-early', '07:00'));
       final TodayState state = await bloc.stream.firstWhere(
         (TodayState s) => s.completedCount == 1,
       );
@@ -96,9 +96,9 @@ void main() {
       final TodayBloc bloc = buildBloc();
       await loadedState(bloc);
 
-      bloc.add(const TodayRoutineCompletionToggled('r-early'));
+      bloc.add(const TodayRoutineCompletionToggled('r-early', '07:00'));
       await bloc.stream.firstWhere((TodayState s) => s.completedCount == 1);
-      bloc.add(const TodayRoutineSkipped('r-late'));
+      bloc.add(const TodayRoutineSkipped('r-late', '20:00'));
       final TodayState state = await bloc.stream.firstWhere(
         (TodayState s) => s.skippedCount == 1,
       );
@@ -113,12 +113,12 @@ void main() {
       final TodayBloc bloc = buildBloc();
       await loadedState(bloc);
 
-      bloc.add(const TodayRoutineSnoozed('r-early'));
+      bloc.add(const TodayRoutineSnoozed('r-early', '07:00'));
       final TodayState state = await bloc.stream.firstWhere(
         (TodayState s) => s.snoozedCount == 1,
       );
 
-      final TodayRoutineItem item = state.findItem('r-early')!;
+      final TodayRoutineItem item = state.findItem('r-early', '07:00')!;
       expect(item.status, TodayRoutineItemStatus.snoozed);
       // The routine's own 15-minute snooze wins over the 10-minute default.
       expect(item.snoozedUntil, now.add(const Duration(minutes: 15)));
@@ -129,13 +129,13 @@ void main() {
       final TodayBloc bloc = buildBloc();
       await loadedState(bloc);
 
-      bloc.add(const TodayRoutineSnoozed('r-early'));
+      bloc.add(const TodayRoutineSnoozed('r-early', '07:00'));
       final TodayState state = await bloc.stream.firstWhere(
         (TodayState s) => s.snoozedCount == 1,
       );
 
       expect(state.completedCount, 0);
-      expect(state.findItem('r-early')!.isOpen, isTrue);
+      expect(state.findItem('r-early', '07:00')!.isOpen, isTrue);
       expect(state.nextRoutine?.routineId, 'r-early');
       await bloc.close();
     });
@@ -144,14 +144,14 @@ void main() {
       final TodayBloc bloc = buildBloc();
       await loadedState(bloc);
 
-      bloc.add(const TodayRoutineCompletionToggled('r-early'));
+      bloc.add(const TodayRoutineCompletionToggled('r-early', '07:00'));
       await bloc.stream.firstWhere((TodayState s) => s.completedCount == 1);
 
-      bloc.add(const TodayRoutineSnoozed('r-early'));
+      bloc.add(const TodayRoutineSnoozed('r-early', '07:00'));
       await Future<void>.delayed(const Duration(milliseconds: 20));
 
       expect(
-        bloc.state.findItem('r-early')!.status,
+        bloc.state.findItem('r-early', '07:00')!.status,
         TodayRoutineItemStatus.done,
       );
       await bloc.close();
@@ -177,6 +177,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r-early',
         dateKey: keyFor(yesterday),
+        reminderTime: '07:00',
         status: 'missed',
       );
 
@@ -187,7 +188,10 @@ void main() {
         (TodayState s) => s.selectedDate == yesterday,
       );
 
-      expect(state.findItem('r-early')!.status, TodayRoutineItemStatus.missed);
+      expect(
+        state.findItem('r-early', '07:00')!.status,
+        TodayRoutineItemStatus.missed,
+      );
       await bloc.close();
     });
 
@@ -195,6 +199,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r-early',
         dateKey: keyFor(yesterday),
+        reminderTime: '07:00',
         status: 'done',
       );
 
@@ -205,7 +210,10 @@ void main() {
         (TodayState s) => s.selectedDate == yesterday,
       );
 
-      expect(state.findItem('r-early')!.status, TodayRoutineItemStatus.done);
+      expect(
+        state.findItem('r-early', '07:00')!.status,
+        TodayRoutineItemStatus.done,
+      );
       expect(state.missedCount, 1);
       await bloc.close();
     });
@@ -227,8 +235,8 @@ void main() {
       final TodayState state = await loadedState(bloc);
 
       // 09:00 now: the 07:00 routine is due, the 20:00 one is not.
-      expect(state.findItem('r-early')!.isDueNow, isTrue);
-      expect(state.findItem('r-late')!.isDueNow, isFalse);
+      expect(state.findItem('r-early', '07:00')!.isDueNow, isTrue);
+      expect(state.findItem('r-late', '20:00')!.isDueNow, isFalse);
       await bloc.close();
     });
   });

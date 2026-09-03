@@ -515,7 +515,10 @@ class _TodayRoutineCard extends StatelessWidget {
                     ? l10n.markNotDoneAction(item.title)
                     : l10n.markDoneAction(item.title),
                 onTap: () => context.read<TodayBloc>().add(
-                  TodayRoutineCompletionToggled(item.routineId),
+                  TodayRoutineCompletionToggled(
+                    item.routineId,
+                    item.reminderTime,
+                  ),
                 ),
               ),
             ],
@@ -529,7 +532,7 @@ class _TodayRoutineCard extends StatelessWidget {
                     label: l10n.snoozeAction,
                     tone: context.palette.primaryInk,
                     onTap: () => context.read<TodayBloc>().add(
-                      TodayRoutineSnoozed(item.routineId),
+                      TodayRoutineSnoozed(item.routineId, item.reminderTime),
                     ),
                   ),
                 ),
@@ -539,7 +542,7 @@ class _TodayRoutineCard extends StatelessWidget {
                     label: l10n.skipAction,
                     tone: context.palette.textSecondary,
                     onTap: () => context.read<TodayBloc>().add(
-                      TodayRoutineSkipped(item.routineId),
+                      TodayRoutineSkipped(item.routineId, item.reminderTime),
                     ),
                   ),
                 ),

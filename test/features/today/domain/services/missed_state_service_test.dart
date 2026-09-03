@@ -76,7 +76,11 @@ void main() {
 
       expect(written, 1);
       final RoutineLogRowData? log = await appDatabase
-          .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
+          .getRoutineLogByRoutineAndDate(
+            'r1',
+            keyFor(yesterday),
+            reminderTime: '07:00',
+          );
       expect(log, isNotNull);
       expect(log!.status, 'missed');
     });
@@ -89,7 +93,11 @@ void main() {
       );
 
       final RoutineLogRowData? todayLog = await appDatabase
-          .getRoutineLogByRoutineAndDate('r1', keyFor(now));
+          .getRoutineLogByRoutineAndDate(
+            'r1',
+            keyFor(now),
+            reminderTime: '07:00',
+          );
       expect(todayLog, isNull);
     });
 
@@ -99,6 +107,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(yesterday),
+        reminderTime: '07:00',
         status: 'done',
       );
 
@@ -108,7 +117,11 @@ void main() {
 
       expect(written, 0);
       final RoutineLogRowData? log = await appDatabase
-          .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
+          .getRoutineLogByRoutineAndDate(
+            'r1',
+            keyFor(yesterday),
+            reminderTime: '07:00',
+          );
       expect(log!.status, 'done');
     });
 
@@ -118,6 +131,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: keyFor(yesterday),
+        reminderTime: '07:00',
         status: 'skipped',
       );
 
@@ -126,7 +140,11 @@ void main() {
       );
 
       final RoutineLogRowData? log = await appDatabase
-          .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
+          .getRoutineLogByRoutineAndDate(
+            'r1',
+            keyFor(yesterday),
+            reminderTime: '07:00',
+          );
       expect(log!.status, 'skipped');
     });
 
@@ -138,6 +156,7 @@ void main() {
         await appDatabase.upsertRoutineLog(
           routineId: 'r1',
           dateKey: keyFor(yesterday),
+          reminderTime: '07:00',
           status: 'snoozed',
           snoozedUntil: yesterday,
         );
@@ -147,7 +166,11 @@ void main() {
         );
 
         final RoutineLogRowData? log = await appDatabase
-            .getRoutineLogByRoutineAndDate('r1', keyFor(yesterday));
+            .getRoutineLogByRoutineAndDate(
+              'r1',
+              keyFor(yesterday),
+              reminderTime: '07:00',
+            );
         expect(log!.status, 'missed');
         expect(log.snoozedUntil, isNull);
       },
@@ -169,6 +192,7 @@ void main() {
               .getRoutineLogByRoutineAndDate(
                 'r1',
                 keyFor(now.subtract(Duration(days: i))),
+                reminderTime: '07:00',
               );
           expect(log?.status, 'missed', reason: 'day -$i should be missed');
         }
@@ -230,6 +254,7 @@ void main() {
           .getRoutineLogByRoutineAndDate(
             'r1',
             keyFor(now.subtract(const Duration(days: 5))),
+            reminderTime: '07:00',
           );
       expect(beforeCreation, isNull);
     });

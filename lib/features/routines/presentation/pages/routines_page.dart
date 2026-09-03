@@ -297,7 +297,11 @@ class _RoutineListRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${L10nFormatters.timeOfDayLabel(context, routine.reminderTime)}'
+                      // The count rather than the hours once there are
+                      // several: three times plus the days overflowed one
+                      // line and the ellipsis ate the days, which are just as
+                      // load-bearing. The hours are on the detail screen.
+                      '${routine.hasMultipleTimes ? l10n.timesPerDayCount(routine.reminderTimes.length) : L10nFormatters.timeOfDayLabel(context, routine.firstReminderTime)}'
                       ' · '
                       '${L10nFormatters.repeatDays(l10n, routine.repeatDays)}',
                       maxLines: 1,

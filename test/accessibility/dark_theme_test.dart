@@ -33,7 +33,7 @@ void main() {
           id: 'r1',
           title: 'Morning hydration',
           category: RoutineCategory.water,
-          reminderTime: '08:00',
+          reminderTimes: <String>['08:00'],
           repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
           isEnabled: true,
           createdAt: seededAt,

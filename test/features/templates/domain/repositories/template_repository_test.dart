@@ -10,9 +10,9 @@ void main() {
       repository = TemplateRepository();
     });
 
-    test('getTemplates returns 5 seed templates', () async {
+    test('getTemplates returns 6 seed templates', () async {
       final List<RoutineTemplate> templates = await repository.getTemplates();
-      expect(templates.length, 5);
+      expect(templates.length, 6);
     });
 
     test('seed templates have all required fields', () async {
@@ -44,7 +44,7 @@ void main() {
       );
       expect(morning.routines.length, 3);
       expect(morning.routines[0].title, 'Wake Up');
-      expect(morning.routines[0].reminderTime, '06:30');
+      expect(morning.routines[0].reminderTimes, <String>['06:30']);
 
       final RoutineTemplate hydration = templates.firstWhere(
         (t) => t.id == 'hydration',

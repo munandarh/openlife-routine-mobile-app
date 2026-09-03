@@ -40,7 +40,7 @@ final class RoutineCreateRequested extends RoutineEvent {
   const RoutineCreateRequested({
     required this.title,
     required this.category,
-    required this.reminderTime,
+    required this.reminderTimes,
     required this.repeatDays,
     this.isEnabled = true,
     this.snoozeMinutes = 10,
@@ -50,7 +50,7 @@ final class RoutineCreateRequested extends RoutineEvent {
 
   final String title;
   final RoutineCategory category;
-  final String reminderTime;
+  final List<String> reminderTimes;
   final List<int> repeatDays;
   final bool isEnabled;
   final int snoozeMinutes;
@@ -61,7 +61,7 @@ final class RoutineCreateRequested extends RoutineEvent {
   List<Object?> get props => <Object?>[
     title,
     category,
-    reminderTime,
+    reminderTimes,
     repeatDays,
     isEnabled,
     snoozeMinutes,
@@ -75,7 +75,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
     required this.id,
     required this.title,
     required this.category,
-    required this.reminderTime,
+    required this.reminderTimes,
     required this.repeatDays,
     required this.isEnabled,
     this.snoozeMinutes = 10,
@@ -86,7 +86,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
   final String id;
   final String title;
   final RoutineCategory category;
-  final String reminderTime;
+  final List<String> reminderTimes;
   final List<int> repeatDays;
   final bool isEnabled;
   final int snoozeMinutes;
@@ -98,7 +98,7 @@ final class RoutineUpdateRequested extends RoutineEvent {
     id,
     title,
     category,
-    reminderTime,
+    reminderTimes,
     repeatDays,
     isEnabled,
     snoozeMinutes,

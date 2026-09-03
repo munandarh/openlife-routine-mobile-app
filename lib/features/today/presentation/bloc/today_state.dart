@@ -114,9 +114,9 @@ class TodayState extends Equatable {
     return count;
   }
 
-  TodayRoutineItem? findItem(String routineId) {
+  TodayRoutineItem? findItem(String routineId, String reminderTime) {
     for (final TodayRoutineItem item in items) {
-      if (item.routineId == routineId) {
+      if (item.routineId == routineId && item.reminderTime == reminderTime) {
         return item;
       }
     }

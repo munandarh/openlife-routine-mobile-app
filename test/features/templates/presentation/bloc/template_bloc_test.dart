@@ -19,7 +19,7 @@ void main() {
       act: (TemplateBloc bloc) => bloc.add(const TemplatesLoaded()),
       verify: (TemplateBloc bloc) {
         expect(bloc.state.status, TemplateStatus.success);
-        expect(bloc.state.templates.length, 5);
+        expect(bloc.state.templates.length, 6);
       },
     );
 

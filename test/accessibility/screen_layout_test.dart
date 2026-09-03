@@ -38,7 +38,7 @@ void main() {
           id: 'r1',
           title: 'Morning hydration reminder',
           category: RoutineCategory.water,
-          reminderTime: '08:00',
+          reminderTimes: <String>['08:00'],
           repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
           isEnabled: true,
           notes: 'Two glasses before coffee',
@@ -49,7 +49,7 @@ void main() {
           id: 'r2',
           title: 'Evening stretch',
           category: RoutineCategory.breakTime,
-          reminderTime: '20:30',
+          reminderTimes: <String>['20:30'],
           repeatDays: const <int>[1, 2, 3, 4, 5],
           isEnabled: true,
           iconKey: 'self_improvement',
@@ -68,7 +68,7 @@ void main() {
       id: 'r2',
       title: 'Evening stretch',
       category: 'breakTime',
-      reminderTime: '20:30',
+      reminderTimes: <String>['20:30'],
       iconKey: 'self_improvement',
     );
   });

@@ -58,6 +58,7 @@ void main() {
       await appDatabase.upsertRoutineLog(
         routineId: 'r1',
         dateKey: '2026-01-01',
+        reminderTime: '08:00',
         status: 'done',
       );
 

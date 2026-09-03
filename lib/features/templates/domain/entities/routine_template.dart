@@ -42,7 +42,7 @@ class TemplateRoutineItem extends Equatable {
     required this.titleKey,
     required this.title,
     required this.category,
-    required this.reminderTime,
+    required this.reminderTimes,
     required this.repeatDays,
     this.snoozeMinutes = 10,
   });
@@ -52,7 +52,10 @@ class TemplateRoutineItem extends Equatable {
   final String titleKey;
   final String title;
   final String category;
-  final String reminderTime;
+
+  /// Every time of day the routine reminds at. Most templates carry one; a
+  /// dose template carries the schedule a person is actually told to follow.
+  final List<String> reminderTimes;
   final List<int> repeatDays;
   final int snoozeMinutes;
 
@@ -61,7 +64,7 @@ class TemplateRoutineItem extends Equatable {
     titleKey,
     title,
     category,
-    reminderTime,
+    reminderTimes,
     repeatDays,
     snoozeMinutes,
   ];

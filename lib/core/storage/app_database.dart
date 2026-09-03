@@ -34,6 +34,9 @@ class RoutineSchedules extends Table {
 
   TextColumn get routineId => text().references(Routines, #id)();
 
+  /// One or more `HH:mm` values, comma-separated — the same shape
+  /// [repeatDays] already uses. A medicine taken three times a day is one
+  /// routine with three times, not three routines.
   TextColumn get reminderTime => text()();
 
   TextColumn get repeatDays => text()();
@@ -52,6 +55,13 @@ class RoutineLogs extends Table {
   TextColumn get routineId => text().references(Routines, #id)();
 
   TextColumn get date => text()();
+
+  /// Which of the routine's reminder times this log answers, as `HH:mm`.
+  ///
+  /// Without it a routine taken morning and night had one log a day, so
+  /// marking the morning dose done marked the evening one done too. Rows
+  /// written before this column existed carry the routine's first time.
+  TextColumn get reminderTime => text().withDefault(const Constant(''))();
 
   /// One of: `done`, `skipped`, `missed`, `snoozed`.
   TextColumn get status => text()();
@@ -86,7 +96,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -102,6 +112,18 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 4) {
         await migrator.addColumn(routines, routines.iconKey);
+      }
+      if (from < 5) {
+        await migrator.addColumn(routineLogs, routineLogs.reminderTime);
+        // Existing logs answered the routine's only time, so point them
+        // at it. Left blank they would orphan every past completion the
+        // moment a second time was added, and the streak would reset.
+        await customStatement(
+          'UPDATE routine_logs SET reminder_time = COALESCE(('
+          'SELECT substr(s.reminder_time, 1, 5) FROM routine_schedules s '
+          'WHERE s.routine_id = routine_logs.routine_id'
+          "), '') WHERE reminder_time = ''",
+        );
       }
     },
   );
@@ -181,13 +203,21 @@ extension RoutineLogQueries on AppDatabase {
     )..where((RoutineLogsTable table) => table.date.equals(dateKey))).get();
   }
 
+  /// The log for one reminder of one routine on one day.
+  ///
+  /// [reminderTime] identifies which reminder: a routine with a morning and an
+  /// evening dose keeps a log for each, and answering one must not answer the
+  /// other.
   Future<RoutineLogRowData?> getRoutineLogByRoutineAndDate(
     String routineId,
-    String dateKey,
-  ) {
+    String dateKey, {
+    required String reminderTime,
+  }) {
     return (select(routineLogs)..where(
           (RoutineLogsTable table) =>
-              table.routineId.equals(routineId) & table.date.equals(dateKey),
+              table.routineId.equals(routineId) &
+              table.date.equals(dateKey) &
+              table.reminderTime.equals(reminderTime),
         ))
         .getSingleOrNull();
   }
@@ -196,19 +226,22 @@ extension RoutineLogQueries on AppDatabase {
     required String routineId,
     required String dateKey,
     required String status,
+    required String reminderTime,
     DateTime? snoozedUntil,
   }) async {
     final DateTime now = DateTime.now();
     final RoutineLogRowData? existingLog = await getRoutineLogByRoutineAndDate(
       routineId,
       dateKey,
+      reminderTime: reminderTime,
     );
 
     await into(routineLogs).insertOnConflictUpdate(
       RoutineLogsCompanion(
-        id: Value(existingLog?.id ?? '${routineId}_$dateKey'),
+        id: Value(existingLog?.id ?? '${routineId}_${dateKey}_$reminderTime'),
         routineId: Value(routineId),
         date: Value(dateKey),
+        reminderTime: Value(reminderTime),
         status: Value(status),
         // Only a snoozed log carries a wake-up time; every other status
         // clears whatever a previous snooze left behind.
@@ -233,10 +266,16 @@ extension RoutineLogQueries on AppDatabase {
         .get();
   }
 
-  Future<void> deleteRoutineLog(String routineId, String dateKey) {
+  Future<void> deleteRoutineLog(
+    String routineId,
+    String dateKey, {
+    required String reminderTime,
+  }) {
     return (delete(routineLogs)..where(
           (RoutineLogsTable table) =>
-              table.routineId.equals(routineId) & table.date.equals(dateKey),
+              table.routineId.equals(routineId) &
+              table.date.equals(dateKey) &
+              table.reminderTime.equals(reminderTime),
         ))
         .go();
   }

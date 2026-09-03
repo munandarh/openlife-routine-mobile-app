@@ -45,7 +45,7 @@ void main() {
 
       final domain.Routine updatedRoutine = routine.copyWith(
         title: 'Morning Hydration',
-        reminderTime: '09:15',
+        reminderTimes: <String>['09:15'],
         repeatDays: <int>[2, 4, 6],
         updatedAt: DateTime(2026, 7, 1, 9, 15),
       );
@@ -57,7 +57,7 @@ void main() {
       );
       expect(reloadedRoutine, isNotNull);
       expect(reloadedRoutine?.title, 'Morning Hydration');
-      expect(reloadedRoutine?.reminderTime, '09:15');
+      expect(reloadedRoutine?.reminderTimes, <String>['09:15']);
       expect(reloadedRoutine?.repeatDays, <int>[2, 4, 6]);
     });
 
@@ -87,7 +87,7 @@ void main() {
       );
       expect(storedRoutine, isNotNull);
       expect(storedRoutine?.title, 'Morning Water');
-      expect(storedRoutine?.reminderTime, '08:00');
+      expect(storedRoutine?.reminderTimes, <String>['08:00']);
       expect(storedRoutine?.repeatDays, <int>[1, 2, 3]);
     });
   });
@@ -98,7 +98,7 @@ domain.Routine _buildRoutine() {
     id: 'routine-1',
     title: 'Morning Water',
     category: domain.RoutineCategory.water,
-    reminderTime: '08:00',
+    reminderTimes: <String>['08:00'],
     repeatDays: const <int>[1, 2, 3],
     isEnabled: true,
     createdAt: DateTime(2026, 7, 1, 8),

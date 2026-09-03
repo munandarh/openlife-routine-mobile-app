@@ -53,6 +53,17 @@ final class L10nFormatters {
     return timeLabel(context, parseTime(reminderTime));
   }
 
+  /// Every one of a routine's times, in the device's 12/24-hour preference.
+  ///
+  /// Joined rather than summarised as "3x daily" because the hours are the
+  /// part a person checks: knowing a dose is at 13:00 is what stops them
+  /// taking it twice.
+  static String reminderTimes(BuildContext context, List<String> times) {
+    return times
+        .map((String time) => timeOfDayLabel(context, time))
+        .join(' · ');
+  }
+
   /// Formats a [TimeOfDay] using the device's 12/24-hour preference.
   static String timeLabel(BuildContext context, TimeOfDay time) {
     return time.format(context);

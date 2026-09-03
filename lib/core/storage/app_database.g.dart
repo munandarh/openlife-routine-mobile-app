@@ -708,6 +708,10 @@ class $RoutineSchedulesTable extends RoutineSchedules
 class RoutineSchedule extends DataClass implements Insertable<RoutineSchedule> {
   final String id;
   final String routineId;
+
+  /// One or more `HH:mm` values, comma-separated — the same shape
+  /// [repeatDays] already uses. A medicine taken three times a day is one
+  /// routine with three times, not three routines.
   final String reminderTime;
   final String repeatDays;
   final int snoozeMinutes;
@@ -986,6 +990,18 @@ class $RoutineLogsTable extends RoutineLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _reminderTimeMeta = const VerificationMeta(
+    'reminderTime',
+  );
+  @override
+  late final GeneratedColumn<String> reminderTime = GeneratedColumn<String>(
+    'reminder_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -1033,6 +1049,7 @@ class $RoutineLogsTable extends RoutineLogs
     id,
     routineId,
     date,
+    reminderTime,
     status,
     snoozedUntil,
     createdAt,
@@ -1070,6 +1087,15 @@ class $RoutineLogsTable extends RoutineLogs
       );
     } else if (isInserting) {
       context.missing(_dateMeta);
+    }
+    if (data.containsKey('reminder_time')) {
+      context.handle(
+        _reminderTimeMeta,
+        reminderTime.isAcceptableOrUnknown(
+          data['reminder_time']!,
+          _reminderTimeMeta,
+        ),
+      );
     }
     if (data.containsKey('status')) {
       context.handle(
@@ -1125,6 +1151,10 @@ class $RoutineLogsTable extends RoutineLogs
         DriftSqlType.string,
         data['${effectivePrefix}date'],
       )!,
+      reminderTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reminder_time'],
+      )!,
       status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}status'],
@@ -1155,6 +1185,13 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
   final String routineId;
   final String date;
 
+  /// Which of the routine's reminder times this log answers, as `HH:mm`.
+  ///
+  /// Without it a routine taken morning and night had one log a day, so
+  /// marking the morning dose done marked the evening one done too. Rows
+  /// written before this column existed carry the routine's first time.
+  final String reminderTime;
+
   /// One of: `done`, `skipped`, `missed`, `snoozed`.
   final String status;
 
@@ -1167,6 +1204,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     required this.id,
     required this.routineId,
     required this.date,
+    required this.reminderTime,
     required this.status,
     this.snoozedUntil,
     required this.createdAt,
@@ -1178,6 +1216,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     map['id'] = Variable<String>(id);
     map['routine_id'] = Variable<String>(routineId);
     map['date'] = Variable<String>(date);
+    map['reminder_time'] = Variable<String>(reminderTime);
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || snoozedUntil != null) {
       map['snoozed_until'] = Variable<DateTime>(snoozedUntil);
@@ -1192,6 +1231,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       id: Value(id),
       routineId: Value(routineId),
       date: Value(date),
+      reminderTime: Value(reminderTime),
       status: Value(status),
       snoozedUntil: snoozedUntil == null && nullToAbsent
           ? const Value.absent()
@@ -1210,6 +1250,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       id: serializer.fromJson<String>(json['id']),
       routineId: serializer.fromJson<String>(json['routineId']),
       date: serializer.fromJson<String>(json['date']),
+      reminderTime: serializer.fromJson<String>(json['reminderTime']),
       status: serializer.fromJson<String>(json['status']),
       snoozedUntil: serializer.fromJson<DateTime?>(json['snoozedUntil']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -1223,6 +1264,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       'id': serializer.toJson<String>(id),
       'routineId': serializer.toJson<String>(routineId),
       'date': serializer.toJson<String>(date),
+      'reminderTime': serializer.toJson<String>(reminderTime),
       'status': serializer.toJson<String>(status),
       'snoozedUntil': serializer.toJson<DateTime?>(snoozedUntil),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -1234,6 +1276,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     String? id,
     String? routineId,
     String? date,
+    String? reminderTime,
     String? status,
     Value<DateTime?> snoozedUntil = const Value.absent(),
     DateTime? createdAt,
@@ -1242,6 +1285,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     id: id ?? this.id,
     routineId: routineId ?? this.routineId,
     date: date ?? this.date,
+    reminderTime: reminderTime ?? this.reminderTime,
     status: status ?? this.status,
     snoozedUntil: snoozedUntil.present ? snoozedUntil.value : this.snoozedUntil,
     createdAt: createdAt ?? this.createdAt,
@@ -1252,6 +1296,9 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
       id: data.id.present ? data.id.value : this.id,
       routineId: data.routineId.present ? data.routineId.value : this.routineId,
       date: data.date.present ? data.date.value : this.date,
+      reminderTime: data.reminderTime.present
+          ? data.reminderTime.value
+          : this.reminderTime,
       status: data.status.present ? data.status.value : this.status,
       snoozedUntil: data.snoozedUntil.present
           ? data.snoozedUntil.value
@@ -1267,6 +1314,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
           ..write('id: $id, ')
           ..write('routineId: $routineId, ')
           ..write('date: $date, ')
+          ..write('reminderTime: $reminderTime, ')
           ..write('status: $status, ')
           ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
@@ -1280,6 +1328,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
     id,
     routineId,
     date,
+    reminderTime,
     status,
     snoozedUntil,
     createdAt,
@@ -1292,6 +1341,7 @@ class RoutineLog extends DataClass implements Insertable<RoutineLog> {
           other.id == this.id &&
           other.routineId == this.routineId &&
           other.date == this.date &&
+          other.reminderTime == this.reminderTime &&
           other.status == this.status &&
           other.snoozedUntil == this.snoozedUntil &&
           other.createdAt == this.createdAt &&
@@ -1302,6 +1352,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
   final Value<String> id;
   final Value<String> routineId;
   final Value<String> date;
+  final Value<String> reminderTime;
   final Value<String> status;
   final Value<DateTime?> snoozedUntil;
   final Value<DateTime> createdAt;
@@ -1311,6 +1362,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     this.id = const Value.absent(),
     this.routineId = const Value.absent(),
     this.date = const Value.absent(),
+    this.reminderTime = const Value.absent(),
     this.status = const Value.absent(),
     this.snoozedUntil = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1321,6 +1373,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     required String id,
     required String routineId,
     required String date,
+    this.reminderTime = const Value.absent(),
     required String status,
     this.snoozedUntil = const Value.absent(),
     required DateTime createdAt,
@@ -1336,6 +1389,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     Expression<String>? id,
     Expression<String>? routineId,
     Expression<String>? date,
+    Expression<String>? reminderTime,
     Expression<String>? status,
     Expression<DateTime>? snoozedUntil,
     Expression<DateTime>? createdAt,
@@ -1346,6 +1400,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
       if (id != null) 'id': id,
       if (routineId != null) 'routine_id': routineId,
       if (date != null) 'date': date,
+      if (reminderTime != null) 'reminder_time': reminderTime,
       if (status != null) 'status': status,
       if (snoozedUntil != null) 'snoozed_until': snoozedUntil,
       if (createdAt != null) 'created_at': createdAt,
@@ -1358,6 +1413,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     Value<String>? id,
     Value<String>? routineId,
     Value<String>? date,
+    Value<String>? reminderTime,
     Value<String>? status,
     Value<DateTime?>? snoozedUntil,
     Value<DateTime>? createdAt,
@@ -1368,6 +1424,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
       id: id ?? this.id,
       routineId: routineId ?? this.routineId,
       date: date ?? this.date,
+      reminderTime: reminderTime ?? this.reminderTime,
       status: status ?? this.status,
       snoozedUntil: snoozedUntil ?? this.snoozedUntil,
       createdAt: createdAt ?? this.createdAt,
@@ -1387,6 +1444,9 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
     }
     if (date.present) {
       map['date'] = Variable<String>(date.value);
+    }
+    if (reminderTime.present) {
+      map['reminder_time'] = Variable<String>(reminderTime.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -1412,6 +1472,7 @@ class RoutineLogsCompanion extends UpdateCompanion<RoutineLog> {
           ..write('id: $id, ')
           ..write('routineId: $routineId, ')
           ..write('date: $date, ')
+          ..write('reminderTime: $reminderTime, ')
           ..write('status: $status, ')
           ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
@@ -2255,6 +2316,7 @@ typedef $$RoutineLogsTableCreateCompanionBuilder =
       required String id,
       required String routineId,
       required String date,
+      Value<String> reminderTime,
       required String status,
       Value<DateTime?> snoozedUntil,
       required DateTime createdAt,
@@ -2266,6 +2328,7 @@ typedef $$RoutineLogsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> routineId,
       Value<String> date,
+      Value<String> reminderTime,
       Value<String> status,
       Value<DateTime?> snoozedUntil,
       Value<DateTime> createdAt,
@@ -2311,6 +2374,11 @@ class $$RoutineLogsTableFilterComposer
 
   ColumnFilters<String> get date => $composableBuilder(
     column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2377,6 +2445,11 @@ class $$RoutineLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnOrderings(column),
@@ -2435,6 +2508,11 @@ class $$RoutineLogsTableAnnotationComposer
 
   GeneratedColumn<String> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
@@ -2505,6 +2583,7 @@ class $$RoutineLogsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> routineId = const Value.absent(),
                 Value<String> date = const Value.absent(),
+                Value<String> reminderTime = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<DateTime?> snoozedUntil = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -2514,6 +2593,7 @@ class $$RoutineLogsTableTableManager
                 id: id,
                 routineId: routineId,
                 date: date,
+                reminderTime: reminderTime,
                 status: status,
                 snoozedUntil: snoozedUntil,
                 createdAt: createdAt,
@@ -2525,6 +2605,7 @@ class $$RoutineLogsTableTableManager
                 required String id,
                 required String routineId,
                 required String date,
+                Value<String> reminderTime = const Value.absent(),
                 required String status,
                 Value<DateTime?> snoozedUntil = const Value.absent(),
                 required DateTime createdAt,
@@ -2534,6 +2615,7 @@ class $$RoutineLogsTableTableManager
                 id: id,
                 routineId: routineId,
                 date: date,
+                reminderTime: reminderTime,
                 status: status,
                 snoozedUntil: snoozedUntil,
                 createdAt: createdAt,

@@ -54,14 +54,14 @@ void main() {
         titleKey: 'drinkwater',
         title: 'Drink Water',
         category: 'water',
-        reminderTime: '08:00',
+        reminderTimes: <String>['08:00'],
         repeatDays: <int>[1, 2, 3, 4, 5],
         snoozeMinutes: 10,
       );
 
       expect(item.title, 'Drink Water');
       expect(item.category, 'water');
-      expect(item.reminderTime, '08:00');
+      expect(item.reminderTimes, <String>['08:00']);
       expect(item.repeatDays, <int>[1, 2, 3, 4, 5]);
       expect(item.snoozeMinutes, 10);
     });
@@ -71,14 +71,14 @@ void main() {
         titleKey: 'meditate',
         title: 'Meditate',
         category: 'custom',
-        reminderTime: '06:30',
+        reminderTimes: <String>['06:30'],
         repeatDays: <int>[1, 3, 5],
       );
       const TemplateRoutineItem b = TemplateRoutineItem(
         titleKey: 'meditate',
         title: 'Meditate',
         category: 'custom',
-        reminderTime: '06:30',
+        reminderTimes: <String>['06:30'],
         repeatDays: <int>[1, 3, 5],
       );
 

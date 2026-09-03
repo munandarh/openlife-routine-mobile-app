@@ -63,7 +63,7 @@ void main() {
     final List<Routine> routines = await repository.watchRoutines().first;
     final Routine first = routines.first;
     expect(first.category, RoutineCategory.vitamin);
-    expect(first.reminderTime, '08:30');
+    expect(first.reminderTimes, <String>['08:30']);
     expect(first.repeatDays, <int>[1, 2, 3, 4, 5, 6, 7]);
     expect(first.isEnabled, isTrue);
   });

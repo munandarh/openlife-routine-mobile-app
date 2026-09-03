@@ -24,7 +24,7 @@ void main() {
       id: 'r1',
       title: 'Vitamin D3',
       category: RoutineCategory.vitamin,
-      reminderTime: '08:30',
+      reminderTimes: <String>['08:30'],
       repeatDays: const <int>[1, 3, 5],
       isEnabled: true,
       snoozeMinutes: snoozeMinutes,

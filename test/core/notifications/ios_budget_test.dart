@@ -24,7 +24,9 @@ void main() {
         id: 'r$i',
         title: 'Routine $i',
         category: RoutineCategory.water,
-        reminderTime: '${(6 + i % 12).toString().padLeft(2, '0')}:00',
+        reminderTimes: <String>[
+          '${(6 + i % 12).toString().padLeft(2, '0')}:00',
+        ],
         repeatDays: const <int>[1, 2, 3, 4, 5, 6, 7],
         isEnabled: isEnabled,
         snoozeMinutes: 10,

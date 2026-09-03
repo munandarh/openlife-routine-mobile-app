@@ -419,5 +419,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "streakDays": "{count, plural, other{Rentetan {count} hari}}",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "doneLabel": "selesai",
+  "activeCount": "{count, plural, other{{count} aktif}}",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastSevenDays": "7 hari terakhir"
 }

@@ -7,12 +7,17 @@ class ProgressRing extends StatelessWidget {
   const ProgressRing({
     required this.progress,
     required this.label,
+    this.caption,
     this.size = 108,
     super.key,
   });
 
   final double progress;
   final String label;
+
+  /// Small word under the count ("done"). Optional so the ring stays usable
+  /// anywhere it is just a gauge.
+  final String? caption;
   final double size;
 
   double get _clampedProgress => progress.clamp(0.0, 1.0);
@@ -32,13 +37,23 @@ class ProgressRing extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
+              // The mockup's dial sits on white, not on the page tint.
+              Container(
+                width: size - 12,
+                height: size - 12,
+                decoration: BoxDecoration(
+                  color: context.palette.surface,
+                  shape: BoxShape.circle,
+                ),
+              ),
               SizedBox(
                 width: size,
                 height: size,
                 child: CircularProgressIndicator(
                   value: animatedProgress,
-                  strokeWidth: 12,
-                  backgroundColor: context.palette.surfaceVariant,
+                  strokeWidth: 11,
+                  strokeCap: StrokeCap.round,
+                  backgroundColor: context.palette.border,
                   color: isComplete ? AppColors.success : AppColors.primary,
                 ),
               ),
@@ -58,12 +73,20 @@ class ProgressRing extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               label,
-                              style: AppTextStyles.cardTitle.copyWith(
+                              style: AppTextStyles.pageTitle.copyWith(
+                                fontSize: 27,
                                 color: isComplete
                                     ? AppColors.success
                                     : context.palette.textPrimary,
                               ),
                             ),
+                            if (caption != null)
+                              Text(
+                                caption!,
+                                style: AppTextStyles.label.copyWith(
+                                  color: context.palette.textMuted,
+                                ),
+                              ),
                           ],
                         ),
                       );

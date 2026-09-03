@@ -385,6 +385,9 @@ class _CategoryGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
 
+    // Kept as a 3x3 grid. The mockup drew a single row, but it drew four
+    // categories and the app has eight: a one-row strip needs a sideways
+    // scroller inside a vertical form, which fights the form's own gesture.
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
@@ -435,10 +438,11 @@ class _CategoryTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected
                 ? AppColors.primarySoft
-                : Theme.of(context).colorScheme.surface,
+                : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
-              color: selected ? AppColors.primary : context.palette.border,
+              color: selected ? AppColors.primary : Colors.transparent,
+              width: 2,
             ),
           ),
           child: Column(
@@ -537,7 +541,7 @@ class _IconOption extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected
                 ? AppColors.primarySoft
-                : Theme.of(context).colorScheme.surface,
+                : context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
               color: selected ? AppColors.primary : context.palette.border,

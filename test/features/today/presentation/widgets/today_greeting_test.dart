@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
@@ -94,8 +95,23 @@ void main() {
   });
 
   group('AppTextStyles', () {
-    test('font family is Plus Jakarta Sans', () {
-      expect(AppTextStyles.fontFamily, 'Plus Jakarta Sans');
+    test('font family is Nunito', () {
+      expect(AppTextStyles.fontFamily, 'Nunito');
+    });
+
+    test('the family the theme names is actually shipped', () {
+      // The app declared 'Plus Jakarta Sans' for months while bundling no
+      // font at all, so Flutter fell back to Roboto without a word. Naming a
+      // family is only half of it; pubspec has to carry the files.
+      final String pubspec = File('pubspec.yaml').readAsStringSync();
+      expect(pubspec, contains('family: ${AppTextStyles.fontFamily}'));
+      for (final int weight in <int>[400, 600, 700, 800]) {
+        expect(
+          pubspec,
+          contains('weight: $weight'),
+          reason: 'weight $weight is used by the type ramp but not bundled',
+        );
+      }
     });
   });
 }

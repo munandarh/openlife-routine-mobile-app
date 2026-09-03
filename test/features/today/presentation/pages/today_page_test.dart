@@ -14,6 +14,7 @@ import 'package:openlife_routine/features/onboarding/domain/repositories/onboard
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
 import 'package:openlife_routine/features/routines/domain/repositories/routine_repository.dart';
+import 'package:openlife_routine/shared/widgets/progress/progress_ring.dart';
 
 import '../../../../support/fake_settings_repository.dart';
 
@@ -88,7 +89,10 @@ void main() {
     await tester.pumpWidget(OpenLifeApp(dependencies: buildDeps()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Daily Progress'), findsOneWidget);
+    // The gradient "Daily Progress" hero card is gone; the count now lives in
+    // the dial beside the greeting, which is what buys the list its room.
+    expect(find.byType(ProgressRing), findsOneWidget);
+    expect(find.text('done'), findsOneWidget);
     expect(find.text('Daily routine'), findsOneWidget);
     expect(find.text('Breakfast'), findsOneWidget);
   });

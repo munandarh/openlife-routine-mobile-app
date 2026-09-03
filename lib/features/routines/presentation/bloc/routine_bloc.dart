@@ -34,6 +34,7 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     on<RoutineCreateRequested>(_onCreateRequested);
     on<RoutineUpdateRequested>(_onUpdateRequested);
     on<RoutineDeleteRequested>(_onDeleteRequested);
+    on<RoutineEnabledToggled>(_onEnabledToggled);
   }
 
   final WatchRoutinesUseCase _watchRoutinesUseCase;
@@ -95,6 +96,27 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
         clearErrorMessage: true,
       ),
     );
+  }
+
+  /// Turning reminders off cancels this routine's alarms and nothing else;
+  /// turning them back on reschedules them. The routine and its history stay.
+  Future<void> _onEnabledToggled(
+    RoutineEnabledToggled event,
+    Emitter<RoutineState> emit,
+  ) async {
+    final Routine? existing = await _getRoutineUseCase(event.routineId);
+    if (existing == null) {
+      return;
+    }
+
+    final Routine updated = existing.copyWith(
+      isEnabled: event.isEnabled,
+      updatedAt: DateTime.now(),
+    );
+    await _updateRoutineUseCase(updated);
+    await _notificationService.scheduleRoutine(updated);
+
+    emit(state.copyWith(status: RoutineStatus.success, clearErrorMessage: true));
   }
 
   Future<void> _onDeleteRequested(

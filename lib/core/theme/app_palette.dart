@@ -21,6 +21,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.border,
     required this.textPrimary,
     required this.textSecondary,
+    required this.textMuted,
+    required this.iconMuted,
     required this.heroStart,
     required this.heroEnd,
   });
@@ -33,6 +35,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       border = AppColors.border,
       textPrimary = AppColors.textPrimary,
       textSecondary = AppColors.textSecondary,
+      textMuted = AppColors.textMuted,
+      iconMuted = AppColors.iconMuted,
       heroStart = AppColors.heroStart,
       heroEnd = AppColors.heroEnd;
 
@@ -44,6 +48,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       border = AppColors.borderDark,
       textPrimary = AppColors.textPrimaryDark,
       textSecondary = AppColors.textSecondaryDark,
+      textMuted = AppColors.textMutedDark,
+      iconMuted = AppColors.iconMutedDark,
       heroStart = AppColors.heroStartDark,
       heroEnd = AppColors.heroEndDark;
 
@@ -54,6 +60,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color border;
   final Color textPrimary;
   final Color textSecondary;
+
+  /// Dimmer than [textSecondary] but still safe for body text.
+  final Color textMuted;
+
+  /// Icons only — held to the 3:1 floor, not 4.5:1.
+  final Color iconMuted;
 
   /// Gradient stops for the daily-progress hero panel.
   final Color heroStart;
@@ -68,6 +80,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? border,
     Color? textPrimary,
     Color? textSecondary,
+    Color? textMuted,
+    Color? iconMuted,
     Color? heroStart,
     Color? heroEnd,
   }) {
@@ -79,6 +93,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       border: border ?? this.border,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
+      textMuted: textMuted ?? this.textMuted,
+      iconMuted: iconMuted ?? this.iconMuted,
       heroStart: heroStart ?? this.heroStart,
       heroEnd: heroEnd ?? this.heroEnd,
     );
@@ -97,6 +113,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       border: Color.lerp(border, other.border, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textMuted: Color.lerp(textMuted, other.textMuted, t)!,
+      iconMuted: Color.lerp(iconMuted, other.iconMuted, t)!,
       heroStart: Color.lerp(heroStart, other.heroStart, t)!,
       heroEnd: Color.lerp(heroEnd, other.heroEnd, t)!,
     );

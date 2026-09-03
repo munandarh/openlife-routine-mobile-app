@@ -4,6 +4,41 @@ All notable changes to OpenLife Routine will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Sage & Clay across the app.** New palette (warm stone page, white cards,
+  muted sage for anything actionable, terracotta only for attention), Nunito
+  type, one radius and one shadow per role, and category tints paired with an
+  ink dark enough to label their own fill.
+- **The type the app claimed to use is now shipped.** `fontFamily` named
+  'Plus Jakarta Sans' while no font was bundled at all, so every screen
+  silently rendered Roboto. Nunito is instanced to four static weights and
+  registered in pubspec; a test now fails if the named family is not shipped.
+- **The greys were unreadable as body text.** The one light grey used for
+  counts, captions and section labels sat at 2.65:1 on white. It is split into
+  a text tone and a lighter icon-only tone held to the 3:1 floor.
+- **A floating pill nav** replaces the boxed bar; only the selected tab carries
+  a label, and the unselected three keep a full 44px target.
+- **One app bar for every tab screen**, with the add action present only where
+  creating a routine is the screen's job. The floating + button is gone.
+- **Today** pairs the greeting with the progress dial instead of stacking a
+  gradient hero above it, which is what buys the routine list its room, and
+  shows the streak from the same rule Insights uses.
+- **Routines** shows each routine's schedule in words and an inline reminders
+  switch, so pausing a routine no longer means opening the editor.
+- **Insights, Settings, Routine detail, Notifications and Profile** follow the
+  same card, row and header vocabulary.
+
+### Fixed
+- The streak rule lived inside `InsightsBloc` and was needed on two more
+  screens; it is now one `RoutineStreak` calculator rather than three copies.
+
+### Testing
+- 408 tests (up from 404), including a guard that the nav's selected label is
+  not ellipsised — measured with the real font, since `flutter_test` otherwise
+  sizes every glyph as a 1em square and answers that question wrongly.
+
+## [1.4.0] — 2026-09-02
+
 ### Added
 - **Notifications screen.** The bell in the app bar had no destination. It now
   opens the reminders that are actually queued, soonest first, built from the

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:openlife_routine/features/insights/domain/routine_streak.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 
 part 'today_event.dart';
@@ -224,6 +225,17 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         .where((TodayRoutineItem item) => item.status == TodayRoutineItemStatus.done)
         .length;
 
+    // The header pill shows the same number Insights does, from the same
+    // rule — a second implementation here would quietly drift from it.
+    final Map<String, List<RoutineLogRowData>> logsByDate =
+        <String, List<RoutineLogRowData>>{};
+    for (final RoutineLogRowData log in await _appDatabase.getRoutineLogsBetween(
+      RoutineStreak.dateKey(today.subtract(const Duration(days: 30))),
+      RoutineStreak.dateKey(today),
+    )) {
+      logsByDate.putIfAbsent(log.date, () => <RoutineLogRowData>[]).add(log);
+    }
+
     emit(
       state.copyWith(
         status: TodayStatus.success,
@@ -231,6 +243,11 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         items: items,
         completedCount: completedCount,
         totalCount: items.length,
+        streak: RoutineStreak.calculate(
+          bundles: _routineBundles,
+          logsByDate: logsByDate,
+          today: today,
+        ),
         hasRoutines: _routineBundles.isNotEmpty,
         clearErrorMessage: true,
       ),

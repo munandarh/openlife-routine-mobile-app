@@ -94,8 +94,8 @@ void main() {
       expect(textWidget.style, isNotNull);
     });
 
-    test('AppTextStyles.fontFamily is Plus Jakarta Sans', () {
-      expect(AppTextStyles.fontFamily, 'Plus Jakarta Sans');
+    test('AppTextStyles.fontFamily is Nunito', () {
+      expect(AppTextStyles.fontFamily, 'Nunito');
     });
   });
 }

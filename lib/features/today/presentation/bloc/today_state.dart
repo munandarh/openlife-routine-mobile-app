@@ -56,6 +56,7 @@ class TodayState extends Equatable {
     required this.completedCount,
     required this.totalCount,
     required this.hasRoutines,
+    this.streak = 0,
     this.errorMessage,
   });
 
@@ -64,6 +65,7 @@ class TodayState extends Equatable {
       items = const <TodayRoutineItem>[],
       completedCount = 0,
       totalCount = 0,
+      streak = 0,
       // Assume routines exist until the first load says otherwise, so the
       // screen shows a spinner rather than flashing the empty state.
       hasRoutines = true,
@@ -74,6 +76,9 @@ class TodayState extends Equatable {
   final List<TodayRoutineItem> items;
   final int completedCount;
   final int totalCount;
+
+  /// Consecutive fully-completed days, from the shared [RoutineStreak] rule.
+  final int streak;
   final bool hasRoutines;
   final String? errorMessage;
 
@@ -124,6 +129,7 @@ class TodayState extends Equatable {
     List<TodayRoutineItem>? items,
     int? completedCount,
     int? totalCount,
+    int? streak,
     bool? hasRoutines,
     String? errorMessage,
     bool clearErrorMessage = false,
@@ -134,6 +140,7 @@ class TodayState extends Equatable {
       items: items ?? this.items,
       completedCount: completedCount ?? this.completedCount,
       totalCount: totalCount ?? this.totalCount,
+      streak: streak ?? this.streak,
       hasRoutines: hasRoutines ?? this.hasRoutines,
       errorMessage: clearErrorMessage
           ? null

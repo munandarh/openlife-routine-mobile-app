@@ -37,7 +37,9 @@ void main() {
     await tester.pumpWidget(harness.wrap(const NotificationsPage()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Upcoming reminders'), findsOneWidget);
+    // The heading is the screen title now; the old 'Upcoming reminders'
+    // subheading was redundant above a list of exactly that.
+    expect(find.text('Notifications'), findsOneWidget);
     expect(find.text('Drink water'), findsWidgets);
     expect(find.text('Evening stretch'), findsWidgets);
   });
@@ -92,6 +94,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Pengingat berikutnya'), findsOneWidget);
+    expect(find.text('Notifikasi'), findsOneWidget);
   });
 }

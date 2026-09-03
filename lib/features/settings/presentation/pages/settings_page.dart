@@ -9,12 +9,13 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/settings/data/services/export_import_service.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_state.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 /// The app's `filledButtonTheme` stretches buttons to full width for the
 /// primary call to action, which makes a dialog's action row wrap and stack.
@@ -31,42 +32,21 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (BuildContext context, SettingsState state) {
-        final TextTheme textTheme = Theme.of(context).textTheme;
         final AppLocalizations l10n = context.l10n;
 
         return CustomScrollView(
           slivers: <Widget>[
-            SliverAppBar(
-              leadingWidth: 68,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
-                child: Center(
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: context.palette.surfaceSoft,
-                    child: const Icon(
-                      Icons.settings_outlined,
-                      color: AppColors.primary,
-                    ),
-                  ),
+            SliverToBoxAdapter(child: OpenLifeAppBar()),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.pageMargin,
+                  AppSpacing.lg,
+                  AppSpacing.pageMargin,
+                  0,
                 ),
+                child: Text(l10n.settingsTitle, style: AppTextStyles.pageTitle),
               ),
-              title: Text(
-                l10n.settingsTitle,
-                style: textTheme.headlineMedium?.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              actions: <Widget>[
-                IconCircleButton(
-                  icon: Icons.notifications_none_rounded,
-                  onPressed: () =>
-                      context.push(OpenLifeRoute.notifications.path),
-                ),
-                const SizedBox(width: AppSpacing.pageMargin),
-              ],
-              pinned: true,
-              backgroundColor: context.palette.background,
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
@@ -107,7 +87,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.lg - 2),
                   _SettingsSection(
                     title: l10n.notificationsSection,
                     items: <_SettingsItemData>[
@@ -132,7 +112,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.lg - 2),
                   _SettingsSection(
                     title: l10n.dataSection,
                     items: <_SettingsItemData>[
@@ -157,7 +137,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.lg - 2),
                   _SettingsSection(
                     title: l10n.privacySection,
                     items: <_SettingsItemData>[
@@ -505,6 +485,11 @@ class _ThemeOption extends StatelessWidget {
   }
 }
 
+/// A labelled group of settings rows.
+///
+/// Rows are built by hand rather than with `ListTile`, because the mockup's
+/// row is a 32px tinted icon container plus a 10px-padded line — a ListTile's
+/// own minimum height and leading metrics push nine rows past the screen.
 class _SettingsSection extends StatelessWidget {
   const _SettingsSection({required this.title, required this.items});
 
@@ -516,60 +501,123 @@ class _SettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(color: context.palette.textSecondary),
+        Padding(
+          padding: const EdgeInsets.only(left: AppSpacing.xs),
+          child: Text(
+            title.toUpperCase(),
+            style: AppTextStyles.label.copyWith(
+              letterSpacing: 1.1,
+              color: context.palette.textMuted,
+            ),
+          ),
         ),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.sm - 2),
         Container(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md + 2),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.large),
-            border: Border.all(color: context.palette.border),
           ),
           child: Column(
-            children: items.map((_SettingsItemData item) {
-              if (item.onToggle != null) {
-                return SwitchListTile.adaptive(
-                  secondary: Icon(item.icon, color: AppColors.primary),
-                  title: Text(item.title),
-                  subtitle: item.subtitle == null
-                      ? null
-                      : Text(item.subtitle!),
-                  value: item.toggleValue ?? false,
-                  onChanged: item.onToggle,
-                );
-              }
-
-              return ListTile(
-                leading: Icon(item.icon, color: AppColors.primary),
-                title: Text(item.title),
-                subtitle: item.subtitle == null ? null : Text(item.subtitle!),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (item.trailing != null)
-                      Text(
-                        item.trailing!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: item.trailingColor ?? context.palette.textSecondary,
-                        ),
-                      ),
-                    if (item.onTap != null) ...<Widget>[
-                      const SizedBox(width: AppSpacing.sm),
-                      const Icon(Icons.chevron_right, size: 20),
-                    ],
-                  ],
-                ),
-                onTap: item.onTap,
-              );
-            }).toList(),
+            children: <Widget>[
+              for (int i = 0; i < items.length; i += 1)
+                _SettingsRow(item: items[i], isLast: i == items.length - 1),
+            ],
           ),
         ),
       ],
     );
+  }
+}
+
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({required this.item, required this.isLast});
+
+  final _SettingsItemData item;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color titleColor = item.trailingColor ?? context.palette.textPrimary;
+
+    final Widget row = Container(
+      decoration: isLast
+          ? null
+          : BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: context.palette.background),
+              ),
+            ),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.small),
+            ),
+            child: Icon(item.icon, size: 17, color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  item.title,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: 15,
+                    color: titleColor,
+                  ),
+                ),
+                if (item.subtitle != null)
+                  Text(
+                    item.subtitle!,
+                    style: AppTextStyles.bodyEmphasis.copyWith(
+                      color: context.palette.textSecondary,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (item.onToggle != null)
+            Switch.adaptive(
+              value: item.toggleValue ?? false,
+              onChanged: item.onToggle,
+              activeThumbColor: Colors.white,
+              activeTrackColor: AppColors.primary,
+            )
+          else ...<Widget>[
+            if (item.trailing != null)
+              Flexible(
+                child: Text(
+                  item.trailing!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyEmphasis.copyWith(
+                    fontSize: 13,
+                    color: item.trailingColor ?? context.palette.textSecondary,
+                  ),
+                ),
+              ),
+            const SizedBox(width: AppSpacing.xs + 2),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: context.palette.iconMuted,
+            ),
+          ],
+        ],
+      ),
+    );
+
+    if (item.onTap == null) {
+      return row;
+    }
+    return InkWell(onTap: item.onTap, child: row);
   }
 }
 

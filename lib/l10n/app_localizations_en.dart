@@ -958,4 +958,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String reminderTomorrowAt(String time) {
     return 'Tomorrow, $time';
   }
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-day streak',
+      one: '1-day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get doneLabel => 'done';
+
+  @override
+  String activeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active',
+      one: '1 active',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lastSevenDays => 'Last 7 days';
 }

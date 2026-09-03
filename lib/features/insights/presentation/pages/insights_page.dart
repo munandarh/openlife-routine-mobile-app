@@ -9,16 +9,15 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/features/insights/presentation/widgets/weekly_bar_chart.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
-import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 
 class InsightsPage extends StatelessWidget {
   const InsightsPage({super.key});
@@ -55,93 +54,99 @@ class _InsightsView extends StatelessWidget {
 
         return CustomScrollView(
           slivers: <Widget>[
-            SliverAppBar(
-              leadingWidth: 68,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
-                child: Center(
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: context.palette.surfaceSoft,
-                    child: const Icon(
-                      Icons.insights_outlined,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ),
-              title: Text(
-                l10n.insightsTitle,
-                style: textTheme.headlineMedium?.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-              actions: <Widget>[
-                IconCircleButton(
-                  icon: Icons.notifications_none_rounded,
-                  onPressed: () =>
-                      context.push(OpenLifeRoute.notifications.path),
-                ),
-                const SizedBox(width: AppSpacing.pageMargin),
-              ],
-              pinned: true,
-              backgroundColor: context.palette.background,
-            ),
+            SliverToBoxAdapter(child: OpenLifeAppBar()),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.pageMargin,
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.pageMargin,
+                  AppSpacing.lg,
+                  AppSpacing.pageMargin,
+                  0,
                 ),
-                child: OpenLifeRiveView.illustration(
-                  illustrationPath: AssetVectors.todayInsightsWorkspace.path,
-                  fallbackIcon: Icons.insights_outlined,
-                  size: 180,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(l10n.insightsTab, style: AppTextStyles.pageTitle),
+                    const SizedBox(height: AppSpacing.xs + 1),
+                    Text(
+                      l10n.lastSevenDays,
+                      style: AppTextStyles.body.copyWith(
+                        color: context.palette.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.pageMargin,
-                AppSpacing.xl,
+                AppSpacing.lg,
                 AppSpacing.pageMargin,
                 120,
               ),
               sliver: SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: _MetricCard(
-                          value:
-                              '${(state.weeklyCompletionRate * 100).round()}%',
-                          label: l10n.completedThisWeek,
-                          icon: Icons.adjust_outlined,
-                          iconColor: AppColors.primary,
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Expanded(
+                          child: _MetricCard(
+                            value:
+                                '${(state.weeklyCompletionRate * 100).round()}%',
+                            label: l10n.completedThisWeek,
+                            icon: Icons.check_rounded,
+                            iconColor: AppColors.primary,
+                            iconBackground: AppColors.primarySoft,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.cardGap),
-                      Expanded(
-                        child: _MetricCard(
-                          value: l10n.daysLabel(state.streak),
-                          label: l10n.bestStreak,
-                          icon: Icons.local_fire_department_outlined,
-                          iconColor: AppColors.warning,
+                        const SizedBox(width: AppSpacing.md - 2),
+                        Expanded(
+                          child: _MetricCard(
+                            value: l10n.daysLabel(state.streak),
+                            label: l10n.bestStreak,
+                            icon: Icons.local_fire_department_outlined,
+                            iconColor: AppColors.accent,
+                            iconBackground: AppColors.accentSoft,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   Container(
-                    padding: const EdgeInsets.all(AppSpacing.xl),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                      border: Border.all(color: context.palette.border),
+                      color: context.palette.surface,
+                      borderRadius: BorderRadius.circular(AppRadius.large),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: AppColors.textPrimary.withValues(alpha: 0.07),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(l10n.thisWeeksFlow, style: textTheme.titleLarge),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                l10n.thisWeeksFlow,
+                                style: AppTextStyles.cardTitle,
+                              ),
+                            ),
+                            Text(
+                              '${(state.weeklyCompletionRate * 100).round()}%',
+                              style: AppTextStyles.cardTitle.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: AppSpacing.lg),
                         WeeklyBarChart(
                           values: state.dailyCompletion,
@@ -240,41 +245,57 @@ class _MetricCard extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.iconColor,
+    required this.iconBackground,
   });
 
   final String value;
   final String label;
   final IconData icon;
   final Color iconColor;
+  final Color iconBackground;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.md + 3),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: context.palette.border),
+        color: context.palette.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(icon, color: iconColor),
-          const SizedBox(height: AppSpacing.lg),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: iconBackground,
+              borderRadius: BorderRadius.circular(AppRadius.small),
+            ),
+            child: Icon(icon, size: 17, color: iconColor),
+          ),
+          const SizedBox(height: AppSpacing.md - 1),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
             child: Text(
               value,
-              style: Theme.of(context).textTheme.displayLarge,
+              style: AppTextStyles.pageTitle.copyWith(fontSize: 26),
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: 2),
           Text(
             label,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: context.palette.textSecondary),
+            style: AppTextStyles.bodyEmphasis.copyWith(
+              color: context.palette.textSecondary,
+            ),
           ),
         ],
       ),

@@ -6,14 +6,15 @@ import 'package:openlife_routine/app/router/navigation_extensions.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/localization/l10n_formatters.dart';
+import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/bloc/routine_bloc.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
-import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
 
 class RoutineDetailPage extends StatelessWidget {
@@ -90,21 +91,22 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    IconButton(
-                      onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    _CircleBack(
+                      onPressed: () =>
+                          context.popOrGo(OpenLifeRoute.today.path),
                     ),
+                    const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Text(
                         l10n.routineDetailTitle,
-                        textAlign: TextAlign.center,
-                        style: textTheme.headlineMedium,
+                        style: AppTextStyles.sectionTitle.copyWith(
+                          fontSize: 19,
+                        ),
                       ),
                     ),
-                    const IconCircleButton(icon: Icons.more_horiz_rounded),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: AppSpacing.lg),
                 if (routine == null &&
                     state.status == RoutineStatus.loading) ...<Widget>[
                   const Center(child: CircularProgressIndicator()),
@@ -115,68 +117,135 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                     textAlign: TextAlign.center,
                   ),
                 ] else ...<Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(AppSpacing.xl),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-                      border: Border.all(color: context.palette.border),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  _SurfaceCard(
+                    child: Row(
                       children: <Widget>[
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor:
-                              RoutineCategoryUi.background(routine.category),
-                          foregroundColor:
-                              RoutineCategoryUi.foreground(routine.category),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: RoutineCategoryUi.background(
+                              routine.category,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppRadius.extraLarge,
+                            ),
+                          ),
                           child: Icon(
                             RoutineCategoryUi.icon(
                               routine.category,
                               iconKey: routine.iconKey,
                             ),
+                            size: 27,
+                            color: RoutineCategoryUi.foreground(
+                              routine.category,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Text(routine.title, style: textTheme.headlineMedium),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          RoutineCategoryUi.routineLabel(l10n, routine.category),
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: context.palette.textSecondary,
+                        const SizedBox(width: AppSpacing.md + 2),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                routine.title,
+                                style: AppTextStyles.pageTitle.copyWith(
+                                  fontSize: 21,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                RoutineCategoryUi.routineLabel(
+                                  l10n,
+                                  routine.category,
+                                ),
+                                style: AppTextStyles.bodyEmphasis.copyWith(
+                                  color: context.palette.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                  _DetailCard(
-                    title: l10n.scheduleLabel,
-                    rows: <String>[
-                      L10nFormatters.repeatDays(l10n, routine.repeatDays),
-                      L10nFormatters.timeOfDayLabel(
-                        context,
-                        routine.reminderTime,
-                      ),
-                    ],
+                  const SizedBox(height: AppSpacing.md),
+                  _SurfaceCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                l10n.scheduleLabel,
+                                style: AppTextStyles.cardTitle,
+                              ),
+                            ),
+                            Icon(
+                              Icons.schedule_outlined,
+                              size: 16,
+                              color: context.palette.textSecondary,
+                            ),
+                            const SizedBox(width: AppSpacing.xs + 3),
+                            Text(
+                              L10nFormatters.timeOfDayLabel(
+                                context,
+                                routine.reminderTime,
+                              ),
+                              style: AppTextStyles.cardTitle,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.md + 1),
+                        _RepeatDayChips(selected: routine.repeatDays),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: AppSpacing.cardGap),
-                  _DetailCard(
-                    title: l10n.reminderBehavior,
-                    rows: <String>[
-                      l10n.snoozeForMinutes(routine.snoozeMinutes),
-                      routine.isEnabled
-                          ? l10n.routineIsActive
-                          : l10n.routineIsDisabled,
-                    ],
+                  const SizedBox(height: AppSpacing.md),
+                  _SurfaceCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          l10n.reminderBehavior,
+                          style: AppTextStyles.cardTitle,
+                        ),
+                        const SizedBox(height: AppSpacing.sm + 2),
+                        _DetailLine(
+                          icon: Icons.snooze_outlined,
+                          label: l10n.snoozeForMinutes(routine.snoozeMinutes),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        _DetailLine(
+                          icon: routine.isEnabled
+                              ? Icons.notifications_active_outlined
+                              : Icons.notifications_off_outlined,
+                          label: routine.isEnabled
+                              ? l10n.routineIsActive
+                              : l10n.routineIsDisabled,
+                        ),
+                      ],
+                    ),
                   ),
                   if (routine.notes != null &&
                       routine.notes!.trim().isNotEmpty) ...<Widget>[
-                    const SizedBox(height: AppSpacing.cardGap),
-                    _DetailCard(
-                      title: l10n.notesLabel,
-                      rows: <String>[routine.notes!.trim()],
+                    const SizedBox(height: AppSpacing.md),
+                    _SurfaceCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(l10n.notesLabel, style: AppTextStyles.cardTitle),
+                          const SizedBox(height: AppSpacing.xs + 2),
+                          Text(
+                            routine.notes!.trim(),
+                            style: AppTextStyles.body.copyWith(
+                              color: context.palette.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                   const SizedBox(height: AppSpacing.xxl),
@@ -204,39 +273,126 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
   }
 }
 
-class _DetailCard extends StatelessWidget {
-  const _DetailCard({required this.title, required this.rows});
+/// The one card shape this screen uses: white, 24px, one soft shadow.
+class _SurfaceCard extends StatelessWidget {
+  const _SurfaceCard({required this.child});
 
-  final String title;
-  final List<String> rows;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.md),
-          ...rows.map(
-            (String row) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: child,
+    );
+  }
+}
+
+class _CircleBack extends StatelessWidget {
+  const _CircleBack({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.surface,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onPressed,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 18,
+            color: context.palette.textPrimary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailLine extends StatelessWidget {
+  const _DetailLine({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Icon(icon, size: 17, color: context.palette.iconMuted),
+        const SizedBox(width: AppSpacing.sm + 2),
+        Expanded(
+          child: Text(
+            label,
+            style: AppTextStyles.bodyEmphasis.copyWith(
+              fontSize: 14,
+              color: context.palette.textSecondary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The seven repeat days, the selected ones filled.
+///
+/// Read-only here — it mirrors the editor's picker so the two screens describe
+/// a schedule the same way.
+class _RepeatDayChips extends StatelessWidget {
+  const _RepeatDayChips({required this.selected});
+
+  final List<int> selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> initials = L10nFormatters.weekdayInitials(context.l10n);
+
+    return Row(
+      children: <Widget>[
+        for (int weekday = 1; weekday <= 7; weekday += 1) ...<Widget>[
+          if (weekday > 1) const SizedBox(width: AppSpacing.xs + 1),
+          Expanded(
+            child: Container(
+              height: 44,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: selected.contains(weekday)
+                    ? AppColors.primary
+                    : context.palette.background,
+                borderRadius: BorderRadius.circular(AppRadius.medium),
+              ),
               child: Text(
-                row,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: context.palette.textSecondary),
+                initials[weekday - 1],
+                style: AppTextStyles.button.copyWith(
+                  fontSize: 13,
+                  color: selected.contains(weekday)
+                      ? Colors.white
+                      : context.palette.textMuted,
+                ),
               ),
             ),
           ),
         ],
-      ),
+      ],
     );
   }
 }

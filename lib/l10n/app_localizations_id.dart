@@ -955,4 +955,30 @@ class AppLocalizationsId extends AppLocalizations {
   String reminderTomorrowAt(String time) {
     return 'Besok, $time';
   }
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Rentetan $count hari',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get doneLabel => 'selesai';
+
+  @override
+  String activeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aktif',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lastSevenDays => '7 hari terakhir';
 }

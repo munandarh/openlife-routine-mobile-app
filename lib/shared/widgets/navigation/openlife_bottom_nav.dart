@@ -9,82 +9,112 @@ import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 
+/// The floating pill nav from the Sage & Clay mockups.
+///
+/// Only the selected tab carries a label; the rest are icon-only. That is what
+/// lets four tabs sit in one 70px pill without crowding — but it also means
+/// every unselected item must still offer a full 44px target, which the
+/// icon glyph alone does not, hence the explicit [_navTargetHeight] box.
 class OpenLifeBottomNav extends StatelessWidget {
   const OpenLifeBottomNav({required this.currentRoute, super.key});
+
+  static const double _navHeight = 70;
+  static const double _navTargetHeight = 44;
 
   final OpenLifeRoute currentRoute;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
+      height: _navHeight,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: context.palette.border),
-        boxShadow: const <BoxShadow>[
+        color: context.palette.surface,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Color(0x148EAA5E),
-            blurRadius: 24,
-            offset: Offset(0, 10),
+            color: AppColors.textPrimary.withValues(alpha: 0.12),
+            blurRadius: 30,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: OpenLifeRoute.bottomNavRoutes.map((OpenLifeRoute route) {
-            final bool isSelected =
-                route == currentRoute ||
-                (route == OpenLifeRoute.routines &&
-                    currentRoute.isNestedUnderRoutines);
+      child: Row(
+        children: OpenLifeRoute.bottomNavRoutes.map((OpenLifeRoute route) {
+          final bool isSelected =
+              route == currentRoute ||
+              (route == OpenLifeRoute.routines &&
+                  currentRoute.isNestedUnderRoutines);
 
-            return Expanded(
+          return Expanded(
+            // The labelled tab needs far more than an equal quarter: at 320dp
+            // an equal share is ~66px against a pill that wants ~100 for
+            // "Hari ini". The pill is min-width anyway, so a generous share
+            // costs the icon-only tabs nothing on a wider screen.
+            flex: isSelected ? 7 : 3,
+            child: Semantics(
+              selected: isSelected,
+              button: true,
+              label: _label(context.l10n, route),
               child: InkWell(
-                borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+                borderRadius: BorderRadius.circular(AppRadius.pill),
                 onTap: () => context.go(route.path),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.lg,
-                          vertical: AppSpacing.sm,
+                child: Center(
+                  child: isSelected
+                      ? _SelectedTab(route: route)
+                      : SizedBox(
+                          height: _navTargetHeight,
+                          child: Center(
+                            child: Icon(
+                              route.icon,
+                              size: 21,
+                              color: context.palette.iconMuted,
+                            ),
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primarySoft
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
-                        ),
-                        child: Icon(
-                          route.icon,
-                          color: isSelected
-                              ? AppColors.primary
-                              : context.palette.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        _label(context.l10n, route),
-                        style: AppTextStyles.label.copyWith(
-                          color: isSelected
-                              ? AppColors.primary
-                              : context.palette.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _SelectedTab extends StatelessWidget {
+  const _SelectedTab({required this.route});
+
+  final OpenLifeRoute route;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md + 2),
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(route.icon, size: 19, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.sm - 1),
+          Flexible(
+            child: Text(
+              _label(context.l10n, route),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.button.copyWith(
+                fontSize: 13,
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1789,6 +1789,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tomorrow, {time}'**
   String reminderTomorrowAt(String time);
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1-day streak} other{{count}-day streak}}'**
+  String streakDays(int count);
+
+  /// No description provided for @doneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'done'**
+  String get doneLabel;
+
+  /// No description provided for @activeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 active} other{{count} active}}'**
+  String activeCount(int count);
+
+  /// No description provided for @lastSevenDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get lastSevenDays;
 }
 
 class _AppLocalizationsDelegate

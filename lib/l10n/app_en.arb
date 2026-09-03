@@ -419,5 +419,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "streakDays": "{count, plural, =1{1-day streak} other{{count}-day streak}}",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "doneLabel": "done",
+  "activeCount": "{count, plural, =1{1 active} other{{count} active}}",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastSevenDays": "Last 7 days"
 }

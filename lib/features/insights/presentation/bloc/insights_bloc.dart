@@ -1,7 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:openlife_routine/features/insights/domain/routine_streak.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 
@@ -41,7 +41,7 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
           : historyStart;
       final DateTime rangeEnd = monday.add(const Duration(days: 6));
       final List<RoutineLogRowData> logs = await _appDatabase
-          .getRoutineLogsBetween(_dateKey(rangeStart), _dateKey(rangeEnd));
+          .getRoutineLogsBetween(RoutineStreak.dateKey(rangeStart), RoutineStreak.dateKey(rangeEnd));
 
       final Map<String, List<RoutineLogRowData>> logsByDate =
           <String, List<RoutineLogRowData>>{};
@@ -56,8 +56,8 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
 
       for (int i = 0; i < 7; i += 1) {
         final DateTime day = monday.add(Duration(days: i));
-        final int scheduled = _scheduledOn(bundles, day);
-        final int done = _countStatus(logsByDate[_dateKey(day)], 'done');
+        final int scheduled = RoutineStreak.scheduledOn(bundles, day);
+        final int done = RoutineStreak.countStatus(logsByDate[RoutineStreak.dateKey(day)], 'done');
 
         weekScheduled += scheduled;
         weekCompleted += done;
@@ -68,14 +68,14 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
       final List<InsightsDaySummary> history = <InsightsDaySummary>[];
       for (int i = 0; i < 7; i += 1) {
         final DateTime day = historyStart.add(Duration(days: i));
-        final List<RoutineLogRowData>? dayLogs = logsByDate[_dateKey(day)];
+        final List<RoutineLogRowData>? dayLogs = logsByDate[RoutineStreak.dateKey(day)];
         history.add(
           InsightsDaySummary(
             date: day,
-            scheduled: _scheduledOn(bundles, day),
-            done: _countStatus(dayLogs, 'done'),
-            skipped: _countStatus(dayLogs, 'skipped'),
-            missed: _countStatus(dayLogs, 'missed'),
+            scheduled: RoutineStreak.scheduledOn(bundles, day),
+            done: RoutineStreak.countStatus(dayLogs, 'done'),
+            skipped: RoutineStreak.countStatus(dayLogs, 'skipped'),
+            missed: RoutineStreak.countStatus(dayLogs, 'missed'),
           ),
         );
       }
@@ -100,27 +100,11 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
         }
       }
 
-      // --- streak ----------------------------------------------------------
-      // Walk back from today, but a still-incomplete today does not break the
-      // streak: an unfinished day only counts once it is over.
-      int streak = 0;
-      for (int i = 0; i < 30; i += 1) {
-        final DateTime day = today.subtract(Duration(days: i));
-        final int scheduled = _scheduledOn(bundles, day);
-        if (scheduled == 0) {
-          continue;
-        }
-
-        final int done = _countStatus(logsByDate[_dateKey(day)], 'done');
-        if (done >= scheduled) {
-          streak += 1;
-          continue;
-        }
-        if (i == 0) {
-          continue;
-        }
-        break;
-      }
+      final int streak = RoutineStreak.calculate(
+        bundles: bundles,
+        logsByDate: logsByDate,
+        today: today,
+      );
 
       emit(
         state.copyWith(
@@ -152,33 +136,7 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
   ///
   /// A routine only counts from the day it was created; otherwise a routine
   /// added today drags last week's completion rate to zero.
-  static int _scheduledOn(List<RoutineBundleRow> bundles, DateTime day) {
-    int count = 0;
-    for (final RoutineBundleRow bundle in bundles) {
-      if (!_repeatDays(bundle.schedule.repeatDays).contains(day.weekday)) {
-        continue;
-      }
-      final DateTime createdAt = bundle.routine.createdAt;
-      if (day.isBefore(DateTime(createdAt.year, createdAt.month, createdAt.day))) {
-        continue;
-      }
-      count += 1;
-    }
-    return count;
-  }
 
-  static int _countStatus(List<RoutineLogRowData>? logs, String status) {
-    if (logs == null) {
-      return 0;
-    }
-    int count = 0;
-    for (final RoutineLogRowData log in logs) {
-      if (log.status == status) {
-        count += 1;
-      }
-    }
-    return count;
-  }
 
   static RoutineMetric? _topMetric(
     Map<String, int> counts,
@@ -198,17 +156,5 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
     );
   }
 
-  static List<int> _repeatDays(String encodedRepeatDays) {
-    try {
-      return (jsonDecode(encodedRepeatDays) as List<dynamic>).cast<int>();
-    } on FormatException {
-      return const <int>[];
-    }
-  }
 
-  static String _dateKey(DateTime date) {
-    final String m = date.month.toString().padLeft(2, '0');
-    final String d = date.day.toString().padLeft(2, '0');
-    return '${date.year}-$m-$d';
-  }
 }

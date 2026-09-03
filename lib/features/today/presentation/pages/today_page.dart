@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +11,7 @@ import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
@@ -19,10 +19,10 @@ import 'package:openlife_routine/features/today/presentation/pages/today_empty_p
 import 'package:openlife_routine/features/today/presentation/widgets/today_greeting.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/cards/routine_card.dart';
 import 'package:openlife_routine/shared/widgets/empty_states/app_empty_state.dart';
 import 'package:openlife_routine/shared/widgets/forms/week_date_selector.dart';
+import 'package:openlife_routine/shared/widgets/navigation/openlife_app_bar.dart';
 import 'package:openlife_routine/shared/widgets/progress/progress_ring.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
@@ -134,44 +134,19 @@ class _TodayViewState extends State<_TodayView> {
 
             return CustomScrollView(
               slivers: <Widget>[
-                SliverAppBar(
-                  leadingWidth: 68,
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
-                    child: Center(
-                      child: IconCircleButton(
-                        icon: Icons.person_outline,
-                        onPressed: () =>
-                            context.push(OpenLifeRoute.profile.path),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    l10n.todayTab,
-                    style: textTheme.headlineMedium?.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    IconCircleButton(
-                      icon: Icons.notifications_none_rounded,
-                      onPressed: () =>
-                          context.push(OpenLifeRoute.notifications.path),
-                    ),
-                    const SizedBox(width: AppSpacing.pageMargin),
-                  ],
-                  pinned: true,
-                  backgroundColor: context.palette.background,
+                SliverToBoxAdapter(
+                  child: OpenLifeAppBar(onAddRoutine: _openNewRoutine),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.pageMargin,
-                      AppSpacing.md,
+                      AppSpacing.lg,
                       AppSpacing.pageMargin,
                       0,
                     ),
-                    child: TodayGreeting(
+                    child: _GreetingAndProgress(
+                      state: state,
                       subtitle: _supportiveSubtitle(l10n, state),
                     ),
                   ),
@@ -185,10 +160,8 @@ class _TodayViewState extends State<_TodayView> {
                   ),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(<Widget>[
-                      _ProgressCard(state: state),
-                      const SizedBox(height: AppSpacing.lg),
                       _NextRoutineCard(item: nextRoutine),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: AppSpacing.lg),
                       WeekDateSelector(
                         selectedIndex: _selectedWeekIndex(state.selectedDate),
                         items: weekItems,
@@ -202,7 +175,7 @@ class _TodayViewState extends State<_TodayView> {
                           );
                         },
                       ),
-                      const SizedBox(height: AppSpacing.xxxl),
+                      const SizedBox(height: AppSpacing.xl),
                       Text(l10n.dailyRoutine, style: textTheme.titleLarge),
                       const SizedBox(height: AppSpacing.lg),
                       if (state.items.isEmpty)
@@ -235,22 +208,6 @@ class _TodayViewState extends State<_TodayView> {
           _CelebrationOverlay(
             onDismiss: () => setState(() => _showCelebration = false),
           ),
-        Positioned(
-          right: AppSpacing.pageMargin,
-          // The shell already keeps the bottom nav outside this Stack, so the
-          // FAB only needs to clear the body edge. A larger offset pushed it
-          // up over the first routine card's completion circle.
-          bottom: AppSpacing.xl,
-          child: FloatingActionButton(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            tooltip: l10n.createRoutine,
-            onPressed: () async {
-              await _openNewRoutine();
-            },
-            child: const Icon(Icons.add),
-          ),
-        ),
       ],
     );
   }
@@ -290,68 +247,87 @@ class _TodayViewState extends State<_TodayView> {
 }
 
 /// Daily completion hero: counts on the left, animated ring on the right.
-class _ProgressCard extends StatelessWidget {
-  const _ProgressCard({required this.state});
+/// The Today header: greeting and streak on the left, the day's dial on the
+/// right.
+///
+/// This replaced a full-width gradient hero card. Pairing the two halves is
+/// what buys the vertical room the routine list needs — the hero card and a
+/// separate greeting cost roughly 90px more for the same information.
+class _GreetingAndProgress extends StatelessWidget {
+  const _GreetingAndProgress({required this.state, required this.subtitle});
 
   final TodayState state;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final AppLocalizations l10n = context.l10n;
-    final bool allDone =
-        state.totalCount > 0 && state.completedCount == state.totalCount;
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[context.palette.heroStart, context.palette.heroEnd],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TodayGreeting(subtitle: subtitle),
+              if (state.streak > 0) ...<Widget>[
+                const SizedBox(height: AppSpacing.md),
+                _StreakPill(days: state.streak),
+              ],
+            ],
+          ),
         ),
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+        const SizedBox(width: AppSpacing.lg),
+        ProgressRing(
+          progress: state.progress,
+          label: '${state.completedCount}/${state.totalCount}',
+          caption: l10n.doneLabel,
+        ),
+      ],
+    );
+  }
+}
+
+class _StreakPill extends StatelessWidget {
+  const _StreakPill({required this.days});
+
+  final int days;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(l10n.dailyProgress, style: textTheme.titleLarge),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  state.totalCount == 0
-                      ? l10n.noRoutinesScheduledForDay
-                      : l10n.completedOfTotal(
-                          state.completedCount,
-                          state.totalCount,
-                        ),
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: context.palette.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppRadius.pill),
-                  ),
-                  child: Text(
-                    allDone ? l10n.allDoneBadge : l10n.stayConsistentBadge,
-                    style: textTheme.labelMedium?.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
+          Container(
+            width: 7,
+            height: 7,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
             ),
           ),
-          ProgressRing(
-            progress: state.progress,
-            label: '${state.completedCount}/${state.totalCount}',
+          const SizedBox(width: AppSpacing.sm - 1),
+          Text(
+            context.l10n.streakDays(days),
+            style: AppTextStyles.bodyEmphasis.copyWith(
+              color: context.palette.textPrimary,
+            ),
           ),
         ],
       ),

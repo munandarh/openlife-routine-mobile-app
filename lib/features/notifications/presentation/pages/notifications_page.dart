@@ -8,9 +8,11 @@ import 'package:openlife_routine/core/localization/l10n_formatters.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart'
     show RoutineBundleRow;
+import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
@@ -50,63 +52,74 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.notificationsTitle),
-        leading: IconButton(
-          onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        ),
-      ),
-      body: FutureBuilder<List<Routine>>(
-        future: _routines,
-        builder: (BuildContext context, AsyncSnapshot<List<Routine>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: FutureBuilder<List<Routine>>(
+          future: _routines,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Routine>> snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          final List<RoutineReminderSlot> upcoming =
-              AppNotificationService.upcomingReminders(
-                snapshot.data ?? const <Routine>[],
-              );
+                final List<RoutineReminderSlot> upcoming =
+                    AppNotificationService.upcomingReminders(
+                      snapshot.data ?? const <Routine>[],
+                    );
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.pageMargin,
-              AppSpacing.pageMargin,
-              AppSpacing.pageMargin,
-              AppSpacing.xxxl,
-            ),
-            children: <Widget>[
-              Text(l10n.upcomingReminders, style: textTheme.titleLarge),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                l10n.upcomingRemindersDesc,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: context.palette.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              if (upcoming.isEmpty)
-                _EmptyState(l10n: l10n)
-              else
-                ...upcoming.map(
-                  (RoutineReminderSlot slot) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                    child: _ReminderTile(slot: slot),
+                return ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.pageMargin,
+                    AppSpacing.md + 2,
+                    AppSpacing.pageMargin,
+                    AppSpacing.xxxl,
                   ),
-                ),
-              const SizedBox(height: AppSpacing.lg),
-              OutlinedButton.icon(
-                onPressed: () => context.go(OpenLifeRoute.settings.path),
-                icon: const Icon(Icons.tune_rounded),
-                label: Text(l10n.manageAlerts),
-              ),
-            ],
-          );
-        },
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        _CircleBack(
+                          onPressed: () =>
+                              context.popOrGo(OpenLifeRoute.today.path),
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Text(
+                            l10n.notificationsTitle,
+                            style: AppTextStyles.sectionTitle.copyWith(
+                              fontSize: 19,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      l10n.upcomingRemindersDesc,
+                      style: AppTextStyles.body.copyWith(
+                        color: context.palette.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    if (upcoming.isEmpty)
+                      _EmptyState(l10n: l10n)
+                    else
+                      ...upcoming.map(
+                        (RoutineReminderSlot slot) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: _ReminderTile(slot: slot),
+                        ),
+                      ),
+                    const SizedBox(height: AppSpacing.lg),
+                    _WhitePillAction(
+                      icon: Icons.notifications_active_outlined,
+                      label: l10n.manageAlerts,
+                      onPressed: () => context.go(OpenLifeRoute.settings.path),
+                    ),
+                  ],
+                );
+              },
+        ),
       ),
     );
   }
@@ -142,31 +155,39 @@ class _ReminderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md + 2,
+        vertical: AppSpacing.md,
+      ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: RoutineCategoryUi.background(
-              slot.routine.category,
-            ),
-            foregroundColor: RoutineCategoryUi.foreground(
-              slot.routine.category,
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: RoutineCategoryUi.background(slot.routine.category),
+              borderRadius: BorderRadius.circular(AppRadius.medium),
             ),
             child: Icon(
               RoutineCategoryUi.icon(
                 slot.routine.category,
                 iconKey: slot.routine.iconKey,
               ),
-              size: 20,
+              size: 18,
+              color: RoutineCategoryUi.foreground(slot.routine.category),
             ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -176,14 +197,14 @@ class _ReminderTile extends StatelessWidget {
               children: <Widget>[
                 Text(
                   slot.routine.title,
-                  style: textTheme.titleMedium,
+                  style: AppTextStyles.cardTitle.copyWith(fontSize: 15.5),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   _whenLabel(context, l10n),
-                  style: textTheme.bodyMedium?.copyWith(
+                  style: AppTextStyles.bodyEmphasis.copyWith(
                     color: context.palette.textSecondary,
                   ),
                 ),
@@ -203,7 +224,6 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
@@ -222,18 +242,90 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Text(
             l10n.noUpcomingReminders,
-            style: textTheme.titleMedium,
+            style: AppTextStyles.cardTitle,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             l10n.noUpcomingRemindersDesc,
-            style: textTheme.bodyMedium?.copyWith(
+            style: AppTextStyles.body.copyWith(
               color: context.palette.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CircleBack extends StatelessWidget {
+  const _CircleBack({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.surface,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onPressed,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 18,
+            color: context.palette.textPrimary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WhitePillAction extends StatelessWidget {
+  const _WhitePillAction({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.surface,
+      borderRadius: BorderRadius.circular(AppRadius.pill),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        onTap: onPressed,
+        child: SizedBox(
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(icon, size: 17, color: AppColors.primary),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: 14,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

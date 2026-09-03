@@ -20,6 +20,22 @@ final class RoutineDetailRequested extends RoutineEvent {
   List<Object?> get props => <Object?>[id];
 }
 
+/// Flips a routine's reminders on or off from the list, without opening the
+/// editor — the switch is inline on Routines, so this is its own event rather
+/// than a full update that would need every other field.
+final class RoutineEnabledToggled extends RoutineEvent {
+  const RoutineEnabledToggled({
+    required this.routineId,
+    required this.isEnabled,
+  });
+
+  final String routineId;
+  final bool isEnabled;
+
+  @override
+  List<Object?> get props => <Object?>[routineId, isEnabled];
+}
+
 final class RoutineCreateRequested extends RoutineEvent {
   const RoutineCreateRequested({
     required this.title,

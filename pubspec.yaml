@@ -50,3 +50,18 @@ flutter:
     - assets/vector/today_vitamin_routine.png
     - assets/vector/today_daily_celebration.png
     - assets/vector/today_insights_workspace.png
+
+  # Bundled rather than fetched: the app is offline-first, and the theme's
+  # type is Nunito. Before this, `fontFamily: 'Plus Jakarta Sans'` named a
+  # family that was never shipped, so every screen silently rendered Roboto.
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Nunito-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Nunito-ExtraBold.ttf
+          weight: 800

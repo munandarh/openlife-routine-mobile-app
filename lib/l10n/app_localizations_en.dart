@@ -1147,7 +1147,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vendorWarningBody =>
-      'Phones from this maker also keep a separate autostart or background permission that no app can read. If reminders still go missing, allow autostart for OpenLife in the system settings.';
+      'These phones stop background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:';
+
+  @override
+  String get vendorStepAutostart =>
+      'Allow autostart, so reminders survive closing the app';
+
+  @override
+  String get vendorStepBattery => 'Set battery usage to no restrictions';
+
+  @override
+  String get vendorStepLock =>
+      'Lock the app in Recents, so clearing apps does not stop it';
+
+  @override
+  String get openAutostartSettings => 'Open autostart settings';
 
   @override
   String get openAppSettings => 'Open app settings';

@@ -1143,7 +1143,21 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get vendorWarningBody =>
-      'HP dari pabrikan ini punya izin autostart atau jalan di latar belakang tersendiri yang tidak bisa dibaca aplikasi mana pun. Kalau pengingat masih hilang, izinkan autostart untuk OpenLife di pengaturan sistem.';
+      'HP ini menghentikan aplikasi latar belakang jauh lebih agresif dari Android standar, dan setelan yang mengaturnya tidak bisa dibaca atau diminta aplikasi mana pun. Tiga hal yang perlu diubah:';
+
+  @override
+  String get vendorStepAutostart =>
+      'Izinkan autostart, agar pengingat tetap jalan setelah aplikasi ditutup';
+
+  @override
+  String get vendorStepBattery => 'Setel penggunaan baterai ke tanpa batasan';
+
+  @override
+  String get vendorStepLock =>
+      'Kunci aplikasi di Recents, agar tidak ikut terhapus saat membersihkan aplikasi';
+
+  @override
+  String get openAutostartSettings => 'Buka pengaturan autostart';
 
   @override
   String get openAppSettings => 'Buka pengaturan aplikasi';

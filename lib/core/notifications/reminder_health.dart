@@ -107,6 +107,11 @@ class ReminderHealth {
 
   Future<void> openAppSettings() => _invoke<bool>('openAppSettings');
 
+  /// Opens the vendor's autostart list, falling back to the app's own
+  /// settings page when this phone has no such screen.
+  Future<void> openAutostartSettings() =>
+      _invoke<bool>('openAutostartSettings');
+
   Future<bool?> requestPermissions() =>
       _notificationService.requestPermissions();
 

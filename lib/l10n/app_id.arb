@@ -507,7 +507,11 @@
       }
     }
   },
-  "vendorWarningBody": "HP dari pabrikan ini punya izin autostart atau jalan di latar belakang tersendiri yang tidak bisa dibaca aplikasi mana pun. Kalau pengingat masih hilang, izinkan autostart untuk OpenLife di pengaturan sistem.",
+  "vendorWarningBody": "HP ini menghentikan aplikasi latar belakang jauh lebih agresif dari Android standar, dan setelan yang mengaturnya tidak bisa dibaca atau diminta aplikasi mana pun. Tiga hal yang perlu diubah:",
+  "vendorStepAutostart": "Izinkan autostart, agar pengingat tetap jalan setelah aplikasi ditutup",
+  "vendorStepBattery": "Setel penggunaan baterai ke tanpa batasan",
+  "vendorStepLock": "Kunci aplikasi di Recents, agar tidak ikut terhapus saat membersihkan aplikasi",
+  "openAutostartSettings": "Buka pengaturan autostart",
   "openAppSettings": "Buka pengaturan aplikasi",
   "reminderHealthSetting": "Kesehatan pengingat"
 }

@@ -130,6 +130,7 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
                           const SizedBox(height: AppSpacing.xs),
                           _VendorCard(
                             brand: report.manufacturer,
+                            onOpenAutostart: _health.openAutostartSettings,
                             onOpenSettings: _health.openAppSettings,
                           ),
                         ],
@@ -300,9 +301,19 @@ class _CheckCard extends StatelessWidget {
 /// Shown only on the vendors that keep an autostart permission no API can
 /// read, so the app cannot tick it off — it can only tell the user it exists.
 class _VendorCard extends StatelessWidget {
-  const _VendorCard({required this.brand, required this.onOpenSettings});
+  const _VendorCard({
+    required this.brand,
+    required this.onOpenAutostart,
+    required this.onOpenSettings,
+  });
 
   final String brand;
+
+  /// Opens the vendor's own autostart list. Worth a button of its own because
+  /// that toggle does not exist anywhere in the app's normal settings page,
+  /// which is where the only button here used to lead.
+  final Future<void> Function() onOpenAutostart;
+
   final Future<void> Function() onOpenSettings;
 
   @override
@@ -335,6 +346,33 @@ class _VendorCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
+          for (final String step in <String>[
+            l10n.vendorStepAutostart,
+            l10n.vendorStepBattery,
+            l10n.vendorStepLock,
+          ]) ...<Widget>[
+            _VendorStep(text: step),
+            const SizedBox(height: AppSpacing.xs + 2),
+          ],
+          const SizedBox(height: AppSpacing.sm),
+          Material(
+            color: AppColors.accentDeep,
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              onTap: onOpenAutostart,
+              child: SizedBox(
+                height: 44,
+                child: Center(
+                  child: Text(
+                    l10n.openAutostartSettings,
+                    style: AppTextStyles.button.copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Material(
             color: context.palette.surface,
             borderRadius: BorderRadius.circular(AppRadius.pill),
@@ -356,6 +394,39 @@ class _VendorCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// One instruction inside the vendor card.
+class _VendorStep extends StatelessWidget {
+  const _VendorStep({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Icon(
+            Icons.check_circle_outline_rounded,
+            size: 15,
+            color: context.palette.accentInk,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            text,
+            style: AppTextStyles.body.copyWith(
+              color: context.palette.accentInk,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

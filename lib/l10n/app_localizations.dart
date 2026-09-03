@@ -2051,8 +2051,32 @@ abstract class AppLocalizations {
   /// No description provided for @vendorWarningBody.
   ///
   /// In en, this message translates to:
-  /// **'Phones from this maker also keep a separate autostart or background permission that no app can read. If reminders still go missing, allow autostart for OpenLife in the system settings.'**
+  /// **'These phones stop background apps far more aggressively than stock Android, and the settings that control it cannot be read or requested by any app. Three things to change:'**
   String get vendorWarningBody;
+
+  /// No description provided for @vendorStepAutostart.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow autostart, so reminders survive closing the app'**
+  String get vendorStepAutostart;
+
+  /// No description provided for @vendorStepBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Set battery usage to no restrictions'**
+  String get vendorStepBattery;
+
+  /// No description provided for @vendorStepLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock the app in Recents, so clearing apps does not stop it'**
+  String get vendorStepLock;
+
+  /// No description provided for @openAutostartSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open autostart settings'**
+  String get openAutostartSettings;
 
   /// No description provided for @openAppSettings.
   ///

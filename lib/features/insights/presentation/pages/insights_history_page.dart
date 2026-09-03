@@ -11,6 +11,7 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_bl
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_event.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 
 /// 7-day completion history (PRD §8.6 / §9 navigation tree).
 class InsightsHistoryPage extends StatelessWidget {
@@ -35,7 +36,6 @@ class _InsightsHistoryView extends StatelessWidget {
     final AppLocalizations l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.sevenDayHistory)),
       body: BlocBuilder<InsightsBloc, InsightsState>(
         builder: (BuildContext context, InsightsState state) {
           if (state.status == InsightsStatus.loading ||
@@ -64,14 +64,27 @@ class _InsightsHistoryView extends StatelessWidget {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(AppSpacing.pageMargin),
-            itemCount: days.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: AppSpacing.cardGap),
-            itemBuilder: (BuildContext context, int index) {
-              return _HistoryRow(day: days[index]);
-            },
+          return SafeArea(
+            child: ListView.separated(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageMargin,
+                AppSpacing.md + 2,
+                AppSpacing.pageMargin,
+                AppSpacing.xxxl,
+              ),
+              itemCount: days.length + 1,
+              separatorBuilder: (BuildContext context, int index) =>
+                  SizedBox(height: index == 0 ? AppSpacing.lg : AppSpacing.md),
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return ScreenHeader(
+                    title: l10n.sevenDayHistory,
+                    onBack: () => Navigator.of(context).pop(),
+                  );
+                }
+                return _HistoryRow(day: days[index - 1]);
+              },
+            ),
           );
         },
       ),
@@ -94,7 +107,13 @@ class _HistoryRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.large),
-        border: Border.all(color: context.palette.border),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

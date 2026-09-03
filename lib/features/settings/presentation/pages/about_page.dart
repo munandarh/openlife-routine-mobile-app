@@ -6,6 +6,7 @@ import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -18,7 +19,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(title: Text(l10n.aboutTitle), pinned: true),
+          SliverToBoxAdapter(child: ScreenHeader(title: l10n.aboutTitle)),
           SliverPadding(
             padding: const EdgeInsets.all(AppSpacing.pageMargin),
             sliver: SliverList(

@@ -16,6 +16,7 @@ import 'package:openlife_routine/features/insights/presentation/bloc/insights_ev
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_state.dart';
 import 'package:openlife_routine/features/settings/presentation/widgets/settings_info_card.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 
 /// What the avatar in the app bar opens.
 ///
@@ -56,19 +57,9 @@ class _ProfileView extends StatelessWidget {
             AppSpacing.xxxl,
           ),
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                _CircleBack(
-                  onPressed: () => context.popOrGo(OpenLifeRoute.today.path),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    l10n.profileTitle,
-                    style: AppTextStyles.sectionTitle.copyWith(fontSize: 19),
-                  ),
-                ),
-              ],
+            ScreenHeader(
+              title: l10n.profileTitle,
+              onBack: () => context.popOrGo(OpenLifeRoute.today.path),
             ),
             const SizedBox(height: AppSpacing.xl),
             Center(
@@ -164,33 +155,6 @@ class _ProfileView extends StatelessWidget {
               label: Text(l10n.settingsTab),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CircleBack extends StatelessWidget {
-  const _CircleBack({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: context.palette.surface,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: SizedBox(
-          width: 44,
-          height: 44,
-          child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 18,
-            color: context.palette.textPrimary,
-          ),
         ),
       ),
     );

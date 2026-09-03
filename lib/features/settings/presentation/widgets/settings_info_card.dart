@@ -23,8 +23,14 @@ class SettingsInfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: context.palette.border),
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

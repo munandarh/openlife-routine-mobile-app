@@ -16,6 +16,7 @@ import 'package:openlife_routine/features/routines/presentation/bloc/routine_blo
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 
 class RoutineDetailPage extends StatelessWidget {
   const RoutineDetailPage({required this.routineId, super.key});
@@ -89,22 +90,9 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                 AppSpacing.xxxl,
               ),
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    _CircleBack(
-                      onPressed: () =>
-                          context.popOrGo(OpenLifeRoute.today.path),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Text(
-                        l10n.routineDetailTitle,
-                        style: AppTextStyles.sectionTitle.copyWith(
-                          fontSize: 19,
-                        ),
-                      ),
-                    ),
-                  ],
+                ScreenHeader(
+                  title: l10n.routineDetailTitle,
+                  onBack: () => context.popOrGo(OpenLifeRoute.today.path),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 if (routine == null &&
@@ -307,33 +295,6 @@ class _SurfaceCard extends StatelessWidget {
         ],
       ),
       child: child,
-    );
-  }
-}
-
-class _CircleBack extends StatelessWidget {
-  const _CircleBack({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: context.palette.surface,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: SizedBox(
-          width: 44,
-          height: 44,
-          child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 18,
-            color: context.palette.textPrimary,
-          ),
-        ),
-      ),
     );
   }
 }

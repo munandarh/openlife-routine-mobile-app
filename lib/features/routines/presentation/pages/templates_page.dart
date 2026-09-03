@@ -1,15 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
 import 'package:openlife_routine/core/theme/app_colors.dart';
 import 'package:openlife_routine/core/theme/app_palette.dart';
 import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
+import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/templates_empty_page.dart';
 import 'package:openlife_routine/features/templates/domain/entities/routine_template.dart';
 import 'package:openlife_routine/features/templates/domain/usecases/apply_template_use_case.dart';
@@ -19,8 +18,8 @@ import 'package:openlife_routine/features/templates/presentation/bloc/template_s
 import 'package:openlife_routine/features/templates/presentation/utils/template_l10n.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:openlife_routine/shared/illustrations/asset_vectors.dart';
-import 'package:openlife_routine/shared/widgets/buttons/icon_circle_button.dart';
 import 'package:openlife_routine/shared/widgets/buttons/primary_button.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 import 'package:openlife_routine/shared/widgets/rive/openlife_rive_view.dart';
 
 class TemplatesPage extends StatelessWidget {
@@ -86,7 +85,6 @@ class _TemplatesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final AppLocalizations l10n = context.l10n;
 
     return BlocBuilder<TemplateBloc, TemplateState>(
@@ -105,38 +103,24 @@ class _TemplatesView extends StatelessWidget {
           body: SafeArea(
             child: CustomScrollView(
               slivers: <Widget>[
-                SliverAppBar(
-                  leadingWidth: 68,
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: AppSpacing.pageMargin),
-                    child: Center(
-                      child: IconCircleButton(
-                        icon: Icons.arrow_back_rounded,
-                        onPressed: () => context.pop(),
-                      ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.pageMargin,
+                      AppSpacing.md + 2,
+                      AppSpacing.pageMargin,
+                      0,
+                    ),
+                    child: ScreenHeader(
+                      title: l10n.templatesTitle,
+                      onBack: () => context.pop(),
                     ),
                   ),
-                  title: Text(
-                    l10n.templatesTitle,
-                    style: textTheme.headlineMedium?.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    IconCircleButton(
-                      icon: Icons.notifications_none_rounded,
-                      onPressed: () =>
-                          context.push(OpenLifeRoute.notifications.path),
-                    ),
-                    const SizedBox(width: AppSpacing.pageMargin),
-                  ],
-                  pinned: true,
-                  backgroundColor: context.palette.background,
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.pageMargin,
-                    AppSpacing.xl,
+                    AppSpacing.lg,
                     AppSpacing.pageMargin,
                     120,
                   ),
@@ -144,34 +128,33 @@ class _TemplatesView extends StatelessWidget {
                     delegate: SliverChildListDelegate(<Widget>[
                       Text(
                         l10n.discoverRoutines,
-                        style: textTheme.displayLarge?.copyWith(
-                          color: AppColors.primary,
-                          fontSize: 22,
-                        ),
+                        style: AppTextStyles.pageTitle,
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.xs + 1),
                       Text(
                         l10n.addStructured,
-                        style: textTheme.bodyLarge?.copyWith(
+                        style: AppTextStyles.body.copyWith(
                           color: context.palette.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: AppSpacing.lg),
                       ...state.templates.map(
                         (RoutineTemplate template) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: _TemplateCard(
                             title: TemplateL10n.title(l10n, template),
-                            description:
-                                TemplateL10n.description(l10n, template),
+                            description: TemplateL10n.description(
+                              l10n,
+                              template,
+                            ),
                             badge: TemplateL10n.badge(l10n, template),
                             icon: _iconForKey(template.iconKey),
                             iconBackground: _iconBgForKey(template.iconKey),
                             iconColor: _iconColorForKey(template.iconKey),
-                            illustrationPath:
-                                _illustrationForKey(template.iconKey),
+                            illustrationPath: _illustrationForKey(
+                              template.iconKey,
+                            ),
                             meta: l10n.stepsCount(template.routineCount),
-                            isPrimary: template.isPrimary,
                             onApply: () =>
                                 unawaited(_applyTemplate(context, template)),
                           ),
@@ -223,7 +206,6 @@ class _TemplateCard extends StatelessWidget {
     required this.meta,
     this.badge,
     this.illustrationPath,
-    this.isPrimary = false,
     this.onApply,
   });
 
@@ -235,17 +217,22 @@ class _TemplateCard extends StatelessWidget {
   final String meta;
   final String? badge;
   final String? illustrationPath;
-  final bool isPrimary;
   final VoidCallback? onApply;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
-        border: Border.all(color: context.palette.border),
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,8 +241,7 @@ class _TemplateCard extends StatelessWidget {
             children: <Widget>[
               illustrationPath != null
                   ? ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(AppRadius.extraLarge),
+                      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
                       child: OpenLifeRiveView.illustration(
                         illustrationPath: illustrationPath!,
                         fallbackIcon: icon,
@@ -290,16 +276,15 @@ class _TemplateCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             description,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: context.palette.textSecondary),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: context.palette.textSecondary,
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(meta, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: AppSpacing.lg),
           PrimaryButton(
             label: context.l10n.addTemplate,
-            isSecondary: !isPrimary,
             icon: Icons.add,
             onPressed: onApply,
           ),

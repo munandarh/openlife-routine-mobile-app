@@ -16,6 +16,7 @@ import 'package:openlife_routine/core/theme/app_text_styles.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
+import 'package:openlife_routine/shared/widgets/navigation/screen_header.dart';
 
 /// What the bell in the app bar opens: the reminders that are actually
 /// queued, so "did my reminder get set?" has an answer inside the app.
@@ -76,22 +77,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     AppSpacing.xxxl,
                   ),
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        _CircleBack(
-                          onPressed: () =>
-                              context.popOrGo(OpenLifeRoute.today.path),
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: Text(
-                            l10n.notificationsTitle,
-                            style: AppTextStyles.sectionTitle.copyWith(
-                              fontSize: 19,
-                            ),
-                          ),
-                        ),
-                      ],
+                    ScreenHeader(
+                      title: l10n.notificationsTitle,
+                      onBack: () => context.popOrGo(OpenLifeRoute.today.path),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
@@ -284,7 +272,6 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
@@ -314,33 +301,6 @@ class _EmptyState extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CircleBack extends StatelessWidget {
-  const _CircleBack({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: context.palette.surface,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: SizedBox(
-          width: 44,
-          height: 44,
-          child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 18,
-            color: context.palette.textPrimary,
-          ),
-        ),
       ),
     );
   }

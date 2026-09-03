@@ -107,7 +107,7 @@ class ReminderHealth {
 
   Future<void> openAppSettings() => _invoke<bool>('openAppSettings');
 
-  Future<void> requestPermissions() =>
+  Future<bool?> requestPermissions() =>
       _notificationService.requestPermissions();
 
   Future<T?> _invoke<T>(String method) async {

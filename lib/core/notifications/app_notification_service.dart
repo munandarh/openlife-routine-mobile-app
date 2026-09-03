@@ -219,12 +219,20 @@ class AppNotificationService {
         ?.canScheduleExactNotifications();
   }
 
-  Future<void> requestPermissions() async {
+  /// Asks for what the reminders need, and reports whether they can now be
+  /// delivered.
+  ///
+  /// Android stops showing the notification prompt once it has been dismissed
+  /// twice, and from then on the request returns false without anything
+  /// appearing on screen. A caller that ignores the answer leaves the user at
+  /// a dead end, so it is returned here and the health screen sends them to
+  /// system settings instead.
+  Future<bool?> requestPermissions() async {
     if (_disabled) {
-      return;
+      return null;
     }
 
-    await _plugin
+    final bool? granted = await _plugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
         >()
@@ -236,11 +244,13 @@ class AppNotificationService {
         ?.requestExactAlarmsPermission();
     // Without this iOS never shows the permission prompt, and every reminder
     // is silently dropped with no error to notice.
-    await _plugin
+    final bool? iosGranted = await _plugin
         .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin
         >()
         ?.requestPermissions(alert: true, badge: true, sound: true);
+
+    return granted ?? iosGranted;
   }
 
   Future<void> syncRoutineSchedules(AppDatabase appDatabase) async {

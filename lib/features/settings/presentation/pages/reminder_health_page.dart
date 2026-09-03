@@ -80,7 +80,14 @@ class _ReminderHealthPageState extends State<ReminderHealthPage>
     switch (check) {
       case ReminderCheck.notifications:
       case ReminderCheck.exactAlarms:
-        await _health.requestPermissions();
+        final bool? granted = await _health.requestPermissions();
+        // Android shows the notification prompt at most twice; after that the
+        // request returns false with nothing on screen. Without this the
+        // button would look broken and the user would have no way to turn
+        // reminders back on.
+        if (granted == false) {
+          await _health.openAppSettings();
+        }
       case ReminderCheck.batteryOptimisation:
         await _health.openBatterySettings();
     }

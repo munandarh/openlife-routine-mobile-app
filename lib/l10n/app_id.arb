@@ -5,6 +5,7 @@
   "preparingYourDay": "Menyiapkan harimu",
   "todayTab": "Hari Ini",
   "routinesTab": "Rutinitas",
+  "meditateTab": "Meditasi",
   "insightsTab": "Wawasan",
   "settingsTab": "Pengaturan",
   "continueButton": "Lanjut",
@@ -518,5 +519,117 @@
   "vendorStepLock": "Kunci aplikasi di Recents, agar tidak ikut terhapus saat membersihkan aplikasi",
   "openAutostartSettings": "Buka pengaturan autostart",
   "openAppSettings": "Buka pengaturan aplikasi",
-  "reminderHealthSetting": "Kesehatan pengingat"
+  "reminderHealthSetting": "Kesehatan pengingat",
+  "meditateHeaderTitle": "Meditasi",
+  "meditateHeaderSubtitle": "Ruang kecil untuk dirimu.",
+  "categoryAnxietyBreath": "Napas Cemas",
+  "anxietyBreathRoutine": "Rutinitas Napas Cemas",
+  "anxietyBreathTitle": "Napas Cemas",
+  "anxietyBreathTagline": "Perlambat napas, satu siklus setiap waktu.",
+  "anxietyBreathDuration": "7 mnt · Panduan bernapas",
+  "anxietyBreathSubtitle": "Napas perlahan dan stabil untuk rasa lebih tenang.",
+  "anxietyBreathSetupTitle": "Pilih durasi hembusan",
+  "anxietyBreathSetupDesc": "Tarik napas tetap 3 detik. Pilih ritme hembusan yang nyaman untukmu hari ini.",
+  "startBreathingAction": "Mulai bernapas",
+  "todaysPause": "JEDA HARI INI",
+  "morningReset": "Mulai Pagi",
+  "morningResetDesc": "Tenangkan pikiranmu perlahan.",
+  "middayPause": "Jeda Siang",
+  "middayPauseDesc": "Berhenti sejenak dan tarik napas.",
+  "eveningUnwind": "Tenangkan Malam",
+  "eveningUnwindDesc": "Lepaskan ketegangan hari ini.",
+  "prepareForSleep": "Persiapan Tidur",
+  "prepareForSleepDesc": "Tenangkan pikiran sebelum istirahat.",
+  "howDoYouWantToFeel": "Apa yang ingin kamu rasakan?",
+  "feelCalm": "Tenang",
+  "feelFocus": "Fokus",
+  "feelReset": "Segar",
+  "feelSleep": "Tidur",
+  "feelBreathe": "Bernapas",
+  "feelStressRelief": "Meredakan stres",
+  "quickStart": "Mulai Cepat",
+  "recentLabel": "Terbaru",
+  "seeAll": "Lihat semua",
+  "inhaleLabel": "Tarik napas",
+  "exhaleLabel": "Hembuskan",
+  "fixedBadge": "Tetap",
+  "secUnit": "{seconds} dtk",
+  "@secUnit": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionLabel": "Sesi",
+  "sevenMinutes": "7 menit",
+  "comfortSafetyNote": "Pilih hanya ritme yang nyaman. Kembalilah ke napas normal jika kamu merasa pusing atau tidak nyaman.",
+  "canEndSessionAnytime": "Kamu dapat mengakhiri sesi kapan saja.",
+  "timeLeft": "Sisa {time}",
+  "@timeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "secExhaleSelected": "Hembusan {seconds} dtk dipilih",
+  "@secExhaleSelected": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "pauseAction": "Jeda",
+  "resumeAction": "Lanjutkan",
+  "endSessionAction": "Akhiri sesi",
+  "endSessionDialogTitle": "Akhiri sesi ini?",
+  "endSessionDialogMessage": "Pengingatmu saat ini akan tetap belum selesai.",
+  "keepBreathingAction": "Lanjutkan bernapas",
+  "sessionCompleteTitle": "Sesi selesai",
+  "sessionCompleteSubtitle": "Kamu telah meluangkan 7 menit untuk memperlambat ritme.",
+  "sessionsCompleteToday": "{completed} dari {total} hari ini",
+  "@sessionsCompleteToday": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsCompleteTodayFull": "{completed} dari {total} sesi selesai hari ini",
+  "@sessionsCompleteTodayFull": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "allSessionsCompleteToday": "5 sesi hari ini telah selesai",
+  "howDoYouFeel": "Bagaimana perasaanmu?",
+  "moodCalmer": "Lebih tenang",
+  "moodSame": "Sama saja",
+  "moodUncomfortable": "Kurang nyaman",
+  "doneAction": "Selesai",
+  "settleOutroLabel": "TENANGKAN",
+  "settleOutroSubtext": "Biarkan napasmu kembali mengalir alami.",
+  "inhaleGentlySubtext": "Tarik napas perlahan",
+  "slowExhaleSubtext": "Hembuskan perlahan",
+  "actionTypeGuidedBreathing": "Panduan bernapas",
+  "fiveTimesADay": "5 kali sehari",
+  "exhaleSelectionNotice": "Kamu akan memilih 7, 12, atau 21 detik sebelum setiap sesi dimulai.",
+  "threeMinutes": "3 mnt",
+  "fiveMinutes": "5 mnt",
+  "tenMinutes": "10 mnt",
+  "fifteenMinutes": "15 mnt",
+  "eveningCalmSample": "Malam Tenang",
+  "meditationSample": "5 mnt · Meditasi",
+  "yesterdayLabel": "Kemarin",
+  "reminderCloseWarning": "Beberapa pengingat berjarak kurang dari 30 menit. Kamu bisa tetap memakai waktu ini atau mengaturnya lebih berjauhan."
 }

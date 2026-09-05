@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_preferences.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/create_routine_use_case.dart';
 import 'package:openlife_routine/features/routines/domain/usecases/delete_routine_use_case.dart';
@@ -84,6 +84,11 @@ class RoutineBloc extends Bloc<RoutineEvent, RoutineState> {
     );
 
     await _createRoutineUseCase(routine);
+    if (routine.category.isAnxietyBreath) {
+      await MeditationPreferences().event('anxiety_breath_routine_created', {
+        'routine_id': routine.id,
+      });
+    }
     await _notificationService.requestPermissions();
     await _notificationService.scheduleRoutine(routine);
 

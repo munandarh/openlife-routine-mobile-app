@@ -87,7 +87,7 @@ class _SelectedTab extends StatelessWidget {
       duration: const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
       height: 44,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md + 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm + 3),
       decoration: BoxDecoration(
         color: context.palette.primarySoft,
         borderRadius: BorderRadius.circular(AppRadius.pill),
@@ -95,15 +95,15 @@ class _SelectedTab extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(route.icon, size: 19, color: context.palette.primaryInk),
-          const SizedBox(width: AppSpacing.sm - 1),
+          Icon(route.icon, size: 18, color: context.palette.primaryInk),
+          const SizedBox(width: AppSpacing.xs + 2),
           Flexible(
             child: Text(
               _label(context.l10n, route),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.button.copyWith(
-                fontSize: 13,
+                fontSize: 12.5,
                 color: context.palette.primaryInk,
               ),
             ),
@@ -120,6 +120,7 @@ String _label(AppLocalizations l10n, OpenLifeRoute route) {
   return switch (route) {
     OpenLifeRoute.today => l10n.todayTab,
     OpenLifeRoute.routines => l10n.routinesTab,
+    OpenLifeRoute.meditate => l10n.meditateTab,
     OpenLifeRoute.insights => l10n.insightsTab,
     OpenLifeRoute.settings => l10n.settingsTab,
     _ => route.label,

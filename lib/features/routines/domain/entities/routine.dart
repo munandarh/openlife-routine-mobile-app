@@ -9,6 +9,7 @@ enum RoutineCategory {
   exercise,
   breakTime,
   custom,
+  anxietyBreath,
 }
 
 extension RoutineCategoryX on RoutineCategory {
@@ -21,7 +22,10 @@ extension RoutineCategoryX on RoutineCategory {
   bool get supportsMultipleTimes =>
       this == RoutineCategory.vitamin ||
       this == RoutineCategory.medicine ||
-      this == RoutineCategory.custom;
+      this == RoutineCategory.custom ||
+      this == RoutineCategory.anxietyBreath;
+
+  bool get isAnxietyBreath => this == RoutineCategory.anxietyBreath;
 }
 
 class Routine extends Equatable {
@@ -70,6 +74,21 @@ class Routine extends Equatable {
   String get firstReminderTime => reminderTimes.first;
 
   bool get hasMultipleTimes => reminderTimes.length > 1;
+  int? get dailyTarget => category.isAnxietyBreath ? 5 : null;
+  int? get sessionDurationSec => category.isAnxietyBreath ? 420 : null;
+  int? get inhaleSec => category.isAnxietyBreath ? 3 : null;
+
+  void validateMeditationSchedule() {
+    if (category.isAnxietyBreath &&
+        (reminderTimes.length != 5 ||
+            reminderTimes.any(
+              (t) => !RegExp(r'^(?:[01]\d|2[0-3]):[0-5]\d$').hasMatch(t),
+            ))) {
+      throw ArgumentError(
+        'Anxiety Breath requires five unique valid reminder times.',
+      );
+    }
+  }
 
   Routine copyWith({
     String? id,

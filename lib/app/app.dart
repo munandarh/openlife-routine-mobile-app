@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
@@ -7,6 +6,7 @@ import 'package:openlife_routine/core/di/app_dependencies.dart';
 import 'package:openlife_routine/core/di/app_scope.dart';
 import 'package:openlife_routine/core/localization/app_locales.dart';
 import 'package:openlife_routine/core/localization/l10n_extensions.dart';
+import 'package:openlife_routine/core/notifications/notification_actions.dart';
 import 'package:openlife_routine/core/theme/app_theme.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
@@ -26,6 +26,7 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
   late final AppRouter _appRouter;
   late final SettingsBloc _settingsBloc;
   StreamSubscription<String>? _notificationSubscription;
+  StreamSubscription<RoutineNotificationPayload>? _meditationSubscription;
 
   @override
   void initState() {
@@ -37,6 +38,18 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
       initialNotificationRoutineId:
           widget.dependencies.initialNotificationRoutineId,
     );
+    _meditationSubscription = widget
+        .dependencies
+        .notificationService
+        .meditationTapStream
+        .listen(_openBreathingReminder);
+    final initial =
+        widget.dependencies.notificationService.initialMeditationPayload;
+    if (initial != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _openBreathingReminder(initial),
+      );
+    }
     _notificationSubscription = widget
         .dependencies
         .notificationService
@@ -51,8 +64,23 @@ class _OpenLifeAppState extends State<OpenLifeApp> {
         });
   }
 
+  void _openBreathingReminder(RoutineNotificationPayload payload) {
+    _appRouter.router.go(
+      Uri(
+        path: OpenLifeRoute.anxietyBreathSetup.path,
+        queryParameters: {
+          'source': 'notification',
+          'routineId': payload.routineId,
+          'reminderTime': payload.reminderTime,
+          'occurrenceDate': payload.dateKeyAt(DateTime.now()),
+        },
+      ).toString(),
+    );
+  }
+
   @override
   void dispose() {
+    _meditationSubscription?.cancel();
     _notificationSubscription?.cancel();
     _settingsBloc.close();
     super.dispose();

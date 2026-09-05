@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/notifications/notification_actions.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/features/insights/domain/routine_streak.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_preferences.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 
@@ -78,7 +78,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
       event.routineId,
       event.reminderTime,
     );
-    if (item == null) {
+    if (item == null || item.category == RoutineCategory.anxietyBreath) {
       return;
     }
 
@@ -130,6 +130,12 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
         reminderTime: event.reminderTime,
         status: 'skipped',
       );
+      if (item.category.isAnxietyBreath) {
+        await MeditationPreferences().event('anxiety_breath_reminder_skipped', {
+          'routine_id': item.routineId,
+          'occurrence_id': '${item.routineId}|$dateKey|${item.reminderTime}',
+        });
+      }
       await _notificationService?.dismissShownRoutine(event.routineId);
     }
 
@@ -169,6 +175,11 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
       snoozedUntil: snoozedUntil,
     );
 
+    if (item.category.isAnxietyBreath) {
+      await MeditationPreferences().event('anxiety_breath_reminder_snoozed', {
+        'routine_id': item.routineId,
+      });
+    }
     await _notificationService?.scheduleSnoozedRoutine(
       routineId: event.routineId,
       title: bundle.routine.title,

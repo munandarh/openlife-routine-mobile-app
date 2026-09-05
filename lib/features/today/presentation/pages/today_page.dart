@@ -13,6 +13,7 @@ import 'package:openlife_routine/core/theme/app_radius.dart';
 import 'package:openlife_routine/core/theme/app_shadows.dart';
 import 'package:openlife_routine/core/theme/app_spacing.dart';
 import 'package:openlife_routine/core/theme/app_text_styles.dart';
+import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/utils/routine_category_ui.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/today/presentation/bloc/today_bloc.dart';
@@ -511,20 +512,112 @@ class _TodayRoutineCard extends StatelessWidget {
                     : context.palette.border,
                 // The circle had no accessible name at all: a screen reader
                 // announced only "button" for the screen's primary action.
-                label: _isDone
+                label: item.category == RoutineCategory.anxietyBreath
+                    ? (_isDone ? l10n.doneAction : l10n.startBreathingAction)
+                    : _isDone
                     ? l10n.markNotDoneAction(item.title)
                     : l10n.markDoneAction(item.title),
-                onTap: () => context.read<TodayBloc>().add(
-                  TodayRoutineCompletionToggled(
-                    item.routineId,
-                    item.reminderTime,
-                  ),
-                ),
+                onTap: () => item.category == RoutineCategory.anxietyBreath
+                    ? (_isDone
+                          ? null
+                          : context.push(
+                              Uri(
+                                path: OpenLifeRoute.anxietyBreathSetup.path,
+                                queryParameters: {
+                                  'source': 'routine',
+                                  'routineId': item.routineId,
+                                  'reminderTime': item.reminderTime,
+                                  'occurrenceDate': context
+                                      .read<TodayBloc>()
+                                      .state
+                                      .selectedDate
+                                      .toIso8601String()
+                                      .substring(0, 10),
+                                },
+                              ).toString(),
+                            ))
+                    : context.read<TodayBloc>().add(
+                        TodayRoutineCompletionToggled(
+                          item.routineId,
+                          item.reminderTime,
+                        ),
+                      ),
               ),
             ],
           ),
-          if (_isDue) ...<Widget>[
+          if (_isDue ||
+              (item.category == RoutineCategory.anxietyBreath &&
+                  !_isDone &&
+                  item.status != TodayRoutineItemStatus.skipped)) ...<Widget>[
             const SizedBox(height: AppSpacing.md),
+            if (item.category == RoutineCategory.anxietyBreath) ...<Widget>[
+              FutureBuilder<int>(
+                future: AppScope.read(context).meditationRepository
+                    .getDailyAnxietyBreathCompletedCount(
+                      context.read<TodayBloc>().state.selectedDate,
+                    ),
+                builder: (context, count) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    l10n.sessionsCompleteTodayFull(
+                      (count.data ?? 0).clamp(0, 5),
+                      5,
+                    ),
+                    style: AppTextStyles.bodyEmphasis,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 42,
+                child: Material(
+                  color: AppColors.forestGreen,
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                    onTap: () {
+                      final Uri uri = Uri(
+                        path: OpenLifeRoute.anxietyBreathSetup.path,
+                        queryParameters: <String, String>{
+                          'source': 'routine',
+                          'routineId': item.routineId,
+                          'reminderTime': item.reminderTime,
+                          'occurrenceDate': context
+                              .read<TodayBloc>()
+                              .state
+                              .selectedDate
+                              .toIso8601String()
+                              .substring(0, 10),
+                        },
+                      );
+                      context.push(uri.toString());
+                    },
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            l10n.startBreathingAction,
+                            style: AppTextStyles.button.copyWith(
+                              color: Colors.white,
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(
+                            Icons.chevron_right_rounded,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             Row(
               children: <Widget>[
                 Expanded(

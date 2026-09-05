@@ -3,6 +3,12 @@ import 'package:openlife_routine/core/notifications/notification_stack_config.da
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
 import 'package:openlife_routine/features/insights/presentation/bloc/insights_bloc.dart';
+import 'package:openlife_routine/features/meditate/data/repositories/shared_prefs_meditation_repository.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_audio.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_session_writer.dart';
+import 'package:openlife_routine/features/meditate/domain/entities/meditation_session.dart';
+import 'package:openlife_routine/features/meditate/domain/repositories/meditation_repository.dart';
+import 'package:openlife_routine/features/meditate/presentation/bloc/meditate_bloc.dart';
 import 'package:openlife_routine/features/onboarding/data/repositories/shared_prefs_onboarding_repository.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
@@ -35,7 +41,11 @@ class AppDependencies {
     required this.notificationService,
     required this.initialNotificationRoutineId,
     required this.settingsRepository,
-  });
+    MeditationRepository? meditationRepository,
+    this.createMeditationAudio = MeditationAudio.new,
+    this.meditationPreferences,
+  }) : meditationRepository =
+           meditationRepository ?? const _NoOpMeditationRepository();
 
   final LocalDatabaseConfig databaseConfig;
   final NotificationStackConfig notificationConfig;
@@ -46,6 +56,9 @@ class AppDependencies {
   final AppNotificationService notificationService;
   final String? initialNotificationRoutineId;
   final SettingsRepository settingsRepository;
+  final MeditationRepository meditationRepository;
+  final MeditationAudio Function() createMeditationAudio;
+  final SharedPreferencesAsync? meditationPreferences;
 
   static Future<AppDependencies> bootstrap() async {
     final SharedPreferencesAsync preferences = SharedPreferencesAsync();
@@ -60,6 +73,16 @@ class AppDependencies {
     final SettingsRepository settingsRepository = SharedPrefsSettingsRepository(
       preferences,
     );
+    final MeditationRepository meditationRepository =
+        SharedPrefsMeditationRepository(preferences);
+    try {
+      await MeditationSessionWriter(
+        meditationRepository,
+        appDatabase,
+      ).reconcileCompletedOccurrences();
+    } catch (_) {
+      /* History errors are surfaced by Meditate; app startup stays usable. */
+    }
     final AppNotificationService notificationService = AppNotificationService();
     // Reminder text is rendered by the service, so it needs the chosen
     // language before any schedule is written — and before `initialize`,
@@ -95,7 +118,13 @@ class AppDependencies {
       notificationService: notificationService,
       initialNotificationRoutineId: initialNotificationRoutineId,
       settingsRepository: settingsRepository,
+      meditationRepository: meditationRepository,
+      meditationPreferences: preferences,
     );
+  }
+
+  MeditateBloc createMeditateBloc() {
+    return MeditateBloc(repository: meditationRepository);
   }
 
   RoutineBloc createRoutineBloc() {
@@ -139,6 +168,27 @@ class AppDependencies {
     return ExportImportService(
       appDatabase: appDatabase,
       notificationService: notificationService,
+      meditationPreferences: meditationPreferences,
     );
   }
+}
+
+class _NoOpMeditationRepository implements MeditationRepository {
+  const _NoOpMeditationRepository();
+
+  @override
+  Future<void> saveSession(MeditationSession session) async {}
+
+  @override
+  Future<List<MeditationSession>> getSessions() async =>
+      const <MeditationSession>[];
+
+  @override
+  Future<int> getDailyAnxietyBreathCompletedCount(DateTime date) async => 0;
+
+  @override
+  Future<int> getLastUsedExhaleSeconds() async => 7;
+
+  @override
+  Future<void> setLastUsedExhaleSeconds(int seconds) async {}
 }

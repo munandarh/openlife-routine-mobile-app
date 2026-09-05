@@ -253,6 +253,50 @@ class _RoutineDetailViewState extends State<_RoutineDetailView> {
                             ],
                           ),
                         ),
+                        if (routine.category.isAnxietyBreath) ...[
+                          const SizedBox(height: AppSpacing.md),
+                          _SurfaceCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.actionTypeGuidedBreathing,
+                                  style: AppTextStyles.cardTitle,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${l10n.sevenMinutes} · ${l10n.fiveTimesADay}',
+                                ),
+                                const SizedBox(height: 8),
+                                Text(l10n.exhaleSelectionNotice),
+                                const SizedBox(height: 12),
+                                FutureBuilder<int>(
+                                  future: AppScope.read(context)
+                                      .meditationRepository
+                                      .getDailyAnxietyBreathCompletedCount(
+                                        DateTime.now(),
+                                      ),
+                                  builder: (context, count) => Text(
+                                    l10n.sessionsCompleteTodayFull(
+                                      (count.data ?? 0).clamp(0, 5),
+                                      5,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                PrimaryButton(
+                                  label: l10n.startBreathingAction,
+                                  onPressed: () async {
+                                    await context.push(
+                                      OpenLifeRoute.anxietyBreathSetup.path,
+                                    );
+                                    if (mounted) setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         if (routine.notes != null &&
                             routine.notes!.trim().isNotEmpty) ...<Widget>[
                           const SizedBox(height: AppSpacing.md),

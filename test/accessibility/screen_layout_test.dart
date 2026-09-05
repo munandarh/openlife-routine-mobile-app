@@ -3,6 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:openlife_routine/app/router/app_router.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_history_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/anxiety_breath_setup_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/breathing_player_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/meditate_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/session_complete_page.dart';
 import 'package:openlife_routine/features/routine_detail/presentation/pages/routine_detail_page.dart';
 import 'package:openlife_routine/features/routines/domain/entities/routine.dart';
 import 'package:openlife_routine/features/routines/presentation/pages/new_routine_page.dart';
@@ -13,7 +17,6 @@ import 'package:openlife_routine/features/settings/presentation/pages/privacy_pa
 import 'package:openlife_routine/features/settings/presentation/pages/settings_page.dart';
 import 'package:openlife_routine/features/today/presentation/pages/today_page.dart';
 import 'package:openlife_routine/shared/navigation/openlife_shell.dart';
-
 import '../support/screen_harness.dart';
 
 /// A layout sweep over every real screen, at the narrowest phone we support and
@@ -89,6 +92,13 @@ void main() {
       currentRoute: OpenLifeRoute.routines,
       child: RoutinesPage(),
     ),
+    'Meditate': const OpenLifeShell(
+      currentRoute: OpenLifeRoute.meditate,
+      child: MeditatePage(),
+    ),
+    'Anxiety breath setup': const AnxietyBreathSetupPage(),
+    'Breathing player': const BreathingPlayerPage(exhaleSeconds: 7),
+    'Session complete': const SessionCompletePage(),
     'Templates': const TemplatesPage(),
     'Insights': const OpenLifeShell(
       currentRoute: OpenLifeRoute.insights,

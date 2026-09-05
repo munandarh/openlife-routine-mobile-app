@@ -36,4 +36,13 @@ final class AppShadows {
       offset: const Offset(0, 10),
     ),
   ];
+
+  /// Glowing aura around the breathing orb during active meditation.
+  static List<BoxShadow> get breathingOrb => <BoxShadow>[
+    BoxShadow(
+      color: AppColors.breathingGlow.withValues(alpha: 0.22),
+      blurRadius: 36,
+      spreadRadius: 8,
+    ),
+  ];
 }

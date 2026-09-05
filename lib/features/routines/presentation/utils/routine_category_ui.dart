@@ -28,6 +28,7 @@ final class RoutineCategoryUi {
       RoutineCategory.exercise => Icons.fitness_center_outlined,
       RoutineCategory.breakTime => Icons.self_improvement_outlined,
       RoutineCategory.custom => Icons.star_outline_rounded,
+      RoutineCategory.anxietyBreath => Icons.air_rounded,
     };
   }
 
@@ -81,6 +82,7 @@ final class RoutineCategoryUi {
       RoutineCategory.exercise => AppColors.moveTint,
       RoutineCategory.breakTime => AppColors.calmTint,
       RoutineCategory.custom => AppColors.primarySoft,
+      RoutineCategory.anxietyBreath => AppColors.anxietyTint,
     };
   }
 
@@ -94,6 +96,7 @@ final class RoutineCategoryUi {
       RoutineCategory.exercise => AppColors.moveInk,
       RoutineCategory.breakTime => AppColors.calmInk,
       RoutineCategory.custom => AppColors.primary,
+      RoutineCategory.anxietyBreath => AppColors.anxietyInk,
     };
   }
 
@@ -108,6 +111,7 @@ final class RoutineCategoryUi {
       RoutineCategory.exercise => l10n.categoryExercise,
       RoutineCategory.breakTime => l10n.categoryBreak,
       RoutineCategory.custom => l10n.categoryCustom,
+      RoutineCategory.anxietyBreath => l10n.categoryAnxietyBreath,
     };
   }
 
@@ -122,6 +126,7 @@ final class RoutineCategoryUi {
       RoutineCategory.exercise => l10n.exerciseRoutine,
       RoutineCategory.breakTime => l10n.breakRoutine,
       RoutineCategory.custom => l10n.customRoutine,
+      RoutineCategory.anxietyBreath => l10n.anxietyBreathRoutine,
     };
   }
 }

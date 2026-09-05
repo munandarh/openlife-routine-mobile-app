@@ -3,6 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_empty_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_history_page.dart';
 import 'package:openlife_routine/features/insights/presentation/pages/insights_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/anxiety_breath_setup_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/breathing_player_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/meditate_page.dart';
+import 'package:openlife_routine/features/meditate/presentation/pages/session_complete_page.dart';
 import 'package:openlife_routine/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/language_selection_page.dart';
 import 'package:openlife_routine/features/onboarding/presentation/pages/notification_permission_page.dart';
@@ -78,6 +82,61 @@ final class AppRouter {
                return _shellPage(
                  child: const RoutinesPage(),
                  currentRoute: OpenLifeRoute.routines,
+               );
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.meditate.path,
+             name: OpenLifeRoute.meditate.name,
+             pageBuilder: (BuildContext context, GoRouterState state) {
+               return _shellPage(
+                 child: const MeditatePage(),
+                 currentRoute: OpenLifeRoute.meditate,
+               );
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.anxietyBreathSetup.path,
+             name: OpenLifeRoute.anxietyBreathSetup.name,
+             builder: (BuildContext context, GoRouterState state) {
+               return AnxietyBreathSetupPage(
+                 source: state.uri.queryParameters['source'] ?? 'manual',
+                 routineId: state.uri.queryParameters['routineId'],
+                 reminderTime: state.uri.queryParameters['reminderTime'],
+                 occurrenceDate: state.uri.queryParameters['occurrenceDate'],
+               );
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.breathingPlayer.path,
+             name: OpenLifeRoute.breathingPlayer.name,
+             redirect: (context, state) => state.extra is AnxietyBreathSetupAuthorization ? null : Uri(path: OpenLifeRoute.anxietyBreathSetup.path, queryParameters: state.uri.queryParameters).toString(),
+             builder: (BuildContext context, GoRouterState state) {
+               final int exhaleSeconds = int.tryParse(
+                 state.uri.queryParameters['exhaleSeconds'] ?? '7',
+               ) ?? 7;
+               return BreathingPlayerPage(
+                 exhaleSeconds: exhaleSeconds,
+                 source: state.uri.queryParameters['source'] ?? 'manual',
+                 routineId: state.uri.queryParameters['routineId'],
+                 reminderTime: state.uri.queryParameters['reminderTime'],
+                 occurrenceDate: state.uri.queryParameters['occurrenceDate'],
+               );
+             },
+           ),
+           GoRoute(
+             path: OpenLifeRoute.sessionComplete.path,
+             name: OpenLifeRoute.sessionComplete.name,
+             builder: (BuildContext context, GoRouterState state) {
+               final int completedCount = int.tryParse(
+                 state.uri.queryParameters['completedCount'] ?? '1',
+               ) ?? 1;
+               return SessionCompletePage(
+                 completedCount: completedCount,
+                 sessionId: state.uri.queryParameters['sessionId'],
+                 minutes: int.tryParse(state.uri.queryParameters['minutes'] ?? '') ?? 7,
+                 type: state.uri.queryParameters['type'] ?? 'anxiety_breath',
+                 source: state.uri.queryParameters['source'] ?? 'manual',
                );
              },
            ),
@@ -226,6 +285,22 @@ enum OpenLifeRoute {
   ),
   today('/today', 'Today', Icons.today_outlined),
   routines('/routines', 'Routines', Icons.calendar_today_outlined),
+  meditate('/meditate', 'Meditate', Icons.eco_outlined),
+  anxietyBreathSetup(
+    '/meditate/anxiety-breath/setup',
+    'Choose your exhale',
+    Icons.air_rounded,
+  ),
+  breathingPlayer(
+    '/meditate/anxiety-breath/session',
+    'Anxiety Breath',
+    Icons.air_rounded,
+  ),
+  sessionComplete(
+    '/meditate/session-complete',
+    'Session Complete',
+    Icons.check_circle_outline_rounded,
+  ),
   templates(
     '/routines/templates',
     'Templates',
@@ -282,6 +357,10 @@ enum OpenLifeRoute {
     OpenLifeRoute.reminderHealth => 'reminderHealth',
     OpenLifeRoute.today => 'today',
     OpenLifeRoute.routines => 'routines',
+    OpenLifeRoute.meditate => 'meditate',
+    OpenLifeRoute.anxietyBreathSetup => 'anxietyBreathSetup',
+    OpenLifeRoute.breathingPlayer => 'breathingPlayer',
+    OpenLifeRoute.sessionComplete => 'sessionComplete',
     OpenLifeRoute.templates => 'templates',
     OpenLifeRoute.insights => 'insights',
     OpenLifeRoute.insightsHistory => 'insightsHistory',
@@ -306,6 +385,7 @@ enum OpenLifeRoute {
   static const List<OpenLifeRoute> bottomNavRoutes = <OpenLifeRoute>[
     OpenLifeRoute.today,
     OpenLifeRoute.routines,
+    OpenLifeRoute.meditate,
     OpenLifeRoute.insights,
     OpenLifeRoute.settings,
   ];

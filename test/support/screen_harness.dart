@@ -9,6 +9,8 @@ import 'package:openlife_routine/core/notifications/app_notification_service.dar
 import 'package:openlife_routine/core/notifications/notification_stack_config.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
 import 'package:openlife_routine/core/storage/local_database_config.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_audio.dart';
+import 'package:openlife_routine/features/meditate/domain/repositories/meditation_repository.dart';
 import 'package:openlife_routine/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:openlife_routine/features/routines/data/datasources/routine_local_data_source.dart';
 import 'package:openlife_routine/features/routines/data/repositories/drift_routine_repository.dart';
@@ -19,6 +21,7 @@ import 'package:openlife_routine/features/settings/domain/repositories/settings_
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:openlife_routine/features/settings/presentation/bloc/settings_event.dart';
 
+import 'fake_meditation_repository.dart';
 import 'fake_settings_repository.dart';
 import 'localized_app.dart';
 
@@ -27,12 +30,16 @@ import 'localized_app.dart';
 class ScreenHarness {
   ScreenHarness({
     SettingsRepository? settingsRepository,
+    MeditationRepository? meditationRepository,
     this.routineRepositoryOverride,
   }) : appDatabase = AppDatabase.forTesting(NativeDatabase.memory()),
-       settingsRepository = settingsRepository ?? FakeSettingsRepository();
+       settingsRepository = settingsRepository ?? FakeSettingsRepository(),
+       meditationRepository =
+           meditationRepository ?? FakeMeditationRepository();
 
   final AppDatabase appDatabase;
   final SettingsRepository settingsRepository;
+  final MeditationRepository meditationRepository;
 
   /// Replaces the Drift-backed repository.
   ///
@@ -53,6 +60,7 @@ class ScreenHarness {
     notificationService: AppNotificationService.noop(),
     initialNotificationRoutineId: null,
     settingsRepository: settingsRepository,
+    meditationRepository: meditationRepository,
   );
 
   Future<void> dispose() => appDatabase.close();
@@ -180,4 +188,13 @@ class StaticRoutineRepository implements RoutineRepository {
 
   @override
   Future<void> deleteRoutine(String id) async {}
+}
+
+class SilentMeditationAudio extends MeditationAudio {
+  @override
+  Future<void> start(String score) async {}
+  @override
+  Future<void> pause() async {}
+  @override
+  Future<void> resume() async {}
 }

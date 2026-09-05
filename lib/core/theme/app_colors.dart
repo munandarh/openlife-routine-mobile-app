@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 final class AppColors {
   const AppColors._();
 
+  // Meditation artwork uses fixed paired colors in both themes.
+  static const Color meditationIvory = Color(0xFFF4EBD8);
+  static const Color meditationFocus = Color(0xFF426A80);
+  static const Color meditationReset = Color(0xFF956340);
+  static const Color meditationSleep = Color(0xFF655884);
+  static const Color meditationStress = Color(0xFF8B5861);
+  static const Color meditationBreathe = Color(0xFF397779);
+  static const Color meditationCalm = Color(0xFF4C684E);
+  static const Color meditationOrbHighlight = Color(0xFFF2F3DE);
+  static const Color meditationNight = Color(0xFF132D2B);
+  static const Color meditationGlow = Color(0xFFFFE9C2);
+  static const Color meditationSun = Color(0xFFF9EACD);
+  static const Color meditationHillShadow = Color(0xFF142C29);
+  static const Color meditationOrbInk = Color(0xFF315149);
+  static const Color meditationPreviewGlow = Color(0xFFF3EAD4);
+  static const Color meditationNumberInk = Color(0xFF2F4933);
+  static const Color meditationPromptInk = Color(0xFF345343);
+  static const Color meditationRingTrack = Color(0xFFDCE5D6);
+  static const Color meditationRingActive = Color(0xFF829D79);
+
   // Sage & Clay. Every value here is a token from the approved mockups; the
   // greys in particular are the corrected ones — the lighter pair they
   // replaced sat at 2.65:1 on white and failed as body text.
@@ -80,4 +100,65 @@ final class AppColors {
   static const Color textSecondaryDark = Color(0xFFB8B3AA);
   static const Color textMutedDark = Color(0xFFA8A297);
   static const Color iconMutedDark = Color(0xFF8E887D);
+
+  // Anxiety Breath & Meditation tokens
+  static const Color anxietyTint = Color(0xFFD6E8EB);
+  static const Color anxietyInk = Color(0xFF356B6F);
+  static const Color anxietyCardTint = Color(0xFFE5F0F2);
+  static const Color anxietyCardDark = Color(0xFF2C4345);
+  static const Color anxietyTitle = Color(0xFF2B5B60);
+  static const Color anxietySubtitle = Color(0xFF386367);
+  static const Color anxietyProgressBg = Color(0xFFCCE0E3);
+  static const Color anxietyProgressBgDark = Color(0xFF36484A);
+
+  // Meditation action and theme tones
+  static const Color forestGreen = Color(0xFF43583F);
+  static const Color forestGreenGlow = Color(0x3343583F);
+  static const Color forestGreenSoft = Color(0xFFE4EEE1);
+  static const Color forestGreenBorder = Color(0xFFE4EDE1);
+
+  // Setup cards
+  static const Color inhaleCardTint = Color(0xFFE2EFF3);
+  static const Color inhaleCardInk = Color(0xFF356B6F);
+  static const Color durationCardTint = Color(0xFFECE8F4);
+  static const Color durationCardInk = Color(0xFF504670);
+  static const Color exhaleCardTint = Color(0xFFE3EFF4);
+  static const Color exhaleCardInk = Color(0xFF426577);
+
+  // Today's Pause Hero & Illustration
+  static const Color meditationMoon = Color(0xFFF3ECE0);
+  static const Color meditationCardText = Color(0xFFFAF7F2);
+  static const Color meditationHillDark = Color(0xFF364433);
+  static const Color meditationHillMid = Color(0xFF4A5C46);
+  static const Color meditationLotusOuter = Color(0xFF7F9579);
+  static const Color meditationLotusCenter = Color(0xFF9CB196);
+
+  // Breathing Player Orb
+  static const Color breathingGlow = Color(0xFF6B9B70);
+  static const Color breathingOrbLight = Color(0xFFE8F3E6);
+  static const Color breathingOrbMid = Color(0xFFC7DFC4);
+  static const Color breathingOrbDeep = Color(0xFFAECDAA);
+  static const Color breathingText = Color(0xFF2E462F);
+  static const Color breathingDigits = Color(0xFF243A26);
+  static const Color breathingTrack = Color(0xFFD6E5D4);
+  static const Color breathingArc = Color(0xFF536E50);
+  static const Color breathingWave1 = Color(0xFF7BA677);
+  static const Color breathingWave2 = Color(0xFF5E8B5A);
+
+  // Feelings Grid
+  static const Color feelCalmTint = Color(0xFFE6ECE3);
+  static const Color feelCalmInk = Color(0xFF3A5437);
+  static const Color feelFocusedTint = Color(0xFFE0E9F2);
+  static const Color feelFocusedInk = Color(0xFF33556D);
+  static const Color feelGroundedTint = Color(0xFFF6ECE0);
+  static const Color feelGroundedInk = Color(0xFF7B542E);
+  static const Color feelRestfulTint = Color(0xFFE7E4F2);
+  static const Color feelRestfulInk = Color(0xFF4A436D);
+  static const Color feelRelievedTint = Color(0xFFDFEFEA);
+  static const Color feelRelievedInk = Color(0xFF2F635E);
+  static const Color feelEnergizedTint = Color(0xFFF7E3E3);
+  static const Color feelEnergizedInk = Color(0xFF7B3B3B);
+
+  // End Session Dialog
+  static const Color sessionEndDanger = Color(0xFFB33A3A);
 }

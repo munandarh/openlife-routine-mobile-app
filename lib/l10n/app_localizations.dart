@@ -128,6 +128,12 @@ abstract class AppLocalizations {
   /// **'Routines'**
   String get routinesTab;
 
+  /// No description provided for @meditateTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Meditate'**
+  String get meditateTab;
+
   /// No description provided for @insightsTab.
   ///
   /// In en, this message translates to:
@@ -2089,6 +2095,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder health'**
   String get reminderHealthSetting;
+
+  /// No description provided for @meditateHeaderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Meditate'**
+  String get meditateHeaderTitle;
+
+  /// No description provided for @meditateHeaderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A little space for yourself.'**
+  String get meditateHeaderSubtitle;
+
+  /// No description provided for @categoryAnxietyBreath.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety Breath'**
+  String get categoryAnxietyBreath;
+
+  /// No description provided for @anxietyBreathRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety Breath routine'**
+  String get anxietyBreathRoutine;
+
+  /// No description provided for @anxietyBreathTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety Breath'**
+  String get anxietyBreathTitle;
+
+  /// No description provided for @anxietyBreathTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow the breath, one cycle at a time.'**
+  String get anxietyBreathTagline;
+
+  /// No description provided for @anxietyBreathDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'7 min · Guided breathing'**
+  String get anxietyBreathDuration;
+
+  /// No description provided for @anxietyBreathSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow, steady breaths to feel calmer.'**
+  String get anxietyBreathSubtitle;
+
+  /// No description provided for @anxietyBreathSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your exhale'**
+  String get anxietyBreathSetupTitle;
+
+  /// No description provided for @anxietyBreathSetupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Inhale stays at 3 seconds. Choose the exhale pace that feels comfortable today.'**
+  String get anxietyBreathSetupDesc;
+
+  /// No description provided for @startBreathingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start breathing'**
+  String get startBreathingAction;
+
+  /// No description provided for @todaysPause.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY\'S PAUSE'**
+  String get todaysPause;
+
+  /// No description provided for @morningReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Reset'**
+  String get morningReset;
+
+  /// No description provided for @morningResetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your mind gently.'**
+  String get morningResetDesc;
+
+  /// No description provided for @middayPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Midday Pause'**
+  String get middayPause;
+
+  /// No description provided for @middayPauseDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Step back and breathe.'**
+  String get middayPauseDesc;
+
+  /// No description provided for @eveningUnwind.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Unwind'**
+  String get eveningUnwind;
+
+  /// No description provided for @eveningUnwindDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Let go of the day\'s tension.'**
+  String get eveningUnwindDesc;
+
+  /// No description provided for @prepareForSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare for Sleep'**
+  String get prepareForSleep;
+
+  /// No description provided for @prepareForSleepDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Settle your mind for rest.'**
+  String get prepareForSleepDesc;
+
+  /// No description provided for @howDoYouWantToFeel.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to feel?'**
+  String get howDoYouWantToFeel;
+
+  /// No description provided for @feelCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get feelCalm;
+
+  /// No description provided for @feelFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get feelFocus;
+
+  /// No description provided for @feelReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get feelReset;
+
+  /// No description provided for @feelSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get feelSleep;
+
+  /// No description provided for @feelBreathe.
+  ///
+  /// In en, this message translates to:
+  /// **'Breathe'**
+  String get feelBreathe;
+
+  /// No description provided for @feelStressRelief.
+  ///
+  /// In en, this message translates to:
+  /// **'Stress relief'**
+  String get feelStressRelief;
+
+  /// No description provided for @quickStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Start'**
+  String get quickStart;
+
+  /// No description provided for @recentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recentLabel;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @inhaleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Inhale'**
+  String get inhaleLabel;
+
+  /// No description provided for @exhaleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Exhale'**
+  String get exhaleLabel;
+
+  /// No description provided for @fixedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed'**
+  String get fixedBadge;
+
+  /// No description provided for @secUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} sec'**
+  String secUnit(int seconds);
+
+  /// No description provided for @sessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get sessionLabel;
+
+  /// No description provided for @sevenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'7 minutes'**
+  String get sevenMinutes;
+
+  /// No description provided for @comfortSafetyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose only a pace that feels comfortable. Return to normal breathing if you feel dizzy or uncomfortable.'**
+  String get comfortSafetyNote;
+
+  /// No description provided for @canEndSessionAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'You can end the session at any time.'**
+  String get canEndSessionAnytime;
+
+  /// No description provided for @timeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} left'**
+  String timeLeft(String time);
+
+  /// No description provided for @secExhaleSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} sec exhale selected'**
+  String secExhaleSelected(int seconds);
+
+  /// No description provided for @pauseAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pauseAction;
+
+  /// No description provided for @resumeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resumeAction;
+
+  /// No description provided for @endSessionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'End session'**
+  String get endSessionAction;
+
+  /// No description provided for @endSessionDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End this session?'**
+  String get endSessionDialogTitle;
+
+  /// No description provided for @endSessionDialogMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current reminder will stay incomplete.'**
+  String get endSessionDialogMessage;
+
+  /// No description provided for @keepBreathingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep breathing'**
+  String get keepBreathingAction;
+
+  /// No description provided for @sessionCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session complete'**
+  String get sessionCompleteTitle;
+
+  /// No description provided for @sessionCompleteSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You gave yourself 7 minutes to slow down.'**
+  String get sessionCompleteSubtitle;
+
+  /// No description provided for @sessionsCompleteToday.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} today'**
+  String sessionsCompleteToday(int completed, int total);
+
+  /// No description provided for @sessionsCompleteTodayFull.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} sessions complete today'**
+  String sessionsCompleteTodayFull(int completed, int total);
+
+  /// No description provided for @allSessionsCompleteToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s 5 sessions are complete'**
+  String get allSessionsCompleteToday;
+
+  /// No description provided for @howDoYouFeel.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you feel?'**
+  String get howDoYouFeel;
+
+  /// No description provided for @moodCalmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Calmer'**
+  String get moodCalmer;
+
+  /// No description provided for @moodSame.
+  ///
+  /// In en, this message translates to:
+  /// **'Same'**
+  String get moodSame;
+
+  /// No description provided for @moodUncomfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncomfortable'**
+  String get moodUncomfortable;
+
+  /// No description provided for @doneAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneAction;
+
+  /// No description provided for @settleOutroLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SETTLE'**
+  String get settleOutroLabel;
+
+  /// No description provided for @settleOutroSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Let your breath return naturally.'**
+  String get settleOutroSubtext;
+
+  /// No description provided for @inhaleGentlySubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Inhale gently'**
+  String get inhaleGentlySubtext;
+
+  /// No description provided for @slowExhaleSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow exhale'**
+  String get slowExhaleSubtext;
+
+  /// No description provided for @actionTypeGuidedBreathing.
+  ///
+  /// In en, this message translates to:
+  /// **'Guided breathing'**
+  String get actionTypeGuidedBreathing;
+
+  /// No description provided for @fiveTimesADay.
+  ///
+  /// In en, this message translates to:
+  /// **'5 times a day'**
+  String get fiveTimesADay;
+
+  /// No description provided for @exhaleSelectionNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'You will choose 7, 12, or 21 seconds before each session.'**
+  String get exhaleSelectionNotice;
+
+  /// No description provided for @threeMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'3 min'**
+  String get threeMinutes;
+
+  /// No description provided for @fiveMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'5 min'**
+  String get fiveMinutes;
+
+  /// No description provided for @tenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'10 min'**
+  String get tenMinutes;
+
+  /// No description provided for @fifteenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'15 min'**
+  String get fifteenMinutes;
+
+  /// No description provided for @eveningCalmSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Calm'**
+  String get eveningCalmSample;
+
+  /// No description provided for @meditationSample.
+  ///
+  /// In en, this message translates to:
+  /// **'5 min · Meditation'**
+  String get meditationSample;
+
+  /// No description provided for @yesterdayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayLabel;
+
+  /// No description provided for @reminderCloseWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Some reminders are less than 30 minutes apart. You can keep these times or spread them out.'**
+  String get reminderCloseWarning;
 }
 
 class _AppLocalizationsDelegate

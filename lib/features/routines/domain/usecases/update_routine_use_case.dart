@@ -7,6 +7,7 @@ class UpdateRoutineUseCase {
   final RoutineRepository _repository;
 
   Future<void> call(Routine routine) {
+    routine.validateMeditationSchedule();
     return _repository.updateRoutine(routine);
   }
 }

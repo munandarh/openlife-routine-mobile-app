@@ -1,0 +1,278 @@
+/// Offline editorial content. Guidance is timed text, with original ambient music.
+class MeditationPractice {
+  const MeditationPractice(
+    this.id,
+    this.category,
+    this.titleEn,
+    this.titleId,
+    this.descriptionEn,
+    this.descriptionId,
+    this.minutes,
+    this.sound,
+    this.promptsEn,
+    this.promptsId,
+  );
+  final String id,
+      category,
+      titleEn,
+      titleId,
+      descriptionEn,
+      descriptionId,
+      sound;
+  final int minutes;
+  final List<String> promptsEn, promptsId;
+  String title(bool idLocale) => idLocale ? titleId : titleEn;
+  String description(bool idLocale) => idLocale ? descriptionId : descriptionEn;
+  String guidance(double progress, bool idLocale) {
+    final prompts = idLocale ? promptsId : promptsEn;
+    return prompts[(progress.clamp(0, .99999) * prompts.length).floor()];
+  }
+
+  static MeditationPractice byId(String id) =>
+      all.firstWhere((p) => p.id == id, orElse: () => all.first);
+  static MeditationPractice forHour(int hour) => byId(
+    hour >= 5 && hour < 12
+        ? 'morning_reset'
+        : hour < 17 && hour >= 12
+        ? 'midday_pause'
+        : hour >= 17 && hour < 21
+        ? 'evening_unwind'
+        : 'sleep',
+  );
+  static const all = <MeditationPractice>[
+    MeditationPractice(
+      'calm',
+      'calm',
+      'Still Waters',
+      'Air yang Tenang',
+      'Make room for a quieter mind.',
+      'Beri ruang untuk pikiran yang lebih tenang.',
+      5,
+      'still_waters',
+      [
+        'Find a comfortable seat. Let your hands rest.',
+        'Notice your natural breath. There is nothing to change.',
+        'Let your shoulders soften with each breath.',
+        'If thoughts arrive, acknowledge them and return gently.',
+        'Feel the support beneath you. Rest in this moment.',
+        'Notice how you feel. Open your eyes when you are ready.',
+      ],
+      [
+        'Duduklah dengan nyaman. Istirahatkan tangan.',
+        'Sadari napas alami. Tidak ada yang perlu diubah.',
+        'Lembutkan bahu bersama setiap napas.',
+        'Jika pikiran datang, sadari lalu kembali perlahan.',
+        'Rasakan tempat duduk menopang tubuh. Hadirlah di sini.',
+        'Sadari perasaanmu. Buka mata saat siap.',
+      ],
+    ),
+    MeditationPractice(
+      'focus',
+      'focus',
+      'One Clear Thing',
+      'Satu Fokus Jernih',
+      'A little clarity for what comes next.',
+      'Kejernihan kecil untuk langkah berikutnya.',
+      10,
+      'clear_sky',
+      [
+        'Sit upright, without holding yourself rigid.',
+        'Choose one point: the feeling of breath at your nose.',
+        'Stay with one complete breath, from beginning to end.',
+        'When attention wanders, gently begin again.',
+        'Let the next task wait. This breath is enough.',
+        'Choose one small intention to carry into your day.',
+      ],
+      [
+        'Duduk tegak tanpa membuat tubuh kaku.',
+        'Pilih satu titik: sensasi napas di hidung.',
+        'Ikuti satu napas utuh dari awal hingga akhir.',
+        'Saat perhatian beralih, mulai lagi perlahan.',
+        'Biarkan tugas berikutnya menunggu. Cukup napas ini.',
+        'Pilih satu niat kecil untuk harimu.',
+      ],
+    ),
+    MeditationPractice(
+      'morning_reset',
+      'reset',
+      'Morning Reset',
+      'Awal Pagi',
+      'Clear your mind gently.',
+      'Jernihkan pikiran perlahan.',
+      5,
+      'first_light',
+      [
+        'Welcome this new moment. Settle into your seat.',
+        'Notice the light around you, even with eyes closed.',
+        'Relax your forehead, jaw, and shoulders.',
+        'Let your breath find its own easy rhythm.',
+        'Ask yourself: what deserves my attention today?',
+        'Carry this small pause with you. Begin gently.',
+      ],
+      [
+        'Sambut momen baru. Duduklah dengan nyaman.',
+        'Sadari cahaya di sekitar, meski mata terpejam.',
+        'Rilekskan dahi, rahang, dan bahu.',
+        'Biarkan napas menemukan ritme alaminya.',
+        'Tanyakan: apa yang perlu perhatianku hari ini?',
+        'Bawa jeda kecil ini bersamamu. Mulai perlahan.',
+      ],
+    ),
+    MeditationPractice(
+      'midday_pause',
+      'reset',
+      'Midday Pause',
+      'Jeda Siang',
+      'Step out of the rush for a moment.',
+      'Ambil jeda dari kesibukan.',
+      5,
+      'first_light',
+      [
+        'Pause what you are doing. Feel your feet on the floor.',
+        'Unclench your hands and soften your jaw.',
+        'Notice three sounds without naming or judging them.',
+        'Let your breathing happen naturally.',
+        'Give yourself permission to do one thing at a time.',
+        'Return to your day with a little more space.',
+      ],
+      [
+        'Hentikan kegiatan sejenak. Rasakan kaki di lantai.',
+        'Lepaskan kepalan tangan dan lembutkan rahang.',
+        'Sadari tiga suara tanpa menilai.',
+        'Biarkan napas mengalir alami.',
+        'Izinkan diri melakukan satu hal pada satu waktu.',
+        'Kembali ke harimu dengan ruang yang lebih lega.',
+      ],
+    ),
+    MeditationPractice(
+      'evening_unwind',
+      'calm',
+      'Evening Unwind',
+      'Tenang di Sore Hari',
+      'Let the day settle around you.',
+      'Biarkan harimu mereda.',
+      5,
+      'still_waters',
+      [
+        'Let your body settle into a comfortable position.',
+        'Notice where the day is still held in your body.',
+        'Soften one area at a time, without forcing.',
+        'Allow unfinished things to wait for now.',
+        'Remember one small moment you appreciated today.',
+        'Let this be enough. Take your time returning.',
+      ],
+      [
+        'Biarkan tubuh beristirahat dengan nyaman.',
+        'Sadari bagian tubuh yang masih terasa tegang.',
+        'Lembutkan satu bagian setiap kali, tanpa memaksa.',
+        'Biarkan yang belum selesai menunggu.',
+        'Ingat satu momen kecil yang kamu syukuri.',
+        'Biarkan ini cukup. Kembalilah perlahan.',
+      ],
+    ),
+    MeditationPractice(
+      'sleep',
+      'sleep',
+      'Moonlit Rest',
+      'Istirahat Rembulan',
+      'A soft landing at the end of the day.',
+      'Istirahat lembut di penghujung hari.',
+      15,
+      'moonlit_rest',
+      [
+        'Lie down or settle somewhere comfortable.',
+        'Let your eyes rest. There is nowhere else to be.',
+        'Soften your toes, feet, and legs.',
+        'Let the belly, chest, and shoulders release effort.',
+        'Thoughts can drift by. You do not need to follow them.',
+        'Rest with your natural breathing. Stay here as long as you like.',
+      ],
+      [
+        'Berbaring atau duduk di tempat yang nyaman.',
+        'Istirahatkan mata. Tidak perlu ke mana-mana.',
+        'Rilekskan jari kaki, telapak, dan tungkai.',
+        'Lepaskan ketegangan perut, dada, dan bahu.',
+        'Biarkan pikiran berlalu. Tak perlu mengikutinya.',
+        'Istirahat bersama napas alami selama yang kamu mau.',
+      ],
+    ),
+    MeditationPractice(
+      'natural_breath',
+      'breathe',
+      'Easy Breathing',
+      'Napas Alami',
+      'Reconnect with your own natural rhythm.',
+      'Kembali ke ritme alami tubuhmu.',
+      5,
+      'soft_tide',
+      [
+        'Sit comfortably. Keep your breathing natural.',
+        'Notice the air as it enters and leaves.',
+        'Feel the small movement in your chest or belly.',
+        'You do not need to count or lengthen your breath.',
+        'Return to the feeling of breathing whenever you wander.',
+        'Notice the room around you. Take your time.',
+      ],
+      [
+        'Duduk nyaman. Biarkan napas tetap alami.',
+        'Sadari udara yang masuk dan keluar.',
+        'Rasakan gerakan kecil pada dada atau perut.',
+        'Tidak perlu menghitung atau memperpanjang napas.',
+        'Kembali ke sensasi bernapas saat perhatian beralih.',
+        'Sadari ruangan di sekitar. Tidak perlu terburu-buru.',
+      ],
+    ),
+    MeditationPractice(
+      'stress_relief',
+      'stress',
+      'Let It Soften',
+      'Lepaskan Perlahan',
+      'A gentle body scan to release the day.',
+      'Pindai tubuh perlahan untuk melepas penat.',
+      10,
+      'warm_ground',
+      [
+        'Find a position that feels supported.',
+        'Notice your feet. Let them rest heavily.',
+        'Bring attention to your legs and hips. Soften what you can.',
+        'Relax your hands, arms, shoulders, and jaw.',
+        'If tension remains, simply make room for it.',
+        'Feel your whole body breathing. Return when ready.',
+      ],
+      [
+        'Temukan posisi yang menopang tubuh.',
+        'Sadari kaki. Biarkan beristirahat sepenuhnya.',
+        'Rasakan tungkai dan pinggul. Rilekskan semampunya.',
+        'Lembutkan tangan, lengan, bahu, dan rahang.',
+        'Jika masih tegang, cukup beri ruang untuk merasakannya.',
+        'Rasakan seluruh tubuh bernapas. Kembali saat siap.',
+      ],
+    ),
+    MeditationPractice(
+      'timer',
+      'calm',
+      'Quiet Timer',
+      'Timer Hening',
+      'Your space. Your own practice.',
+      'Ruang untuk latihanmu sendiri.',
+      5,
+      'still_waters',
+      [
+        'Settle in. This time is yours.',
+        'Follow your own practice at your own pace.',
+        'Let your breath remain easy and natural.',
+        'Rest your attention wherever feels comfortable.',
+        'There is nothing to achieve in this moment.',
+        'Return gently when your practice is complete.',
+      ],
+      [
+        'Duduk nyaman. Waktu ini milikmu.',
+        'Ikuti latihanmu dengan ritmemu sendiri.',
+        'Biarkan napas tetap mudah dan alami.',
+        'Istirahatkan perhatian di tempat yang nyaman.',
+        'Tidak ada yang harus dicapai saat ini.',
+        'Kembali perlahan saat latihan selesai.',
+      ],
+    ),
+  ];
+}

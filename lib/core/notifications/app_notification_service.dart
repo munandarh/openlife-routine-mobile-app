@@ -46,6 +46,11 @@ class AppNotificationService {
       StreamController<String>.broadcast();
   final StreamController<String> _routineActionController =
       StreamController<String>.broadcast();
+  final StreamController<RoutineNotificationPayload> _meditationTapController =
+      StreamController<RoutineNotificationPayload>.broadcast();
+  Stream<RoutineNotificationPayload> get meditationTapStream =>
+      _meditationTapController.stream;
+  RoutineNotificationPayload? initialMeditationPayload;
   bool _disabled = false;
   Locale _locale = const Locale('en');
 
@@ -118,9 +123,11 @@ class AppNotificationService {
 
     final NotificationAppLaunchDetails? launchDetails = await _plugin
         .getNotificationAppLaunchDetails();
-    return RoutineNotificationPayload.decode(
+    final payload = RoutineNotificationPayload.decode(
       launchDetails?.notificationResponse?.payload,
-    )?.routineId;
+    );
+    if (payload?.isAnxietyBreath == true) initialMeditationPayload = payload;
+    return payload?.routineId;
   }
 
   /// Publishes the reminder channel before anything needs it.
@@ -409,11 +416,14 @@ class AppNotificationService {
       notificationDetails: routineNotificationDetails(
         strings: strings,
         snoozeMinutes: routine.snoozeMinutes,
+        isAnxietyBreath: routine.category.isAnxietyBreath,
       ),
       payload: RoutineNotificationPayload(
         routineId: routine.id,
         snoozeMinutes: routine.snoozeMinutes,
         reminderTime: slot.reminderTime,
+        isAnxietyBreath: routine.category.isAnxietyBreath,
+        weekday: slot.weekday,
         title: routine.title,
       ).encode(),
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
@@ -481,26 +491,47 @@ class AppNotificationService {
     }
 
     final AppLocalizations strings = await _strings();
+    final incoming = RoutineNotificationPayload.decode(payload);
+    final bundle = await _database?.getRoutineBundleById(routineId);
+    final anxiety =
+        incoming?.isAnxietyBreath == true ||
+        bundle?.routine.category == 'anxietyBreath';
+    final actualTime = incoming?.reminderTime.isNotEmpty == true
+        ? incoming!.reminderTime
+        : reminderTime;
+    final index = incoming == null
+        ? timeIndex
+        : (bundle?.schedule.reminderTime.split(',').indexOf(actualTime) ??
+                  timeIndex)
+              .clamp(0, maxReminderTimes - 1);
+    final actualPayload = RoutineNotificationPayload(
+      routineId: routineId,
+      snoozeMinutes: snoozeMinutes,
+      title: title,
+      reminderTime: actualTime,
+      isAnxietyBreath: anxiety,
+      occurrenceDate:
+          incoming?.dateKeyAt(
+            scheduledFor.subtract(Duration(minutes: snoozeMinutes)),
+          ) ??
+          routineLogDateKey(
+            scheduledFor.subtract(Duration(minutes: snoozeMinutes)),
+          ),
+    );
 
     await _zonedScheduleWithFallback(
       // Its own slot per time: snoozing the morning dose must not cancel a
       // snooze already running on the evening one.
-      id: routineNotificationId(routineId, routineSnoozeSlotFor(timeIndex)),
+      id: routineNotificationId(routineId, routineSnoozeSlotFor(index)),
       title: title,
       body: strings.notificationReminderBody(title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
       notificationDetails: routineNotificationDetails(
         strings: strings,
         snoozeMinutes: snoozeMinutes,
+        isAnxietyBreath: anxiety,
       ),
-      payload:
-          payload ??
-          RoutineNotificationPayload(
-            routineId: routineId,
-            snoozeMinutes: snoozeMinutes,
-            reminderTime: reminderTime,
-            title: title,
-          ).encode(),
+      payload: actualPayload.encode(),
     );
   }
 
@@ -558,6 +589,7 @@ class AppNotificationService {
   }
 
   Future<void> dispose() async {
+    await _meditationTapController.close();
     await _routineTapController.close();
     await _routineActionController.close();
   }
@@ -621,7 +653,15 @@ class AppNotificationService {
     }
 
     final String? actionId = response.actionId;
-    if (actionId != null) {
+    if (payload.isAnxietyBreath &&
+        (actionId == null ||
+            actionId.isEmpty ||
+            actionId == notificationStartBreathingActionId ||
+            actionId == notificationDoneActionId)) {
+      _meditationTapController.add(payload);
+      return;
+    }
+    if (actionId != null && actionId.isNotEmpty) {
       // The app is alive, so the foreground handler fires instead of the
       // background isolate; it has to do the same work.
       final AppDatabase? database = _database;

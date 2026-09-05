@@ -59,6 +59,16 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
   /// generated. Once a time is edited by hand, changing the count stops
   /// regenerating and starts appending, so the edit is never thrown away.
   bool _timesAutoSpread = true;
+  bool get _hasCloseReminders {
+    final minutes = _times.map((t) => t.hour * 60 + t.minute).toList()..sort();
+    for (var i = 0; i < minutes.length; i++) {
+      final gap =
+          (minutes[(i + 1) % minutes.length] - minutes[i] + 1440) % 1440;
+      if (minutes.length > 1 && gap < 30) return true;
+    }
+    return false;
+  }
+
   Set<int> _repeatDays = <int>{1, 2, 3};
   bool _seededFromExisting = false;
   int _snoozeMinutes = 10;
@@ -270,6 +280,20 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   onSelected: (RoutineCategory category) {
                     setState(() {
                       _selectedCategory = category;
+                      if (category == RoutineCategory.anxietyBreath) {
+                        if (_nameController.text.trim().isEmpty) {
+                          _nameController.text = l10n.categoryAnxietyBreath;
+                        }
+                        _times = const <TimeOfDay>[
+                          TimeOfDay(hour: 8, minute: 0),
+                          TimeOfDay(hour: 11, minute: 0),
+                          TimeOfDay(hour: 14, minute: 0),
+                          TimeOfDay(hour: 17, minute: 0),
+                          TimeOfDay(hour: 20, minute: 0),
+                        ];
+                        _timesAutoSpread = false;
+                        _repeatDays = const <int>{1, 2, 3, 4, 5, 6, 7};
+                      }
                     });
                   },
                 ),
@@ -285,10 +309,91 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
                   },
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                // A dose is the thing people take several times a day, so only
-                // those categories carry the count; everything else keeps the
-                // single time field it always had.
-                if (_selectedCategory.supportsMultipleTimes) ...<Widget>[
+                if (_selectedCategory ==
+                    RoutineCategory.anxietyBreath) ...<Widget>[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: context.palette.surface,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                      border: Border.all(
+                        color: context.palette.border.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    l10n.actionTypeGuidedBreathing,
+                                    style: AppTextStyles.cardTitle.copyWith(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${l10n.sevenMinutes} · ${l10n.fiveTimesADay}',
+                                    style: AppTextStyles.body.copyWith(
+                                      fontSize: 13,
+                                      color: context.palette.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.palette.primarySoft,
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.pill,
+                                ),
+                              ),
+                              child: Text(
+                                l10n.fixedBadge,
+                                style: AppTextStyles.label.copyWith(
+                                  color: context.palette.primaryInk,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          l10n.exhaleSelectionNotice,
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: 12.5,
+                            color: context.palette.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  _FieldLabel(l10n.timesPerDayLabel),
+                  const SizedBox(height: AppSpacing.sm),
+                  _ReminderTimeFields(times: _times, onPick: _pickTimeAt),
+                  if (_hasCloseReminders)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        l10n.reminderCloseWarning,
+                        style: TextStyle(color: context.palette.textSecondary),
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.lg),
+                ] else if (_selectedCategory.supportsMultipleTimes) ...<Widget>[
                   Row(
                     children: <Widget>[
                       Expanded(child: _FieldLabel(l10n.timesPerDayLabel)),
@@ -466,6 +571,10 @@ class _NewRoutineViewState extends State<_NewRoutineView> {
       return;
     }
 
+    if (_selectedCategory.isAnxietyBreath && serialisedTimes.length != 5) {
+      _showValidationError(context, l10n.fiveTimesADay);
+      return;
+    }
     final List<int> repeatDays = _repeatDays.toList()..sort();
     final String? notes = _notesController.text.trim().isEmpty
         ? null

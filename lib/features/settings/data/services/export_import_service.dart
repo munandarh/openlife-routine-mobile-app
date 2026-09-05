@@ -1,17 +1,20 @@
 import 'dart:convert';
-
 import 'package:drift/drift.dart' as drift;
 import 'package:openlife_routine/core/notifications/app_notification_service.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExportImportService {
   ExportImportService({
     required AppDatabase appDatabase,
     AppNotificationService? notificationService,
+    SharedPreferencesAsync? meditationPreferences,
   }) : _appDatabase = appDatabase,
-       _notificationService = notificationService;
+       _notificationService = notificationService,
+       _meditationPreferences = meditationPreferences;
 
   final AppDatabase _appDatabase;
+  final SharedPreferencesAsync? _meditationPreferences;
 
   /// Reminders live in the OS, not in the database, so both destructive and
   /// restorative data operations have to reach out and fix them too.
@@ -35,6 +38,14 @@ class ExportImportService {
         .get();
     data['routineLogs'] = logs.map(_logToJson).toList();
 
+    final meditation = await _meditationPreferences?.getString(
+      'meditation.sessions',
+    );
+    if (meditation != null) data['meditationSessions'] = jsonDecode(meditation);
+    final favorites = await _meditationPreferences?.getStringList(
+      'meditation.favorites',
+    );
+    if (favorites != null) data['meditationFavorites'] = favorites;
     return const JsonEncoder.withIndent('  ').convert(data);
   }
 
@@ -131,10 +142,49 @@ class ExportImportService {
     // cold start to sync them.
     await _notificationService?.syncRoutineSchedules(_appDatabase);
 
+    if (_meditationPreferences != null && data['meditationSessions'] is List) {
+      final current =
+          jsonDecode(
+                await _meditationPreferences.getString('meditation.sessions') ??
+                    '[]',
+              )
+              as List<dynamic>;
+      final byId = <String, dynamic>{
+        for (final item in current)
+          (item as Map<String, dynamic>)['id'] as String: item,
+      };
+      for (final item in data['meditationSessions'] as List<dynamic>) {
+        if (item is Map<String, dynamic> &&
+            item['id'] is String &&
+            item['startedAt'] is String &&
+            DateTime.tryParse(item['startedAt'] as String) != null) {
+          byId[item['id'] as String] = item;
+        }
+      }
+      await _meditationPreferences.setString(
+        'meditation.sessions',
+        jsonEncode(byId.values.toList()),
+      );
+    }
+    if (data['meditationFavorites'] is List) {
+      await _meditationPreferences?.setStringList(
+        'meditation.favorites',
+        (data['meditationFavorites'] as List).whereType<String>().toList(),
+      );
+    }
     return count;
   }
 
   Future<void> resetAllData() async {
+    await _meditationPreferences?.clear(
+      allowList: {
+        'meditation.sessions',
+        'meditation.favorites',
+        'meditation.last_used_exhale',
+        'meditation.music',
+        'meditation.events',
+      },
+    );
     await _appDatabase.delete(_appDatabase.routineLogs).go();
     await _appDatabase.delete(_appDatabase.routineSchedules).go();
     await _appDatabase.delete(_appDatabase.routines).go();

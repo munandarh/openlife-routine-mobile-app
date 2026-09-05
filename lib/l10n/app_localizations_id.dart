@@ -24,6 +24,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get routinesTab => 'Rutinitas';
 
   @override
+  String get meditateTab => 'Meditasi';
+
+  @override
   String get insightsTab => 'Wawasan';
 
   @override
@@ -1162,4 +1165,235 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get reminderHealthSetting => 'Kesehatan pengingat';
+
+  @override
+  String get meditateHeaderTitle => 'Meditasi';
+
+  @override
+  String get meditateHeaderSubtitle => 'Ruang kecil untuk dirimu.';
+
+  @override
+  String get categoryAnxietyBreath => 'Napas Cemas';
+
+  @override
+  String get anxietyBreathRoutine => 'Rutinitas Napas Cemas';
+
+  @override
+  String get anxietyBreathTitle => 'Napas Cemas';
+
+  @override
+  String get anxietyBreathTagline =>
+      'Perlambat napas, satu siklus setiap waktu.';
+
+  @override
+  String get anxietyBreathDuration => '7 mnt · Panduan bernapas';
+
+  @override
+  String get anxietyBreathSubtitle =>
+      'Napas perlahan dan stabil untuk rasa lebih tenang.';
+
+  @override
+  String get anxietyBreathSetupTitle => 'Pilih durasi hembusan';
+
+  @override
+  String get anxietyBreathSetupDesc =>
+      'Tarik napas tetap 3 detik. Pilih ritme hembusan yang nyaman untukmu hari ini.';
+
+  @override
+  String get startBreathingAction => 'Mulai bernapas';
+
+  @override
+  String get todaysPause => 'JEDA HARI INI';
+
+  @override
+  String get morningReset => 'Mulai Pagi';
+
+  @override
+  String get morningResetDesc => 'Tenangkan pikiranmu perlahan.';
+
+  @override
+  String get middayPause => 'Jeda Siang';
+
+  @override
+  String get middayPauseDesc => 'Berhenti sejenak dan tarik napas.';
+
+  @override
+  String get eveningUnwind => 'Tenangkan Malam';
+
+  @override
+  String get eveningUnwindDesc => 'Lepaskan ketegangan hari ini.';
+
+  @override
+  String get prepareForSleep => 'Persiapan Tidur';
+
+  @override
+  String get prepareForSleepDesc => 'Tenangkan pikiran sebelum istirahat.';
+
+  @override
+  String get howDoYouWantToFeel => 'Apa yang ingin kamu rasakan?';
+
+  @override
+  String get feelCalm => 'Tenang';
+
+  @override
+  String get feelFocus => 'Fokus';
+
+  @override
+  String get feelReset => 'Segar';
+
+  @override
+  String get feelSleep => 'Tidur';
+
+  @override
+  String get feelBreathe => 'Bernapas';
+
+  @override
+  String get feelStressRelief => 'Meredakan stres';
+
+  @override
+  String get quickStart => 'Mulai Cepat';
+
+  @override
+  String get recentLabel => 'Terbaru';
+
+  @override
+  String get seeAll => 'Lihat semua';
+
+  @override
+  String get inhaleLabel => 'Tarik napas';
+
+  @override
+  String get exhaleLabel => 'Hembuskan';
+
+  @override
+  String get fixedBadge => 'Tetap';
+
+  @override
+  String secUnit(int seconds) {
+    return '$seconds dtk';
+  }
+
+  @override
+  String get sessionLabel => 'Sesi';
+
+  @override
+  String get sevenMinutes => '7 menit';
+
+  @override
+  String get comfortSafetyNote =>
+      'Pilih hanya ritme yang nyaman. Kembalilah ke napas normal jika kamu merasa pusing atau tidak nyaman.';
+
+  @override
+  String get canEndSessionAnytime => 'Kamu dapat mengakhiri sesi kapan saja.';
+
+  @override
+  String timeLeft(String time) {
+    return 'Sisa $time';
+  }
+
+  @override
+  String secExhaleSelected(int seconds) {
+    return 'Hembusan $seconds dtk dipilih';
+  }
+
+  @override
+  String get pauseAction => 'Jeda';
+
+  @override
+  String get resumeAction => 'Lanjutkan';
+
+  @override
+  String get endSessionAction => 'Akhiri sesi';
+
+  @override
+  String get endSessionDialogTitle => 'Akhiri sesi ini?';
+
+  @override
+  String get endSessionDialogMessage =>
+      'Pengingatmu saat ini akan tetap belum selesai.';
+
+  @override
+  String get keepBreathingAction => 'Lanjutkan bernapas';
+
+  @override
+  String get sessionCompleteTitle => 'Sesi selesai';
+
+  @override
+  String get sessionCompleteSubtitle =>
+      'Kamu telah meluangkan 7 menit untuk memperlambat ritme.';
+
+  @override
+  String sessionsCompleteToday(int completed, int total) {
+    return '$completed dari $total hari ini';
+  }
+
+  @override
+  String sessionsCompleteTodayFull(int completed, int total) {
+    return '$completed dari $total sesi selesai hari ini';
+  }
+
+  @override
+  String get allSessionsCompleteToday => '5 sesi hari ini telah selesai';
+
+  @override
+  String get howDoYouFeel => 'Bagaimana perasaanmu?';
+
+  @override
+  String get moodCalmer => 'Lebih tenang';
+
+  @override
+  String get moodSame => 'Sama saja';
+
+  @override
+  String get moodUncomfortable => 'Kurang nyaman';
+
+  @override
+  String get doneAction => 'Selesai';
+
+  @override
+  String get settleOutroLabel => 'TENANGKAN';
+
+  @override
+  String get settleOutroSubtext => 'Biarkan napasmu kembali mengalir alami.';
+
+  @override
+  String get inhaleGentlySubtext => 'Tarik napas perlahan';
+
+  @override
+  String get slowExhaleSubtext => 'Hembuskan perlahan';
+
+  @override
+  String get actionTypeGuidedBreathing => 'Panduan bernapas';
+
+  @override
+  String get fiveTimesADay => '5 kali sehari';
+
+  @override
+  String get exhaleSelectionNotice =>
+      'Kamu akan memilih 7, 12, atau 21 detik sebelum setiap sesi dimulai.';
+
+  @override
+  String get threeMinutes => '3 mnt';
+
+  @override
+  String get fiveMinutes => '5 mnt';
+
+  @override
+  String get tenMinutes => '10 mnt';
+
+  @override
+  String get fifteenMinutes => '15 mnt';
+
+  @override
+  String get eveningCalmSample => 'Malam Tenang';
+
+  @override
+  String get meditationSample => '5 mnt · Meditasi';
+
+  @override
+  String get yesterdayLabel => 'Kemarin';
+
+  @override
+  String get reminderCloseWarning =>
+      'Beberapa pengingat berjarak kurang dari 30 menit. Kamu bisa tetap memakai waktu ini atau mengaturnya lebih berjauhan.';
 }

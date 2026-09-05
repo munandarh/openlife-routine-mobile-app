@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:openlife_routine/core/storage/app_database.dart';
+import 'package:openlife_routine/features/meditate/data/services/meditation_preferences.dart';
 import 'package:openlife_routine/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -12,6 +12,8 @@ import 'package:timezone/timezone.dart' as tz;
 /// Action ids carried on the notification and echoed back in the response.
 const String notificationDoneActionId = 'done';
 const String notificationSnoozeActionId = 'snooze';
+const String notificationStartBreathingActionId = 'start_breathing';
+const String notificationSkipActionId = 'skip';
 
 /// What a notification carries so an action can be handled without the app
 /// running: the routine, which of its reminder times fired, its snooze length,
@@ -28,6 +30,9 @@ class RoutineNotificationPayload {
     required this.snoozeMinutes,
     required this.title,
     this.reminderTime = '',
+    this.isAnxietyBreath = false,
+    this.weekday,
+    this.occurrenceDate,
   });
 
   static const String _marker = 'v2';
@@ -41,8 +46,31 @@ class RoutineNotificationPayload {
   /// Empty on a payload written before routines could have several, which the
   /// handler reads as the routine's first time.
   final String reminderTime;
+  final bool isAnxietyBreath;
+  final int? weekday;
+  final String? occurrenceDate;
 
-  String encode() => '$routineId|$snoozeMinutes|$_marker|$reminderTime|$title';
+  String dateKeyAt(DateTime now) {
+    if (occurrenceDate != null) return occurrenceDate!;
+    var date = DateTime(now.year, now.month, now.day);
+    if (weekday != null) {
+      date = date.subtract(Duration(days: (date.weekday - weekday!) % 7));
+      final time = reminderTime.split(':');
+      final scheduled = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        int.tryParse(time.first) ?? 0,
+        time.length > 1 ? int.tryParse(time[1]) ?? 0 : 0,
+      );
+      if (scheduled.isAfter(now)) date = date.subtract(const Duration(days: 7));
+    }
+    return routineLogDateKey(date);
+  }
+
+  String encode() => isAnxietyBreath
+      ? '$routineId|$snoozeMinutes|v3|$reminderTime|${weekday ?? 0}|${occurrenceDate ?? ''}|$title'
+      : '$routineId|$snoozeMinutes|$_marker|$reminderTime|$title';
 
   static RoutineNotificationPayload? decode(String? raw) {
     if (raw == null || raw.isEmpty) {
@@ -53,6 +81,18 @@ class RoutineNotificationPayload {
         ? int.tryParse(parts[1]) ?? 10
         : 10;
 
+    if (parts.length >= 7 && parts[2] == 'v3') {
+      final day = int.tryParse(parts[4]);
+      return RoutineNotificationPayload(
+        routineId: parts.first,
+        snoozeMinutes: snoozeMinutes,
+        reminderTime: parts[3],
+        isAnxietyBreath: true,
+        weekday: day != null && day >= 1 && day <= 7 ? day : null,
+        occurrenceDate: parts[5].isEmpty ? null : parts[5],
+        title: parts.sublist(6).join('|'),
+      );
+    }
     if (parts.length >= 5 && parts[2] == _marker) {
       return RoutineNotificationPayload(
         routineId: parts.first,
@@ -91,11 +131,25 @@ Future<NotificationActionResult> applyRoutineNotificationAction({
   DateTime? now,
 }) async {
   final DateTime moment = now ?? DateTime.now();
-  final String dateKey = routineLogDateKey(moment);
+  final String dateKey = payload.dateKeyAt(moment);
   final String reminderTime = await _resolveReminderTime(database, payload);
+
+  final existing = await database.getRoutineLogByRoutineAndDate(
+    payload.routineId,
+    dateKey,
+    reminderTime: reminderTime,
+  );
+  if (existing?.status == 'done' || existing?.status == 'skipped') {
+    return const NotificationActionResult(snoozedUntil: null);
+  }
 
   switch (actionId) {
     case notificationDoneActionId:
+      final bundle = await database.getRoutineBundleById(payload.routineId);
+      if (payload.isAnxietyBreath ||
+          bundle?.routine.category == 'anxietyBreath') {
+        return const NotificationActionResult(snoozedUntil: null);
+      }
       await database.upsertRoutineLog(
         routineId: payload.routineId,
         dateKey: dateKey,
@@ -104,7 +158,26 @@ Future<NotificationActionResult> applyRoutineNotificationAction({
       );
       return const NotificationActionResult(snoozedUntil: null);
 
+    case notificationSkipActionId:
+      if (payload.isAnxietyBreath) {
+        await MeditationPreferences().event('anxiety_breath_reminder_skipped', {
+          'routine_id': payload.routineId,
+        });
+      }
+      await database.upsertRoutineLog(
+        routineId: payload.routineId,
+        dateKey: dateKey,
+        reminderTime: reminderTime,
+        status: 'skipped',
+      );
+      return const NotificationActionResult(snoozedUntil: null);
+
     case notificationSnoozeActionId:
+      if (payload.isAnxietyBreath) {
+        await MeditationPreferences().event('anxiety_breath_reminder_snoozed', {
+          'routine_id': payload.routineId,
+        });
+      }
       final DateTime until = moment.add(
         Duration(minutes: payload.snoozeMinutes),
       );
@@ -275,6 +348,7 @@ int routineSnoozeSlotFor(int timeIndex) => 900 + timeIndex;
 NotificationDetails routineNotificationDetails({
   required AppLocalizations strings,
   required int snoozeMinutes,
+  bool isAnxietyBreath = false,
 }) {
   return NotificationDetails(
     android: AndroidNotificationDetails(
@@ -301,17 +375,29 @@ NotificationDetails routineNotificationDetails({
       // the app to answer is a reminder people stop answering.
       actions: <AndroidNotificationAction>[
         AndroidNotificationAction(
-          notificationDoneActionId,
-          strings.notificationDoneAction,
+          isAnxietyBreath
+              ? notificationStartBreathingActionId
+              : notificationDoneActionId,
+          isAnxietyBreath
+              ? strings.startBreathingAction
+              : strings.notificationDoneAction,
+          showsUserInterface: isAnxietyBreath,
         ),
         AndroidNotificationAction(
           notificationSnoozeActionId,
           strings.notificationSnoozeAction(snoozeMinutes),
         ),
+        if (isAnxietyBreath)
+          AndroidNotificationAction(
+            notificationSkipActionId,
+            strings.skipAction,
+          ),
       ],
     ),
-    iOS: const DarwinNotificationDetails(
-      categoryIdentifier: routineCategoryId,
+    iOS: DarwinNotificationDetails(
+      categoryIdentifier: isAnxietyBreath
+          ? 'anxiety_breath_reminder'
+          : routineCategoryId,
       // The buttons themselves come from the category registered at startup;
       // see [routineNotificationCategories].
       presentAlert: true,
@@ -331,6 +417,24 @@ List<DarwinNotificationCategory> routineNotificationCategories(
   AppLocalizations strings,
 ) {
   return <DarwinNotificationCategory>[
+    DarwinNotificationCategory(
+      'anxiety_breath_reminder',
+      actions: [
+        DarwinNotificationAction.plain(
+          notificationStartBreathingActionId,
+          strings.startBreathingAction,
+          options: {DarwinNotificationActionOption.foreground},
+        ),
+        DarwinNotificationAction.plain(
+          notificationSnoozeActionId,
+          strings.notificationSnoozeActionGeneric,
+        ),
+        DarwinNotificationAction.plain(
+          notificationSkipActionId,
+          strings.skipAction,
+        ),
+      ],
+    ),
     DarwinNotificationCategory(
       routineCategoryId,
       actions: <DarwinNotificationAction>[
@@ -394,16 +498,43 @@ Future<void> rescheduleSnoozeFromBackground({
   final NotificationDetails details = routineNotificationDetails(
     strings: strings,
     snoozeMinutes: payload.snoozeMinutes,
+    isAnxietyBreath: payload.isAnxietyBreath,
   );
 
+  final db = AppDatabase();
+  int timeIndex = 0;
+  try {
+    final bundle = await db.getRoutineBundleById(payload.routineId);
+    timeIndex =
+        (bundle?.schedule.reminderTime
+                    .split(',')
+                    .indexOf(payload.reminderTime) ??
+                0)
+            .clamp(0, maxReminderTimes - 1);
+  } finally {
+    await db.close();
+  }
+  final snoozePayload = RoutineNotificationPayload(
+    routineId: payload.routineId,
+    snoozeMinutes: payload.snoozeMinutes,
+    title: payload.title,
+    reminderTime: payload.reminderTime,
+    isAnxietyBreath: payload.isAnxietyBreath,
+    occurrenceDate: payload.dateKeyAt(
+      scheduledFor.subtract(Duration(minutes: payload.snoozeMinutes)),
+    ),
+  );
   try {
     await plugin.zonedSchedule(
-      id: routineNotificationId(payload.routineId, routineSnoozeSlot),
+      id: routineNotificationId(
+        payload.routineId,
+        routineSnoozeSlotFor(timeIndex),
+      ),
       title: payload.title,
       body: strings.notificationReminderBody(payload.title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
       notificationDetails: details,
-      payload: payload.encode(),
+      payload: snoozePayload.encode(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   } on PlatformException catch (error) {
@@ -411,12 +542,15 @@ Future<void> rescheduleSnoozeFromBackground({
       rethrow;
     }
     await plugin.zonedSchedule(
-      id: routineNotificationId(payload.routineId, routineSnoozeSlot),
+      id: routineNotificationId(
+        payload.routineId,
+        routineSnoozeSlotFor(timeIndex),
+      ),
       title: payload.title,
       body: strings.notificationReminderBody(payload.title),
       scheduledDate: tz.TZDateTime.from(scheduledFor, tz.local),
       notificationDetails: details,
-      payload: payload.encode(),
+      payload: snoozePayload.encode(),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }

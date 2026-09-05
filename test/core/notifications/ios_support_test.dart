@@ -60,13 +60,20 @@ void main() {
       final List<DarwinNotificationCategory> categories =
           routineNotificationCategories(en);
 
-      expect(categories, hasLength(1));
-      expect(categories.single.identifier, routineCategoryId);
+      expect(categories, hasLength(2));
+      expect(
+        categories
+            .firstWhere((c) => c.identifier == routineCategoryId)
+            .identifier,
+        routineCategoryId,
+      );
     });
 
     test('offers both Done and Snooze', () {
       final List<DarwinNotificationAction> actions =
-          routineNotificationCategories(en).single.actions;
+          routineNotificationCategories(
+            en,
+          ).firstWhere((c) => c.identifier == routineCategoryId).actions;
 
       expect(
         actions.map((DarwinNotificationAction a) => a.identifier),
@@ -79,7 +86,9 @@ void main() {
 
     test('no action opens the app, so iOS answers in the background', () {
       final List<DarwinNotificationAction> actions =
-          routineNotificationCategories(en).single.actions;
+          routineNotificationCategories(
+            en,
+          ).firstWhere((c) => c.identifier == routineCategoryId).actions;
 
       for (final DarwinNotificationAction action in actions) {
         expect(
@@ -92,11 +101,19 @@ void main() {
 
     test('follows the chosen language', () {
       expect(
-        routineNotificationCategories(id).single.actions.first.title,
+        routineNotificationCategories(id)
+            .firstWhere((c) => c.identifier == routineCategoryId)
+            .actions
+            .first
+            .title,
         id.notificationDoneAction,
       );
       expect(
-        routineNotificationCategories(id).single.actions.last.title,
+        routineNotificationCategories(id)
+            .firstWhere((c) => c.identifier == routineCategoryId)
+            .actions
+            .last
+            .title,
         'Tunda',
       );
     });

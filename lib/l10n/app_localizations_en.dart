@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routinesTab => 'Routines';
 
   @override
+  String get meditateTab => 'Meditate';
+
+  @override
   String get insightsTab => 'Insights';
 
   @override
@@ -1166,4 +1169,233 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reminderHealthSetting => 'Reminder health';
+
+  @override
+  String get meditateHeaderTitle => 'Meditate';
+
+  @override
+  String get meditateHeaderSubtitle => 'A little space for yourself.';
+
+  @override
+  String get categoryAnxietyBreath => 'Anxiety Breath';
+
+  @override
+  String get anxietyBreathRoutine => 'Anxiety Breath routine';
+
+  @override
+  String get anxietyBreathTitle => 'Anxiety Breath';
+
+  @override
+  String get anxietyBreathTagline => 'Slow the breath, one cycle at a time.';
+
+  @override
+  String get anxietyBreathDuration => '7 min · Guided breathing';
+
+  @override
+  String get anxietyBreathSubtitle => 'Slow, steady breaths to feel calmer.';
+
+  @override
+  String get anxietyBreathSetupTitle => 'Choose your exhale';
+
+  @override
+  String get anxietyBreathSetupDesc =>
+      'Inhale stays at 3 seconds. Choose the exhale pace that feels comfortable today.';
+
+  @override
+  String get startBreathingAction => 'Start breathing';
+
+  @override
+  String get todaysPause => 'TODAY\'S PAUSE';
+
+  @override
+  String get morningReset => 'Morning Reset';
+
+  @override
+  String get morningResetDesc => 'Clear your mind gently.';
+
+  @override
+  String get middayPause => 'Midday Pause';
+
+  @override
+  String get middayPauseDesc => 'Step back and breathe.';
+
+  @override
+  String get eveningUnwind => 'Evening Unwind';
+
+  @override
+  String get eveningUnwindDesc => 'Let go of the day\'s tension.';
+
+  @override
+  String get prepareForSleep => 'Prepare for Sleep';
+
+  @override
+  String get prepareForSleepDesc => 'Settle your mind for rest.';
+
+  @override
+  String get howDoYouWantToFeel => 'How do you want to feel?';
+
+  @override
+  String get feelCalm => 'Calm';
+
+  @override
+  String get feelFocus => 'Focus';
+
+  @override
+  String get feelReset => 'Reset';
+
+  @override
+  String get feelSleep => 'Sleep';
+
+  @override
+  String get feelBreathe => 'Breathe';
+
+  @override
+  String get feelStressRelief => 'Stress relief';
+
+  @override
+  String get quickStart => 'Quick Start';
+
+  @override
+  String get recentLabel => 'Recent';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get inhaleLabel => 'Inhale';
+
+  @override
+  String get exhaleLabel => 'Exhale';
+
+  @override
+  String get fixedBadge => 'Fixed';
+
+  @override
+  String secUnit(int seconds) {
+    return '$seconds sec';
+  }
+
+  @override
+  String get sessionLabel => 'Session';
+
+  @override
+  String get sevenMinutes => '7 minutes';
+
+  @override
+  String get comfortSafetyNote =>
+      'Choose only a pace that feels comfortable. Return to normal breathing if you feel dizzy or uncomfortable.';
+
+  @override
+  String get canEndSessionAnytime => 'You can end the session at any time.';
+
+  @override
+  String timeLeft(String time) {
+    return '$time left';
+  }
+
+  @override
+  String secExhaleSelected(int seconds) {
+    return '$seconds sec exhale selected';
+  }
+
+  @override
+  String get pauseAction => 'Pause';
+
+  @override
+  String get resumeAction => 'Resume';
+
+  @override
+  String get endSessionAction => 'End session';
+
+  @override
+  String get endSessionDialogTitle => 'End this session?';
+
+  @override
+  String get endSessionDialogMessage =>
+      'Your current reminder will stay incomplete.';
+
+  @override
+  String get keepBreathingAction => 'Keep breathing';
+
+  @override
+  String get sessionCompleteTitle => 'Session complete';
+
+  @override
+  String get sessionCompleteSubtitle =>
+      'You gave yourself 7 minutes to slow down.';
+
+  @override
+  String sessionsCompleteToday(int completed, int total) {
+    return '$completed of $total today';
+  }
+
+  @override
+  String sessionsCompleteTodayFull(int completed, int total) {
+    return '$completed of $total sessions complete today';
+  }
+
+  @override
+  String get allSessionsCompleteToday => 'Today\'s 5 sessions are complete';
+
+  @override
+  String get howDoYouFeel => 'How do you feel?';
+
+  @override
+  String get moodCalmer => 'Calmer';
+
+  @override
+  String get moodSame => 'Same';
+
+  @override
+  String get moodUncomfortable => 'Uncomfortable';
+
+  @override
+  String get doneAction => 'Done';
+
+  @override
+  String get settleOutroLabel => 'SETTLE';
+
+  @override
+  String get settleOutroSubtext => 'Let your breath return naturally.';
+
+  @override
+  String get inhaleGentlySubtext => 'Inhale gently';
+
+  @override
+  String get slowExhaleSubtext => 'Slow exhale';
+
+  @override
+  String get actionTypeGuidedBreathing => 'Guided breathing';
+
+  @override
+  String get fiveTimesADay => '5 times a day';
+
+  @override
+  String get exhaleSelectionNotice =>
+      'You will choose 7, 12, or 21 seconds before each session.';
+
+  @override
+  String get threeMinutes => '3 min';
+
+  @override
+  String get fiveMinutes => '5 min';
+
+  @override
+  String get tenMinutes => '10 min';
+
+  @override
+  String get fifteenMinutes => '15 min';
+
+  @override
+  String get eveningCalmSample => 'Evening Calm';
+
+  @override
+  String get meditationSample => '5 min · Meditation';
+
+  @override
+  String get yesterdayLabel => 'Yesterday';
+
+  @override
+  String get reminderCloseWarning =>
+      'Some reminders are less than 30 minutes apart. You can keep these times or spread them out.';
 }

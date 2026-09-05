@@ -5,6 +5,7 @@
   "preparingYourDay": "Preparing your day",
   "todayTab": "Today",
   "routinesTab": "Routines",
+  "meditateTab": "Meditate",
   "insightsTab": "Insights",
   "settingsTab": "Settings",
   "continueButton": "Continue",
@@ -518,5 +519,117 @@
   "vendorStepLock": "Lock the app in Recents, so clearing apps does not stop it",
   "openAutostartSettings": "Open autostart settings",
   "openAppSettings": "Open app settings",
-  "reminderHealthSetting": "Reminder health"
+  "reminderHealthSetting": "Reminder health",
+  "meditateHeaderTitle": "Meditate",
+  "meditateHeaderSubtitle": "A little space for yourself.",
+  "categoryAnxietyBreath": "Anxiety Breath",
+  "anxietyBreathRoutine": "Anxiety Breath routine",
+  "anxietyBreathTitle": "Anxiety Breath",
+  "anxietyBreathTagline": "Slow the breath, one cycle at a time.",
+  "anxietyBreathDuration": "7 min · Guided breathing",
+  "anxietyBreathSubtitle": "Slow, steady breaths to feel calmer.",
+  "anxietyBreathSetupTitle": "Choose your exhale",
+  "anxietyBreathSetupDesc": "Inhale stays at 3 seconds. Choose the exhale pace that feels comfortable today.",
+  "startBreathingAction": "Start breathing",
+  "todaysPause": "TODAY'S PAUSE",
+  "morningReset": "Morning Reset",
+  "morningResetDesc": "Clear your mind gently.",
+  "middayPause": "Midday Pause",
+  "middayPauseDesc": "Step back and breathe.",
+  "eveningUnwind": "Evening Unwind",
+  "eveningUnwindDesc": "Let go of the day's tension.",
+  "prepareForSleep": "Prepare for Sleep",
+  "prepareForSleepDesc": "Settle your mind for rest.",
+  "howDoYouWantToFeel": "How do you want to feel?",
+  "feelCalm": "Calm",
+  "feelFocus": "Focus",
+  "feelReset": "Reset",
+  "feelSleep": "Sleep",
+  "feelBreathe": "Breathe",
+  "feelStressRelief": "Stress relief",
+  "quickStart": "Quick Start",
+  "recentLabel": "Recent",
+  "seeAll": "See all",
+  "inhaleLabel": "Inhale",
+  "exhaleLabel": "Exhale",
+  "fixedBadge": "Fixed",
+  "secUnit": "{seconds} sec",
+  "@secUnit": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionLabel": "Session",
+  "sevenMinutes": "7 minutes",
+  "comfortSafetyNote": "Choose only a pace that feels comfortable. Return to normal breathing if you feel dizzy or uncomfortable.",
+  "canEndSessionAnytime": "You can end the session at any time.",
+  "timeLeft": "{time} left",
+  "@timeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "secExhaleSelected": "{seconds} sec exhale selected",
+  "@secExhaleSelected": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "pauseAction": "Pause",
+  "resumeAction": "Resume",
+  "endSessionAction": "End session",
+  "endSessionDialogTitle": "End this session?",
+  "endSessionDialogMessage": "Your current reminder will stay incomplete.",
+  "keepBreathingAction": "Keep breathing",
+  "sessionCompleteTitle": "Session complete",
+  "sessionCompleteSubtitle": "You gave yourself 7 minutes to slow down.",
+  "sessionsCompleteToday": "{completed} of {total} today",
+  "@sessionsCompleteToday": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsCompleteTodayFull": "{completed} of {total} sessions complete today",
+  "@sessionsCompleteTodayFull": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "allSessionsCompleteToday": "Today's 5 sessions are complete",
+  "howDoYouFeel": "How do you feel?",
+  "moodCalmer": "Calmer",
+  "moodSame": "Same",
+  "moodUncomfortable": "Uncomfortable",
+  "doneAction": "Done",
+  "settleOutroLabel": "SETTLE",
+  "settleOutroSubtext": "Let your breath return naturally.",
+  "inhaleGentlySubtext": "Inhale gently",
+  "slowExhaleSubtext": "Slow exhale",
+  "actionTypeGuidedBreathing": "Guided breathing",
+  "fiveTimesADay": "5 times a day",
+  "exhaleSelectionNotice": "You will choose 7, 12, or 21 seconds before each session.",
+  "threeMinutes": "3 min",
+  "fiveMinutes": "5 min",
+  "tenMinutes": "10 min",
+  "fifteenMinutes": "15 min",
+  "eveningCalmSample": "Evening Calm",
+  "meditationSample": "5 min · Meditation",
+  "yesterdayLabel": "Yesterday",
+  "reminderCloseWarning": "Some reminders are less than 30 minutes apart. You can keep these times or spread them out."
 }

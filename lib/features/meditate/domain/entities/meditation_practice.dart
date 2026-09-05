@@ -74,7 +74,7 @@ class MeditationPractice {
       'A little clarity for what comes next.',
       'Kejernihan kecil untuk langkah berikutnya.',
       10,
-      'clear_sky',
+      'one_clear_thing',
       [
         'Sit upright, without holding yourself rigid.',
         'Choose one point: the feeling of breath at your nose.',
@@ -100,7 +100,7 @@ class MeditationPractice {
       'Clear your mind gently.',
       'Jernihkan pikiran perlahan.',
       5,
-      'first_light',
+      'morning_reset',
       [
         'Welcome this new moment. Settle into your seat.',
         'Notice the light around you, even with eyes closed.',
@@ -126,7 +126,7 @@ class MeditationPractice {
       'Step out of the rush for a moment.',
       'Ambil jeda dari kesibukan.',
       5,
-      'first_light',
+      'midday_pause',
       [
         'Pause what you are doing. Feel your feet on the floor.',
         'Unclench your hands and soften your jaw.',
@@ -152,7 +152,7 @@ class MeditationPractice {
       'Let the day settle around you.',
       'Biarkan harimu mereda.',
       5,
-      'still_waters',
+      'evening_unwind',
       [
         'Let your body settle into a comfortable position.',
         'Notice where the day is still held in your body.',
@@ -204,7 +204,7 @@ class MeditationPractice {
       'Reconnect with your own natural rhythm.',
       'Kembali ke ritme alami tubuhmu.',
       5,
-      'soft_tide',
+      'easy_breathing',
       [
         'Sit comfortably. Keep your breathing natural.',
         'Notice the air as it enters and leaves.',
@@ -230,7 +230,7 @@ class MeditationPractice {
       'A gentle body scan to release the day.',
       'Pindai tubuh perlahan untuk melepas penat.',
       10,
-      'warm_ground',
+      'let_it_soften',
       [
         'Find a position that feels supported.',
         'Notice your feet. Let them rest heavily.',
@@ -256,7 +256,7 @@ class MeditationPractice {
       'Your space. Your own practice.',
       'Ruang untuk latihanmu sendiri.',
       5,
-      'still_waters',
+      'quiet_timer',
       [
         'Settle in. This time is yours.',
         'Follow your own practice at your own pace.',

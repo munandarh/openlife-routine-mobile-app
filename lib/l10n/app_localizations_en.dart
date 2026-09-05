@@ -1262,6 +1262,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAll => 'See all';
 
   @override
+  String get showAll => 'Show all';
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
   String get inhaleLabel => 'Inhale';
 
   @override

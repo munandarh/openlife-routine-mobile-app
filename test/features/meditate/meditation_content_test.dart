@@ -27,7 +27,11 @@ void main() {
           greaterThan(100000),
         );
       }
-      expect(practices.map((p) => p.sound).toSet().length, 6);
+      expect(practices.map((p) => p.sound).toSet().length, 9);
+      expect(
+        File('assets/audio/forest_stream_flow.m4a').lengthSync(),
+        greaterThan(100000),
+      );
     },
   );
   test('local-time hero uses four real practices across midnight', () {

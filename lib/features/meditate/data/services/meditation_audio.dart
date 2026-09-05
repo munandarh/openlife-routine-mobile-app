@@ -4,12 +4,28 @@ import 'package:flutter/foundation.dart';
 
 /// Serialized commands prevent a slow load from restarting music after pause/exit.
 class MeditationAudio extends ChangeNotifier {
+  MeditationAudio([this._player]);
+
   AudioPlayer? _player;
   Future<void> _queue = Future<void>.value();
   bool _closed = false;
   bool available = true;
   bool enabled = true;
-  double volume = .35;
+  double volume = 1.0;
+
+  static final AudioContext audioContext = AudioContext(
+    iOS: AudioContextIOS(
+      category: AVAudioSessionCategory.playback,
+      options: const {},
+    ),
+    android: const AudioContextAndroid(
+      isSpeakerphoneOn: false,
+      stayAwake: true,
+      contentType: AndroidContentType.music,
+      usageType: AndroidUsageType.media,
+      audioFocus: AndroidAudioFocus.gain,
+    ),
+  );
 
   Future<void> _run(Future<void> Function() action) {
     _queue = _queue.then((_) async {
@@ -24,34 +40,40 @@ class MeditationAudio extends ChangeNotifier {
     return _queue;
   }
 
-  Future<void> start(String score) => _run(() async {
+  Future<void> _setupPlayer() async {
     _player ??= AudioPlayer();
-    await _player!.setReleaseMode(ReleaseMode.loop);
-    await _player!.play(AssetSource('audio/$score.m4a'), volume: 0);
-    if (!enabled) {
-      await _player!.pause();
-      return;
+    try {
+      await AudioPlayer.global.setAudioContext(audioContext);
+    } catch (_) {
+      // Global AudioContext configuration is ignored if unsupported or in tests.
     }
-    await _fade(volume);
-  });
-
-  Future<void> _fade(double target) async {
-    final start = _player?.volume ?? 0;
-    for (var i = 1; i <= 8 && !_closed; i++) {
-      await _player?.setVolume(start + (target - start) * i / 8);
-      await Future<void>.delayed(const Duration(milliseconds: 35));
+    try {
+      await _player!.setAudioContext(audioContext);
+    } catch (_) {
+      // AudioContext configuration is ignored if unsupported or in tests.
     }
   }
 
+  Future<void> start(String score) => _run(() async {
+    await _setupPlayer();
+    await _player!.setReleaseMode(ReleaseMode.loop);
+    await _player!.setVolume(volume);
+    await _player!.play(AssetSource('audio/$score.m4a'), volume: volume);
+    if (!enabled) {
+      await _player!.pause();
+    }
+  });
+
   Future<void> pause() => _run(() async {
-    await _fade(0);
     await _player?.pause();
   });
+
   Future<void> resume() => _run(() async {
     if (!enabled) return;
+    await _player?.setVolume(volume);
     await _player?.resume();
-    await _fade(volume);
   });
+
   Future<void> setEnabled(bool value, {required bool paused}) async {
     enabled = value;
     notifyListeners();
@@ -63,7 +85,7 @@ class MeditationAudio extends ChangeNotifier {
   }
 
   Future<void> setVolume(double value) {
-    volume = value.clamp(0, 1);
+    volume = value.clamp(0.0, 1.0);
     notifyListeners();
     return _run(() async {
       if (enabled) await _player?.setVolume(volume);

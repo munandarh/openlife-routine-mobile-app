@@ -66,4 +66,19 @@ void main() {
     expect(find.text('Profil'), findsOneWidget);
     expect(find.text('Tanpa akun'), findsOneWidget);
   });
+
+  testWidgets('profile navigation buttons render with surface background', (
+    WidgetTester tester,
+  ) async {
+    useScreenWidth(tester, 390);
+
+    await tester.pumpWidget(harness.wrap(const ProfilePage()));
+    await tester.pumpAndSettle();
+
+    final buttons = tester.widgetList<OutlinedButton>(find.byType(OutlinedButton));
+    expect(buttons.length, 2);
+    for (final button in buttons) {
+      expect(button.style?.backgroundColor?.resolve({}), isNotNull);
+    }
+  });
 }

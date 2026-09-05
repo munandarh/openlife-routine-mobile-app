@@ -587,6 +587,7 @@ class _SettingsRow extends StatelessWidget {
             ),
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
             width: 32,
@@ -599,45 +600,44 @@ class _SettingsRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  item.title,
-                  style: AppTextStyles.button.copyWith(
-                    fontSize: 15,
-                    color: titleColor,
-                  ),
-                ),
-              ],
+            child: Text(
+              item.title,
+              style: AppTextStyles.button.copyWith(
+                fontSize: 15,
+                color: titleColor,
+              ),
             ),
           ),
+          const SizedBox(width: AppSpacing.sm),
           if (item.onToggle != null)
             Switch.adaptive(
               value: item.toggleValue ?? false,
               onChanged: item.onToggle,
             )
-          else ...<Widget>[
-            if (item.trailing != null)
-              Flexible(
-                child: Text(
-                  item.trailing!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.bodyEmphasis.copyWith(
-                    fontSize: 13,
-                    color: item.trailingColor ?? context.palette.textSecondary,
+          else
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (item.trailing != null) ...<Widget>[
+                  Text(
+                    item.trailing!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyEmphasis.copyWith(
+                      fontSize: 13,
+                      color:
+                          item.trailingColor ?? context.palette.textSecondary,
+                    ),
                   ),
+                  const SizedBox(width: AppSpacing.xs + 2),
+                ],
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 18,
+                  color: context.palette.iconMuted,
                 ),
-              ),
-            const SizedBox(width: AppSpacing.xs + 2),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 18,
-              color: context.palette.iconMuted,
+              ],
             ),
-          ],
         ],
       ),
     );

@@ -154,6 +154,11 @@ class _MeditateViewState extends State<_MeditateView> {
                         children: [
                           Expanded(
                             child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: context.palette.surface,
+                                foregroundColor: context.palette.primaryInk,
+                                side: BorderSide(color: context.palette.border),
+                              ),
                               onPressed: _library,
                               icon: const Icon(Icons.spa_outlined),
                               label: Text(
@@ -172,6 +177,13 @@ class _MeditateViewState extends State<_MeditateView> {
                               'Saved practices',
                               'Latihan tersimpan',
                             ),
+                            style: IconButton.styleFrom(
+                              backgroundColor: context.palette.surface,
+                              foregroundColor: context.palette.primaryInk,
+                              side: BorderSide(color: context.palette.border),
+                              minimumSize: const Size(52, 52),
+                              fixedSize: const Size(52, 52),
+                            ),
                             onPressed: () => Navigator.of(context).push<void>(
                               MaterialPageRoute(
                                 builder: (_) => const MeditationLibraryPage(
@@ -187,6 +199,13 @@ class _MeditateViewState extends State<_MeditateView> {
                               context,
                               'Mindfulness insights',
                               'Insight meditasi',
+                            ),
+                            style: IconButton.styleFrom(
+                              backgroundColor: context.palette.surface,
+                              foregroundColor: context.palette.primaryInk,
+                              side: BorderSide(color: context.palette.border),
+                              minimumSize: const Size(52, 52),
+                              fixedSize: const Size(52, 52),
                             ),
                             onPressed: () => Navigator.of(context).push<void>(
                               MaterialPageRoute(

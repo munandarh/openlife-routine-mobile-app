@@ -1260,6 +1260,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get seeAll => 'Lihat semua';
 
   @override
+  String get showAll => 'Tampilkan semua';
+
+  @override
+  String get showLess => 'Tampilkan lebih sedikit';
+
+  @override
   String get inhaleLabel => 'Tarik napas';
 
   @override

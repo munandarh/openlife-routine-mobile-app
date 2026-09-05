@@ -261,10 +261,18 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
       }
     }
 
-    items.sort(
-      (TodayRoutineItem left, TodayRoutineItem right) =>
-          left.reminderTime.compareTo(right.reminderTime),
-    );
+    items.sort((TodayRoutineItem left, TodayRoutineItem right) {
+      final bool leftDone = left.status == TodayRoutineItemStatus.done;
+      final bool rightDone = right.status == TodayRoutineItemStatus.done;
+      if (leftDone != rightDone) {
+        return leftDone ? 1 : -1;
+      }
+      final int timeCompare = left.reminderTime.compareTo(right.reminderTime);
+      if (timeCompare != 0) {
+        return timeCompare;
+      }
+      return left.title.compareTo(right.title);
+    });
 
     final int completedCount = items
         .where(

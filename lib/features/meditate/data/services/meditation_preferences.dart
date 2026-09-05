@@ -15,6 +15,10 @@ class MeditationPreferences {
       await _prefs.getBool('meditation.music') ?? true;
   Future<void> setMusic(bool value) =>
       _prefs.setBool('meditation.music', value);
+  Future<double> musicVolume() async =>
+      await _prefs.getDouble('meditation.volume') ?? 1.0;
+  Future<void> setVolume(double value) =>
+      _prefs.setDouble('meditation.volume', value.clamp(0.0, 1.0));
   Future<void> event(
     String name, [
     Map<String, Object?> properties = const {},

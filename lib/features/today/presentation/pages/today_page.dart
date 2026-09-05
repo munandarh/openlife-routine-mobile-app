@@ -49,6 +49,7 @@ class _TodayView extends StatefulWidget {
 
 class _TodayViewState extends State<_TodayView> {
   bool _showCelebration = false;
+  bool _showAllRoutines = false;
   AppLifecycleListener? _lifecycleListener;
   StreamSubscription<String>? _actionSubscription;
 
@@ -173,6 +174,7 @@ class _TodayViewState extends State<_TodayView> {
                         selectedIndex: _selectedWeekIndex(state.selectedDate),
                         items: weekItems,
                         onSelected: (int index) {
+                          setState(() => _showAllRoutines = false);
                           context.read<TodayBloc>().add(
                             TodayDateSelected(
                               _startOfWeek(
@@ -215,15 +217,32 @@ class _TodayViewState extends State<_TodayView> {
                             await _openNewRoutine();
                           },
                         )
-                      else
-                        ...state.items.map(
-                          (TodayRoutineItem item) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: AppSpacing.sm + 2,
+                      else ...<Widget>[
+                        ...(state.items.length > 5 && !_showAllRoutines
+                                ? state.items.take(5)
+                                : state.items)
+                            .map(
+                              (TodayRoutineItem item) => Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.sm + 2,
+                                ),
+                                child: _TodayRoutineCard(item: item),
+                              ),
                             ),
-                            child: _TodayRoutineCard(item: item),
+                        if (state.items.length > 5)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: AppSpacing.xs,
+                              bottom: AppSpacing.sm,
+                            ),
+                            child: _ShowMoreRoutinesButton(
+                              isExpanded: _showAllRoutines,
+                              onTap: () => setState(
+                                () => _showAllRoutines = !_showAllRoutines,
+                              ),
+                            ),
                           ),
-                        ),
+                      ],
                     ]),
                   ),
                 ),
@@ -812,6 +831,65 @@ class _QuietAction extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.button.copyWith(color: tone),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ShowMoreRoutinesButton extends StatelessWidget {
+  const _ShowMoreRoutinesButton({
+    required this.isExpanded,
+    required this.onTap,
+  });
+
+  final bool isExpanded;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    final String label = isExpanded ? l10n.showLess : l10n.showAll;
+
+    return Center(
+      child: Semantics(
+        button: true,
+        label: label,
+        child: Material(
+          color: context.palette.surface,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+            onTap: onTap,
+            child: Container(
+              height: 44,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadius.pill),
+                border: Border.all(color: context.palette.border, width: 1),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    label,
+                    style: AppTextStyles.button.copyWith(
+                      color: context.palette.textPrimary,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    size: 18,
+                    color: context.palette.textSecondary,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

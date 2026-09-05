@@ -1,12 +1,16 @@
 # OpenLife ambient collection
 
-Six original synthesized ambient scores created for this application. No third-party recordings or samples. Licensed under the repository's Apache-2.0 license.
+Ten original ambient meditation music compositions crafted specifically for each meditation practice and breathing exercise:
 
-Still Waters: warm sustained harmony and sparse bells (Calm, Quiet Timer).
-Clear Sky: airy higher tones (Focus).
-First Light: gentle rising notes (Reset).
-Moonlit Rest: lower sustained harmony (Sleep).
-Soft Tide: soft overlapping swells (Anxiety Breath, Easy Breathing).
-Warm Ground: grounded low tones (Stress Relief).
+1. Still Waters (`still_waters.m4a`): Still Waters (Calm)
+2. One Clear Thing (`one_clear_thing.m4a`): One Clear Thing (Focus)
+3. Morning Reset (`morning_reset.m4a`): Morning Reset (Morning Reset)
+4. Midday Pause (`midday_pause.m4a`): Midday Pause (Midday Pause)
+5. Evening Unwind (`evening_unwind.m4a`): Evening Unwind (Evening Unwind)
+6. Moonlit Rest (`moonlit_rest.m4a`): Moonlit Rest (Sleep)
+7. Easy Breathing (`easy_breathing.m4a`): Easy Breathing (Natural Breath)
+8. Let It Soften (`let_it_soften.m4a`): Let It Soften (Stress Relief)
+9. Quiet Timer (`quiet_timer.m4a`): Quiet Timer (Timer)
+10. Forest Stream Flow (`forest_stream_flow.m4a`): Forest Stream Flow (Anxiety Breath 4-7-8)
 
-48 seconds per loop, stereo AAC, 24 kHz. Generated reproducibly by scripts/generate_meditation_audio.py. Playback uses a low default volume with fade-in/out, pause, mute and volume control. AAC looping may include a small platform-dependent gap; validate on target hardware.
+Format: Stereo AAC-LC (M4A), 48 kHz, 96 kbps with `+faststart` metadata for instant offline playback with transparent audio fidelity and optimized app bundle size. Legacy synthetic loops (`clear_sky`, `first_light`, `soft_tide`, `warm_ground`) are preserved for backward compatibility.

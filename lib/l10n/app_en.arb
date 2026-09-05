@@ -550,6 +550,8 @@
   "quickStart": "Quick Start",
   "recentLabel": "Recent",
   "seeAll": "See all",
+  "showAll": "Show all",
+  "showLess": "Show less",
   "inhaleLabel": "Inhale",
   "exhaleLabel": "Exhale",
   "fixedBadge": "Fixed",

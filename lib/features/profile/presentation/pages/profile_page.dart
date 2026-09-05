@@ -140,12 +140,22 @@ class _ProfileView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: context.palette.surface,
+                      foregroundColor: context.palette.primaryInk,
+                      side: BorderSide(color: context.palette.border),
+                    ),
                     onPressed: () => context.go(OpenLifeRoute.insights.path),
                     icon: const Icon(Icons.insights_outlined),
                     label: Text(l10n.insightsTab),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: context.palette.surface,
+                      foregroundColor: context.palette.primaryInk,
+                      side: BorderSide(color: context.palette.border),
+                    ),
                     onPressed: () => context.go(OpenLifeRoute.settings.path),
                     icon: const Icon(Icons.settings_outlined),
                     label: Text(l10n.settingsTab),

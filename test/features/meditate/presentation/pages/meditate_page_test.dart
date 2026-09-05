@@ -64,6 +64,21 @@ void main() {
       expect(find.text('5 min'), findsOneWidget);
       expect(find.text('10 min'), findsOneWidget);
       expect(find.text('15 min'), findsOneWidget);
+
+      // Explore all & action buttons have surface background
+      expect(find.text('Explore all'), findsOneWidget);
+      final exploreButton = tester.widget<OutlinedButton>(
+        find.widgetWithText(OutlinedButton, 'Explore all'),
+      );
+      expect(exploreButton.style?.backgroundColor?.resolve({}), isNotNull);
+
+      final iconButtons = tester.widgetList<IconButton>(find.byType(IconButton));
+      expect(
+        iconButtons.any(
+          (b) => b.style?.backgroundColor?.resolve({}) != null,
+        ),
+        isTrue,
+      );
     });
   });
 }

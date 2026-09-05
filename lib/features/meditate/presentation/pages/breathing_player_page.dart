@@ -138,11 +138,12 @@ class _BreathingPlayerPageState extends State<BreathingPlayerPage>
   Future<void> _startAudio() async {
     try {
       _audio.enabled = await _preferences.musicEnabled();
+      _audio.volume = await _preferences.musicVolume();
     } catch (_) {
       /* Default music is still available offline. */
     }
     if (!mounted) return;
-    await _audio.start(widget.practice?.sound ?? 'soft_tide');
+    await _audio.start(widget.practice?.sound ?? 'forest_stream_flow');
     if (_paused || _completed) await _audio.pause();
   }
 
@@ -591,8 +592,9 @@ class _BreathingPlayerPageState extends State<BreathingPlayerPage>
                                 size: 18,
                               ),
                               const SizedBox(width: 8),
-                              if (MediaQuery.textScalerOf(context).scale(1) <=
-                                  1.4)
+                              if (MediaQuery.sizeOf(context).width > 340 &&
+                                  MediaQuery.textScalerOf(context).scale(1) <=
+                                      1.4)
                                 Text(
                                   medText(
                                     context,
@@ -605,11 +607,24 @@ class _BreathingPlayerPageState extends State<BreathingPlayerPage>
                                 child: Slider(
                                   value: _audio.volume,
                                   onChanged: _audio.available
-                                      ? (value) => _audio.setVolume(value)
+                                      ? (value) {
+                                          _audio.setVolume(value);
+                                          _preferences.setVolume(value);
+                                        }
                                       : null,
                                   semanticFormatterCallback: (v) =>
                                       '${(v * 100).round()}%',
                                   activeColor: _color,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Text(
+                                  '${(_audio.volume * 100).round()}%',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                               if (_breathing)
